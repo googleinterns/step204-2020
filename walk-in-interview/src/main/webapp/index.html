@@ -9,7 +9,7 @@
 
 <body>
   <div class="header-container">
-    <button>New Post</button>
+    <button onclick="location.href='/walk-in-interview/src/main/webapp/new-post.html'">New Post</button>
     <div>Find Walk-in Interviews</div>
     <button>Create an Account</button>
   </div>
@@ -19,7 +19,7 @@
       <div>
         Sort by:
         <select id="sort-by-select">
-          <option disabled>Select</option>
+          <option disabled value="">Select</option>
           <option selected value="dist-asc">Distance (low to high)</option>
           <option value="dist-desc">Distance (high to low)</option>
           <option value="sal-asc">Salary (low to high)</option>
@@ -29,13 +29,13 @@
       <div>
         Filter by:
         Distance:
-        <input type="text" id="dist-min" placeholder="min">
+        <input type="text" class="filter-input" id="dist-min" placeholder="min">
         -
-        <input type="text" id="dist-max" placeholder="max">
+        <input type="text" class="filter-input" id="dist-max" placeholder="max">
         Salary:
-        <input type="text" id="sal-min" placeholder="min">
+        <input type="text" class="filter-input" id="sal-min" placeholder="min">
         -
-        <input type="text" id="sal-max" placeholder="max">
+        <input type="text" class="filter-input" id="sal-max" placeholder="max">
       </div>
       <button>Submit</button>
     </div>

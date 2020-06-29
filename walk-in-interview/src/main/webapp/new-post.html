@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+
+    <form>
+        <div class="header-container">
+            <button type="reset" onclick="location.href='/walk-in-interview/src/main/webapp/index.html'">Cancel</button>
+            <div>New Job Post</div>
+            <input type="submit" value="Post">
+        </div>
+        <div class="content-container">
+            <input type="text" class="new-post-field" id="job-title" name="job-title" placeholder="Job Title" />
+            <textarea class="new-post-field" id="job-description" name="job-description"
+                placeholder="Describe the job here (responsibilities, preffered skills)..."></textarea>
+            <input type="text" class="new-post-field" id="job-location" name="job-location" placeholder="Job Address" />
+            
+            <div class="new-post-field">
+                Requirements (for applicants):
+                <input type="checkbox" id="o-level" name="o-level" value="o-level">
+                <label for="o-level">O Levels</label>
+                <input type="checkbox" id="drivers-license" name="drivers-license" value="drivers-license">
+                <label for="drivers-license">Driver's License</label>
+            </div>
+
+            <div class="new-post-field">
+                Job Pay:
+                <select id="job-pay-frequency" name="job-pay-frequency">
+                    <option selected disabled value="">Select</option>
+                    <option value="HOURLY">Hourly</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                    <option value="YEARLY">Yearly</option>
+                </select>
+                <input type="text" id="job-pay-min" name="job-pay-min" placeholder="min">
+                -
+                <input type="text" id="job-pay-max" name="job-pay-max" placeholder="max">
+            </div>
+
+            <div class="new-post-field">
+                Job Duration (optional):
+                <select id="job-duration" name="job-duration">
+                    <option selected disabled value="">Select</option>
+                    <option value="ONE_WEEK">1 Week</option>
+                    <option value="TWO_WEEKS">2 Weeks</option>
+                    <option value="ONE_MONTH">1 Month</option>
+                    <option value="SIX_MONTHS">6 Months</option>
+                    <option value="ONE_YEAR">1 Year</option>
+                </select>
+            </div>
+
+            <div class="new-post-field">
+                Post Duration:
+                <select id="post-duration" name="post-duration">
+                    <option disabled value="">Select</option>
+                    <option value="ONE_WEEK">1 Week</option>
+                    <option value="TWO_WEEKS">2 Weeks</option>
+                    <option value="ONE_MONTH">1 Month</option>
+                    <option selected value="SIX_MONTHS">6 Months</option>
+                    <option value="ONE_YEAR">1 Year</option>
+                </select>
+            </div>
+        
+        </div>
+    </form>
+</body>
+
+</html>

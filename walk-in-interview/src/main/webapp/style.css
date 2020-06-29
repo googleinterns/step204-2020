@@ -24,8 +24,8 @@ body {
     justify-content: space-between;
 }
 
-input {
-    width: 30px;
+.filter-input {
+    width: 50px;
 }
 
 .job-listings-container {
@@ -42,4 +42,13 @@ ul {
     margin: 10px 0px;
     padding: 20px;
     border: 1px solid grey;
+}
+
+.new-post-field {
+    width: -webkit-fill-available;
+    margin: 10px 0px;
+}
+
+textarea {
+    height: 100px;
 }
