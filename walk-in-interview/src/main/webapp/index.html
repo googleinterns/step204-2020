@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+
+<body>
+  <div class="header-container">
+    <button>New Post</button>
+    <div>Find Walk-in Interviews</div>
+    <button>Create an Account</button>
+  </div>
+  <div class="content-container">
+    <div id="homepage-map">map here</div>
+    <div class="filters-container">
+      <div>
+        Sort by:
+        <select id="sort-by-select">
+          <option disabled>Select</option>
+          <option selected value="dist-asc">Distance (low to high)</option>
+          <option value="dist-desc">Distance (high to low)</option>
+          <option value="sal-asc">Salary (low to high)</option>
+          <option value="sal-desc">Salary (high to low)</option>
+        </select>
+      </div>
+      <div>
+        Filter by:
+        Distance:
+        <input type="text" id="dist-min" placeholder="min">
+        -
+        <input type="text" id="dist-max" placeholder="max">
+        Salary:
+        <input type="text" id="sal-min" placeholder="min">
+        -
+        <input type="text" id="sal-max" placeholder="max">
+      </div>
+      <button>Submit</button>
+    </div>
+    <div class="job-listings-container">
+      <div>Jobs:</div>
+      <ul id="job-listings">
+        <li id='jobId1'>
+          <div class="job-listing">
+            waiter + info
+          </div>
+        </li>
+        <li id='jobId2'>
+          <div class="job-listing">
+            cashier + info
+          </div>
+        </li>
+        <li id='jobId3'>
+          <div class="job-listing">
+            driver + info
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>
