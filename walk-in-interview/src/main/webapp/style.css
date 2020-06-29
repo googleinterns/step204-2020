@@ -18,6 +18,13 @@ body {
     margin: 10px 0px;
 }
 
+#jobpage-map {
+    background-color: lightgrey;
+    height: 300px;
+    width: -webkit-fill-available;
+    margin: 10px 0px;
+}
+
 .filters-container {
     margin: 10px 0px;
     display: flex;
@@ -25,14 +32,14 @@ body {
 }
 
 .filter-input {
-    width: 50px;
+    /* width: 50px; */
 }
 
 .job-listings-container {
     margin: 10px 0px;
 }
 
-ul {
+#job-listings {
     list-style: none;
     padding-left: 0px;
     margin: 10px 0px;
@@ -44,7 +51,7 @@ ul {
     border: 1px solid grey;
 }
 
-.new-post-field {
+.job-field {
     width: -webkit-fill-available;
     margin: 10px 0px;
 }

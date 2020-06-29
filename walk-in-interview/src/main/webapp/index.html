@@ -15,10 +15,10 @@
   </div>
   <div class="content-container">
     <div id="homepage-map">map here</div>
-    <div class="filters-container">
+    <form class="filters-container">
       <div>
         Sort by:
-        <select id="sort-by-select">
+        <select id="sort-by-select" name="sort-by-select">
           <option disabled value="">Select</option>
           <option selected value="dist-asc">Distance (low to high)</option>
           <option value="dist-desc">Distance (high to low)</option>
@@ -29,30 +29,30 @@
       <div>
         Filter by:
         Distance:
-        <input type="text" class="filter-input" id="dist-min" placeholder="min">
+        <input type="text" id="dist-min" name="dist-min" placeholder="min (km)">
         -
-        <input type="text" class="filter-input" id="dist-max" placeholder="max">
+        <input type="text" id="dist-max" name="dist-max" placeholder="max (km)">
         Salary:
-        <input type="text" class="filter-input" id="sal-min" placeholder="min">
+        <input type="text" id="sal-min" name="sal-min" placeholder="min (sgd)">
         -
-        <input type="text" class="filter-input" id="sal-max" placeholder="max">
+        <input type="text" id="sal-max" name="sal-max" placeholder="max (sgd)">
       </div>
-      <button>Submit</button>
-    </div>
+      <input type="submit" value="Apply">
+    </form>
     <div class="job-listings-container">
       <div>Jobs:</div>
       <ul id="job-listings">
-        <li id='jobId1'>
+        <li id='jobId1' onclick="location.href='/walk-in-interview/src/main/webapp/job-post.html'">
           <div class="job-listing">
             waiter + info
           </div>
         </li>
-        <li id='jobId2'>
+        <li id='jobId2' onclick="location.href='/walk-in-interview/src/main/webapp/job-post.html'">
           <div class="job-listing">
             cashier + info
           </div>
         </li>
-        <li id='jobId3'>
+        <li id='jobId3' onclick="location.href='/walk-in-interview/src/main/webapp/job-post.html'">
           <div class="job-listing">
             driver + info
           </div>
