@@ -8,7 +8,7 @@ import com.google.firestore.FireStoreUtils;
 
 import java.util.concurrent.ExecutionException;
 
-public class JobsDatabase {
+public final class JobsDatabase {
     // TODO
     private static final String COLLECTION = "Jobs";
     private final Firestore firestore;

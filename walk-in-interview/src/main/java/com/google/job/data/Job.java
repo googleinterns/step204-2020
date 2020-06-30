@@ -1,5 +1,5 @@
 package com.google.job.data;
 
-public class Job {
+public final class Job {
     // TODO
 }
