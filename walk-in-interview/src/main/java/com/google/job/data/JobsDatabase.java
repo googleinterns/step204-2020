@@ -8,8 +8,8 @@ import com.google.firestore.FireStoreUtils;
 
 import java.util.concurrent.ExecutionException;
 
+/** Interaction methods between job posts and database. */
 public final class JobsDatabase {
-    // TODO
     private static final String COLLECTION = "Jobs";
     private final Firestore firestore;
 
@@ -60,7 +60,7 @@ public final class JobsDatabase {
             // convert document to POJO
             job = document.toObject(Job.class);
         } else {
-            // TODO
+            // TODO: error handling
         }
 
         return job;

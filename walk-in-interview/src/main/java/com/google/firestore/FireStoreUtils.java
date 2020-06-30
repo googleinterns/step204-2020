@@ -34,6 +34,12 @@ public final class FireStoreUtils {
         db = FirestoreClient.getFirestore();
     }
 
+    /**
+     * Gets the only cloud firestore database.
+     *
+     * @return The only cloud firestore database.
+     * @throws IOException If error occurs when creating database.
+     */
     public static Firestore getFireStore() throws IOException {
         if (db == null) {
             init();
@@ -61,6 +67,14 @@ public final class FireStoreUtils {
         future.get();
     }
 
+    /**
+     * Loads the target document in database.
+     *
+     * @param docRef Document reference towards the target document.
+     * @return Document snap shot.
+     * @throws ExecutionException If error occurs when getting the document snap shot.
+     * @throws InterruptedException If error occurs when getting the document snap shot.
+     */
     public static DocumentSnapshot load(DocumentReference docRef)
             throws ExecutionException, InterruptedException {
         ApiFuture<DocumentSnapshot> future = docRef.get();
