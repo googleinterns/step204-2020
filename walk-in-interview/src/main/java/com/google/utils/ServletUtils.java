@@ -11,9 +11,9 @@ public final class ServletUtils {
      * @return the value of parameter with the {@code name} in the {@code request}
      *         or returns {@code defaultValue} if that parameter does not exist.
      */
-    public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    public static String getStringParameter(HttpServletRequest request, String name, String defaultValue) {
         String value = request.getParameter(name);
-        if (value == null || value.length() <= 0) {
+        if (value == null || value.isEmpty()) {
             return defaultValue;
         }
         return value;
@@ -32,9 +32,28 @@ public final class ServletUtils {
         try {
             int result = Integer.parseInt(resultStr);
 
-            if (result < 0 || result > 10) {
-                throw new NumberFormatException("Please enter an integer between 1 and 10.");
-            }
+            return result;
+        } catch (NumberFormatException e) {
+            // TODO: error handling
+
+            // TODO: add logging to log the error
+
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Gets the integer parameter from html form input.
+     * @param request Http request.
+     * @param parameterName Input id in html element.
+     * @param defaultValue Default integer.
+     * @return Parsed float or default value if exception occur
+     */
+    public static float getFloatParameter(HttpServletRequest request, String parameterName, float defaultValue) {
+        String resultStr = request.getParameter(parameterName);
+
+        try {
+            float result = Float.parseFloat(resultStr);
 
             return result;
         } catch (NumberFormatException e) {

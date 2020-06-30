@@ -7,7 +7,7 @@ public final class Job {
     private static final String DUMMY = "dummy";
 
     private String jobId;
-    private long businessAccountId;
+    // private long businessAccountId; // log in not involved so far
     private JobStatus jobStatus;
     private String jobName;
     private JobLocation jobLocation;
@@ -17,13 +17,12 @@ public final class Job {
     private Duration postDuration;
     private Optional<Duration> jobDuration;
 
-    private Job(String jobId, long businessAccountId,
-               JobStatus jobStatus, String jobName,
+    private Job(String jobId, JobStatus jobStatus, String jobName,
                JobLocation jobLocation, String jobDescription,
                JobPayment jobPayment, Collection<String> requirements,
                Duration postDuration, Optional<Duration> jobDuration) {
         this.jobId = jobId;
-        this.businessAccountId = businessAccountId;
+        // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobName = jobName;
         this.jobLocation = jobLocation;
@@ -34,13 +33,12 @@ public final class Job {
         this.jobDuration = jobDuration;
     }
 
-    public Job(long businessAccountId,
-                JobStatus jobStatus, String jobName,
+    public Job(JobStatus jobStatus, String jobName,
                 JobLocation jobLocation, String jobDescription,
                 JobPayment jobPayment, Collection<String> requirements,
                 Duration postDuration, Optional<Duration> jobDuration) {
         this.jobId = DUMMY;
-        this.businessAccountId = businessAccountId;
+        // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobName = jobName;
         this.jobLocation = jobLocation;
