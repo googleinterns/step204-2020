@@ -8,7 +8,7 @@ import com.google.firestore.FireStoreUtils;
 
 import java.util.concurrent.ExecutionException;
 
-/** Interaction methods between job posts and database. */
+/** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String COLLECTION = "Jobs";
     private final Firestore firestore;
