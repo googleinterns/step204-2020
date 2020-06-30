@@ -60,7 +60,7 @@ public final class JobsDatabase {
             // convert document to POJO
             job = document.toObject(Job.class);
         } else {
-            // TODO: error handling
+            // TODO(issue/3): error handling
         }
 
         return job;
