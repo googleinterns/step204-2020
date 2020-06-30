@@ -4,12 +4,13 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.firestore.FireStoreUtils;
+import com.google.utils.FireStoreUtils;
 
 import java.util.concurrent.ExecutionException;
 
 /** Interaction methods between job posts and database. */
 public final class JobsDatabase {
+
     private static final String COLLECTION = "Jobs";
     private final Firestore firestore;
 
@@ -20,6 +21,7 @@ public final class JobsDatabase {
     /**
      * Adds a newly created job post.
      *
+<<<<<<< Updated upstream
      * @param newJob Newly created job post.
      * @return Id for the job in the database.
      * @throws ExecutionException If error occurs when getting job id.
