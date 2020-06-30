@@ -14,6 +14,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+/** Util methods related to Cloud Firestore database. */
 public final class FireStoreUtils {
 
     private static final String PROJECT_ID = "google.com:walk-in-interview";

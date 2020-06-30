@@ -17,7 +17,14 @@ public final class JobsDatabase {
         this.firestore = firestore;
     }
 
-    // TODO: change the return type to "string" to return jobId
+    /**
+     * Adds a newly created job post.
+     *
+     * @param newJob Newly created job post.
+     * @return Id for the job in the database.
+     * @throws ExecutionException If error occurs when getting job id.
+     * @throws InterruptedException If error occurs when getting job id.
+     */
     public String addJob(Job newJob) throws ExecutionException, InterruptedException {
         ApiFuture<DocumentReference> addedDocRef = FireStoreUtils.store(COLLECTION, newJob);
 
@@ -25,11 +32,25 @@ public final class JobsDatabase {
         return jobId;
     }
 
+    /**
+     * Edits the job post.
+     *
+     * @param jobId Id for the target job post in the database.
+     * @param job Updated job post.
+     */
     public void editJob(String jobId, Job job) {
-        // Overwrites the whole document
+        // Overwrites the whole job post
         firestore.collection(COLLECTION).document(jobId).set(job);
     }
 
+    /**
+     * Fetches a specific job post.
+     *
+     * @param jobId Id for the job post in the database.
+     * @return Target job post.
+     * @throws ExecutionException If error occurs when getting job post.
+     * @throws InterruptedException If error occurs when getting job post.
+     */
     public Job fetchJob(String jobId) throws ExecutionException, InterruptedException {
         DocumentReference docRef = firestore.collection(COLLECTION).document(jobId);
         DocumentSnapshot document = FireStoreUtils.load(docRef);
