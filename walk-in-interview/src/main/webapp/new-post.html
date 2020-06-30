@@ -38,9 +38,10 @@
                     <option value="MONTHLY">Monthly</option>
                     <option value="YEARLY">Yearly</option>
                 </select>
-                <input type="text" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
+                <!-- Note that "e" is allowed with number type as 2.72 -->
+                <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
                 -
-                <input type="text" id="new-job-pay-max" name="job-pay-max" placeholder="max (sgd)" required>
+                <input type="number" id="new-job-pay-max" name="job-pay-max" placeholder="max (sgd)" required>
             </div>
 
             <div class="job-field">
