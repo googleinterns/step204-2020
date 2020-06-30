@@ -31,10 +31,6 @@ body {
     justify-content: space-between;
 }
 
-.filter-input {
-    /* width: 50px; */
-}
-
 .job-listings-container {
     margin: 10px 0px;
 }
