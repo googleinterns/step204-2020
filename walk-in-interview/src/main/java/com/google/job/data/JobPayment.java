@@ -1,7 +1,6 @@
 package com.google.job.data;
 
 public final class JobPayment {
-    // (int min, int max, Frequency frequency)
     private float min;
     private float max;
     private Frequency frequency;

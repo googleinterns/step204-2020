@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 
 /** Interaction methods between job posts and database. */
 public final class JobsDatabase {
-
     private static final String COLLECTION = "Jobs";
     private final Firestore firestore;
 
