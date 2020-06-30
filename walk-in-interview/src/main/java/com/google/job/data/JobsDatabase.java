@@ -20,7 +20,7 @@ public final class JobsDatabase {
     /**
      * Adds a newly created job post.
      *
-     * @param newJob Newly created job post.
+     * @param newJob Newly created job post. Assumes that it is non-nullable.
      * @return Id for the job in the database.
      * @throws ExecutionException If error occurs when getting job id.
      * @throws InterruptedException If error occurs when getting job id.

@@ -48,6 +48,15 @@ public final class FireStoreUtils {
         return db;
     }
 
+    /**
+     * Stores item into the database
+     *
+     * @param collection Name of the collection where the item will be stored.
+     * @param item Target item to be stored.
+     * @return A reference towards the item (in the form of "document").
+     * @throws ExecutionException If error occurs when blocking the operation.
+     * @throws InterruptedException If error occurs when blocking the operation.
+     */
     public static ApiFuture<DocumentReference> store(String collection, Object item)
             throws ExecutionException, InterruptedException {
         ApiFuture<DocumentReference> addedDocRef = db.collection(collection).add(item);
@@ -59,9 +68,18 @@ public final class FireStoreUtils {
         // id for the document: addedDocRef.getId()
     }
 
+    /**
+     * Updates the field in a specific document.
+     *
+     * @param docRef A reference towards the target document.
+     * @param field Field to be updated.
+     * @param value Updated value.
+     * @throws ExecutionException If error occurs when blocking the operation.
+     * @throws InterruptedException If error occurs when blocking the operation.
+     */
     public static void update(DocumentReference docRef, String field, Object value)
             throws ExecutionException, InterruptedException {
-        ApiFuture<WriteResult> future = docRef.update("capital", true);
+        ApiFuture<WriteResult> future = docRef.update(field, /* value= */true);
 
         // Blocks operation
         future.get();
