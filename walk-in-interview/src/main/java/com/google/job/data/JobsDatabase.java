@@ -1,4 +1,4 @@
-package com.google.data;
+package com.google.job.data;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
