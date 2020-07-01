@@ -1,6 +1,6 @@
 package com.google.configuration;
 
-/** Class that specify the configuration details for firestore during testing phase. */
+/** Class that specify the configuration details for firestore during development phase. */
 public final class DevelopmentFireStoreConfiguration implements FireStoreConfiguration {
     private static DevelopmentFireStoreConfiguration developmentFireStoreConfiguration = null;
 

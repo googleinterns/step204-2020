@@ -1,0 +1,57 @@
+body {
+    margin: 30px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.content-container {
+    margin: 20px 0px;
+}
+
+#homepage-map {
+    background-color: lightgrey;
+    height: 300px;
+    width: -webkit-fill-available;
+    margin: 10px 0px;
+}
+
+#jobpage-map {
+    background-color: lightgrey;
+    height: 300px;
+    width: -webkit-fill-available;
+    margin: 10px 0px;
+}
+
+.filters-container {
+    margin: 10px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.job-listings-container {
+    margin: 10px 0px;
+}
+
+#job-listings {
+    list-style: none;
+    padding-left: 0px;
+    margin: 10px 0px;
+}
+
+.job-listing {
+    margin: 10px 0px;
+    padding: 20px;
+    border: 1px solid grey;
+}
+
+.job-field {
+    width: -webkit-fill-available;
+    margin: 10px 0px;
+}
+
+textarea {
+    height: 100px;
+}

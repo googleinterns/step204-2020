@@ -44,6 +44,14 @@ public final class FireStoreUtils {
         return firestore;
     }
 
+    /**
+     * Converts the DocumentSnapshot object to the target raw object.
+     *
+     * @param documentSnapshot Target document snapshot to be converted.
+     * @param classType Type of the target raw object.
+     * @param <T> Generic class type.
+     * @return Converted target raw object.
+     */
     public static <T> T convertDocumentSnapshotToPOJO(DocumentSnapshot documentSnapshot, Class<T> classType) {
         T item = null;
 
