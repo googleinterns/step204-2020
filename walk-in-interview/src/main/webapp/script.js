@@ -10,15 +10,3 @@ function addJobExpiryLimits() {
   datePicker.setAttribute('min', min);
   datePicker.setAttribute('max', max);
 }
-
-
-/** Adds a new job listing by making a POST request to the /jobs servlet */
-function addJob() {
-  fetch('/jobs', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(jobDetails),
-  }).then((response) => response.text()).then((data) => {
-
-  });
-}
