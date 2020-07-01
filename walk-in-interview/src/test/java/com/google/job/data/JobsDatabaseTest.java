@@ -1,7 +1,9 @@
 package com.google.job.data;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firestore.FireStoreUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +30,10 @@ public final class JobsDatabaseTest {
         Job job = new Job(expectedJobName);
         jobsDatabase.addJob(job);
 
-        List<QueryDocumentSnapshot> documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
+        // Asynchronously retrieves all documents.
+        ApiFuture<QuerySnapshot> future = firestore.collection(JOB_COLLECTION).get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documentSnapshots = future.get().getDocuments();
         Job actualJob = documentSnapshots.get(0).toObject(Job.class);
 
         String actualJobName = actualJob.getJobName();
@@ -41,7 +46,10 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Googler";
         Job job = new Job(expectedJobName);
 
-        List<QueryDocumentSnapshot> documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
+        // Asynchronously retrieves all documents.
+        ApiFuture<QuerySnapshot> future = firestore.collection(JOB_COLLECTION).get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documentSnapshots = future.get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
 
         jobsDatabase.editJob(jobId, job);
@@ -56,10 +64,13 @@ public final class JobsDatabaseTest {
 
     @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
-        List<QueryDocumentSnapshot> documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
+        // Asynchronously retrieves all documents.
+        ApiFuture<QuerySnapshot> future = firestore.collection(JOB_COLLECTION).get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documentSnapshots = future.get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
 
-        Job job = documentSnapshots.get(0).toObject(Job.class);
+        Job job = jobsDatabase.fetchJob(jobId).get();
 
         String actualJobName = job.getJobName();
         String expectedJobName = "Googler";
