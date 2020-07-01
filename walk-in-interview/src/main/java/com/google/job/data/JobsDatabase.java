@@ -1,8 +1,15 @@
 package com.google.job.data;
 
+import com.google.api.core.ApiFunction;
+import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.firestore.FireStoreUtils;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.concurrent.Future;
 
@@ -19,11 +26,11 @@ public final class JobsDatabase {
      * Adds a newly created job post.
      *
      * @param newJob Newly created job post. Assumes that it is non-nullable.
-     * @return Future for the added job post.
+     * @return Future for the added job post task.
      */
-    public Future<DocumentReference> addJob(Job newJob) {
-        Future<DocumentReference> addedDocRef = firestore.collection(JOB_COLLECTION).add(newJob);
-        return addedDocRef;
+    public void addJob(Job newJob) {
+        // Future<DocumentReference> addedDocRef = firestore.collection(JOB_COLLECTION).add(newJob);
+        firestore.collection(JOB_COLLECTION).add(newJob);
     }
 
     /**
@@ -32,21 +39,32 @@ public final class JobsDatabase {
      * @param jobId Id for the target job post in the database.
      * @param job Updated job post.
      */
-    public void editJob(String jobId, Job job) {
+    public Future<WriteResult> editJob(String jobId, Job job) {
         // Overwrites the whole job post
-        firestore.collection(JOB_COLLECTION).document(jobId).set(job);
+        Future<WriteResult> edittedDocRef = firestore.collection(JOB_COLLECTION).document(jobId).set(job);
+        return edittedDocRef;
     }
 
     /**
      * Fetches the snapshot future of a specific job post.
      *
      * @param jobId Id for the job post in the database.
-     * @return Target job post.
+     * @return Future of the target job post.
      */
-    public Future<DocumentSnapshot> fetchJob(String jobId) {
+    public Future<Job> fetchJob(String jobId) {
         DocumentReference docRef = firestore.collection(JOB_COLLECTION).document(jobId);
         // Asynchronously retrieves the document
-        Future<DocumentSnapshot> future = docRef.get();
-        return future;
+        ApiFuture<DocumentSnapshot> snapshotFuture = docRef.get();
+
+        ApiFunction<DocumentSnapshot, Job> jobFunction = new ApiFunction<DocumentSnapshot, Job>() {
+            @NullableDecl
+            public Job apply(@NullableDecl DocumentSnapshot documentSnapshot) {
+                return FireStoreUtils.convertDocumentSnapshotToPOJO(documentSnapshot, Job.class);
+            }
+        };
+
+        Future<Job> jobFuture = ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+
+        return jobFuture;
     }
 }
