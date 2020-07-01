@@ -7,23 +7,23 @@
     <script src="script.js"></script>
 </head>
 
-<body onload="addJobExpiryLimits()">
+<body>
 
-    <form>
+    <form id="new-job-form" onsubmit="event.preventDefault(); addJob()">
         <div class="header-container">
             <button type="reset" onclick="location.href='/walk-in-interview/src/main/webapp/index.html'">Cancel</button>
             <div>New Job Post</div>
             <input type="submit" value="Post">
         </div>
         <div class="content-container">
-            <input type="text" class="job-field" id="new-job-title" name="job-title" placeholder="Job Title" required />
+            <input type="text" class="job-field" id="new-job-title" name="job-title" placeholder="Job Title" value="titlee" required>
             <textarea class="job-field" id="new-job-description" name="job-description"
-                placeholder="Describe the job here (responsibilities, preffered skills)..." required></textarea>
-            <input type="text" class="job-field" id="new-job-address" name="job-address" placeholder="Job Address" required/>
+                placeholder="Describe the job here (responsibilities, preffered skills)..." required>platofrm app</textarea>
+            <input type="text" class="job-field" id="new-job-address" name="job-address" placeholder="Job Address" value="leonie" required>
             
             <div class="job-field">
                 Requirements (for applicants):
-                <input type="checkbox" id="o-level" name="requirements-list" value="o-level">
+                <input type="checkbox" id="o-level" name="requirements-list" value="o-level" checked>
                 <label for="o-level">O Levels</label>
                 <input type="checkbox" id="drivers-license" name="requirements-list" value="drivers-license">
                 <label for="drivers-license">Driver's License</label>
@@ -33,23 +33,23 @@
             <div class="job-field">
                 Job Pay:
                 <select id="new-job-pay-frequency" name="job-pay-frequency" required>
-                    <option selected disabled value="">Select</option>
-                    <option value="HOURLY">Hourly</option>
+                    <option  disabled value="">Select</option>
+                    <option selected value="HOURLY">Hourly</option>
                     <option value="WEEKLY">Weekly</option>
                     <option value="MONTHLY">Monthly</option>
                     <option value="YEARLY">Yearly</option>
                     <!-- TODO(issue/8) -->
                 </select>
-                <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
+                <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" value="5" required>
                 -
-                <input type="number" id="new-job-pay-max" name="job-pay-max" placeholder="max (sgd)" required>
+                <input type="number" id="new-job-pay-max" name="job-pay-max" placeholder="max (sgd)" value="10" required>
             </div>
 
             <div class="job-field">
                 Job Duration (optional):
                 <select id="new-job-duration" name="job-duration">
-                    <option selected value="">Select</option>
-                    <option value="ONE_WEEK">1 Week</option>
+                    <option  value="">Other</option>
+                    <option selected  value="ONE_WEEK">1 Week</option>
                     <option value="TWO_WEEKS">2 Weeks</option>
                     <option value="ONE_MONTH">1 Month</option>
                     <option value="SIX_MONTHS">6 Months</option>
@@ -60,7 +60,7 @@
 
             <div class="job-field">
                 Post Expiry:
-                <input type="date" id="new-post-expiry" name="post-expiry" required>
+                <input type="date" id="new-job-expiry" name="job-expiry" value="2020-08-01" required>
             </div>
         
         </div>
