@@ -1,8 +1,5 @@
 package com.google.job.data;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.firestore.FireStoreUtils;
 
@@ -10,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
-    private static final String COLLECTION = "Jobs";
+    private static final String JOB_COLLECTION = "Jobs";
     private final Firestore firestore;
 
     public JobsDatabase(Firestore firestore) {
@@ -26,9 +23,7 @@ public final class JobsDatabase {
      * @throws InterruptedException If error occurs when getting job id.
      */
     public String addJob(Job newJob) throws ExecutionException, InterruptedException {
-        ApiFuture<DocumentReference> addedDocRef = FireStoreUtils.store(COLLECTION, newJob);
-
-        String jobId = addedDocRef.get().getId();
+        String jobId = FireStoreUtils.store(JOB_COLLECTION, newJob);
         return jobId;
     }
 
@@ -40,7 +35,7 @@ public final class JobsDatabase {
      */
     public void editJob(String jobId, Job job) {
         // Overwrites the whole job post
-        firestore.collection(COLLECTION).document(jobId).set(job);
+        firestore.collection(JOB_COLLECTION).document(jobId).set(job);
     }
 
     /**
@@ -52,17 +47,7 @@ public final class JobsDatabase {
      * @throws InterruptedException If error occurs when getting job post.
      */
     public Job fetchJob(String jobId) throws ExecutionException, InterruptedException {
-        DocumentReference docRef = firestore.collection(COLLECTION).document(jobId);
-        DocumentSnapshot document = FireStoreUtils.load(docRef);
-
-        Job job = null;
-        if (document.exists()) {
-            // convert document to POJO
-            job = document.toObject(Job.class);
-        } else {
-            // TODO(issue/3): error handling
-        }
-
+        Job job = FireStoreUtils.load(JOB_COLLECTION, jobId, Job.class);
         return job;
     }
 }
