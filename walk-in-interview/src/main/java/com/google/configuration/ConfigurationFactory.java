@@ -1,5 +1,6 @@
 package com.google.configuration;
 
+/** Retrieves the project configuration details. */
 public final class ConfigurationFactory {
     private enum ProjectStatus {
         DEVELOPMENT,
