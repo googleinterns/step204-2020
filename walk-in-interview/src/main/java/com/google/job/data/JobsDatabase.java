@@ -1,11 +1,12 @@
 package com.google.job.data;
 
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.utils.FireStoreUtils;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
-/** Helps persist and retrieve job posts. */
+/** Helps persist and retrieve Future of job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private final Firestore firestore;
@@ -18,13 +19,11 @@ public final class JobsDatabase {
      * Adds a newly created job post.
      *
      * @param newJob Newly created job post. Assumes that it is non-nullable.
-     * @return Id for the job in the database.
-     * @throws ExecutionException If error occurs when getting job id.
-     * @throws InterruptedException If error occurs when getting job id.
+     * @return Future for the added job post.
      */
-    public String addJob(Job newJob) throws ExecutionException, InterruptedException {
-        String jobId = FireStoreUtils.store(JOB_COLLECTION, newJob);
-        return jobId;
+    public Future<DocumentReference> addJob(Job newJob) {
+        Future<DocumentReference> addedDocRef = firestore.collection(JOB_COLLECTION).add(newJob);
+        return addedDocRef;
     }
 
     /**
@@ -39,15 +38,15 @@ public final class JobsDatabase {
     }
 
     /**
-     * Fetches a specific job post.
+     * Fetches the snapshot future of a specific job post.
      *
      * @param jobId Id for the job post in the database.
      * @return Target job post.
-     * @throws ExecutionException If error occurs when getting job post.
-     * @throws InterruptedException If error occurs when getting job post.
      */
-    public Job fetchJob(String jobId) throws ExecutionException, InterruptedException {
-        Job job = FireStoreUtils.load(JOB_COLLECTION, jobId, Job.class);
-        return job;
+    public Future<DocumentSnapshot> fetchJob(String jobId) {
+        DocumentReference docRef = firestore.collection(JOB_COLLECTION).document(jobId);
+        // Asynchronously retrieves the document
+        Future<DocumentSnapshot> future = docRef.get();
+        return future;
     }
 }

@@ -97,14 +97,6 @@ public final class NewJobServlet extends HttpServlet {
     }
 
     private void storeJobPost(Job job) {
-        try {
-            this.jobsDatabase.addJob(job);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            // TODO: error handling
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            // TODO: error handling
-        }
+        this.jobsDatabase.addJob(job);
     }
 }
