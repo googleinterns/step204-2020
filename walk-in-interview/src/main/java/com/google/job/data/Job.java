@@ -8,7 +8,7 @@ public final class Job {
     private static final String DUMMY = "dummy";
 
     private String jobId;
-    // private long businessAccountId; // log in not involved so far
+    // private long businessAccountId; // account is not involved so far
     private JobStatus jobStatus;
     private String jobName;
     private JobLocation jobLocation;
