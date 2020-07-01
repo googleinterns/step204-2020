@@ -7,6 +7,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 
 import com.google.cloud.firestore.WriteResult;
+import com.google.configuration.TestFireStoreConfiguration;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -16,8 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 /** Util methods related to Cloud Firestore database. */
 public final class FireStoreUtils {
-
-    private static final String PROJECT_ID = "google.com:walk-in-interview";
     private static Firestore db;
 
     private FireStoreUtils() {}
@@ -27,7 +26,7 @@ public final class FireStoreUtils {
         GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
-                .setProjectId(PROJECT_ID)
+                .setProjectId(TestFireStoreConfiguration.PROJECT_ID)
                 .build();
         FirebaseApp.initializeApp(options);
 
