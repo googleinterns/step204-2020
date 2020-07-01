@@ -3,11 +3,10 @@ package com.google.job.data;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.firestore.FireStoreUtils;
 
 import java.util.concurrent.Future;
 
-/** Helps persist and retrieve job posts. */
+/** Helps persist and retrieve Future of job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private final Firestore firestore;
