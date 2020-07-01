@@ -3,6 +3,7 @@ package com.google.utils;
 import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 
 public final class ServletUtils {
     private ServletUtils() {}
@@ -43,7 +44,7 @@ public final class ServletUtils {
     }
 
     /**
-     * Gets the integer parameter from html form input.
+     * Gets the float parameter from html form input.
      * @param request Http request.
      * @param parameterName Input id in html element.
      * @param defaultValue Default integer.
@@ -54,6 +55,30 @@ public final class ServletUtils {
 
         try {
             float result = Float.parseFloat(resultStr);
+
+            return result;
+        } catch (NumberFormatException e) {
+            // TODO: error handling
+
+            // TODO: add logging to log the error
+
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Gets the LocalDate parameter from html form input.
+     * @param request Http request.
+     * @param parameterName Input id in html element.
+     * @param defaultValue Default integer.
+     * @return Parsed date or default value if exception occur
+     */
+    public static LocalDate getLocalDateParameter(HttpServletRequest request,
+                                                  String parameterName, LocalDate defaultValue) {
+        String resultStr = request.getParameter(parameterName);
+
+        try {
+            LocalDate result = LocalDate.parse(resultStr);
 
             return result;
         } catch (NumberFormatException e) {

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -23,11 +24,12 @@ public final class NewJobServlet extends HttpServlet {
     private static final String PARAM_NAME_MIN = "job-pay-min";
     private static final String PARAM_NAME_MAX = "job-pay-max";
     private static final String PARAM_NAME_REQUIREMENTS = "requirement-list";
-    private static final String PARAM_NAME_POST_DURATION = "post-duration";
-    private static final String PARAM_NAME_JOB_DURATION = "post-duration";
+    private static final String PARAM_NAME_POST_EXPIRY = "post-expiry";
+    private static final String PARAM_NAME_JOB_DURATION = "job-duration";
 
     private static final String DEFAULT_STRING_VALUE = "";
     private static final float DEFAULT_FLOAT_VALUE = 0;
+    private static final LocalDate DEFAULT_DATE_VALUE = null;
     private static final String DEFAULT_FREQUENCY = "HOURLY";
     private static final String DEFAULT_DURATION = "SIX_MONTHS";
 
@@ -48,7 +50,7 @@ public final class NewJobServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Gets job post from the form
-        Job job = getJobPost(request);
+        Job job = parseJobPost(request);
 
         // Stores job post into the database
         storeJobPost(job);
@@ -57,7 +59,7 @@ public final class NewJobServlet extends HttpServlet {
         response.sendRedirect(REDIRECT_LINK);
     }
 
-    private Job getJobPost(HttpServletRequest request) {
+    private Job parseJobPost(HttpServletRequest request) {
         // Gets jobs from the form
         // TODO: validate the parameter
         JobStatus jobStatus = JobStatus.ACTIVE;
@@ -81,8 +83,7 @@ public final class NewJobServlet extends HttpServlet {
         ImmutableList<String> requirements = ImmutableList.copyOf(
                 Arrays.asList(request.getParameterValues(PARAM_NAME_REQUIREMENTS)));
 
-        Duration postDuration = Duration.valueOf(
-                ServletUtils.getStringParameter(request, PARAM_NAME_POST_DURATION, DEFAULT_DURATION));
+        LocalDate postExpiry = ServletUtils.getLocalDateParameter(request, PARAM_NAME_POST_EXPIRY, DEFAULT_DATE_VALUE);
 
         String jobDurationString = ServletUtils.getStringParameter(
                 request, PARAM_NAME_JOB_DURATION, DEFAULT_STRING_VALUE);
@@ -90,7 +91,7 @@ public final class NewJobServlet extends HttpServlet {
         Optional<Duration> jobDuration = Optional.ofNullable(duration);
 
         Job job = new Job(jobStatus, jobName, jobLocation, jobDescription,
-                jobPayment, requirements, postDuration, jobDuration);
+                jobPayment, requirements, postExpiry, jobDuration);
 
         return job;
     }
