@@ -55,7 +55,7 @@ class JobsDatabaseTest {
     }
 
     @org.junit.jupiter.api.Test
-    void fetchJob() throws ExecutionException, InterruptedException {
+    void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         List<QueryDocumentSnapshot> documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
 
