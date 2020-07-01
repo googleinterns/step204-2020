@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 public final class JobsDatabaseTest {
 
-    private static final String JOB_COLLECTION = "Jobs";
+    private static final String TEST_JOB_COLLECTION = "Jobs_Test";
     private static final int BATCH_SIZE = 10;
 
     Firestore firestore;
