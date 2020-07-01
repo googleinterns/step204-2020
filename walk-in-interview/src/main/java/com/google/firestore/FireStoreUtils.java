@@ -1,9 +1,11 @@
 package com.google.firestore;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 
-import com.google.configuration.TestFireStoreConfiguration;
+import com.google.configuration.ConfigurationFactory;
+import com.google.configuration.DevelopmentFireStoreConfiguration;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -21,7 +23,7 @@ public final class FireStoreUtils {
         GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
-                .setProjectId(TestFireStoreConfiguration.PROJECT_ID)
+                .setProjectId(ConfigurationFactory.getFireStoreConfiguration().getProjectId())
                 .build();
         FirebaseApp.initializeApp(options);
 
@@ -40,5 +42,18 @@ public final class FireStoreUtils {
         }
 
         return firestore;
+    }
+
+    public static <T> T convertDocumentSnapshotToPOJO(DocumentSnapshot documentSnapshot, Class<T> classType) {
+        T item = null;
+
+        if (documentSnapshot.exists()) {
+            // Converts document to POJO
+            item = documentSnapshot.toObject(classType);
+        } else {
+            // TODO(issue/10): error handling
+        }
+
+        return item;
     }
 }
