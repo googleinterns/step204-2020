@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 public final class JobsDatabaseTest {
 
-    private static final String TEST_JOB_COLLECTION = "Jobs_Test";
+    private static final String FACTOR_JOB_COLLECTION = "Jobs_Test";
     private static final int BATCH_SIZE = 10;
 
     Firestore firestore;
@@ -53,14 +53,14 @@ public final class JobsDatabaseTest {
 
     @Test
     public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
-        deleteCollection(firestore.collection(JOB_COLLECTION), BATCH_SIZE);
+        deleteCollection(firestore.collection(FACTOR_JOB_COLLECTION), BATCH_SIZE);
 
         String expectedJobName = "Noogler";
         Job job = new Job(expectedJobName);
         jobsDatabase.addJob(job);
 
         // Asynchronously retrieves all documents.
-        ApiFuture<QuerySnapshot> future = firestore.collection(JOB_COLLECTION).get();
+        ApiFuture<QuerySnapshot> future = firestore.collection(FACTOR_JOB_COLLECTION).get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documentSnapshots = future.get().getDocuments();
         Job actualJob = documentSnapshots.get(0).toObject(Job.class);
@@ -72,22 +72,22 @@ public final class JobsDatabaseTest {
 
     @Test
     public void editJob_NormalInput_success() throws ExecutionException, InterruptedException {
-        deleteCollection(firestore.collection(JOB_COLLECTION), BATCH_SIZE);
+        deleteCollection(firestore.collection(FACTOR_JOB_COLLECTION), BATCH_SIZE);
 
-        firestore.collection(JOB_COLLECTION).add(new Job("Noogler"));
+        firestore.collection(FACTOR_JOB_COLLECTION).add(new Job("Noogler"));
 
         String expectedJobName = "Googler";
         Job job = new Job(expectedJobName);
 
         // Asynchronously retrieves all documents.
-        ApiFuture<QuerySnapshot> future = firestore.collection(JOB_COLLECTION).get();
+        ApiFuture<QuerySnapshot> future = firestore.collection(FACTOR_JOB_COLLECTION).get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documentSnapshots = future.get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
 
         jobsDatabase.editJob(jobId, job);
 
-        documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
+        documentSnapshots = firestore.collection(FACTOR_JOB_COLLECTION).get().get().getDocuments();
         Job actualJob = documentSnapshots.get(0).toObject(Job.class);
 
         String actualJobName = actualJob.getJobName();
@@ -97,12 +97,12 @@ public final class JobsDatabaseTest {
 
     @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
-        deleteCollection(firestore.collection(JOB_COLLECTION), BATCH_SIZE);
+        deleteCollection(firestore.collection(FACTOR_JOB_COLLECTION), BATCH_SIZE);
 
-        firestore.collection(JOB_COLLECTION).add(new Job("Noogler"));
+        firestore.collection(FACTOR_JOB_COLLECTION).add(new Job("Noogler"));
 
         // Asynchronously retrieves all documents.
-        ApiFuture<QuerySnapshot> future = firestore.collection(JOB_COLLECTION).get();
+        ApiFuture<QuerySnapshot> future = firestore.collection(FACTOR_JOB_COLLECTION).get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documentSnapshots = future.get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
