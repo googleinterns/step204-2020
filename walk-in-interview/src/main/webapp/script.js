@@ -20,7 +20,6 @@ function addJob() {
   event.preventDefault();
 
   const formElements = document.forms[NEW_JOB_FORM_ID];
-  console.log('forrm', formElements.elements);
 
   const name = formElements[NEW_JOB_TITLE_ID].value;
   const address = formElements[NEW_JOB_ADDRESS_ID].value;
@@ -60,7 +59,6 @@ function addJob() {
   };
 
   duration !== '' ? jobDetails.jobDuration = duration : '';
-  console.log('requestbody', jobDetails);
 
   fetch('/jobs', {
     method: 'POST',
