@@ -10,18 +10,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-class JobsDatabaseTest {
+public final class JobsDatabaseTest {
 
     private static final String JOB_COLLECTION = "Jobs";
 
-    Firestore firestore = FireStoreUtils.getFireStore();
-    JobsDatabase jobsDatabase = new JobsDatabase(firestore);
+    Firestore firestore;
+    JobsDatabase jobsDatabase;
 
-    JobsDatabaseTest() throws IOException {
+    public JobsDatabaseTest() throws IOException {
+        firestore = FireStoreUtils.getFireStore();
+        jobsDatabase = new JobsDatabase(firestore);
     }
 
     @Test
-    void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
         String expectedJobName = "Noogler";
         Job job = new Job(expectedJobName);
         jobsDatabase.addJob(job);
@@ -35,13 +37,12 @@ class JobsDatabaseTest {
     }
 
     @Test
-    void editJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void editJob_NormalInput_success() throws ExecutionException, InterruptedException {
         String expectedJobName = "Googler";
         Job job = new Job(expectedJobName);
 
         List<QueryDocumentSnapshot> documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
-        System.out.println(jobId);
 
         jobsDatabase.editJob(jobId, job);
 
@@ -54,7 +55,7 @@ class JobsDatabaseTest {
     }
 
     @Test
-    void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         List<QueryDocumentSnapshot> documentSnapshots = firestore.collection(JOB_COLLECTION).get().get().getDocuments();
         String jobId = documentSnapshots.get(0).getId();
 
