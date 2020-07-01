@@ -26,11 +26,11 @@ public final class JobsDatabase {
      * Adds a newly created job post.
      *
      * @param newJob Newly created job post. Assumes that it is non-nullable.
-     * @return Future for the added job post task.
+     * @return Future for the added job post task, convenient for testing.
      */
-    public void addJob(Job newJob) {
-        // Future<DocumentReference> addedDocRef = firestore.collection(JOB_COLLECTION).add(newJob);
-        firestore.collection(JOB_COLLECTION).add(newJob);
+    public Future<DocumentReference> addJob(Job newJob) {
+        Future<DocumentReference> addedDocRef = firestore.collection(JOB_COLLECTION).add(newJob);
+        return addedDocRef;
     }
 
     /**

@@ -34,6 +34,10 @@ public final class Job {
         this.jobDuration = jobDuration;
     }
 
+    public Job() {
+
+    }
+
     public Job(JobStatus jobStatus, String jobName,
                 JobLocation jobLocation, String jobDescription,
                 JobPayment jobPayment, Collection<String> requirements,
@@ -48,5 +52,41 @@ public final class Job {
         this.requirements = requirements;
         this.postExpiry = postExpiry;
         this.jobDuration = jobDuration;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public JobStatus getJobStatus() {
+        return jobStatus;
+    }
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public JobLocation getJobLocation() {
+        return jobLocation;
+    }
+
+    public String getJobDescription() {
+        return jobDescription;
+    }
+
+    public JobPayment getJobPayment() {
+        return jobPayment;
+    }
+
+    public Collection<String> getRequirements() {
+        return requirements;
+    }
+
+    public LocalDate getPostExpiry() {
+        return postExpiry;
+    }
+
+    public Optional<Duration> getJobDuration() {
+        return jobDuration;
     }
 }
