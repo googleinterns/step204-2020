@@ -95,7 +95,7 @@ public final class JobsDatabaseTest {
     }
 
     @After
-    public void clearDatabase() {
+    public void clearCollection() {
         deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
     }
 
