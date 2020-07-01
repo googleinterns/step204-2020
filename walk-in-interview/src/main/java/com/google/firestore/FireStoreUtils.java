@@ -108,7 +108,7 @@ public final class FireStoreUtils {
             // Converts document to POJO
             item = document.toObject(classType);
         } else {
-            // TODO(issue/3): error handling
+            // TODO(issue/10): error handling
         }
 
         return item;
