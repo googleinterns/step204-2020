@@ -7,6 +7,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 
 import com.google.cloud.firestore.WriteResult;
+import com.google.configuration.TestFireStoreConfiguration;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -16,9 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 /** Util methods related to Cloud Firestore database. */
 public final class FireStoreUtils {
-
-    private static final String PROJECT_ID = "google.com:walk-in-interview";
-    private static Firestore db;
+    private static Firestore firestore;
 
     private FireStoreUtils() {}
 
@@ -27,11 +26,11 @@ public final class FireStoreUtils {
         GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
-                .setProjectId(PROJECT_ID)
+                .setProjectId(TestFireStoreConfiguration.PROJECT_ID)
                 .build();
         FirebaseApp.initializeApp(options);
 
-        db = FirestoreClient.getFirestore();
+        firestore = FirestoreClient.getFirestore();
     }
 
     /**
@@ -41,64 +40,77 @@ public final class FireStoreUtils {
      * @throws IOException If error occurs when creating database.
      */
     public static Firestore getFireStore() throws IOException {
-        if (db == null) {
+        if (firestore == null) {
             init();
         }
 
-        return db;
+        return firestore;
     }
 
     /**
-     * Stores item into the database
+     * Stores item into the database in the form of documents.
      *
      * @param collection Name of the collection where the item will be stored.
      * @param item Target item to be stored.
-     * @return A reference towards the item (in the form of "document").
+     * @return Auto-generated id for the stored item.
      * @throws ExecutionException If error occurs when blocking the operation.
      * @throws InterruptedException If error occurs when blocking the operation.
      */
-    public static ApiFuture<DocumentReference> store(String collection, Object item)
+    public static String store(String collection, Object item)
             throws ExecutionException, InterruptedException {
-        ApiFuture<DocumentReference> addedDocRef = db.collection(collection).add(item);
+        ApiFuture<DocumentReference> addedDocRef = firestore.collection(collection).add(item);
 
-        // Blocks operation
-        addedDocRef.get();
+        // Blocks operation and gets the auto-generated id for the item.
+        String documentId = addedDocRef.get().getId();
 
-        return addedDocRef;
-        // id for the document: addedDocRef.getId()
+        return documentId;
     }
 
     /**
-     * Updates the field in a specific document.
+     * Updates the field in a specific item.
      *
-     * @param docRef A reference towards the target document.
+     * @param collection Name of the collection where the target item is stored.
+     * @param documentId Id of the target item.
      * @param field Field to be updated.
      * @param value Updated value.
      * @throws ExecutionException If error occurs when blocking the operation.
      * @throws InterruptedException If error occurs when blocking the operation.
      */
-    public static void update(DocumentReference docRef, String field, Object value)
+    public static void update(String collection, String documentId, String field, Object value)
             throws ExecutionException, InterruptedException {
-        ApiFuture<WriteResult> future = docRef.update(field, /* value= */true);
+        DocumentReference docRef = firestore.collection(collection).document(documentId);
+        ApiFuture<WriteResult> future = docRef.update(field, value);
 
         // Blocks operation
         future.get();
     }
 
     /**
-     * Loads the target document in database.
+     * Loads the target item from the database.
      *
-     * @param docRef Document reference towards the target document.
-     * @return Document snap shot.
-     * @throws ExecutionException If error occurs when getting the document snap shot.
+     * @param collection Name of the collection where the target item is stored.
+     * @param documentId Id of the target item.
+     * @param classType The class type of the target item.
+     * @param <T> Generic type.
+     * @return The target item in the form of original type.
+     * @throws ExecutionException ExecutionException If error occurs when getting the document snap shot.
      * @throws InterruptedException If error occurs when getting the document snap shot.
      */
-    public static DocumentSnapshot load(DocumentReference docRef)
+    public static <T> T load(String collection, String documentId, Class<T> classType)
             throws ExecutionException, InterruptedException {
+        DocumentReference docRef = firestore.collection(collection).document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
-
         DocumentSnapshot document = future.get();
 
-        return document;
+        T item = null;
+
+        if (document.exists()) {
+            // Converts document to POJO
+            item = document.toObject(classType);
+        } else {
+            // TODO(issue/10): error handling
+        }
+
+        return item;
     }
 }
