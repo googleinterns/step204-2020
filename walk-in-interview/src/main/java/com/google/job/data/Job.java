@@ -4,6 +4,10 @@ public final class Job {
     // TODO(issue/9);
     private String jobName;
 
+    public Job() {
+
+    }
+
     public Job(String jobName) {
         this.jobName = jobName;
     }
