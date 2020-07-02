@@ -1,9 +1,14 @@
 
+/**
+ * Fields related to job pay.
+ * @enum {stirng}
+ */
 const NEW_JOB_PAY = {
   FREQUENCY_ID: 'new-job-pay-frequency',
   MIN_ID: 'new-job-pay-min',
   MAX_ID: 'new-job-pay-max',
 };
+
 const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
 const NEW_JOB_DURATION_ID = 'new-job-duration';
 
@@ -20,9 +25,9 @@ const JOB_DURATION = {
 };
 
 /**
-   * Options for frequency of job pay.
-   * @enum {stirng}
-   */
+ * Options for frequency of job pay.
+ * @enum {stirng}
+ */
 const JOB_PAY_FREQUENCY = {
   HOURLY: 'Hourly',
   WEEKLY: 'Weekly',
@@ -63,10 +68,10 @@ function addJobDurationOptions() {
 }
 
 /**
-   * Add the keys and values from the options map to the select element.
-   * @param {Element} select The select element.
-   * @param {Map} options The map of options to be added.
-   */
+ * Add the keys and values from the options map to the select element.
+ * @param {Element} select The select element.
+ * @param {Map} options The map of options to be added.
+ */
 function addSelectOptions(select, options) {
   for (key in options) {
     if ({}.hasOwnProperty.call(options, key)) {
