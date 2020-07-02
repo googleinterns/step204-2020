@@ -1,4 +1,12 @@
 
+const NEW_JOB_PAY = {
+  FREQUENCY_ID: 'new-job-pay-frequency',
+  MIN_ID: 'new-job-pay-min',
+  MAX_ID: 'new-job-pay-max',
+};
+const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
+const NEW_JOB_DURATION_ID = 'new-job-duration';
+
 /**
  * Options for job duration.
  * @enum {stirng}
@@ -37,7 +45,7 @@ function addRequirementsList() {
 
 /** Dynamically add the options for job pay frequency. */
 function addJobPayFrequencyOptions() {
-  const jobPaySelect = document.getElementById('new-job-pay-frequency');
+  const jobPaySelect = document.getElementById(NEW_JOB_PAY.FREQUENCY_ID);
   jobPaySelect.options.length = 0;
 
   (jobPaySelect.options[0] = new Option('Select', ''))
@@ -47,7 +55,7 @@ function addJobPayFrequencyOptions() {
 
 /** Dynamically add the options for job duration. */
 function addJobDurationOptions() {
-  const jobDurationSelect = document.getElementById('new-job-duration');
+  const jobDurationSelect = document.getElementById(NEW_JOB_DURATION_ID);
   jobDurationSelect.options.length = 0;
 
   jobDurationSelect.options[0] = new Option('Other', '');
@@ -75,7 +83,7 @@ function addJobExpiryLimits() {
   date.setFullYear(date.getFullYear() + 1);
   const max = date.toISOString().substr(0, 10);
 
-  const datePicker = document.getElementById('new-post-expiry');
+  const datePicker = document.getElementById(NEW_JOB_EXPIRY_ID);
   datePicker.setAttribute('min', min);
   datePicker.setAttribute('max', max);
 }
