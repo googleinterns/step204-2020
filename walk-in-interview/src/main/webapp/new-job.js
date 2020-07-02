@@ -40,7 +40,7 @@ function addNewJobOptions() {
 
 /** Add the list of requirements that are stored in the database. */
 function addRequirementsList() {
-  // TODO(issue/17)
+  // TODO(issue/17): get from the database and render dynamically
 }
 
 /** Dynamically add the options for job pay frequency. */
