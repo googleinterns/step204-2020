@@ -27,7 +27,7 @@
                 <label for="o-level">O Levels</label>
                 <input type="checkbox" id="drivers-license" name="requirements-list" value="drivers-license">
                 <label for="drivers-license">Driver's License</label>
-                <!-- TODO(issue/8) -->
+                <!-- TODO(issue/17): render based on list in database -->
             </div>
 
             <div class="job-field">
@@ -38,7 +38,7 @@
                     <option value="WEEKLY">Weekly</option>
                     <option value="MONTHLY">Monthly</option>
                     <option value="YEARLY">Yearly</option>
-                    <!-- TODO(issue/8) -->
+                    <!-- TODO(issue/8): render dynamically -->
                 </select>
                 <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
                 -
@@ -54,7 +54,7 @@
                     <option value="ONE_MONTH">1 Month</option>
                     <option value="SIX_MONTHS">6 Months</option>
                     <option value="ONE_YEAR">1 Year</option>
-                    <!-- TODO(issue/8) -->
+                    <!-- TODO(issue/8): render dynamically -->
                 </select>
             </div>
 
@@ -62,7 +62,7 @@
                 Post Expiry:
                 <input type="date" id="new-job-expiry" name="job-expiry" 
                     min="2020-07-01" max="2021-06-30" required>
-                <!-- TODO(issue/11) -->
+                <!-- TODO(issue/11): render min and max dynamically -->
             </div>
         
         </div>
