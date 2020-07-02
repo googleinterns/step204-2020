@@ -35,7 +35,9 @@ function addJob() {
   const requirementsCheckboxes = formElements[REQUIREMENTS_LIST_ID];
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
-      checked? requirementsList.push(id) : '';
+    if (checked) {
+      requirementsList.push(id);
+    }
   });
 
   const expiry = formElements[NEW_JOB_EXPIRY_ID].value;
@@ -58,7 +60,9 @@ function addJob() {
     postExpiry: expiry,
   };
 
-  duration !== '' ? jobDetails.jobDuration = duration : '';
+  if (duration !== '') {
+    jobDetails.jobDuration = duration;
+  }
 
   fetch('/jobs', {
     method: 'POST',
