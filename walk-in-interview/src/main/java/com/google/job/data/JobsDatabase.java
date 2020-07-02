@@ -13,9 +13,10 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.concurrent.Future;
 
-/** Helps persist and retrieve Future of job posts. */
+/** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
+
     private final Firestore firestore;
 
     public JobsDatabase(Firestore firestore) {
@@ -38,6 +39,7 @@ public final class JobsDatabase {
      *
      * @param jobId Id for the target job post in the database.
      * @param job Updated job post.
+     * @return A future of the detailed information of the update.
      */
     public Future<WriteResult> editJob(String jobId, Job job) {
         // Overwrites the whole job post

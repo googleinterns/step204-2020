@@ -8,6 +8,11 @@ public final class DevelopmentFireStoreConfiguration implements FireStoreConfigu
 
     private DevelopmentFireStoreConfiguration() {}
 
+    /**
+     * Gets the cloud firestore configuration in test phase.
+     *
+     * @return Configuration details of the cloud firestore database.
+     */
     public static DevelopmentFireStoreConfiguration getFireStoreConfiguration() {
         if (developmentFireStoreConfiguration == null) {
             developmentFireStoreConfiguration = new DevelopmentFireStoreConfiguration();

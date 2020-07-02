@@ -11,7 +11,11 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static org.junit.Assert.assertEquals;
+
+/** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
+    // TODO(issue/15): Add failure test case
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
@@ -40,9 +44,9 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         Job actualJob = document.toObject(Job.class);
-        String actualJobName = actualJob.getJobName();
+        String actualJobName = actualJob.getJobTitle();
 
-        Assert.assertEquals(expectedJobName, actualJobName);
+        assertEquals(expectedJobName, actualJobName);
 
         firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
@@ -66,13 +70,14 @@ public final class JobsDatabaseTest {
         // future.get() blocks on response.
         edittedDocRef.get();
 
-        ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = firestore.collection(TEST_JOB_COLLECTION).document(jobId).get();
+        ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = firestore.collection(TEST_JOB_COLLECTION).
+                document(jobId).get();
         DocumentSnapshot documentSnapshot = documentSnapshotApiFuture.get();
         Job actualJob = documentSnapshot.toObject(Job.class);
 
-        String actualJobName = actualJob.getJobName();
+        String actualJobName = actualJob.getJobTitle();
 
-        Assert.assertEquals(expectedJobName, actualJobName);
+        assertEquals(expectedJobName, actualJobName);
 
         firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
@@ -92,10 +97,10 @@ public final class JobsDatabaseTest {
 
         Job job = jobsDatabase.fetchJob(jobId).get();
 
-        String actualJobName = job.getJobName();
+        String actualJobName = job.getJobTitle();
         String expectedJobName = "Programmer";
 
-        Assert.assertEquals(expectedJobName, actualJobName);
+        assertEquals(expectedJobName, actualJobName);
 
         firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }

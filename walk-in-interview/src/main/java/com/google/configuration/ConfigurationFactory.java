@@ -11,13 +11,18 @@ public final class ConfigurationFactory {
     private static final ProjectStatus projectStatus = ProjectStatus.DEVELOPMENT;
 
     public static final FireStoreConfiguration getFireStoreConfiguration() {
+        FireStoreConfiguration fireStoreConfiguration = null;
         switch (projectStatus) {
-        case PRODUCTION:
-            return ProductionFireStoreConfiguration.getFireStoreConfiguration();
-        case TEST:
-            return TestFireStoreConfiguration.getFireStoreConfiguration();
-        default:
-            return DevelopmentFireStoreConfiguration.getFireStoreConfiguration();
+            case PRODUCTION:
+                fireStoreConfiguration = ProductionFireStoreConfiguration.getFireStoreConfiguration();
+                break;
+            case TEST:
+                fireStoreConfiguration = TestFireStoreConfiguration.getFireStoreConfiguration();
+                break;
+            case DEVELOPMENT:
+                fireStoreConfiguration = DevelopmentFireStoreConfiguration.getFireStoreConfiguration();
+                break;
         }
+        return fireStoreConfiguration;
     }
 }

@@ -1,18 +1,15 @@
 package com.google.job.data;
 
+/** Class for a job post. */
 public final class Job {
     // TODO(issue/9);
-    private String jobName;
+    private final String jobTitle;
 
-    public Job() {
-
+    public Job(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
-    public Job(String jobName) {
-        this.jobName = jobName;
-    }
-
-    public String getJobName() {
-        return jobName;
+    public String getJobTitle() {
+        return jobTitle;
     }
 }
