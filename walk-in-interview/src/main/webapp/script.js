@@ -11,6 +11,17 @@ const JOB_DURATION = {
   ONE_YEAR: '1 Year',
 };
 
+/**
+ * Options for frequency of job pay.
+ * @enum {stirng}
+ */
+const JOB_PAY_FREQUENCY = {
+  HOURLY: 'Hourly',
+  WEEKLY: 'Weekly',
+  MONTHLY: 'Monthly',
+  YEARLY: 'Yearly',
+};
+
 /** Dynamically add the limits for choosing the new job post expiry. */
 function addJobExpiryLimits() {
   const date = new Date();
@@ -29,10 +40,29 @@ function addJobDurationOptions() {
   jobDurationSelect.options.length = 0;
 
   jobDurationSelect.options[0] = new Option('Other', '');
-  for (key in JOB_DURATION) {
-    if ({}.hasOwnProperty.call(JOB_DURATION, key)) {
-      jobDurationSelect.options[jobDurationSelect.options.length] =
-      new Option(JOB_DURATION[key], key);
+  addSelectOptions(jobDurationSelect, JOB_DURATION);
+}
+
+/** Dynamically add the options for job pay frequency. */
+function addJobPayFrequencyOptions() {
+  const jobPaySelect = document.getElementById('new-job-pay-frequency');
+  jobPaySelect.options.length = 0;
+
+  (jobPaySelect.options[0] = new Option('Select', ''))
+      .setAttribute('disabled', true);
+  addSelectOptions(jobPaySelect, JOB_PAY_FREQUENCY);
+}
+
+/**
+ * Add the keys and values from the options map to the select element.
+ * @param {Element} select The select element.
+ * @param {Map} options The map of options to be added.
+ */
+function addSelectOptions(select, options) {
+  for (key in options) {
+    if ({}.hasOwnProperty.call(options, key)) {
+      select.options[select.options.length] =
+      new Option(options[key], key);
     }
   }
 }

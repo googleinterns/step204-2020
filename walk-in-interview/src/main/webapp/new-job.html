@@ -7,7 +7,7 @@
     <script src="script.js"></script>
 </head>
 
-<body onload="addJobExpiryLimits(); addJobDurationOptions()">
+<body onload="addJobExpiryLimits(); addJobDurationOptions(); addJobPayFrequencyOptions()">
 
     <form>
         <div class="header-container">
@@ -32,23 +32,15 @@
 
             <div class="job-field">
                 Job Pay:
-                <select id="new-job-pay-frequency" name="job-pay-frequency" required>
-                    <option selected disabled value="">Select</option>
-                    <option value="HOURLY">Hourly</option>
-                    <option value="WEEKLY">Weekly</option>
-                    <option value="MONTHLY">Monthly</option>
-                    <option value="YEARLY">Yearly</option>
-                    <!-- TODO(issue/8) -->
-                </select>
+                <select id="new-job-pay-frequency" name="job-pay-frequency" required></select>
                 <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
                 -
                 <input type="number" id="new-job-pay-max" name="job-pay-max" placeholder="max (sgd)" required>
             </div>
 
             <div class="job-field">
-                Job Duration (optional):
-                <select id="new-job-duration" name="job-duration">
-                </select>
+                Job Duration:
+                <select id="new-job-duration" name="job-duration"></select>
             </div>
 
             <div class="job-field">
