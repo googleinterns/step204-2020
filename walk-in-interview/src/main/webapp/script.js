@@ -20,12 +20,17 @@ const ORDER_BY = {
 const SORT_BY_SELECT_ID = 'sort-by-select';
 const ORDER_BY_SELECT_ID = 'order-by-select';
 
+/** Called when homepage is loaded. */
+function loadHomepage() {
+  addJobSortOptions();
+  addJobOrderOptions();
+}
+
 /** Dynamically add the options for sorting the jobs. */
 function addJobSortOptions() {
   const jobSortSelect = document.getElementById(SORT_BY_SELECT_ID);
   jobSortSelect.options.length = 0;
 
-  // jobSortSelect.options[0] = new Option('Other', '');
   addSelectOptions(jobSortSelect, SORT_BY);
 }
 
@@ -34,7 +39,6 @@ function addJobOrderOptions() {
   const jobOrderSelect = document.getElementById(ORDER_BY_SELECT_ID);
   jobOrderSelect.options.length = 0;
 
-  // jobOrderSelect.options[0] = new Option('Other', '');
   addSelectOptions(jobOrderSelect, ORDER_BY);
 }
 
