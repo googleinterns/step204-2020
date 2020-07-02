@@ -15,30 +15,32 @@
   </div>
   <div class="content-container">
     <div id="homepage-map">map here</div>
-    <form class="filters-container">
-      <div>
-        Sort by:
-        <select id="sort-by-select" name="sort-by-select">
-          <option selected value="dist-asc">Distance (low to high)</option>
-          <option value="dist-desc">Distance (high to low)</option>
-          <option value="sal-asc">Salary (low to high)</option>
-          <option value="sal-desc">Salary (high to low)</option>
-          <!-- TODO(issue/8): render dynamically -->
-        </select>
-      </div>
-      <div>
-        Filter by:
-        Distance:
-        <input type="number" id="dist-min" name="dist-min" placeholder="min (km)">
-        -
-        <input type="number" id="dist-max" name="dist-max" placeholder="max (km)">
-        Salary:
-        <input type="number" id="sal-min" name="sal-min" placeholder="min (sgd)">
-        -
-        <input type="number" id="sal-max" name="sal-max" placeholder="max (sgd)">
-      </div>
+    
+    <form id="job-sorting">
+      Sort by:
+      <select id="sort-by-select" name="sort-by-select">
+        <option selected value="dist-asc">Distance (low to high)</option>
+        <option value="dist-desc">Distance (high to low)</option>
+        <option value="sal-asc">Salary (low to high)</option>
+        <option value="sal-desc">Salary (high to low)</option>
+        <!-- TODO(issue/8): render dynamically -->
+      </select>
       <input type="submit" value="Apply">
     </form>
+
+    <form id="job-filters">
+      Filter by:
+      Distance:
+      <input type="number" id="dist-min" name="dist-min" placeholder="min (km)">
+      -
+      <input type="number" id="dist-max" name="dist-max" placeholder="max (km)">
+      Salary:
+      <input type="number" id="sal-min" name="sal-min" placeholder="min (sgd)">
+      -
+      <input type="number" id="sal-max" name="sal-max" placeholder="max (sgd)">
+      <input type="submit" value="Apply">
+    </form>
+
     <div class="job-listings-container">
       <div>Jobs:</div>
       <ul id="job-listings">
