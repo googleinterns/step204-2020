@@ -7,7 +7,7 @@
   <script src="script.js"></script>
 </head>
 
-<body>
+<body onload="addJobSortOptions(); addJobOrderOptions()">
   <div class="header-container">
     <button onclick="location.href='/walk-in-interview/src/main/webapp/new-job.html'">New Post</button>
     <div>Find Walk-in Interviews</div>
@@ -15,16 +15,11 @@
   </div>
   <div class="content-container">
     <div id="homepage-map">map here</div>
-    
+
     <form id="job-sorting">
       Sort by:
-      <select id="sort-by-select" name="sort-by-select">
-        <option selected value="dist-asc">Distance (low to high)</option>
-        <option value="dist-desc">Distance (high to low)</option>
-        <option value="sal-asc">Salary (low to high)</option>
-        <option value="sal-desc">Salary (high to low)</option>
-        <!-- TODO(issue/8): render dynamically -->
-      </select>
+      <select id="sort-by-select" name="sort-by-select"></select>
+      <select id="order-by-select" name="order-by-select"></select>
       <input type="submit" value="Apply">
     </form>
 
