@@ -22,6 +22,7 @@ public final class ServletUtils {
 
     /**
      * Gets the integer parameter from html form input.
+     *
      * @param request Http request.
      * @param parameterName Input id in html element.
      * @param defaultValue Default integer.
@@ -45,6 +46,7 @@ public final class ServletUtils {
 
     /**
      * Gets the float parameter from html form input.
+     *
      * @param request Http request.
      * @param parameterName Input id in html element.
      * @param defaultValue Default integer.
@@ -92,6 +94,7 @@ public final class ServletUtils {
 
     /**
      * Converts the target item into json format.
+     *
      * @param item Target item.
      * @return Target item in json format.
      */
@@ -99,5 +102,19 @@ public final class ServletUtils {
         Gson gson = new Gson();
         String json = gson.toJson(item);
         return json;
+    }
+
+    /**
+     * Converts the json string into the target class type.
+     *
+     * @param jsonStr Target json string.
+     * @param classType Target class type.
+     * @param <T> Generic format.
+     * @return Object in the target class type.
+     */
+    public static <T> T parseFromJsonUsingGson(String jsonStr, Class<T> classType) {
+        Gson gson = new Gson();
+        T object = gson.fromJson(jsonStr, classType);
+        return object;
     }
 }

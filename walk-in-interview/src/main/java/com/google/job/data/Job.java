@@ -15,13 +15,13 @@ public final class Job {
     private String jobDescription;
     private JobPayment jobPayment;
     private Collection<String> requirements;
-    private LocalDate postExpiry;
+    private LocalDate jobExpiry;
     private Optional<Duration> jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobName,
-               JobLocation jobLocation, String jobDescription,
-               JobPayment jobPayment, Collection<String> requirements,
-                LocalDate postExpiry, Optional<Duration> jobDuration) {
+                JobLocation jobLocation, String jobDescription,
+                JobPayment jobPayment, Collection<String> requirements,
+                LocalDate jobExpiry, Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
@@ -30,7 +30,7 @@ public final class Job {
         this.jobDescription = jobDescription;
         this.jobPayment = jobPayment;
         this.requirements = requirements;
-        this.postExpiry = postExpiry;
+        this.jobExpiry = jobExpiry;
         this.jobDuration = jobDuration;
     }
 
@@ -39,9 +39,9 @@ public final class Job {
     }
 
     public Job(JobStatus jobStatus, String jobName,
-                JobLocation jobLocation, String jobDescription,
-                JobPayment jobPayment, Collection<String> requirements,
-                LocalDate postExpiry, Optional<Duration> jobDuration) {
+               JobLocation jobLocation, String jobDescription,
+               JobPayment jobPayment, Collection<String> requirements,
+               LocalDate jobExpiry, Optional<Duration> jobDuration) {
         this.jobId = DUMMY;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
@@ -50,7 +50,7 @@ public final class Job {
         this.jobDescription = jobDescription;
         this.jobPayment = jobPayment;
         this.requirements = requirements;
-        this.postExpiry = postExpiry;
+        this.jobExpiry = jobExpiry;
         this.jobDuration = jobDuration;
     }
 
@@ -82,8 +82,8 @@ public final class Job {
         return requirements;
     }
 
-    public LocalDate getPostExpiry() {
-        return postExpiry;
+    public LocalDate getJobExpiry() {
+        return jobExpiry;
     }
 
     public Optional<Duration> getJobDuration() {

@@ -73,7 +73,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         Assert.assertEquals(expectedRequirements, actualRequirements);
 
-        LocalDate actualPostExpiry = actualJob.getPostExpiry();
+        LocalDate actualPostExpiry = actualJob.getJobExpiry();
         Assert.assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
@@ -138,7 +138,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         Assert.assertEquals(expectedRequirements, actualRequirements);
 
-        LocalDate actualPostExpiry = actualJob.getPostExpiry();
+        LocalDate actualPostExpiry = actualJob.getJobExpiry();
         Assert.assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
@@ -192,7 +192,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         Assert.assertEquals(expectedRequirements, actualRequirements);
 
-        LocalDate actualPostExpiry = actualJob.getPostExpiry();
+        LocalDate actualPostExpiry = actualJob.getJobExpiry();
         Assert.assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
