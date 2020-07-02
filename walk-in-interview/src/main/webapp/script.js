@@ -22,25 +22,17 @@ const JOB_PAY_FREQUENCY = {
   YEARLY: 'Yearly',
 };
 
-/** Dynamically add the limits for choosing the new job post expiry. */
-function addJobExpiryLimits() {
-  const date = new Date();
-  const min = date.toISOString().substr(0, 10);
-  date.setFullYear(date.getFullYear() + 1);
-  const max = date.toISOString().substr(0, 10);
-
-  const datePicker = document.getElementById('new-post-expiry');
-  datePicker.setAttribute('min', min);
-  datePicker.setAttribute('max', max);
+/** Function to be called on loading of the "create new job" page. */
+function addNewJobOptions() {
+  addRequirementsList();
+  addJobPayFrequencyOptions();
+  addJobDurationOptions();
+  addJobExpiryLimits();
 }
 
-/** Dynamically add the options for job duration. */
-function addJobDurationOptions() {
-  const jobDurationSelect = document.getElementById('new-job-duration');
-  jobDurationSelect.options.length = 0;
-
-  jobDurationSelect.options[0] = new Option('Other', '');
-  addSelectOptions(jobDurationSelect, JOB_DURATION);
+/** Add the list of requirements that are stored in the database. */
+function addRequirementsList() {
+  // TODO(issue/17)
 }
 
 /** Dynamically add the options for job pay frequency. */
@@ -51,6 +43,15 @@ function addJobPayFrequencyOptions() {
   (jobPaySelect.options[0] = new Option('Select', ''))
       .setAttribute('disabled', true);
   addSelectOptions(jobPaySelect, JOB_PAY_FREQUENCY);
+}
+
+/** Dynamically add the options for job duration. */
+function addJobDurationOptions() {
+  const jobDurationSelect = document.getElementById('new-job-duration');
+  jobDurationSelect.options.length = 0;
+
+  jobDurationSelect.options[0] = new Option('Other', '');
+  addSelectOptions(jobDurationSelect, JOB_DURATION);
 }
 
 /**
@@ -65,4 +66,16 @@ function addSelectOptions(select, options) {
       new Option(options[key], key);
     }
   }
+}
+
+/** Dynamically add the limits for choosing the new job post expiry. */
+function addJobExpiryLimits() {
+  const date = new Date();
+  const min = date.toISOString().substr(0, 10);
+  date.setFullYear(date.getFullYear() + 1);
+  const max = date.toISOString().substr(0, 10);
+
+  const datePicker = document.getElementById('new-post-expiry');
+  datePicker.setAttribute('min', min);
+  datePicker.setAttribute('max', max);
 }
