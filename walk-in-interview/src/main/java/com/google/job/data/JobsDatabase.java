@@ -10,7 +10,6 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
@@ -38,11 +37,9 @@ public final class JobsDatabase {
      */
     public Future<WriteResult> setJob(String jobId, Job job) throws IllegalArgumentException {
         // Overwrites the whole job post
-        DocumentReference docRef = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
-        if (!isDocumentExist(docRef)) {
-            throw new IllegalArgumentException("Job Id does not exist");
-        }
-        return docRef.set(job);
+        return FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION).document(jobId)
+                .set(job);
     }
 
     /**
@@ -56,10 +53,6 @@ public final class JobsDatabase {
         DocumentReference docRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document(jobId);
 
-        if (!isDocumentExist(docRef)) {
-            throw new IllegalArgumentException("Job Id does not exist");
-        }
-
         // Asynchronously retrieves the document
         ApiFuture<DocumentSnapshot> snapshotFuture = docRef.get();
 
@@ -71,12 +64,5 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
-    }
-
-    private boolean isDocumentExist(DocumentReference docIdRef) {
-        AtomicBoolean isExist = new AtomicBoolean(/* initialValue= */false);
-        docIdRef.addSnapshotListener((documentSnapshot, e) -> isExist.set(documentSnapshot.exists()));
-
-        return isExist.get();
     }
 }
