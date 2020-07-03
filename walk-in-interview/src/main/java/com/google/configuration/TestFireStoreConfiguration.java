@@ -1,10 +1,14 @@
 package com.google.configuration;
 
+import jdk.internal.jline.internal.Nullable;
+
 /** Class that specify the configuration details for firestore during testing phase. */
 public final class TestFireStoreConfiguration implements FireStoreConfiguration {
-    private static TestFireStoreConfiguration testFireStoreConfiguration = null;
-
     private static final String PROJECT_ID = "";
+    // TODO(issue/16): create a cloud firestore project for test phase.
+
+    @Nullable
+    private static TestFireStoreConfiguration testFireStoreConfiguration = null;
 
     private TestFireStoreConfiguration() {}
 
@@ -12,18 +16,19 @@ public final class TestFireStoreConfiguration implements FireStoreConfiguration 
      * Gets the cloud firestore configuration in test phase.
      *
      * @return Configuration details of the cloud firestore database.
-     * @throws UnsupportedOperationException If the project Id is not specified yet.
      */
-    public static TestFireStoreConfiguration getFireStoreConfiguration() throws UnsupportedOperationException{
+    public static TestFireStoreConfiguration getFireStoreConfiguration() {
         if (testFireStoreConfiguration == null) {
-            // The project id is not specified yet
-            throw new UnsupportedOperationException("Not implemented");
-            // testFireStoreConfiguration = new TestFireStoreConfiguration();
+            testFireStoreConfiguration = new TestFireStoreConfiguration();
         }
         return testFireStoreConfiguration;
     }
 
-    public String getProjectId() {
+    @Override
+    public String getProjectId() throws UnsupportedOperationException {
+        if (getProjectId().isEmpty()) {
+            throw new UnsupportedOperationException("Not implemented");
+        }
         return PROJECT_ID;
     }
 }

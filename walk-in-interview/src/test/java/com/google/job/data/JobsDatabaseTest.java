@@ -3,38 +3,43 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firestore.FireStoreUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
     // TODO(issue/15): Add failure test case
+    // TODO(issue/16): Move the clear database method as @After
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
-    private static final int BATCH_SIZE = 10;
 
-    Firestore firestore;
     JobsDatabase jobsDatabase;
+    Firestore firestore;
 
     @Before
     public void setUp() throws IOException {
+        jobsDatabase = new JobsDatabase();
         firestore = FireStoreUtils.getFireStore();
-        jobsDatabase = new JobsDatabase(firestore);
     }
 
     @Test
     public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
+        // Arrange.
         String expectedJobName = "Software Engineer";
         Job job = new Job(expectedJobName);
+
+        // Act.
         Future<DocumentReference> addedJobFuture = jobsDatabase.addJob(job);
 
+        // Assert.
         DocumentReference documentReference = addedJobFuture.get();
         // Asynchronously retrieve the document.
         ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -52,9 +57,11 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void editJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
+        // Arrange.
+        Job oldJob = new Job("Noogler");
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION)
-                .add(new Job("Noogler"));
+                .add(oldJob);
 
         DocumentReference documentReference = addedJobFuture.get();
         // Asynchronously retrieve the document.
@@ -66,9 +73,13 @@ public final class JobsDatabaseTest {
 
         String expectedJobName = "Googler";
         Job job = new Job(expectedJobName);
-        Future<WriteResult> edittedDocRef = jobsDatabase.editJob(jobId, job);
+
+        // Act.
+        Future<WriteResult> editedDocRef = jobsDatabase.setJob(jobId, job);
+
+        // Assert.
         // future.get() blocks on response.
-        edittedDocRef.get();
+        editedDocRef.get();
 
         ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = firestore.collection(TEST_JOB_COLLECTION).
                 document(jobId).get();
@@ -84,8 +95,10 @@ public final class JobsDatabaseTest {
 
     @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
-        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION)
-                .add(new Job("Programmer"));
+        // Arrange.
+        Job job = new Job("Programmer");
+
+        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
 
         DocumentReference documentReference = addedJobFuture.get();
         // Asynchronously retrieve the document.
@@ -95,9 +108,15 @@ public final class JobsDatabaseTest {
         DocumentSnapshot document = future.get();
         String jobId = document.getId();
 
-        Job job = jobsDatabase.fetchJob(jobId).get();
+        // Act.
+        Optional<Job> jobOptional = jobsDatabase.fetchJob(jobId).get();
 
-        String actualJobName = job.getJobTitle();
+        // Assert.
+        assertTrue(jobOptional.isPresent());
+
+        Job actualJob = jobOptional.get();
+
+        String actualJobName = actualJob.getJobTitle();
         String expectedJobName = "Programmer";
 
         assertEquals(expectedJobName, actualJobName);

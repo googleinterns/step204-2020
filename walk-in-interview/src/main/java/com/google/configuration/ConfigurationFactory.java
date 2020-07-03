@@ -10,15 +10,17 @@ public final class ConfigurationFactory {
 
     private static final ProjectStatus projectStatus = ProjectStatus.DEVELOPMENT;
 
-    public static final FireStoreConfiguration getFireStoreConfiguration() {
+    /**
+     *
+     * @return
+     * @throws UnsupportedOperationException
+     */
+    public static final FireStoreConfiguration getFireStoreConfiguration() throws UnsupportedOperationException {
         FireStoreConfiguration fireStoreConfiguration = null;
         switch (projectStatus) {
             case PRODUCTION:
-                fireStoreConfiguration = ProductionFireStoreConfiguration.getFireStoreConfiguration();
-                break;
             case TEST:
-                fireStoreConfiguration = TestFireStoreConfiguration.getFireStoreConfiguration();
-                break;
+                throw new UnsupportedOperationException("Not implemented");
             case DEVELOPMENT:
                 fireStoreConfiguration = DevelopmentFireStoreConfiguration.getFireStoreConfiguration();
                 break;
