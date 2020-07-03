@@ -43,6 +43,7 @@ public final class FireStoreUtils {
             try {
                 init();
             } catch (IOException e) {
+                // TODO(issue/10.1): error handline
                 e.printStackTrace();
             }
         }
@@ -65,7 +66,7 @@ public final class FireStoreUtils {
             // Converts document to POJO
             item = documentSnapshot.toObject(classType);
         } else {
-            // TODO(issue/10): error handling
+            // TODO(issue/10.2): error handling
         }
 
         return Optional.ofNullable(item);
