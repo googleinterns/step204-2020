@@ -205,6 +205,7 @@ submitButton. addEventListener('click', (_) => {
       .then((repsonse) => repsonse.text())
       .then((data) => {
         console.log('data', data);
+        document.getElementById(NEW_JOB_ERROR_MESSAGE.ID).innerText = '';
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {

@@ -6,27 +6,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body onload="addNewJobOptions()">
 
     <div class="header-container">
         <button type="reset" onclick="location.href='/walk-in-interview/src/main/webapp/index.html'">Cancel</button>
         <div>New Job Post</div>
         <input type="submit" value="Post" id="new-job-submit">
     </div>
-    <div class="content-container">
-        <input type="text" class="job-field" id="new-job-title" name="job-title" placeholder="Job Title" required>
-        <textarea class="job-field" id="new-job-description" name="job-description"
-            placeholder="Describe the job here (responsibilities, preffered skills)..." required></textarea>
-        <input type="text" class="job-field" id="new-job-address" name="job-address" placeholder="Job Address" required>
 
-        <div class="job-field">
-            Requirements (for applicants):
-            <input type="checkbox" id="o-level" name="requirements-list" value="o-level">
-            <label for="o-level">O Levels</label>
-            <input type="checkbox" id="drivers-license" name="requirements-list" value="drivers-license">
-            <label for="drivers-license">Driver's License</label>
-            <!-- TODO(issue/17): render based on list in database -->
-        </div>
+    <div class="content-container">
         <div class="content-container">
             <input type="text" class="job-field" id="new-job-title" name="job-title" placeholder="Job Title" required />
             <textarea class="job-field" id="new-job-description" name="job-description"
@@ -62,7 +50,7 @@
         </div>
     </div>
 
-    <div id="new-job-error-message"></div>
+    <div class="error-message" id="new-job-error-message"></div>
 
 </body>
 
