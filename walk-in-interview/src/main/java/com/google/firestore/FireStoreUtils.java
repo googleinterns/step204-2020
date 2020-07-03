@@ -27,7 +27,11 @@ public final class FireStoreUtils {
                 .setCredentials(credentials)
                 .setProjectId(ConfigurationFactory.getFireStoreConfiguration().getProjectId())
                 .build();
-        FirebaseApp.initializeApp(options);
+
+        if(FirebaseApp.getApps().isEmpty()) {
+            FirebaseApp.initializeApp(options);
+        }
+
 
         firestore = FirestoreClient.getFirestore();
     }
