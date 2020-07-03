@@ -10,6 +10,8 @@ const NEW_JOB_DESCRIPTION_ID = 'new-job-description';
 const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
 const NEW_JOB_DURATION_ID = 'new-job-duration';
 const REQUIREMENTS_LIST_NAME = 'requirements-list';
+const NEW_JOB_SUBMIT_ID = 'new-job-submit';
+const NEW_JOB_CANCEL_ID = 'new-job-cancel';
 
 const HOMEPAGE_PATH = '/walk-in-interview/src/main/webapp/index.html';
 
@@ -56,13 +58,12 @@ const NEW_JOB_ERROR_MESSAGE = {
   ERROR_RESPONSE: 'Unable to create job listing',
 };
 
-/** Function to be called on loading of the "create new job" page. */
-function addNewJobOptions() {
+window.onload = () => {
   addRequirementsList();
   addJobPayFrequencyOptions();
   addJobDurationOptions();
   addJobExpiryLimits();
-}
+};
 
 /** Add the list of requirements that are stored in the database. */
 function addRequirementsList() {
@@ -188,7 +189,7 @@ function validateRequiredUserInput() {
   return false;
 }
 
-const submitButton = document.getElementById('new-job-submit');
+const submitButton = document.getElementById(NEW_JOB_SUBMIT_ID);
 submitButton. addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
     document.getElementById(NEW_JOB_ERROR_MESSAGE.ID).innerText =
@@ -213,4 +214,9 @@ submitButton. addEventListener('click', (_) => {
           NEW_JOB_ERROR_MESSAGE.ERROR_RESPONSE;
         console.log('error', error);
       });
+});
+
+const cancelButton = document.getElementById(NEW_JOB_CANCEL_ID);
+cancelButton. addEventListener('click', (_) => {
+  window.location.href= HOMEPAGE_PATH;
 });
