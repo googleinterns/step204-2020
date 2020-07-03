@@ -21,7 +21,6 @@ const HOMEPAGE_PATH = '/walk-in-interview/src/main/webapp/index.html';
 
 /**
  * Adds a new job listing by making a POST request to the /jobs servlet.
- * @param {Object} event The event object sent by the submission of a form.
  * @return {boolean} If the request given the parameters was valid or not.
  */
 function addJob() {
