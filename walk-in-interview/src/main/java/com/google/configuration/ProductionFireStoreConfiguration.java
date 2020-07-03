@@ -26,7 +26,7 @@ public final class ProductionFireStoreConfiguration implements FireStoreConfigur
 
     @Override
     public String getProjectId() throws UnsupportedOperationException {
-        if (getProjectId().isEmpty()) {
+        if (PROJECT_ID.isEmpty()) {
             throw new UnsupportedOperationException("Not implemented");
         }
         return PROJECT_ID;
