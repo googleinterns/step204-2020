@@ -1,3 +1,8 @@
+/**
+ * This file is specific to new-job.html. It renders the fields on the
+ * page dynamically, and it also makes the POST request when the form
+ * is submitted.
+ */
 
 const NEW_JOB_FORM_ID = 'new-job-form';
 const NEW_JOB_TITLE_ID = 'new-job-title';
@@ -12,8 +17,11 @@ const REQUIREMENTS_LIST_ID = 'requirements-list';
 const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
 const NEW_JOB_DURATION_ID = 'new-job-duration';
 
+const HOMEPAGE_PATH = '/walk-in-interview/src/main/webapp/index.html';
+
 /**
  * Adds a new job listing by making a POST request to the /jobs servlet.
+ * @param {Object} event The event object sent by the submission of a form.
  * @return {boolean} If the request given the parameters was valid or not.
  */
 function addJob() {
@@ -69,6 +77,8 @@ function addJob() {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
   }).then((response) => response.text()).then((data) => {
-    return data.status === 200;
+    if (data.status === 200) {
+      window.location.href= HOMEPAGE_PATH;
+    }
   });
 }
