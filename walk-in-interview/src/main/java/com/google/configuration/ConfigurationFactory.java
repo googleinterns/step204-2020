@@ -11,9 +11,10 @@ public final class ConfigurationFactory {
     private static final ProjectStatus projectStatus = ProjectStatus.DEVELOPMENT;
 
     /**
+     * Gets the configuration of the cloud firestore.
      *
-     * @return
-     * @throws UnsupportedOperationException
+     * @return Configuration details
+     * @throws UnsupportedOperationException Cloud Firestore database is not created yet.
      */
     public static final FireStoreConfiguration getFireStoreConfiguration() throws UnsupportedOperationException {
         FireStoreConfiguration fireStoreConfiguration = null;
