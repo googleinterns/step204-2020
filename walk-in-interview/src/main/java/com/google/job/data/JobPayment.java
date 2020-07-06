@@ -5,6 +5,11 @@ public final class JobPayment {
     private float max;
     private Frequency frequency;
 
+    // For serialization
+    public JobPayment() {
+
+    }
+
     public JobPayment(float min, float max, Frequency frequency) {
         this.min = min;
         this.max = max;
