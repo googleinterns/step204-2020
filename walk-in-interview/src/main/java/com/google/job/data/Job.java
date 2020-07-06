@@ -15,13 +15,13 @@ public final class Job {
     private String jobDescription;
     private JobPayment jobPay;
     private Collection<String> requirements;
-    private JobPostExpiry postExpiry;
+    private long postExpiry; // a timestamp
     private Optional<Duration> jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobTitle,
                 JobLocation jobLocation, String jobDescription,
                 JobPayment jobPayment, Collection<String> requirements,
-                JobPostExpiry postExpiry, Optional<Duration> jobDuration) {
+                long postExpiry, Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
@@ -50,7 +50,7 @@ public final class Job {
     public Job(String jobTitle, JobStatus jobStatus,
                JobLocation jobLocation, String jobDescription,
                JobPayment jobPayment, Collection<String> requirements,
-               JobPostExpiry jobExpiry, Optional<Duration> jobDuration) throws IllegalArgumentException {
+               long jobExpiry, Optional<Duration> jobDuration) throws IllegalArgumentException {
         validateParameters(jobTitle, jobDescription);
 
         this.jobId = DUMMY;
@@ -106,7 +106,7 @@ public final class Job {
         return requirements;
     }
 
-    public JobPostExpiry getPostExpiry() {
+    public long getPostExpiry() {
         return postExpiry;
     }
 

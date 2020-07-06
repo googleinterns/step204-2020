@@ -63,7 +63,7 @@ public final class JobsDatabaseTest {
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("O Level", "Driving License");
-        JobPostExpiry expectedPostExpiry = new JobPostExpiry("2020-07-02");
+        long expectedPostExpiry = System.currentTimeMillis();
 
         Optional<Duration> expectedJobDuration = Optional.of(Duration.SIX_MONTHS);
 
@@ -102,7 +102,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         assertEquals(expectedRequirements, actualRequirements);
 
-        JobPostExpiry actualPostExpiry = actualJob.getPostExpiry();
+        long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
@@ -117,7 +117,7 @@ public final class JobsDatabaseTest {
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
-        JobPostExpiry expectedPostExpiry = new JobPostExpiry("2020-07-03");
+        long expectedPostExpiry = System.currentTimeMillis();
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
         Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
@@ -170,7 +170,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         assertEquals(expectedRequirements, actualRequirements);
 
-        JobPostExpiry actualPostExpiry = actualJob.getPostExpiry();
+        long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
@@ -186,7 +186,7 @@ public final class JobsDatabaseTest {
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
-        JobPostExpiry expectedPostExpiry = new JobPostExpiry("2020-07-04");
+        long expectedPostExpiry = System.currentTimeMillis();;
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
         Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
@@ -229,7 +229,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         assertEquals(expectedRequirements, actualRequirements);
 
-        JobPostExpiry actualPostExpiry = actualJob.getPostExpiry();
+       long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
