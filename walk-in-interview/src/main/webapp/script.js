@@ -1,7 +1,6 @@
 
 /**
  * Ways in which the user can sort the job listings.
- * @enum {Stirng}
  */
 const SORT_BY = {
   DISTANCE: 'Distance', // default
@@ -10,7 +9,6 @@ const SORT_BY = {
 
 /**
  * Ways in which the user can order the job listings.
- * @enum {Stirng}
  */
 const ORDER_BY = {
   ASCENDING: 'Ascending', // default
@@ -22,13 +20,12 @@ const ORDER_BY_SELECT_ID = 'order-by-select';
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
 
-/** Called when homepage is loaded. */
-function loadHomepage() {
+window.onload = () => {
   addJobSortOptions();
   addJobOrderOptions();
   getJobListings(SORT_BY.DISTANCE, ORDER_BY.ASCENDING,
       DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX);
-}
+};
 
 /** Dynamically add the options for sorting the jobs. */
 function addJobSortOptions() {
