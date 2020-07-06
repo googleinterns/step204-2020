@@ -32,7 +32,6 @@ public final class FireStoreUtils {
             FirebaseApp.initializeApp(options);
         }
 
-
         firestore = FirestoreClient.getFirestore();
     }
 
