@@ -15,4 +15,16 @@ public final class JobLocation {
         this.lat = lat;
         this.lon = lon;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
 }

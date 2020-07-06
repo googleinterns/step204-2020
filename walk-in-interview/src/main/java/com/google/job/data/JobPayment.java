@@ -15,4 +15,16 @@ public final class JobPayment {
         this.max = max;
         this.frequency = frequency;
     }
+
+    public float getMin() {
+        return min;
+    }
+
+    public void setMin(float min) {
+        this.min = min;
+    }
+
+    public float getMax() {
+        return max;
+    }
 }
