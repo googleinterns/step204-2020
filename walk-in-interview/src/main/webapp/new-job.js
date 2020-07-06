@@ -17,7 +17,6 @@ const HOMEPAGE_PATH = '/walk-in-interview/src/main/webapp/index.html';
 
 /**
  * Fields related to job pay.
- * @enum {stirng}
  */
 const NEW_JOB_PAY = {
   FREQUENCY_ID: 'new-job-pay-frequency',
@@ -27,7 +26,6 @@ const NEW_JOB_PAY = {
 
 /**
  * Options for job duration.
- * @enum {stirng}
  */
 const JOB_DURATION = {
   ONE_WEEK: '1 Week',
@@ -39,7 +37,6 @@ const JOB_DURATION = {
 
 /**
  * Options for frequency of job pay.
- * @enum {stirng}
  */
 const JOB_PAY_FREQUENCY = {
   HOURLY: 'Hourly',
@@ -50,7 +47,6 @@ const JOB_PAY_FREQUENCY = {
 
 /**
  * Error messages.
- * @enum {stirng}
  */
 const NEW_JOB_ERROR_MESSAGE = {
   ID: 'new-job-error-message',
