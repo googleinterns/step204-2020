@@ -22,12 +22,7 @@ public final class NewJobServlet extends HttpServlet {
 
     @Override
     public void init() {
-        try {
-            this.jobsDatabase = new JobsDatabase(FireStoreUtils.getFireStore());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO: error handling
-        }
+        this.jobsDatabase = new JobsDatabase();
     }
 
     @Override
