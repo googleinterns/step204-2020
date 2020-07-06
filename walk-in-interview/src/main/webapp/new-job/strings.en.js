@@ -7,11 +7,10 @@
  * AppStrings will be set to {} if it is
  * falsy (false, 0, '', null, undefined, NaN)
  */
-// export const AppStrings = AppStrings || {};
 export const AppStrings = {};
 
 /**
- * explain.
+ * All the strings to be used in the new-job folder.
  */
 AppStrings['new-job'] = {
   'page': {
