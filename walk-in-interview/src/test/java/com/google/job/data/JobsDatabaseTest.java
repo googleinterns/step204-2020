@@ -3,11 +3,11 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,21 +16,53 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+/** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
+    // TODO(issue/15): Add failure test case
+    // TODO(issue/16): Move the clear database method as @After
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
+    private static final int BATCH_SIZE = 10;
 
-    Firestore firestore;
     JobsDatabase jobsDatabase;
+    Firestore firestore;
+
+    /** Delete a collection in batches to avoid out-of-memory errors.
+     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
+     */
+    private void deleteCollection(CollectionReference collection, int batchSize) {
+        try {
+            // retrieve a small batch of documents to avoid out-of-memory errors
+            ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
+            int deleted = 0;
+            // future.get() blocks on document retrieval
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                document.getReference().delete();
+                ++deleted;
+            }
+            if (deleted >= batchSize) {
+                // retrieve and delete another batch
+                deleteCollection(collection, batchSize);
+            }
+        } catch (Exception e) {
+            System.err.println("Error deleting collection : " + e.getMessage());
+        }
+    }
+
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
+        jobsDatabase = new JobsDatabase();
         firestore = FireStoreUtils.getFireStore();
-        jobsDatabase = new JobsDatabase(firestore);
     }
 
     @Test
     public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
+        // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
         JobLocation expectedJobLocation =  new JobLocation("Google", 0, 0);
@@ -43,43 +75,43 @@ public final class JobsDatabaseTest {
         Job job = new Job(expectedJobStatus, expectedJobName, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
+
+        // Act.
         Future<DocumentReference> addedJobFuture = jobsDatabase.addJob(job);
 
+        // Assert.
         DocumentReference documentReference = addedJobFuture.get();
         // Asynchronously retrieve the document.
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
         // future.get() blocks on response.
         DocumentSnapshot document = future.get();
-        String jobId = document.getId();
 
         Job actualJob = document.toObject(Job.class);
 
         JobStatus actualJobStatus = actualJob.getJobStatus();
-        Assert.assertEquals(expectedJobStatus, actualJobStatus);
+        assertEquals(expectedJobStatus, actualJobStatus);
 
-        String actualJobName = actualJob.getJobName();
-        Assert.assertEquals(expectedJobName, actualJobName);
+        String actualJobName = actualJob.getJobTitle();
+        assertEquals(expectedJobName, actualJobName);
 
         JobLocation actualJobLocation = actualJob.getJobLocation();
-        Assert.assertEquals(expectedJobLocation, actualJobLocation);
+        assertEquals(expectedJobLocation, actualJobLocation);
 
         String actualJobDescription = actualJob.getJobDescription();
-        Assert.assertEquals(expectedJobDescription, actualJobDescription);
+        assertEquals(expectedJobDescription, actualJobDescription);
 
         JobPayment actualJobPayment = actualJob.getJobPayment();
-        Assert.assertEquals(expectedJobPayment, actualJobPayment);
+        assertEquals(expectedJobPayment, actualJobPayment);
 
         Collection<String> actualRequirements = actualJob.getRequirements();
-        Assert.assertEquals(expectedRequirements, actualRequirements);
+        assertEquals(expectedRequirements, actualRequirements);
 
         LocalDate actualPostExpiry = actualJob.getJobExpiry();
-        Assert.assertEquals(expectedPostExpiry, actualPostExpiry);
+        assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
-        Assert.assertEquals(expectedJobDuration, actualJobDuration);
-
-        firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+        assertEquals(expectedJobDuration, actualJobDuration);
     }
 
     @Test
@@ -111,47 +143,51 @@ public final class JobsDatabaseTest {
         Job updatedJob = new Job(expectedJobStatus, expectedJobName, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
-        Future<WriteResult> edittedDocRef = jobsDatabase.editJob(jobId, updatedJob);
-        // future.get() blocks on response.
-        edittedDocRef.get();
 
-        ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = firestore.collection(TEST_JOB_COLLECTION).document(jobId).get();
+        // Act.
+        Future<WriteResult> editedDocRef = jobsDatabase.setJob(jobId, updatedJob);
+
+        // Assert.
+        // future.get() blocks on response.
+        editedDocRef.get();
+
+        ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = firestore.collection(TEST_JOB_COLLECTION).
+                document(jobId).get();
         DocumentSnapshot documentSnapshot = documentSnapshotApiFuture.get();
 
         Job actualJob = documentSnapshot.toObject(Job.class);
 
         JobStatus actualJobStatus = actualJob.getJobStatus();
-        Assert.assertEquals(expectedJobStatus, actualJobStatus);
+        assertEquals(expectedJobStatus, actualJobStatus);
 
-        String actualJobName = actualJob.getJobName();
-        Assert.assertEquals(expectedJobName, actualJobName);
+        String actualJobName = actualJob.getJobTitle();
+        assertEquals(expectedJobName, actualJobName);
 
         JobLocation actualJobLocation = actualJob.getJobLocation();
-        Assert.assertEquals(expectedJobLocation, actualJobLocation);
+        assertEquals(expectedJobLocation, actualJobLocation);
 
         String actualJobDescription = actualJob.getJobDescription();
-        Assert.assertEquals(expectedJobDescription, actualJobDescription);
+        assertEquals(expectedJobDescription, actualJobDescription);
 
         JobPayment actualJobPayment = actualJob.getJobPayment();
-        Assert.assertEquals(expectedJobPayment, actualJobPayment);
+        assertEquals(expectedJobPayment, actualJobPayment);
 
         Collection<String> actualRequirements = actualJob.getRequirements();
-        Assert.assertEquals(expectedRequirements, actualRequirements);
+        assertEquals(expectedRequirements, actualRequirements);
 
         LocalDate actualPostExpiry = actualJob.getJobExpiry();
-        Assert.assertEquals(expectedPostExpiry, actualPostExpiry);
+        assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
-        Assert.assertEquals(expectedJobDuration, actualJobDuration);
-
-        firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+        assertEquals(expectedJobDuration, actualJobDuration);
     }
 
     @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
+        // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
-        String expectedJobName = "Noogler";
-        JobLocation expectedJobLocation =  new JobLocation("Programmer", 0, 0);
+        String expectedJobName = "Programmer";
+        JobLocation expectedJobLocation =  new JobLocation("Maple Tree", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
@@ -172,32 +208,41 @@ public final class JobsDatabaseTest {
         DocumentSnapshot document = future.get();
         String jobId = document.getId();
 
-        Job actualJob = jobsDatabase.fetchJob(jobId).get();
+        // Act.
+        Optional<Job> jobOptional = jobsDatabase.fetchJob(jobId).get();
+
+        // Assert.
+        assertTrue(jobOptional.isPresent());
+
+        Job actualJob = jobOptional.get();
 
         JobStatus actualJobStatus = actualJob.getJobStatus();
-        Assert.assertEquals(expectedJobStatus, actualJobStatus);
+        assertEquals(expectedJobStatus, actualJobStatus);
 
-        String actualJobName = actualJob.getJobName();
-        Assert.assertEquals(expectedJobName, actualJobName);
+        String actualJobName = actualJob.getJobTitle();
+        assertEquals(expectedJobName, actualJobName);
 
         JobLocation actualJobLocation = actualJob.getJobLocation();
-        Assert.assertEquals(expectedJobLocation, actualJobLocation);
+        assertEquals(expectedJobLocation, actualJobLocation);
 
         String actualJobDescription = actualJob.getJobDescription();
-        Assert.assertEquals(expectedJobDescription, actualJobDescription);
+        assertEquals(expectedJobDescription, actualJobDescription);
 
         JobPayment actualJobPayment = actualJob.getJobPayment();
-        Assert.assertEquals(expectedJobPayment, actualJobPayment);
+        assertEquals(expectedJobPayment, actualJobPayment);
 
         Collection<String> actualRequirements = actualJob.getRequirements();
-        Assert.assertEquals(expectedRequirements, actualRequirements);
+        assertEquals(expectedRequirements, actualRequirements);
 
         LocalDate actualPostExpiry = actualJob.getJobExpiry();
-        Assert.assertEquals(expectedPostExpiry, actualPostExpiry);
+        assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
-        Assert.assertEquals(expectedJobDuration, actualJobDuration);
+        assertEquals(expectedJobDuration, actualJobDuration);
+    }
 
-        firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+    @After
+    public void clearCollection() {
+        deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
     }
 }

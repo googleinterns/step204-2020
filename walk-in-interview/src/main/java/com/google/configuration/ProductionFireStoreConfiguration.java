@@ -1,21 +1,34 @@
 package com.google.configuration;
 
+import jdk.internal.jline.internal.Nullable;
+
 /** Class that specify the configuration details for firestore during production phase. */
 public final class ProductionFireStoreConfiguration implements FireStoreConfiguration {
-    private static ProductionFireStoreConfiguration developmentFireStoreConfiguration = null;
-
     private static final String PROJECT_ID = "";
+    // TODO(issue/16): create a cloud firestore project for production phase.
+
+    @Nullable
+    private static ProductionFireStoreConfiguration productionFireStoreConfiguration = null;
 
     private ProductionFireStoreConfiguration() {}
 
+    /**
+     * Gets the cloud firestore configuration in production phase.
+     *
+     * @return Configuration details of the cloud firestore database.
+     */
     public static ProductionFireStoreConfiguration getFireStoreConfiguration() {
-        if (developmentFireStoreConfiguration == null) {
-            developmentFireStoreConfiguration = new ProductionFireStoreConfiguration();
+        if (productionFireStoreConfiguration == null) {
+            productionFireStoreConfiguration = new ProductionFireStoreConfiguration();
         }
-        return developmentFireStoreConfiguration;
+        return productionFireStoreConfiguration;
     }
 
-    public String getProjectId() {
+    @Override
+    public String getProjectId() throws UnsupportedOperationException {
+        if (PROJECT_ID.isEmpty()) {
+            throw new UnsupportedOperationException("Not implemented");
+        }
         return PROJECT_ID;
     }
 }

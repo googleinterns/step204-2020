@@ -5,15 +5,17 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 
 import com.google.configuration.ConfigurationFactory;
-import com.google.configuration.DevelopmentFireStoreConfiguration;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import jdk.internal.jline.internal.Nullable;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /** Util methods related to Cloud Firestore database. */
 public final class FireStoreUtils {
+    @Nullable
     private static Firestore firestore;
 
     private FireStoreUtils() {}
@@ -25,7 +27,11 @@ public final class FireStoreUtils {
                 .setCredentials(credentials)
                 .setProjectId(ConfigurationFactory.getFireStoreConfiguration().getProjectId())
                 .build();
-        FirebaseApp.initializeApp(options);
+
+        if(FirebaseApp.getApps().isEmpty()) {
+            FirebaseApp.initializeApp(options);
+        }
+
 
         firestore = FirestoreClient.getFirestore();
     }
@@ -36,9 +42,14 @@ public final class FireStoreUtils {
      * @return The only cloud firestore database.
      * @throws IOException If error occurs when creating database.
      */
-    public static Firestore getFireStore() throws IOException {
+    public static Firestore getFireStore() {
         if (firestore == null) {
-            init();
+            try {
+                init();
+            } catch (IOException e) {
+                // TODO(issue/10.1): error handline
+                e.printStackTrace();
+            }
         }
 
         return firestore;
@@ -52,16 +63,16 @@ public final class FireStoreUtils {
      * @param <T> Generic class type.
      * @return Converted target raw object.
      */
-    public static <T> T convertDocumentSnapshotToPOJO(DocumentSnapshot documentSnapshot, Class<T> classType) {
+    public static <T> Optional<T> convertDocumentSnapshotToPOJO(DocumentSnapshot documentSnapshot, Class<T> classType) {
         T item = null;
 
         if (documentSnapshot.exists()) {
             // Converts document to POJO
             item = documentSnapshot.toObject(classType);
         } else {
-            // TODO(issue/10): error handling
+            // TODO(issue/10.2): error handling
         }
 
-        return item;
+        return Optional.ofNullable(item);
     }
 }

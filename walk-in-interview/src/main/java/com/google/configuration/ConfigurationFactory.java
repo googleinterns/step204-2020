@@ -10,14 +10,22 @@ public final class ConfigurationFactory {
 
     private static final ProjectStatus projectStatus = ProjectStatus.DEVELOPMENT;
 
-    public static final FireStoreConfiguration getFireStoreConfiguration() {
+    /**
+     * Gets the configuration of the cloud firestore.
+     *
+     * @return Configuration details
+     * @throws UnsupportedOperationException Cloud Firestore database is not created yet.
+     */
+    public static final FireStoreConfiguration getFireStoreConfiguration() throws UnsupportedOperationException {
+        FireStoreConfiguration fireStoreConfiguration = null;
         switch (projectStatus) {
-        case PRODUCTION:
-            return ProductionFireStoreConfiguration.getFireStoreConfiguration();
-        case TEST:
-            return TestFireStoreConfiguration.getFireStoreConfiguration();
-        default:
-            return DevelopmentFireStoreConfiguration.getFireStoreConfiguration();
+            case PRODUCTION:
+            case TEST:
+                throw new UnsupportedOperationException("Not implemented");
+            case DEVELOPMENT:
+                fireStoreConfiguration = DevelopmentFireStoreConfiguration.getFireStoreConfiguration();
+                break;
         }
+        return fireStoreConfiguration;
     }
 }
