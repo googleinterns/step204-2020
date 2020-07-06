@@ -3,7 +3,11 @@ package com.google.utils;
 import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
 public final class ServletUtils {
     private ServletUtils() {}
@@ -75,15 +79,15 @@ public final class ServletUtils {
      * @param defaultValue Default integer.
      * @return Parsed date or default value if exception occur
      */
-    public static LocalDate getLocalDateParameter(HttpServletRequest request,
-                                                  String parameterName, LocalDate defaultValue) {
+    public static Date getDateParameter(HttpServletRequest request,
+                                        String parameterName, Date defaultValue) {
         String resultStr = request.getParameter(parameterName);
 
         try {
-            LocalDate result = LocalDate.parse(resultStr);
+            Date result = new SimpleDateFormat().parse(resultStr);
 
             return result;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ParseException e) {
             // TODO: error handling
 
             // TODO: add logging to log the error

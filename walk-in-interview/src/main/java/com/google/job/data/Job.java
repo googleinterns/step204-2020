@@ -1,7 +1,7 @@
 package com.google.job.data;
 
-import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 
 /** Class for a job post. */
@@ -16,13 +16,13 @@ public final class Job {
     private String jobDescription;
     private JobPayment jobPayment;
     private Collection<String> requirements;
-    private LocalDate jobExpiry;
+    private Date jobExpiry;
     private Optional<Duration> jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobTitle,
                 JobLocation jobLocation, String jobDescription,
                 JobPayment jobPayment, Collection<String> requirements,
-                LocalDate jobExpiry, Optional<Duration> jobDuration) {
+                Date jobExpiry, Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
@@ -43,7 +43,7 @@ public final class Job {
     public Job(JobStatus jobStatus, String jobTitle,
                JobLocation jobLocation, String jobDescription,
                JobPayment jobPayment, Collection<String> requirements,
-               LocalDate jobExpiry, Optional<Duration> jobDuration) {
+               Date jobExpiry, Optional<Duration> jobDuration) {
         this.jobId = DUMMY;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
@@ -94,7 +94,7 @@ public final class Job {
         return requirements;
     }
 
-    public LocalDate getJobExpiry() {
+    public Date getJobExpiry() {
         return jobExpiry;
     }
 
