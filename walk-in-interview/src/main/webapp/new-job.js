@@ -48,7 +48,7 @@ function getJobDetailsFromUserInput() {
   const duration = document.getElementById(NEW_JOB_DURATION_ID).value;
 
   const jobDetails = {
-    jobName: name,
+    jobTitle: name,
     jobLocation: {
       address: address,
       lat: 1.3039, // TODO(issue/13): get these from places api

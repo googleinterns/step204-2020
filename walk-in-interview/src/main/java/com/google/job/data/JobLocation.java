@@ -1,5 +1,6 @@
 package com.google.job.data;
 
+/** Class that represents the location of a job. */
 public final class JobLocation {
     private String address;
     private double lat;
@@ -26,5 +27,15 @@ public final class JobLocation {
 
     public double getLon() {
         return lon;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JobLocation that = (JobLocation) o;
+        return Double.compare(that.lat, lat) == 0 &&
+                Double.compare(that.lon, lon) == 0 &&
+                address.equals(that.address);
     }
 }

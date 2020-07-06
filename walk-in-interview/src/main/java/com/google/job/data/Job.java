@@ -1,7 +1,6 @@
 package com.google.job.data;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 
 /** Class for a job post. */
@@ -14,44 +13,64 @@ public final class Job {
     private String jobTitle;
     private JobLocation jobLocation;
     private String jobDescription;
-    private JobPayment jobPayment;
+    private JobPayment jobPay;
     private Collection<String> requirements;
-    private Date jobExpiry;
+    private JobPostExpiry postExpiry;
     private Optional<Duration> jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobTitle,
                 JobLocation jobLocation, String jobDescription,
                 JobPayment jobPayment, Collection<String> requirements,
-                Date jobExpiry, Optional<Duration> jobDuration) {
+                JobPostExpiry postExpiry, Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobTitle = jobTitle;
         this.jobLocation = jobLocation;
         this.jobDescription = jobDescription;
-        this.jobPayment = jobPayment;
+        this.jobPay = jobPayment;
         this.requirements = requirements;
-        this.jobExpiry = jobExpiry;
+        this.postExpiry = postExpiry;
         this.jobDuration = jobDuration;
+    }
+
+    private void validateParameters(String jobTitle, String jobDescription) throws IllegalArgumentException {
+        if (jobTitle.isEmpty()) {
+            throw new IllegalArgumentException("Empty job title provided");
+        }
+
+        if (jobDescription.isEmpty()) {
+            throw new IllegalArgumentException("Empty job description provided");
+        }
     }
 
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
     public Job() {}
 
-    public Job(JobStatus jobStatus, String jobTitle,
+    public Job(String jobTitle, JobStatus jobStatus,
                JobLocation jobLocation, String jobDescription,
                JobPayment jobPayment, Collection<String> requirements,
-               Date jobExpiry, Optional<Duration> jobDuration) {
+               JobPostExpiry jobExpiry, Optional<Duration> jobDuration) throws IllegalArgumentException {
+        validateParameters(jobTitle, jobDescription);
+
         this.jobId = DUMMY;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobTitle = jobTitle;
         this.jobLocation = jobLocation;
         this.jobDescription = jobDescription;
-        this.jobPayment = jobPayment;
+        this.jobPay = jobPayment;
         this.requirements = requirements;
-        this.jobExpiry = jobExpiry;
+        this.postExpiry = jobExpiry;
         this.jobDuration = jobDuration;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public void setJobStatus(JobStatus jobStatus) {
+        this.jobStatus = jobStatus;
     }
 
     public String getJobId() {
@@ -60,11 +79,6 @@ public final class Job {
 
     public JobStatus getJobStatus() {
         return jobStatus;
-//    public Job(String jobTitle) throws IllegalArgumentException {
-//        if (jobTitle.isEmpty()) {
-//            throw new IllegalArgumentException("Empty job title provided");
-//        }
-//        this.jobTitle = jobTitle;
     }
 
     /**
@@ -84,16 +98,16 @@ public final class Job {
         return jobDescription;
     }
 
-    public JobPayment getJobPayment() {
-        return jobPayment;
+    public JobPayment getJobPay() {
+        return jobPay;
     }
 
     public Collection<String> getRequirements() {
         return requirements;
     }
 
-    public Date getJobExpiry() {
-        return jobExpiry;
+    public JobPostExpiry getPostExpiry() {
+        return postExpiry;
     }
 
     public Optional<Duration> getJobDuration() {
