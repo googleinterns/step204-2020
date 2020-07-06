@@ -46,7 +46,7 @@ public final class FireStoreUtils {
             try {
                 init();
             } catch (IOException e) {
-                // TODO(issue/10.1): error handline
+                // TODO(issue/10.1): error handling
                 e.printStackTrace();
             }
         }

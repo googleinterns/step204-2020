@@ -110,7 +110,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void editJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
         JobLocation expectedJobLocation =  new JobLocation("Google", 0, 0);
@@ -229,7 +229,7 @@ public final class JobsDatabaseTest {
         Collection<String> actualRequirements = actualJob.getRequirements();
         assertEquals(expectedRequirements, actualRequirements);
 
-       long actualPostExpiry = actualJob.getPostExpiry();
+        long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
         Optional<Duration> actualJobDuration = actualJob.getJobDuration();
