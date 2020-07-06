@@ -3,10 +3,11 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firestore.FireStoreUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -20,12 +21,37 @@ public final class JobsDatabaseTest {
     // TODO(issue/16): Move the clear database method as @After
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
+    private static final int BATCH_SIZE = 10;
 
     JobsDatabase jobsDatabase;
     Firestore firestore;
 
+    /** Delete a collection in batches to avoid out-of-memory errors.
+     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
+     */
+    private void deleteCollection(CollectionReference collection, int batchSize) {
+        try {
+            // retrieve a small batch of documents to avoid out-of-memory errors
+            ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
+            int deleted = 0;
+            // future.get() blocks on document retrieval
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                document.getReference().delete();
+                ++deleted;
+            }
+            if (deleted >= batchSize) {
+                // retrieve and delete another batch
+                deleteCollection(collection, batchSize);
+            }
+        } catch (Exception e) {
+            System.err.println("Error deleting collection : " + e.getMessage());
+        }
+    }
+
+
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         jobsDatabase = new JobsDatabase();
         firestore = FireStoreUtils.getFireStore();
     }
@@ -53,7 +79,7 @@ public final class JobsDatabaseTest {
 
         assertEquals(expectedJobName, actualJobName);
 
-        firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+        // firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
 
     @Test
@@ -90,7 +116,7 @@ public final class JobsDatabaseTest {
 
         assertEquals(expectedJobName, actualJobName);
 
-        firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+        // firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
 
     @Test
@@ -121,6 +147,11 @@ public final class JobsDatabaseTest {
 
         assertEquals(expectedJobName, actualJobName);
 
-        firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+        // firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
+    }
+
+    @After
+    public void clearCollection() {
+        deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
     }
 }
