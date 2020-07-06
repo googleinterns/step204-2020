@@ -213,6 +213,6 @@ submitButton.addEventListener('click', (_) => {
 });
 
 const cancelButton = document.getElementById(NEW_JOB_CANCEL_ID);
-cancelButton. addEventListener('click', (_) => {
+cancelButton.addEventListener('click', (_) => {
   window.location.href= HOMEPAGE_PATH;
 });
