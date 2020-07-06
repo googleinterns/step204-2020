@@ -6,9 +6,7 @@ public final class Job {
     private String jobTitle;
 
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
-    public Job() {
-
-    }
+    public Job() {}
 
     public Job(String jobTitle) throws IllegalArgumentException {
         if (jobTitle.isEmpty()) {

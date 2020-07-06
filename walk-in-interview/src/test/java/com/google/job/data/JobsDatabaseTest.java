@@ -26,26 +26,25 @@ public final class JobsDatabaseTest {
     JobsDatabase jobsDatabase;
     Firestore firestore;
 
-    /** Delete a collection in batches to avoid out-of-memory errors.
+    /**
+     * Delete a collection in batches to avoid out-of-memory errors.
+     *
      * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
      */
-    private void deleteCollection(CollectionReference collection, int batchSize) {
-        try {
-            // retrieve a small batch of documents to avoid out-of-memory errors
-            ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
-            int deleted = 0;
-            // future.get() blocks on document retrieval
-            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                document.getReference().delete();
-                ++deleted;
-            }
-            if (deleted >= batchSize) {
-                // retrieve and delete another batch
-                deleteCollection(collection, batchSize);
-            }
-        } catch (Exception e) {
-            System.err.println("Error deleting collection : " + e.getMessage());
+    private void deleteCollection(CollectionReference collection, int batchSize)
+            throws ExecutionException, InterruptedException {
+        // retrieve a small batch of documents to avoid out-of-memory errors
+        ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
+        int deleted = 0;
+        // future.get() blocks on document retrieval
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            document.getReference().delete();
+            ++deleted;
+        }
+        if (deleted >= batchSize) {
+            // retrieve and delete another batch
+            deleteCollection(collection, batchSize);
         }
     }
 
@@ -145,6 +144,10 @@ public final class JobsDatabaseTest {
 
     @After
     public void clearCollection() {
-        deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
+        try {
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error deleting collection : " + e.getMessage());
+        }
     }
 }
