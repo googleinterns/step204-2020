@@ -50,6 +50,7 @@ const NEW_JOB_DESCRIPTION_ID = 'new-job-description';
 const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
 const NEW_JOB_DURATION_ID = 'new-job-duration';
 const REQUIREMENTS_LIST_NAME = 'requirements-list';
+const NEW_JOB_REQUIREMENTS_LIST_ID = 'new-job-requirements-list';
 const NEW_JOB_SUBMIT_ID = 'new-job-submit';
 const NEW_JOB_CANCEL_ID = 'new-job-cancel';
 
@@ -164,7 +165,46 @@ function addJobPageElements() {
 
 /** Add the list of requirements that are stored in the database. */
 function addRequirementsList() {
-  // TODO(issue/17): get from the database and render dynamically
+  const requirementsList = getRequirementsList();
+  const requirementsListElement =
+    document.getElementById(NEW_JOB_REQUIREMENTS_LIST_ID);
+
+  requirementsListElement.innerHTML = '';
+  for (key in requirementsList) {
+    if ({}.hasOwnProperty.call(requirementsList, key)) {
+      const requirementElement = document.createElement('li');
+      requirementElement.setAttribute('id', key);
+
+      const checkbox = document.createElement('input');
+      checkbox.setAttribute('type', 'checkbox');
+      checkbox.setAttribute('id', key);
+      checkbox.setAttribute('name', REQUIREMENTS_LIST_NAME);
+      checkbox.setAttribute('value', key);
+
+      const label = document.createElement('label');
+      label.setAttribute('for', key);
+      label.innerText = requirementsList[key];
+
+      requirementElement.appendChild(checkbox);
+      requirementElement.appendChild(label);
+
+      requirementsListElement.appendChild(requirementElement);
+    }
+  }
+}
+
+/**
+ * Gets the requirements list from the servlet
+ * (which gets it from the database).
+ * @return {Object} the requirements list in a key-value mapping format.
+ */
+function getRequirementsList() {
+  // TODO(issue/17): GET request to servlet to get from database
+  // returning some hardcoded values for now
+  return {
+    'o-levels': 'O Levels',
+    'drivers-license': 'Drivers License',
+  };
 }
 
 /** Dynamically add the options for job pay frequency. */
