@@ -7,7 +7,7 @@
 /**
  * Titles for all the sections/fields in different languages.
  */
-const NEW_JOB_TITLE = {
+const NEW_JOB_PAGE_TITLE = {
   en: 'New Job Post',
 };
 const NEW_JOB_CANCEL_TITLE = {
@@ -16,11 +16,26 @@ const NEW_JOB_CANCEL_TITLE = {
 const NEW_JOB_SUBMIT_TITLE = {
   en: 'Create',
 };
+const NEW_JOB_TITLE = {
+  en: 'Job Title',
+};
+const NEW_JOB_DESCRIPTION = {
+  en: 'Describe the job here (responsibilities, preffered skills)...',
+};
+const NEW_JOB_ADDRESS = {
+  en: 'Job Address',
+};
 const NEW_JOB_REQUIREMENTS_TITLE = {
   en: 'Requirements',
 };
 const NEW_JOB_PAY_TITLE = {
   en: 'Job Pay',
+};
+const NEW_JOB_PAY_MIN_TITLE = {
+  en: 'min (sgd)',
+};
+const NEW_JOB_PAY_MAX_TITLE = {
+  en: 'max (sgd)',
 };
 const NEW_JOB_DURATION_TITLE = {
   en: 'Job Duration',
@@ -29,6 +44,7 @@ const NEW_JOB_EXPIRY_TITLE = {
   en: 'Job Expiry',
 };
 
+const NEW_JOB_TITLE_ID = 'new-job-title';
 const NEW_JOB_ADDRESS_ID = 'new-job-address';
 const NEW_JOB_DESCRIPTION_ID = 'new-job-description';
 const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
@@ -37,7 +53,7 @@ const REQUIREMENTS_LIST_NAME = 'requirements-list';
 const NEW_JOB_SUBMIT_ID = 'new-job-submit';
 const NEW_JOB_CANCEL_ID = 'new-job-cancel';
 
-const NEW_JOB_TITLE_ID = 'new-job-title';
+const NEW_JOB_PAGE_TITLE_ID = 'new-job-page-title';
 const NEW_JOB_REQUIREMENTS_TITLE_ID = 'new-job-requirements-title';
 const NEW_JOB_PAY_TITLE_ID = 'new-job-pay-title';
 const NEW_JOB_DURATION_TITLE_ID = 'new-job-duration-title';
@@ -85,36 +101,65 @@ const NEW_JOB_ERROR_MESSAGE = {
 };
 
 window.onload = () => {
-  addJobPageTitles();
-  addRequirementsList();
-  addJobPayFrequencyOptions();
-  addJobDurationOptions();
-  addJobExpiryLimits();
+  addJobPageElements();
 };
 
 /** Adds all the titles to the fields on this page. */
-function addJobPageTitles() {
+function addJobPageElements() {
   const cancelButton = document.getElementById(NEW_JOB_CANCEL_ID);
   cancelButton.setAttribute('value', NEW_JOB_CANCEL_TITLE.en);
+  cancelButton.setAttribute('type', 'reset');
 
-  const jobTitle = document.getElementById(NEW_JOB_TITLE_ID);
-  jobTitle.innerText = NEW_JOB_TITLE.en;
+  const jobPageTitle = document.getElementById(NEW_JOB_PAGE_TITLE_ID);
+  jobPageTitle.innerText = NEW_JOB_PAGE_TITLE.en;
 
   const submitButton = document.getElementById(NEW_JOB_SUBMIT_ID);
   submitButton.setAttribute('value', NEW_JOB_SUBMIT_TITLE.en);
+  submitButton.setAttribute('type', 'submit');
+
+  const jobTitle = document.getElementById(NEW_JOB_TITLE_ID);
+  jobTitle.setAttribute('type', 'text');
+  jobTitle.setAttribute('placeholder', NEW_JOB_TITLE.en);
+  jobTitle.setAttribute('required', true);
+
+  const jobDescription = document.getElementById(NEW_JOB_DESCRIPTION_ID);
+  jobDescription.setAttribute('placeholder', NEW_JOB_DESCRIPTION.en);
+  jobDescription.setAttribute('required', true);
+
+  const jobAddress = document.getElementById(NEW_JOB_ADDRESS_ID);
+  jobAddress.setAttribute('placeholder', NEW_JOB_ADDRESS.en);
+  jobAddress.setAttribute('required', true);
 
   const requirementsTitle =
     document.getElementById(NEW_JOB_REQUIREMENTS_TITLE_ID);
   requirementsTitle.innerText = NEW_JOB_REQUIREMENTS_TITLE.en;
+  addRequirementsList();
 
   const payTitle = document.getElementById(NEW_JOB_PAY_TITLE_ID);
   payTitle.innerText = NEW_JOB_PAY_TITLE.en;
+  addJobPayFrequencyOptions();
+
+  const payMin = document.getElementById(NEW_JOB_PAY.MIN_ID);
+  payMin.setAttribute('type', 'number');
+  payMin.setAttribute('placeholder', NEW_JOB_PAY_MIN_TITLE.en);
+  payMin.setAttribute('required', true);
+
+  const payMax = document.getElementById(NEW_JOB_PAY.MAX_ID);
+  payMax.setAttribute('type', 'number');
+  payMax.setAttribute('placeholder', NEW_JOB_PAY_MAX_TITLE.en);
+  payMax.setAttribute('required', true);
 
   const durationTitle = document.getElementById(NEW_JOB_DURATION_TITLE_ID);
   durationTitle.innerText = NEW_JOB_DURATION_TITLE.en;
+  addJobDurationOptions();
 
   const expiryTitle = document.getElementById(NEW_JOB_EXPIRY_TITLE_ID);
   expiryTitle.innerText = NEW_JOB_EXPIRY_TITLE.en;
+  const expiryInput = document.getElementById(NEW_JOB_EXPIRY_ID);
+  expiryInput.setAttribute('type', 'date');
+  expiryInput.setAttribute('name', NEW_JOB_EXPIRY_ID);
+  expiryInput.setAttribute('required', true);
+  addJobExpiryLimits();
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -125,6 +170,7 @@ function addRequirementsList() {
 /** Dynamically add the options for job pay frequency. */
 function addJobPayFrequencyOptions() {
   const jobPaySelect = document.getElementById(NEW_JOB_PAY.FREQUENCY_ID);
+  jobPaySelect.setAttribute('required', true);
   jobPaySelect.options.length = 0;
 
   jobPaySelect.options[0] = new Option('Select', '');
@@ -188,7 +234,7 @@ function getJobDetailsFromUserInput() {
     }
   });
 
-  const expiry = document.getElementById(NEW_JOB_EXPIRY_ID).value;
+  const expiry = document.getElementById(NEW_JOB_EXPIRY_ID).valueAsNumber;
   const duration = document.getElementById(NEW_JOB_DURATION_ID).value;
 
   const jobDetails = {
@@ -227,14 +273,15 @@ function validateRequiredUserInput() {
   const payFrequency = document.getElementById(NEW_JOB_PAY.FREQUENCY_ID).value;
   const payMin = document.getElementById(NEW_JOB_PAY.MIN_ID).valueAsNumber;
   const payMax = document.getElementById(NEW_JOB_PAY.MAX_ID).valueAsNumber;
-  const expiry = document.getElementById(NEW_JOB_EXPIRY_ID).value;
+  const expiry = document.getElementById(NEW_JOB_EXPIRY_ID).valueAsNumber;
 
   if (payMin > payMax) {
     return false;
   }
 
   if (name !== '' && address !== '' && description !== '' &&
-    payFrequency !== '' && payMin !== '' && payMax !== '' && expiry !== '') {
+    payFrequency !== '' && payMin !== '' && payMax !== '' &&
+    !Number.isNaN(expiry)) {
     return true;
   }
 

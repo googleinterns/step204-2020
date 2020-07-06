@@ -9,18 +9,16 @@
 <body>
 
     <div class="header-container">
-        <input type="reset" id="new-job-cancel">
-        <div id="new-job-title"></div>
-        <input type="submit" id="new-job-submit">
+        <input id="new-job-cancel">
+        <div id="new-job-page-title"></div>
+        <input id="new-job-submit">
     </div>
 
     <div class="content-container">
         <div class="content-container">
-            <input type="text" class="job-field" id="new-job-title" name="job-title" placeholder="Job Title" required />
-            <textarea class="job-field" id="new-job-description" name="job-description"
-                placeholder="Describe the job here (responsibilities, preffered skills)..." required></textarea>
-            <input type="text" class="job-field" id="new-job-address" name="job-address" placeholder="Job Address"
-                required />
+            <input class="job-field" id="new-job-title" />
+            <textarea class="job-field" id="new-job-description"></textarea>
+            <input class="job-field" id="new-job-address" />
 
             <div class="job-field">
                 <div id="new-job-requirements-title"></div>
@@ -33,20 +31,20 @@
 
             <div class="job-field">
                 <div id="new-job-pay-title"></div>
-                <select id="new-job-pay-frequency" name="job-pay-frequency" required></select>
-                <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
+                <select id="new-job-pay-frequency"></select>
+                <input id="new-job-pay-min">
                 -
-                <input type="number" id="new-job-pay-max" name="job-pay-max" placeholder="max (sgd)" required>
+                <input id="new-job-pay-max">
             </div>
 
             <div class="job-field">
                 <div id="new-job-duration-title"></div>
-                <select id="new-job-duration" name="job-duration"></select>
+                <select id="new-job-duration"></select>
             </div>
 
             <div class="job-field">
                 <div id="new-job-expiry-title"></div>
-                <input type="date" id="new-job-expiry" name="job-expiry" required>
+                <input id="new-job-expiry">
             </div>
         </div>
 
