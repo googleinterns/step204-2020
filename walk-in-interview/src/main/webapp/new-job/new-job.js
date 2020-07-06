@@ -4,102 +4,7 @@
  * is submitted.
  */
 
-/**
- * Titles for all the sections/fields in different languages.
- */
-const NEW_JOB_PAGE_TITLE = {
-  en: 'New Job Post',
-};
-const NEW_JOB_CANCEL_TITLE = {
-  en: 'Cancel',
-};
-const NEW_JOB_SUBMIT_TITLE = {
-  en: 'Create',
-};
-const NEW_JOB_TITLE = {
-  en: 'Job Title',
-};
-const NEW_JOB_DESCRIPTION = {
-  en: 'Describe the job here (responsibilities, preffered skills)...',
-};
-const NEW_JOB_ADDRESS = {
-  en: 'Job Address',
-};
-const NEW_JOB_REQUIREMENTS_TITLE = {
-  en: 'Requirements',
-};
-const NEW_JOB_PAY_TITLE = {
-  en: 'Job Pay',
-};
-const NEW_JOB_PAY_MIN_TITLE = {
-  en: 'min (sgd)',
-};
-const NEW_JOB_PAY_MAX_TITLE = {
-  en: 'max (sgd)',
-};
-const NEW_JOB_DURATION_TITLE = {
-  en: 'Job Duration',
-};
-const NEW_JOB_EXPIRY_TITLE = {
-  en: 'Job Expiry',
-};
-
-const NEW_JOB_TITLE_ID = 'new-job-title';
-const NEW_JOB_ADDRESS_ID = 'new-job-address';
-const NEW_JOB_DESCRIPTION_ID = 'new-job-description';
-const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
-const NEW_JOB_DURATION_ID = 'new-job-duration';
-const REQUIREMENTS_LIST_NAME = 'requirements-list';
-const NEW_JOB_REQUIREMENTS_LIST_ID = 'new-job-requirements-list';
-const NEW_JOB_SUBMIT_ID = 'new-job-submit';
-const NEW_JOB_CANCEL_ID = 'new-job-cancel';
-
-const NEW_JOB_PAGE_TITLE_ID = 'new-job-page-title';
-const NEW_JOB_REQUIREMENTS_TITLE_ID = 'new-job-requirements-title';
-const NEW_JOB_PAY_TITLE_ID = 'new-job-pay-title';
-const NEW_JOB_DURATION_TITLE_ID = 'new-job-duration-title';
-const NEW_JOB_EXPIRY_TITLE_ID = 'new-job-expiry-title';
-
-const HOMEPAGE_PATH = '/walk-in-interview/src/main/webapp/index.html';
-
-/**
- * Fields related to job pay.
- */
-const NEW_JOB_PAY = {
-  FREQUENCY_ID: 'new-job-pay-frequency',
-  MIN_ID: 'new-job-pay-min',
-  MAX_ID: 'new-job-pay-max',
-};
-
-/**
- * Options for job duration.
- */
-const JOB_DURATION = {
-  ONE_WEEK: '1 Week',
-  TWO_WEEKS: '2 Weeks',
-  ONE_MONTH: '1 Month',
-  SIX_MONTHS: '6 Months',
-  ONE_YEAR: '1 Year',
-};
-
-/**
- * Options for frequency of job pay.
- */
-const JOB_PAY_FREQUENCY = {
-  HOURLY: 'Hourly',
-  WEEKLY: 'Weekly',
-  MONTHLY: 'Monthly',
-  YEARLY: 'Yearly',
-};
-
-/**
- * Error messages.
- */
-const NEW_JOB_ERROR_MESSAGE = {
-  ID: 'new-job-error-message',
-  INVALID_INPUT: 'Invalid inputs',
-  ERROR_RESPONSE: 'Unable to create job listing',
-};
+import {} from './strings.en.js';
 
 window.onload = () => {
   addJobPageElements();
@@ -111,8 +16,8 @@ function addJobPageElements() {
   cancelButton.setAttribute('value', NEW_JOB_CANCEL_TITLE.en);
   cancelButton.setAttribute('type', 'reset');
 
-  const jobPageTitle = document.getElementById(NEW_JOB_PAGE_TITLE_ID);
-  jobPageTitle.innerText = NEW_JOB_PAGE_TITLE.en;
+  // const jobPageTitle = document.getElementById(NEW_JOB_PAGE_TITLE_ID);
+  // jobPageTitle.innerText = NEW_JOB_PAGE_TITLE.en;
 
   const submitButton = document.getElementById(NEW_JOB_SUBMIT_ID);
   submitButton.setAttribute('value', NEW_JOB_SUBMIT_TITLE.en);
