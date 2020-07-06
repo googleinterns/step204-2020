@@ -9,9 +9,9 @@
 <body>
 
     <div class="header-container">
-        <button type="reset" id="new-job-cancel">Cancel</button>
-        <div>New Job Post</div>
-        <input type="submit" value="Post" id="new-job-submit">
+        <input type="reset" id="new-job-cancel">
+        <div id="new-job-title"></div>
+        <input type="submit" id="new-job-submit">
     </div>
 
     <div class="content-container">
@@ -23,7 +23,7 @@
                 required />
 
             <div class="job-field">
-                Requirements (for applicants):
+                <div id="new-job-requirements-title"></div>
                 <input type="checkbox" id="o-level" name="requirements-list" value="o-level">
                 <label for="o-level">O Levels</label>
                 <input type="checkbox" id="drivers-license" name="requirements-list" value="drivers-license">
@@ -32,7 +32,7 @@
             </div>
 
             <div class="job-field">
-                Job Pay:
+                <div id="new-job-pay-title"></div>
                 <select id="new-job-pay-frequency" name="job-pay-frequency" required></select>
                 <input type="number" id="new-job-pay-min" name="job-pay-min" placeholder="min (sgd)" required>
                 -
@@ -40,12 +40,12 @@
             </div>
 
             <div class="job-field">
-                Job Duration:
+                <div id="new-job-duration-title"></div>
                 <select id="new-job-duration" name="job-duration"></select>
             </div>
 
             <div class="job-field">
-                Post Expiry:
+                <div id="new-job-expiry-title"></div>
                 <input type="date" id="new-job-expiry" name="job-expiry" required>
             </div>
         </div>

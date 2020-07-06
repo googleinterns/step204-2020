@@ -4,7 +4,31 @@
  * is submitted.
  */
 
-const NEW_JOB_TITLE_ID = 'new-job-title';
+/**
+ * Titles for all the sections/fields in different languages.
+ */
+const NEW_JOB_TITLE = {
+  en: 'New Job Post',
+};
+const NEW_JOB_CANCEL_TITLE = {
+  en: 'Cancel',
+};
+const NEW_JOB_SUBMIT_TITLE = {
+  en: 'Create',
+};
+const NEW_JOB_REQUIREMENTS_TITLE = {
+  en: 'Requirements',
+};
+const NEW_JOB_PAY_TITLE = {
+  en: 'Job Pay',
+};
+const NEW_JOB_DURATION_TITLE = {
+  en: 'Job Duration',
+};
+const NEW_JOB_EXPIRY_TITLE = {
+  en: 'Job Expiry',
+};
+
 const NEW_JOB_ADDRESS_ID = 'new-job-address';
 const NEW_JOB_DESCRIPTION_ID = 'new-job-description';
 const NEW_JOB_EXPIRY_ID = 'new-job-expiry';
@@ -12,6 +36,12 @@ const NEW_JOB_DURATION_ID = 'new-job-duration';
 const REQUIREMENTS_LIST_NAME = 'requirements-list';
 const NEW_JOB_SUBMIT_ID = 'new-job-submit';
 const NEW_JOB_CANCEL_ID = 'new-job-cancel';
+
+const NEW_JOB_TITLE_ID = 'new-job-title';
+const NEW_JOB_REQUIREMENTS_TITLE_ID = 'new-job-requirements-title';
+const NEW_JOB_PAY_TITLE_ID = 'new-job-pay-title';
+const NEW_JOB_DURATION_TITLE_ID = 'new-job-duration-title';
+const NEW_JOB_EXPIRY_TITLE_ID = 'new-job-expiry-title';
 
 const HOMEPAGE_PATH = '/walk-in-interview/src/main/webapp/index.html';
 
@@ -55,11 +85,37 @@ const NEW_JOB_ERROR_MESSAGE = {
 };
 
 window.onload = () => {
+  addJobPageTitles();
   addRequirementsList();
   addJobPayFrequencyOptions();
   addJobDurationOptions();
   addJobExpiryLimits();
 };
+
+/** Adds all the titles to the fields on this page. */
+function addJobPageTitles() {
+  const cancelButton = document.getElementById(NEW_JOB_CANCEL_ID);
+  cancelButton.setAttribute('value', NEW_JOB_CANCEL_TITLE.en);
+
+  const jobTitle = document.getElementById(NEW_JOB_TITLE_ID);
+  jobTitle.innerText = NEW_JOB_TITLE.en;
+
+  const submitButton = document.getElementById(NEW_JOB_SUBMIT_ID);
+  submitButton.setAttribute('value', NEW_JOB_SUBMIT_TITLE.en);
+
+  const requirementsTitle =
+    document.getElementById(NEW_JOB_REQUIREMENTS_TITLE_ID);
+  requirementsTitle.innerText = NEW_JOB_REQUIREMENTS_TITLE.en;
+
+  const payTitle = document.getElementById(NEW_JOB_PAY_TITLE_ID);
+  payTitle.innerText = NEW_JOB_PAY_TITLE.en;
+
+  const durationTitle = document.getElementById(NEW_JOB_DURATION_TITLE_ID);
+  durationTitle.innerText = NEW_JOB_DURATION_TITLE.en;
+
+  const expiryTitle = document.getElementById(NEW_JOB_EXPIRY_TITLE_ID);
+  expiryTitle.innerText = NEW_JOB_EXPIRY_TITLE.en;
+}
 
 /** Add the list of requirements that are stored in the database. */
 function addRequirementsList() {
@@ -136,7 +192,7 @@ function getJobDetailsFromUserInput() {
   const duration = document.getElementById(NEW_JOB_DURATION_ID).value;
 
   const jobDetails = {
-    jobName: name,
+    jobTitle: name,
     jobLocation: {
       address: address,
       lat: 1.3039, // TODO(issue/13): get these from places api
@@ -199,7 +255,7 @@ submitButton.addEventListener('click', (_) => {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
   })
-      .then((repsonse) => repsonse.text())
+      .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
         document.getElementById(NEW_JOB_ERROR_MESSAGE.ID).innerText = '';
