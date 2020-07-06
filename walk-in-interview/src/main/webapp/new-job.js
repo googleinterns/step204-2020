@@ -71,8 +71,8 @@ function addJobPayFrequencyOptions() {
   const jobPaySelect = document.getElementById(NEW_JOB_PAY.FREQUENCY_ID);
   jobPaySelect.options.length = 0;
 
-  (jobPaySelect.options[0] = new Option('Select', ''))
-      .setAttribute('disabled', true);
+  jobPaySelect.options[0] = new Option('Select', '');
+  jobPaySelect.options[0].setAttribute('disabled', true);
   addSelectOptions(jobPaySelect, JOB_PAY_FREQUENCY);
 }
 
