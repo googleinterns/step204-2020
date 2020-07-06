@@ -72,14 +72,11 @@ public final class JobsDatabaseTest {
 
         // future.get() blocks on response.
         DocumentSnapshot document = future.get();
-        String jobId = document.getId();
 
         Job actualJob = document.toObject(Job.class);
         String actualJobName = actualJob.getJobTitle();
 
         assertEquals(expectedJobName, actualJobName);
-
-        // firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
 
     @Test
@@ -115,8 +112,6 @@ public final class JobsDatabaseTest {
         String actualJobName = actualJob.getJobTitle();
 
         assertEquals(expectedJobName, actualJobName);
-
-        // firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
 
     @Test
@@ -146,8 +141,6 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Programmer";
 
         assertEquals(expectedJobName, actualJobName);
-
-        // firestore.collection(TEST_JOB_COLLECTION).document(jobId).delete();
     }
 
     @After
