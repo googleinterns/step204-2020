@@ -186,7 +186,7 @@ function validateRequiredUserInput() {
 }
 
 const submitButton = document.getElementById(NEW_JOB_SUBMIT_ID);
-submitButton. addEventListener('click', (_) => {
+submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
     document.getElementById(NEW_JOB_ERROR_MESSAGE.ID).innerText =
       NEW_JOB_ERROR_MESSAGE.INVALID_INPUT;
