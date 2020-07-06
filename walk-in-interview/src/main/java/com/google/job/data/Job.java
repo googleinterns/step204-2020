@@ -36,9 +36,7 @@ public final class Job {
     }
 
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
-    public Job() {
-
-    }
+    public Job() {}
 
     public Job(JobStatus jobStatus, String jobTitle,
                JobLocation jobLocation, String jobDescription,
