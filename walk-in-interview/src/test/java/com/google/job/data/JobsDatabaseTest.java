@@ -120,11 +120,11 @@ public final class JobsDatabaseTest {
         long expectedPostExpiry = System.currentTimeMillis();
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
-        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
+        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(oldJob);
 
         DocumentReference documentReference = addedJobFuture.get();
         // Asynchronously retrieve the document.
