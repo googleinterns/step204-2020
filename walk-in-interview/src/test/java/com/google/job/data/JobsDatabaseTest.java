@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 /** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
     // TODO(issue/15): Add failure test case
-    // TODO(issue/16): Move the clear database method as @After
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
+    private static final String DUMMY = "dummy";
 
     JobsDatabase jobsDatabase;
     Firestore firestore;
@@ -47,7 +47,6 @@ public final class JobsDatabaseTest {
         }
     }
 
-
     @Before
     public void setUp() {
         jobsDatabase = new JobsDatabase();
@@ -67,7 +66,7 @@ public final class JobsDatabaseTest {
 
         Optional<Duration> expectedJobDuration = Optional.of(Duration.SIX_MONTHS);
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job job = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -120,7 +119,7 @@ public final class JobsDatabaseTest {
         long expectedPostExpiry = System.currentTimeMillis();
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job oldJob = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -189,7 +188,7 @@ public final class JobsDatabaseTest {
         long expectedPostExpiry = System.currentTimeMillis();;
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job job = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
