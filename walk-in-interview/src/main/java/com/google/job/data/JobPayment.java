@@ -23,12 +23,12 @@ public final class JobPayment {
         return min;
     }
 
-    public void setMin(float min) {
-        this.min = min;
-    }
-
     public float getMax() {
         return max;
+    }
+
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     @Override
@@ -55,5 +55,14 @@ public final class JobPayment {
         result = 31 * result + c;
 
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "JobPayment{" +
+                "min=" + min +
+                ", max=" + max +
+                ", frequency=" + frequency +
+                '}';
     }
 }

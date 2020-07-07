@@ -56,4 +56,13 @@ public final class JobLocation {
 
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "JobLocation{" +
+                "address='" + address + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                '}';
+    }
 }
