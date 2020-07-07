@@ -88,24 +88,20 @@ function addRequirementsList() {
     document.getElementById('new-job-requirements-list');
 
   requirementsListElement.innerHTML = '';
+  const requirementElementTemplate = document.getElementById('requirement-element-template');
   for (const key in requirementsList) {
     if (requirementsList.hasOwnProperty(key)) {
-      const requirementElement = document.createElement('li');
+      const requirementElement = requirementElementTemplate
+        .cloneNode( /** and child elements */ true);
       requirementElement.setAttribute('id', key);
-
-      const checkbox = document.createElement('input');
-      checkbox.setAttribute('type', 'checkbox');
+      
+      const checkbox = requirementElement.children[0];
       checkbox.setAttribute('id', key);
-      checkbox.setAttribute('name',
-          STRINGS['new-job-requirements-list']);
       checkbox.setAttribute('value', key);
 
-      const label = document.createElement('label');
+      const label = requirementElement.children[1];
       label.setAttribute('for', key);
       label.innerText = requirementsList[key];
-
-      requirementElement.appendChild(checkbox);
-      requirementElement.appendChild(label);
 
       requirementsListElement.appendChild(requirementElement);
     }
