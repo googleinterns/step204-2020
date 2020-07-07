@@ -74,7 +74,6 @@ function addJobPageElements() {
   const expiryInput =
     document.getElementById('new-job-expiry');
   expiryInput.setAttribute('type', 'date');
-  // expiryInput.setAttribute('name', 'new-job-expiry');
   expiryInput.setAttribute('required', true);
   addJobExpiryLimits();
 }
@@ -87,7 +86,7 @@ function addRequirementsList() {
 
   requirementsListElement.innerHTML = '';
   for (const key in requirementsList) {
-    if ({}.hasOwnProperty.call(requirementsList, key)) {
+    if (requirementsList.hasOwnProperty(key)) {
       const requirementElement = document.createElement('li');
       requirementElement.setAttribute('id', key);
 
@@ -154,7 +153,7 @@ function addJobDurationOptions() {
  */
 function addSelectOptions(select, options) {
   for (const key in options) {
-    if ({}.hasOwnProperty.call(options, key)) {
+    if (options.hasOwnProperty(key)) {
       select.options[select.options.length] =
         new Option(options[key], key);
     }
