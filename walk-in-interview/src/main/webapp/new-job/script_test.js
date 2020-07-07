@@ -13,9 +13,9 @@ const assert = require('assert');
 // Test two: Should test if (3–4)*8 = -8
 describe('Math', function() {
   it('should test if 3*3 = 9', function() {
-    assert.equal(3*3, 9);
+    assert.equal(9, 3*3);
   });
   it('should test if (3-4)*8=-8', function() {
-    assert.equal((3-4)*8, -8);
+    assert.equal(-8, (3-4)*8);
   });
 });

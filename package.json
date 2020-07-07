@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/riya-n/step204-2020/issues"
   },
-  "homepage": "https://github.com/riya-n/step204-2020#readme"
+  "homepage": "https://github.com/riya-n/step204-2020#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
 }
