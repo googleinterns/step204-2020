@@ -3,6 +3,7 @@ package com.google.job.data;
 import jdk.internal.jline.internal.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /** Class for a job post. */
@@ -16,13 +17,13 @@ public final class Job {
     private JobLocation jobLocation;
     private String jobDescription;
     private JobPayment jobPay;
-    private Collection<String> requirements;
+    private List<String> requirements;
     private long postExpiry; // a timestamp
     private Duration jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobTitle,
                 JobLocation jobLocation, String jobDescription,
-                JobPayment jobPayment, Collection<String> requirements,
+                JobPayment jobPayment, List<String> requirements,
                 long postExpiry, @Nullable Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
@@ -53,7 +54,7 @@ public final class Job {
 
     public Job(String jobTitle, JobStatus jobStatus,
                JobLocation jobLocation, String jobDescription,
-               JobPayment jobPayment, Collection<String> requirements,
+               JobPayment jobPayment, List<String> requirements,
                long jobExpiry, @Nullable Optional<Duration> jobDuration) throws IllegalArgumentException {
         validateParameters(jobTitle, jobDescription);
 
