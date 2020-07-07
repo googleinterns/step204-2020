@@ -4,10 +4,14 @@
  * is submitted.
  */
 
+const CurrentLocale = 'en';
+// TODO(issue/21): get the language from the browser
+
+// backticks don't seem to be working
 import {AppStrings} from './strings.en.js';
 
-const NEW_JOB_STRINGS = AppStrings['new-job'];
-const HOMEPAGE_PATH = '../index.html';
+const STRINGS = AppStrings[`new-job`];
+const HOMEPAGE_PATH = `../index.html`;
 
 window.onload = () => {
   addJobPageElements();
@@ -15,62 +19,62 @@ window.onload = () => {
 
 /** Adds all the titles to the fields on this page. */
 function addJobPageElements() {
-  const cancelButton = document.getElementById(NEW_JOB_STRINGS['cancel'].id);
-  cancelButton.setAttribute('value', NEW_JOB_STRINGS['cancel'].title);
+  const cancelButton = document.getElementById('new-job-cancel');
+  cancelButton.setAttribute('value', STRINGS['new-job-cancel']);
   cancelButton.setAttribute('type', 'reset');
 
-  const jobPageTitle = document.getElementById(NEW_JOB_STRINGS['page'].id);
-  jobPageTitle.innerText = NEW_JOB_STRINGS['page'].title;
+  const jobPageTitle = document.getElementById('new-job-page-title');
+  jobPageTitle.innerText = STRINGS['new-job-page-title'];
 
-  const submitButton = document.getElementById(NEW_JOB_STRINGS['submit'].id);
-  submitButton.setAttribute('value', NEW_JOB_STRINGS['submit'].title);
+  const submitButton = document.getElementById('new-job-submit');
+  submitButton.setAttribute('value', STRINGS['new-job-submit']);
   submitButton.setAttribute('type', 'submit');
 
-  const jobTitle = document.getElementById(NEW_JOB_STRINGS['job-title'].id);
+  const jobTitle = document.getElementById('new-job-title');
   jobTitle.setAttribute('type', 'text');
-  jobTitle.setAttribute('placeholder', NEW_JOB_STRINGS['job-title'].title);
+  jobTitle.setAttribute('placeholder', STRINGS['new-job-title']);
   jobTitle.setAttribute('required', true);
 
   const jobDescription =
-    document.getElementById(NEW_JOB_STRINGS['job-description'].id);
+    document.getElementById('new-job-description');
   jobDescription.setAttribute('placeholder',
-      NEW_JOB_STRINGS['job-description'].title);
+      STRINGS['new-job-description']);
   jobDescription.setAttribute('required', true);
 
-  const jobAddress = document.getElementById(NEW_JOB_STRINGS['job-address'].id);
-  jobAddress.setAttribute('placeholder', NEW_JOB_STRINGS['job-address'].title);
+  const jobAddress = document.getElementById('new-job-address');
+  jobAddress.setAttribute('placeholder', STRINGS['new-job-address']);
   jobAddress.setAttribute('required', true);
 
   const requirementsTitle =
-    document.getElementById(NEW_JOB_STRINGS['job-requirements'].id);
-  requirementsTitle.innerText = NEW_JOB_STRINGS['job-requirements'].title;
+    document.getElementById('new-job-requirements-title');
+  requirementsTitle.innerText = STRINGS['new-job-requirements-title'];
   addRequirementsList();
 
-  const payTitle = document.getElementById(NEW_JOB_STRINGS['job-pay'].id);
-  payTitle.innerText = NEW_JOB_STRINGS['job-pay'].title;
+  const payTitle = document.getElementById('new-job-pay-title');
+  payTitle.innerText = STRINGS['new-job-pay-title'];
   addJobPayFrequencyOptions();
 
-  const payMin = document.getElementById(NEW_JOB_STRINGS['job-pay-min'].id);
+  const payMin = document.getElementById('new-job-pay-min');
   payMin.setAttribute('type', 'number');
-  payMin.setAttribute('placeholder', NEW_JOB_STRINGS['job-pay-min'].title);
+  payMin.setAttribute('placeholder', STRINGS['new-job-pay-min']);
   payMin.setAttribute('required', true);
 
-  const payMax = document.getElementById(NEW_JOB_STRINGS['job-pay-max'].id);
+  const payMax = document.getElementById('new-job-pay-max');
   payMax.setAttribute('type', 'number');
-  payMax.setAttribute('placeholder', NEW_JOB_STRINGS['job-pay-max'].title);
+  payMax.setAttribute('placeholder', STRINGS['new-job-pay-max']);
   payMax.setAttribute('required', true);
 
   const durationTitle =
-    document.getElementById(NEW_JOB_STRINGS['job-duration'].id);
-  durationTitle.innerText = NEW_JOB_STRINGS['job-duration'].title;
+    document.getElementById('new-job-duration-title');
+  durationTitle.innerText = STRINGS['new-job-duration-title'];
   addJobDurationOptions();
 
-  const expiryTitle = document.getElementById(NEW_JOB_STRINGS['job-expiry'].id);
-  expiryTitle.innerText = NEW_JOB_STRINGS['job-expiry'].title;
+  const expiryTitle = document.getElementById('new-job-expiry-title');
+  expiryTitle.innerText = STRINGS['new-job-expiry-title'];
   const expiryInput =
-    document.getElementById(NEW_JOB_STRINGS['job-expiry-picker'].id);
+    document.getElementById('new-job-expiry');
   expiryInput.setAttribute('type', 'date');
-  expiryInput.setAttribute('name', NEW_JOB_STRINGS['job-expiry-picker'].id);
+  // expiryInput.setAttribute('name', 'new-job-expiry');
   expiryInput.setAttribute('required', true);
   addJobExpiryLimits();
 }
@@ -79,7 +83,7 @@ function addJobPageElements() {
 function addRequirementsList() {
   const requirementsList = getRequirementsList();
   const requirementsListElement =
-    document.getElementById(NEW_JOB_STRINGS['job-requirements-list'].id);
+    document.getElementById('new-job-requirements-list');
 
   requirementsListElement.innerHTML = '';
   for (const key in requirementsList) {
@@ -91,7 +95,7 @@ function addRequirementsList() {
       checkbox.setAttribute('type', 'checkbox');
       checkbox.setAttribute('id', key);
       checkbox.setAttribute('name',
-          NEW_JOB_STRINGS['job-requirements-list'].name);
+          STRINGS['new-job-requirements-list']);
       checkbox.setAttribute('value', key);
 
       const label = document.createElement('label');
@@ -123,24 +127,24 @@ function getRequirementsList() {
 /** Dynamically add the options for job pay frequency. */
 function addJobPayFrequencyOptions() {
   const jobPaySelect =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-frequency'].id);
+    document.getElementById('new-job-pay-frequency');
   jobPaySelect.setAttribute('required', true);
   jobPaySelect.options.length = 0;
 
   jobPaySelect.options[0] = new Option('Select', '');
   jobPaySelect.options[0].setAttribute('disabled', true);
-  addSelectOptions(jobPaySelect, NEW_JOB_STRINGS['job-pay-frequency'].values);
+  addSelectOptions(jobPaySelect, STRINGS['new-job-pay-frequency']);
 }
 
 /** Dynamically add the options for job duration. */
 function addJobDurationOptions() {
   const jobDurationSelect =
-    document.getElementById(NEW_JOB_STRINGS['job-duration-select'].id);
+    document.getElementById('new-job-duration');
   jobDurationSelect.options.length = 0;
 
   jobDurationSelect.options[0] = new Option('Other', '');
   addSelectOptions(jobDurationSelect,
-      NEW_JOB_STRINGS['job-duration-select'].values);
+      STRINGS['new-job-duration']);
 }
 
 /**
@@ -165,7 +169,7 @@ function addJobExpiryLimits() {
   const max = date.toISOString().substr(0, 10);
 
   const datePicker =
-    document.getElementById(NEW_JOB_STRINGS['job-expiry-picker'].id);
+    document.getElementById('new-job-expiry');
   datePicker.setAttribute('min', min);
   datePicker.setAttribute('max', max);
 }
@@ -175,20 +179,20 @@ function addJobExpiryLimits() {
  * @return {Object} containing the user inputs.
  */
 function getJobDetailsFromUserInput() {
-  const name = document.getElementById(NEW_JOB_STRINGS['job-title'].id).value;
+  const name = document.getElementById('new-job-title').value;
   const address =
-    document.getElementById(NEW_JOB_STRINGS['job-address'].id).value;
+    document.getElementById('new-job-address').value;
   const description =
-    document.getElementById(NEW_JOB_STRINGS['job-description'].id).value;
+    document.getElementById('new-job-description').value;
   const payFrequency =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-frequency'].id).value;
+    document.getElementById('new-job-pay-frequency').value;
   const payMin =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-min'].id).valueAsNumber;
+    document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-max'].id).valueAsNumber;
+    document.getElementById('new-job-pay-max').valueAsNumber;
 
   const requirementsCheckboxes =
-    document.getElementsByName(NEW_JOB_STRINGS['job-requirements-list'].name);
+    document.getElementsByName(STRINGS['new-job-requirements-list']);
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
     if (checked) {
@@ -197,10 +201,10 @@ function getJobDetailsFromUserInput() {
   });
 
   const expiry =
-    document.getElementById(NEW_JOB_STRINGS['job-expiry-picker'].id)
+    document.getElementById('new-job-expiry')
         .valueAsNumber;
   const duration =
-    document.getElementById(NEW_JOB_STRINGS['job-duration-select'].id).value;
+    document.getElementById('new-job-duration').value;
 
   const jobDetails = {
     jobTitle: name,
@@ -232,19 +236,19 @@ function getJobDetailsFromUserInput() {
  */
 function validateRequiredUserInput() {
   // TODO(issue/19): add more validation checks
-  const name = document.getElementById(NEW_JOB_STRINGS['job-title'].id).value;
+  const name = document.getElementById('new-job-title').value;
   const address =
-    document.getElementById(NEW_JOB_STRINGS['job-address'].id).value;
+    document.getElementById('new-job-address').value;
   const description =
-    document.getElementById(NEW_JOB_STRINGS['job-description'].id).value;
+    document.getElementById('new-job-description').value;
   const payFrequency =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-frequency'].id).value;
+    document.getElementById('new-job-pay-frequency').value;
   const payMin =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-min'].id).valueAsNumber;
+    document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax =
-    document.getElementById(NEW_JOB_STRINGS['job-pay-max'].id).valueAsNumber;
+    document.getElementById('new-job-pay-max').valueAsNumber;
   const expiry =
-    document.getElementById(NEW_JOB_STRINGS['job-expiry-picker'].id)
+    document.getElementById('new-job-expiry')
         .valueAsNumber;
 
   if (payMin > payMax) {
@@ -260,11 +264,11 @@ function validateRequiredUserInput() {
   return false;
 }
 
-const submitButton = document.getElementById(NEW_JOB_STRINGS['submit'].id);
+const submitButton = document.getElementById('new-job-submit');
 submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
-    document.getElementById(NEW_JOB_STRINGS['error'].id).innerText =
-      NEW_JOB_STRINGS['error'].message;
+    document.getElementById('new-job-error-message').innerText =
+      STRINGS['new-job-error-message'].message;
     return;
   }
 
@@ -277,17 +281,17 @@ submitButton.addEventListener('click', (_) => {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
-        document.getElementById(NEW_JOB_STRINGS['error'].id).innerText = '';
+        document.getElementById('new-job-error-message').innerText = '';
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        document.getElementById(NEW_JOB_STRINGS['error'].id).innerText =
-          NEW_JOB_STRINGS['error'].message;
+        document.getElementById('new-job-error-message').innerText =
+          STRINGS['new-job-error-message'].message;
         console.log('error', error);
       });
 });
 
-const cancelButton = document.getElementById(NEW_JOB_STRINGS['cancel'].id);
+const cancelButton = document.getElementById('new-job-cancel');
 cancelButton.addEventListener('click', (_) => {
   window.location.href= HOMEPAGE_PATH;
 });
