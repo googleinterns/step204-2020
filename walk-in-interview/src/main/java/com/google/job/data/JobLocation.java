@@ -1,5 +1,7 @@
 package com.google.job.data;
 
+import java.util.Objects;
+
 /** Class that represents the location of a job. */
 public final class JobLocation {
     private String address;
@@ -37,5 +39,10 @@ public final class JobLocation {
         return Double.compare(that.lat, lat) == 0 &&
                 Double.compare(that.lon, lon) == 0 &&
                 address.equals(that.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, lat, lon);
     }
 }

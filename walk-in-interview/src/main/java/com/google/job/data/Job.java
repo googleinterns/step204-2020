@@ -136,4 +136,9 @@ public final class Job {
                 requirements.equals(job.requirements) &&
                 jobDuration.equals(job.jobDuration);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(jobId, jobStatus, jobTitle, jobLocation, jobDescription, jobPay, requirements, postExpiry, jobDuration);
+    }
 }

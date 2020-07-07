@@ -1,5 +1,7 @@
 package com.google.job.data;
 
+import java.util.Objects;
+
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
     private float min;
@@ -37,5 +39,10 @@ public final class JobPayment {
         return Float.compare(that.min, min) == 0 &&
                 Float.compare(that.max, max) == 0 &&
                 frequency == that.frequency;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(min, max, frequency);
     }
 }
