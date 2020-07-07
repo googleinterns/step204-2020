@@ -43,6 +43,17 @@ public final class JobLocation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(address, lat, lon);
+        int result = 0;
+
+        int c = ((Double)lat).hashCode();
+        result = 31 * result + c;
+
+        c = ((Double)lon).hashCode();
+        result = 31 * result + c;
+
+        c = address.hashCode();
+        result = 31 * result + c;
+
+        return result;
     }
 }

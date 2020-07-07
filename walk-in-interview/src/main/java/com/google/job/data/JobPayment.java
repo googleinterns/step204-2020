@@ -43,6 +43,17 @@ public final class JobPayment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(min, max, frequency);
+        int result = 0;
+
+        int c = ((Float)min).hashCode();
+        result = 31 * result + c;
+
+        c = ((Float)max).hashCode();
+        result = 31 * result + c;
+
+        c = frequency.hashCode();
+        result = 31 * result + c;
+
+        return result;
     }
 }

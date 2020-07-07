@@ -139,6 +139,35 @@ public final class Job {
 
     @Override
     public int hashCode() {
-        return Objects.hash(jobId, jobStatus, jobTitle, jobLocation, jobDescription, jobPay, requirements, postExpiry, jobDuration);
+        int result = 0;
+
+        int c = jobId.hashCode();
+        result = 31 * result + c;
+
+        c = jobStatus.hashCode();
+        result = 31 * result + c;
+
+        c = jobTitle.hashCode();
+        result = 31 * result + c;
+
+        c = jobLocation.hashCode();
+        result = 31 * result + c;
+
+        c = jobDescription.hashCode();
+        result = 31 * result + c;
+
+        c = jobPay.hashCode();
+        result = 31 * result + c;
+
+        c = requirements.hashCode();
+        result = 31 * result + c;
+
+        c = ((Long)postExpiry).hashCode();
+        result = 31 * result + c;
+
+        c = jobDuration == null ? 0 : jobDuration.hashCode();
+        result = 31 * result + c;
+
+        return result;
     }
 }
