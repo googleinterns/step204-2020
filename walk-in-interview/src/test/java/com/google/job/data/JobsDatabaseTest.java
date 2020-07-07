@@ -134,7 +134,7 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         expectedJobName = "Googler";
-        Job updatedJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job updatedJob = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
