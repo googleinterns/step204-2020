@@ -1,0 +1,19 @@
+{
+  "name": "step204-2020",
+  "version": "1.0.0",
+  "description": "walk-in interview capstone projec",
+  "main": "index.js",
+  "scripts": {
+    "test": "find ./walk-in-interview -name '*_test.js' | xargs mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riya-n/step204-2020.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/riya-n/step204-2020/issues"
+  },
+  "homepage": "https://github.com/riya-n/step204-2020#readme"
+}
