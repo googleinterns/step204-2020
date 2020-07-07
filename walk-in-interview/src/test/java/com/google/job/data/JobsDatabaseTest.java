@@ -83,30 +83,6 @@ public final class JobsDatabaseTest {
         Job actualJob = document.toObject(Job.class);
 
         assertEquals(job, actualJob);
-
-//        JobStatus actualJobStatus = actualJob.getJobStatus();
-//        assertEquals(expectedJobStatus, actualJobStatus);
-//
-//        String actualJobName = actualJob.getJobTitle();
-//        assertEquals(expectedJobName, actualJobName);
-//
-//        JobLocation actualJobLocation = actualJob.getJobLocation();
-//        assertEquals(expectedJobLocation, actualJobLocation);
-//
-//        String actualJobDescription = actualJob.getJobDescription();
-//        assertEquals(expectedJobDescription, actualJobDescription);
-//
-//        JobPayment actualJobPayment = actualJob.getJobPay();
-//        assertEquals(expectedJobPayment, actualJobPayment);
-//
-//        Collection<String> actualRequirements = actualJob.getRequirements();
-//        assertEquals(expectedRequirements, actualRequirements);
-//
-//        long actualPostExpiry = actualJob.getPostExpiry();
-//        assertEquals(expectedPostExpiry, actualPostExpiry);
-//
-//        Duration actualJobDuration = actualJob.getJobDuration();
-//        assertEquals(expectedJobDuration.get(), actualJobDuration);
     }
 
     @Test
@@ -152,29 +128,7 @@ public final class JobsDatabaseTest {
 
         Job actualJob = documentSnapshot.toObject(Job.class);
 
-        JobStatus actualJobStatus = actualJob.getJobStatus();
-        assertEquals(expectedJobStatus, actualJobStatus);
-
-        String actualJobName = actualJob.getJobTitle();
-        assertEquals(expectedJobName, actualJobName);
-
-        JobLocation actualJobLocation = actualJob.getJobLocation();
-        assertEquals(expectedJobLocation, actualJobLocation);
-
-        String actualJobDescription = actualJob.getJobDescription();
-        assertEquals(expectedJobDescription, actualJobDescription);
-
-        JobPayment actualJobPayment = actualJob.getJobPay();
-        assertEquals(expectedJobPayment, actualJobPayment);
-
-        Collection<String> actualRequirements = actualJob.getRequirements();
-        assertEquals(expectedRequirements, actualRequirements);
-
-        long actualPostExpiry = actualJob.getPostExpiry();
-        assertEquals(expectedPostExpiry, actualPostExpiry);
-
-        Duration actualJobDuration = actualJob.getJobDuration();
-        assertEquals(expectedJobDuration.get(), actualJobDuration);
+        assertEquals(updatedJob, actualJob);
     }
 
     @Test
@@ -211,29 +165,7 @@ public final class JobsDatabaseTest {
 
         Job actualJob = jobOptional.get();
 
-        JobStatus actualJobStatus = actualJob.getJobStatus();
-        assertEquals(expectedJobStatus, actualJobStatus);
-
-        String actualJobName = actualJob.getJobTitle();
-        assertEquals(expectedJobName, actualJobName);
-
-        JobLocation actualJobLocation = actualJob.getJobLocation();
-        assertEquals(expectedJobLocation, actualJobLocation);
-
-        String actualJobDescription = actualJob.getJobDescription();
-        assertEquals(expectedJobDescription, actualJobDescription);
-
-        JobPayment actualJobPayment = actualJob.getJobPay();
-        assertEquals(expectedJobPayment, actualJobPayment);
-
-        Collection<String> actualRequirements = actualJob.getRequirements();
-        assertEquals(expectedRequirements, actualRequirements);
-
-        long actualPostExpiry = actualJob.getPostExpiry();
-        assertEquals(expectedPostExpiry, actualPostExpiry);
-
-        Duration actualJobDuration = actualJob.getJobDuration();
-        assertEquals(expectedJobDuration.get(), actualJobDuration);
+        assertEquals(job, actualJob);
     }
 
     @After
