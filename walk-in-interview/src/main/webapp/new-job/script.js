@@ -88,13 +88,14 @@ function addRequirementsList() {
     document.getElementById('new-job-requirements-list');
 
   requirementsListElement.innerHTML = '';
-  const requirementElementTemplate = document.getElementById('requirement-element-template');
+  const requirementElementTemplate =
+    document.getElementById('requirement-element-template');
   for (const key in requirementsList) {
     if (requirementsList.hasOwnProperty(key)) {
       const requirementElement = requirementElementTemplate
-        .cloneNode( /** and child elements */ true);
+          .cloneNode( /** and child elements */ true);
       requirementElement.setAttribute('id', key);
-      
+
       const checkbox = requirementElement.children[0];
       checkbox.setAttribute('id', key);
       checkbox.setAttribute('value', key);
