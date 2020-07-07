@@ -1,32 +1,55 @@
 package com.google.job.data;
 
-import java.util.Objects;
-
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
     private float min;
     private float max;
     private Frequency frequency;
 
-    // For serialization
-    public JobPayment() {
+    private void validateParameter(float min, float max) throws IllegalArgumentException {
+        if (min < 0) {
+            throw new IllegalArgumentException("\"min\" should not be negative");
+        }
 
+        if (max < min) {
+            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
+        }
     }
 
+    // For serialization
+    public JobPayment() {}
+
     public JobPayment(float min, float max, Frequency frequency) {
+        validateParameter(min, max);
+
         this.min = min;
         this.max = max;
         this.frequency = frequency;
     }
 
+    /**
+     * Gets the lower limit of the payment.
+     *
+     * @return Lower limit of the payment.
+     */
     public float getMin() {
         return min;
     }
 
+    /**
+     * Gets the upper limit of the payment.
+     *
+     * @return Upper limit of the payment.
+     */
     public float getMax() {
         return max;
     }
 
+    /**
+     * Gets the payment frequency.
+     *
+     * @return Payment frequency.
+     */
     public Frequency getFrequency() {
         return frequency;
     }

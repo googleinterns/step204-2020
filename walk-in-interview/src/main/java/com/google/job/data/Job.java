@@ -2,9 +2,7 @@ package com.google.job.data;
 
 import jdk.internal.jline.internal.Nullable;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /** Class for a job post. */
@@ -15,7 +13,7 @@ public final class Job {
     // private long businessAccountId; // account is not involved so far
     private JobStatus jobStatus;
     private String jobTitle;
-    private JobLocation jobLocation;
+    private Location location;
     private String jobDescription;
     private JobPayment jobPay;
     private List<String> requirements;
@@ -23,14 +21,14 @@ public final class Job {
     private Duration jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobTitle,
-                JobLocation jobLocation, String jobDescription,
+                Location location, String jobDescription,
                 JobPayment jobPayment, List<String> requirements,
                 long postExpiry, @Nullable Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobTitle = jobTitle;
-        this.jobLocation = jobLocation;
+        this.location = location;
         this.jobDescription = jobDescription;
         this.jobPay = jobPayment;
         this.requirements = requirements;
@@ -54,7 +52,7 @@ public final class Job {
     public Job() {}
 
     public Job(String jobTitle, JobStatus jobStatus,
-               JobLocation jobLocation, String jobDescription,
+               Location location, String jobDescription,
                JobPayment jobPayment, List<String> requirements,
                long jobExpiry, @Nullable Optional<Duration> jobDuration) throws IllegalArgumentException {
         validateParameters(jobTitle, jobDescription);
@@ -63,7 +61,7 @@ public final class Job {
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobTitle = jobTitle;
-        this.jobLocation = jobLocation;
+        this.location = location;
         this.jobDescription = jobDescription;
         this.jobPay = jobPayment;
         this.requirements = requirements;
@@ -80,10 +78,20 @@ public final class Job {
         this.jobStatus = jobStatus;
     }
 
+    /**
+     * Gets the id for the job post.
+     *
+     * @return Id of the job post.
+     */
     public String getJobId() {
         return jobId;
     }
 
+    /**
+     * Gets the status of the job post, either ACTIVE, DELETED, or EXPIRED.
+     *
+     * @return Status of the job post.
+     */
     public JobStatus getJobStatus() {
         return jobStatus;
     }
@@ -97,26 +105,56 @@ public final class Job {
         return jobTitle;
     }
 
-    public JobLocation getJobLocation() {
-        return jobLocation;
+    /**
+     * Gets the location details of the job post.
+     *
+     * @return Location details of the post.
+     */
+    public Location getLocation() {
+        return location;
     }
 
+    /**
+     * Gets the job description of that post. Job description cannot be empty.
+     *
+     * @return Job description of the post.
+     */
     public String getJobDescription() {
         return jobDescription;
     }
 
+    /**
+     * Gets the payment details of the job post.
+     *
+     * @return Payment details of the post.
+     */
     public JobPayment getJobPay() {
         return jobPay;
     }
 
-    public Collection<String> getRequirements() {
+    /**
+     * Gets a list of requirements of the job post.
+     *
+     * @return Requirement list.
+     */
+    public List<String> getRequirements() {
         return requirements;
     }
 
+    /**
+     * Gets the date when the job post will expire.
+     *
+     * @return Expiry date of the post.
+     */
     public long getPostExpiry() {
         return postExpiry;
     }
 
+    /**
+     * Gets the duration of the job itself. This field is optional, so it can be null.
+     *
+     * @return Duration of the job.
+     */
     public @Nullable Duration getJobDuration() {
         return jobDuration;
     }
@@ -130,7 +168,7 @@ public final class Job {
                 jobId.equals(job.jobId) &&
                 jobStatus == job.jobStatus &&
                 jobTitle.equals(job.jobTitle) &&
-                jobLocation.equals(job.jobLocation) &&
+                location.equals(job.location) &&
                 jobDescription.equals(job.jobDescription) &&
                 jobPay.equals(job.jobPay) &&
                 requirements.equals(job.requirements) &&
@@ -150,7 +188,7 @@ public final class Job {
         c = jobTitle.hashCode();
         result = 31 * result + c;
 
-        c = jobLocation.hashCode();
+        c = location.hashCode();
         result = 31 * result + c;
 
         c = jobDescription.hashCode();

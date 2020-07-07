@@ -57,7 +57,7 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
-        JobLocation expectedJobLocation =  new JobLocation("Google", 0, 0);
+        Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("O Level", "Driving License");
@@ -65,7 +65,7 @@ public final class JobsDatabaseTest {
 
         Optional<Duration> expectedJobDuration = Optional.of(Duration.SIX_MONTHS);
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -89,14 +89,14 @@ public final class JobsDatabaseTest {
     public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
-        JobLocation expectedJobLocation =  new JobLocation("Google", 0, 0);
+        Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
         long expectedPostExpiry = System.currentTimeMillis();
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -111,7 +111,7 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         expectedJobName = "Googler";
-        Job updatedJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job updatedJob = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -136,14 +136,14 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
-        JobLocation expectedJobLocation =  new JobLocation("Maple Tree", 0, 0);
+        Location expectedLocation =  new Location("Maple Tree", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
         long expectedPostExpiry = System.currentTimeMillis();;
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
