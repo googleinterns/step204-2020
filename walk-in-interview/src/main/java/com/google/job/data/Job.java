@@ -1,5 +1,7 @@
 package com.google.job.data;
 
+import jdk.internal.jline.internal.Nullable;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -16,12 +18,12 @@ public final class Job {
     private JobPayment jobPay;
     private Collection<String> requirements;
     private long postExpiry; // a timestamp
-    private Optional<Duration> jobDuration;
+    private Duration jobDuration;
 
     private Job(String jobId, JobStatus jobStatus, String jobTitle,
                 JobLocation jobLocation, String jobDescription,
                 JobPayment jobPayment, Collection<String> requirements,
-                long postExpiry, Optional<Duration> jobDuration) {
+                long postExpiry, @Nullable Optional<Duration> jobDuration) {
         this.jobId = jobId;
         // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
@@ -31,7 +33,9 @@ public final class Job {
         this.jobPay = jobPayment;
         this.requirements = requirements;
         this.postExpiry = postExpiry;
-        this.jobDuration = jobDuration;
+
+        // Cloud firestore cannot handle Optional, so simply store null into it.
+        this.jobDuration = jobDuration.get();
     }
 
     private void validateParameters(String jobTitle, String jobDescription) throws IllegalArgumentException {
@@ -47,10 +51,10 @@ public final class Job {
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
     public Job() {}
 
-    public Job(String jobId, String jobTitle, JobStatus jobStatus,
+    public Job(String jobTitle, JobStatus jobStatus,
                JobLocation jobLocation, String jobDescription,
                JobPayment jobPayment, Collection<String> requirements,
-               long jobExpiry, Optional<Duration> jobDuration) throws IllegalArgumentException {
+               long jobExpiry, @Nullable Optional<Duration> jobDuration) throws IllegalArgumentException {
         validateParameters(jobTitle, jobDescription);
 
         this.jobId = DUMMY;
@@ -62,7 +66,8 @@ public final class Job {
         this.jobPay = jobPayment;
         this.requirements = requirements;
         this.postExpiry = jobExpiry;
-        this.jobDuration = jobDuration;
+
+        this.jobDuration = jobDuration.get();
     }
 
     public void setJobId(String jobId) {
@@ -110,7 +115,7 @@ public final class Job {
         return postExpiry;
     }
 
-    public Optional<Duration> getJobDuration() {
+    public @Nullable Duration getJobDuration() {
         return jobDuration;
     }
 }

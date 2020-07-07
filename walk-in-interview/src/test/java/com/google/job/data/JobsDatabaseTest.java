@@ -20,7 +20,6 @@ public final class JobsDatabaseTest {
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
-    private static final String DUMMY = "dummy";
 
     JobsDatabase jobsDatabase;
     Firestore firestore;
@@ -66,7 +65,7 @@ public final class JobsDatabaseTest {
 
         Optional<Duration> expectedJobDuration = Optional.of(Duration.SIX_MONTHS);
 
-        Job job = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -104,8 +103,8 @@ public final class JobsDatabaseTest {
         long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
-        Optional<Duration> actualJobDuration = actualJob.getJobDuration();
-        assertEquals(expectedJobDuration, actualJobDuration);
+        Duration actualJobDuration = actualJob.getJobDuration();
+        assertEquals(expectedJobDuration.get(), actualJobDuration);
     }
 
     @Test
@@ -119,7 +118,7 @@ public final class JobsDatabaseTest {
         long expectedPostExpiry = System.currentTimeMillis();
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job oldJob = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -134,7 +133,7 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         expectedJobName = "Googler";
-        Job updatedJob = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job updatedJob = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -172,8 +171,8 @@ public final class JobsDatabaseTest {
         long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
-        Optional<Duration> actualJobDuration = actualJob.getJobDuration();
-        assertEquals(expectedJobDuration, actualJobDuration);
+        Duration actualJobDuration = actualJob.getJobDuration();
+        assertEquals(expectedJobDuration.get(), actualJobDuration);
     }
 
     @Test
@@ -188,7 +187,7 @@ public final class JobsDatabaseTest {
         long expectedPostExpiry = System.currentTimeMillis();;
         Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
 
-        Job job = new Job(DUMMY, expectedJobName, expectedJobStatus, expectedJobLocation,
+        Job job = new Job(expectedJobName, expectedJobStatus, expectedJobLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
                 expectedPostExpiry, expectedJobDuration);
 
@@ -231,8 +230,8 @@ public final class JobsDatabaseTest {
         long actualPostExpiry = actualJob.getPostExpiry();
         assertEquals(expectedPostExpiry, actualPostExpiry);
 
-        Optional<Duration> actualJobDuration = actualJob.getJobDuration();
-        assertEquals(expectedJobDuration, actualJobDuration);
+        Duration actualJobDuration = actualJob.getJobDuration();
+        assertEquals(expectedJobDuration.get(), actualJobDuration);
     }
 
     @After
