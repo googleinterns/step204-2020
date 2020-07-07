@@ -4,14 +4,17 @@
  * is submitted.
  */
 
-const CurrentLocale = 'en';
 // TODO(issue/21): get the language from the browser
+const CurrentLocale = 'en';
 
-// backticks don't seem to be working
+/**
+ * Import statements are static so its parameters cannot be dynamic.
+ * TODO(issue/22): figure out how to use dnamic imports
+ */
 import {AppStrings} from './strings.en.js';
 
-const STRINGS = AppStrings[`new-job`];
-const HOMEPAGE_PATH = `../index.html`;
+const STRINGS = AppStrings['new-job'];
+const HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
   addJobPageElements();
