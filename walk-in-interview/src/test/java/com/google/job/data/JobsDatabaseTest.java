@@ -82,29 +82,31 @@ public final class JobsDatabaseTest {
 
         Job actualJob = document.toObject(Job.class);
 
-        JobStatus actualJobStatus = actualJob.getJobStatus();
-        assertEquals(expectedJobStatus, actualJobStatus);
+        assertEquals(job, actualJob);
 
-        String actualJobName = actualJob.getJobTitle();
-        assertEquals(expectedJobName, actualJobName);
-
-        JobLocation actualJobLocation = actualJob.getJobLocation();
-        assertEquals(expectedJobLocation, actualJobLocation);
-
-        String actualJobDescription = actualJob.getJobDescription();
-        assertEquals(expectedJobDescription, actualJobDescription);
-
-        JobPayment actualJobPayment = actualJob.getJobPay();
-        assertEquals(expectedJobPayment, actualJobPayment);
-
-        Collection<String> actualRequirements = actualJob.getRequirements();
-        assertEquals(expectedRequirements, actualRequirements);
-
-        long actualPostExpiry = actualJob.getPostExpiry();
-        assertEquals(expectedPostExpiry, actualPostExpiry);
-
-        Duration actualJobDuration = actualJob.getJobDuration();
-        assertEquals(expectedJobDuration.get(), actualJobDuration);
+//        JobStatus actualJobStatus = actualJob.getJobStatus();
+//        assertEquals(expectedJobStatus, actualJobStatus);
+//
+//        String actualJobName = actualJob.getJobTitle();
+//        assertEquals(expectedJobName, actualJobName);
+//
+//        JobLocation actualJobLocation = actualJob.getJobLocation();
+//        assertEquals(expectedJobLocation, actualJobLocation);
+//
+//        String actualJobDescription = actualJob.getJobDescription();
+//        assertEquals(expectedJobDescription, actualJobDescription);
+//
+//        JobPayment actualJobPayment = actualJob.getJobPay();
+//        assertEquals(expectedJobPayment, actualJobPayment);
+//
+//        Collection<String> actualRequirements = actualJob.getRequirements();
+//        assertEquals(expectedRequirements, actualRequirements);
+//
+//        long actualPostExpiry = actualJob.getPostExpiry();
+//        assertEquals(expectedPostExpiry, actualPostExpiry);
+//
+//        Duration actualJobDuration = actualJob.getJobDuration();
+//        assertEquals(expectedJobDuration.get(), actualJobDuration);
     }
 
     @Test

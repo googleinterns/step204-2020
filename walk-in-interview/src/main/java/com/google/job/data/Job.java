@@ -4,6 +4,7 @@ import jdk.internal.jline.internal.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /** Class for a job post. */
@@ -118,5 +119,21 @@ public final class Job {
 
     public @Nullable Duration getJobDuration() {
         return jobDuration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Job job = (Job) o;
+        return postExpiry == job.postExpiry &&
+                jobId.equals(job.jobId) &&
+                jobStatus == job.jobStatus &&
+                jobTitle.equals(job.jobTitle) &&
+                jobLocation.equals(job.jobLocation) &&
+                jobDescription.equals(job.jobDescription) &&
+                jobPay.equals(job.jobPay) &&
+                requirements.equals(job.requirements) &&
+                jobDuration.equals(job.jobDuration);
     }
 }
