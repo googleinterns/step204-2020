@@ -16,10 +16,9 @@ AppStrings['new-job'] = {
   'new-job-page-title': 'New Job Post',
   'new-job-cancel': 'Cancel',
   'new-job-submit': 'Create',
-  'new-job-error-message': 'Please check your inputs and try submitting again.',
+  'new-job-error-message': 'There is an error in the following field: ',
   'new-job-title': 'Job Title',
-  'new-job-description':
-    'Describe the job here (responsibilities, preffered skills)...',
+  'new-job-description': 'Job Description',
   'new-job-address': 'Job Address',
   'new-job-requirements-title': 'Requirements',
   'new-job-requirements-list': 'requirements-list',

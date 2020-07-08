@@ -15,6 +15,8 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
+const RESPONSE_ERROR = 'There was an error while creating' +
+  'the job listing, please try submitting again';
 
 window.onload = () => {
   addJobPageElements();
@@ -76,6 +78,20 @@ function addJobPageElements() {
   expiryInput.setAttribute('type', 'date');
   expiryInput.setAttribute('required', true);
   addJobExpiryLimits();
+
+  setErrorMessage('', /** includes default msg */ false);
+}
+
+/**
+ * Sets the error message according to the param.
+ * @param {String} msg the message that the error div should display.
+ * @param {boolean} includesDefault whether the deafult
+ * message should be included.
+ */
+function setErrorMessage(msg, includesDefault) {
+  console.log('set error: ', msg, ' & include default: ', includesDefault);
+  document.getElementById('new-job-error-message').innerText =
+    (includesDefault ? STRINGS['new-job-error-message'] + msg : msg);
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -217,33 +233,58 @@ function getJobDetailsFromUserInput() {
  */
 function validateRequiredUserInput() {
   // TODO(issue/19): add more validation checks
-  const name = document.getElementById('new-job-title').value;
-  const address = document.getElementById('new-job-address').value;
-  const description = document.getElementById('new-job-description').value;
+  const name = document.getElementById('new-job-title');
+  const description = document.getElementById('new-job-description');
+  const address = document.getElementById('new-job-address');
   const payFrequency = document.getElementById('new-job-pay-frequency').value;
   const payMin = document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax = document.getElementById('new-job-pay-max').valueAsNumber;
-  const expiry = document.getElementById('new-job-expiry').valueAsNumber;
   const duration = document.getElementById('new-job-duration').value;
+  const expiry = document.getElementById('new-job-expiry').valueAsNumber;
 
-  if (payMin > payMax) {
+  if (name.value === '') {
+    setErrorMessage(name.placeholder,
+        /** includes default msg */ true);
     return false;
   }
 
-  if (name !== '' && address !== '' && description !== '' &&
-    payFrequency !== '' && payMin !== '' && payMax !== '' &&
-    !Number.isNaN(expiry) && duration !== '') {
-    return true;
+  if (description.value === '') {
+    setErrorMessage(description.placeholder,
+        /** includes default msg */ true);
+    return false;
   }
 
-  return false;
+  if (address.value === '') {
+    setErrorMessage(address.placeholder,
+        /** includes default msg */ true);
+    return false;
+  }
+
+  if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
+    payMin > payMax || payMin < 0 || payMax < 0) {
+    setErrorMessage(document.getElementById('new-job-pay-title').textContent,
+        /** includes default msg */ true);
+    return false;
+  }
+
+  if (duration === '') {
+    setErrorMessage(document.getElementById('new-job-duration-title')
+        .textContent, /** includes default msg */ true);
+    return false;
+  }
+
+  if (Number.isNaN(expiry)) {
+    setErrorMessage(document.getElementById('new-job-expiry-title')
+        .textContent, /** includes default msg */ true);
+    return false;
+  }
+
+  return true;
 }
 
 const submitButton = document.getElementById('new-job-submit');
 submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
-    document.getElementById('new-job-error-message').innerText =
-      STRINGS['new-job-error-message'].message;
     return;
   }
 
@@ -256,12 +297,11 @@ submitButton.addEventListener('click', (_) => {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
-        document.getElementById('new-job-error-message').innerText = '';
+        setErrorMessage('', /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        document.getElementById('new-job-error-message').innerText =
-          STRINGS['new-job-error-message'].message;
+        setErrorMessage(RESPONSE_ERROR, /** include default msg */ false);
         console.log('error', error);
       });
 });
