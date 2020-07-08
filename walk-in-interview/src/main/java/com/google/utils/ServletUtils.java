@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
+/** Util methods related to servlet. */
 public final class ServletUtils {
     private ServletUtils() {}
 
@@ -40,9 +41,7 @@ public final class ServletUtils {
 
             return result;
         } catch (NumberFormatException e) {
-            // TODO: error handling
-
-            // TODO: add logging to log the error
+            // TODO(issue/12): error handling; can consider to add logging to log the error
 
             return defaultValue;
         }
@@ -64,9 +63,7 @@ public final class ServletUtils {
 
             return result;
         } catch (NumberFormatException e) {
-            // TODO: error handling
-
-            // TODO: add logging to log the error
+            // TODO(issue/12): error handling; can consider to add logging to log the error
 
             return defaultValue;
         }
@@ -88,9 +85,7 @@ public final class ServletUtils {
 
             return result;
         } catch (NumberFormatException | ParseException e) {
-            // TODO: error handling
-
-            // TODO: add logging to log the error
+            // TODO(issue/12): error handling; can consider to add logging to log the error
 
             return defaultValue;
         }

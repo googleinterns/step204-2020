@@ -10,7 +10,7 @@ public final class Job {
     private static final String DUMMY = "dummy";
 
     private String jobId;
-    // private long businessAccountId; // account is not involved so far
+    // TODO(issue/25): merge the account stuff into job post.
     private JobStatus jobStatus;
     private String jobTitle;
     private Location location;
@@ -18,27 +18,11 @@ public final class Job {
     private JobPayment jobPay;
     private List<String> requirements;
     private long postExpiry; // a timestamp
-    private Duration jobDuration;
-
-    private Job(String jobId, JobStatus jobStatus, String jobTitle,
-                Location location, String jobDescription,
-                JobPayment jobPayment, List<String> requirements,
-                long postExpiry, @Nullable Optional<Duration> jobDuration) {
-        this.jobId = jobId;
-        // this.businessAccountId = businessAccountId;
-        this.jobStatus = jobStatus;
-        this.jobTitle = jobTitle;
-        this.location = location;
-        this.jobDescription = jobDescription;
-        this.jobPay = jobPayment;
-        this.requirements = requirements;
-        this.postExpiry = postExpiry;
-
-        // Cloud firestore cannot handle Optional, so simply store null into it.
-        this.jobDuration = jobDuration.get();
-    }
+    @Nullable
+    private JobDuration jobDuration;
 
     private void validateParameters(String jobTitle, String jobDescription) throws IllegalArgumentException {
+        // TODO(issue/19): add more validation check
         if (jobTitle.isEmpty()) {
             throw new IllegalArgumentException("Empty job title provided");
         }
@@ -54,11 +38,13 @@ public final class Job {
     public Job(String jobTitle, JobStatus jobStatus,
                Location location, String jobDescription,
                JobPayment jobPayment, List<String> requirements,
-               long jobExpiry, @Nullable Optional<Duration> jobDuration) throws IllegalArgumentException {
+               long jobExpiry, Optional<JobDuration> jobDuration) throws IllegalArgumentException {
         validateParameters(jobTitle, jobDescription);
 
+        // Assigns to it a dummy id first,
+        // so later can reassign it with the firestore generated id
+        // when retrieve a Job from database and display on the website
         this.jobId = DUMMY;
-        // this.businessAccountId = businessAccountId;
         this.jobStatus = jobStatus;
         this.jobTitle = jobTitle;
         this.location = location;
@@ -67,6 +53,7 @@ public final class Job {
         this.requirements = requirements;
         this.postExpiry = jobExpiry;
 
+        // Cloud firestore cannot handle Optional, so simply store null into it.
         this.jobDuration = jobDuration.get();
     }
 
@@ -155,7 +142,8 @@ public final class Job {
      *
      * @return Duration of the job.
      */
-    public @Nullable Duration getJobDuration() {
+    public @Nullable
+    JobDuration getJobDuration() {
         return jobDuration;
     }
 

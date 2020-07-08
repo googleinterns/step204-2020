@@ -4,16 +4,16 @@ package com.google.job.data;
 public final class Location {
     // TODO(issue/23): add "postalCode" and deal with optional address
     private String address;
-    private double lat;
-    private double lon;
+    private double latitude;
+    private double longitude;
 
     // For serialization
     public Location() {}
 
-    public Location(String address, double lat, double lon) {
+    public Location(String address, double latitude, double longitude) {
         this.address = address;
-        this.lat = lat;
-        this.lon = lon;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -30,8 +30,8 @@ public final class Location {
      *
      * @return Latitude of the place.
      */
-    public double getLat() {
-        return lat;
+    public double getLatitude() {
+        return latitude;
     }
 
     /**
@@ -39,8 +39,8 @@ public final class Location {
      *
      * @return Longitude of the place.
      */
-    public double getLon() {
-        return lon;
+    public double getLongitude() {
+        return longitude;
     }
 
     @Override
@@ -48,8 +48,8 @@ public final class Location {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location that = (Location) o;
-        return Double.compare(that.lat, lat) == 0 &&
-                Double.compare(that.lon, lon) == 0 &&
+        return Double.compare(that.latitude, latitude) == 0 &&
+                Double.compare(that.longitude, longitude) == 0 &&
                 address.equals(that.address);
     }
 
@@ -57,10 +57,10 @@ public final class Location {
     public int hashCode() {
         int result = 0;
 
-        int c = ((Double)lat).hashCode();
+        int c = ((Double) latitude).hashCode();
         result = 31 * result + c;
 
-        c = ((Double)lon).hashCode();
+        c = ((Double) longitude).hashCode();
         result = 31 * result + c;
 
         c = address.hashCode();
@@ -73,8 +73,8 @@ public final class Location {
     public String toString() {
         return "JobLocation{" +
                 "address='" + address + '\'' +
-                ", lat=" + lat +
-                ", lon=" + lon +
+                ", lat=" + latitude +
+                ", lon=" + longitude +
                 '}';
     }
 }

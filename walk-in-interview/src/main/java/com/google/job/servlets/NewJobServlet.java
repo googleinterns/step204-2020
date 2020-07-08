@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
+/** Servlet that handles posting new job posts. */
 @WebServlet("/jobs")
 public final class NewJobServlet extends HttpServlet {
     private static final String REDIRECT_LINK = "/new-job.html";
@@ -36,7 +37,7 @@ public final class NewJobServlet extends HttpServlet {
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } finally {
@@ -45,13 +46,13 @@ public final class NewJobServlet extends HttpServlet {
         }
     }
 
-    private Job parseJobPost(HttpServletRequest request) throws IOException {
+    private Job parseJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
         // Parses job object from the POST request
         BufferedReader bufferedReader = request.getReader();
         String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator()));
 
         if (StringUtils.isBlank(jobPostJsonStr)) {
-            throw new IOException();
+            throw new IllegalArgumentException("Json for Job object is Empty");
         }
 
         Job job = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);

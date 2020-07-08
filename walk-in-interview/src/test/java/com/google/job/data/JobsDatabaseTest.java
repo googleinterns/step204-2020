@@ -59,11 +59,11 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Software Engineer";
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "Programming using java";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("O Level", "Driving License");
         long expectedPostExpiry = System.currentTimeMillis();
 
-        Optional<Duration> expectedJobDuration = Optional.of(Duration.SIX_MONTHS);
+        Optional<JobDuration> expectedJobDuration = Optional.of(JobDuration.SIX_MONTHS);
 
         Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
@@ -91,10 +91,10 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Noogler";
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "New employee";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
         long expectedPostExpiry = System.currentTimeMillis();
-        Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
+        Optional<JobDuration> expectedJobDuration = Optional.of(JobDuration.ONE_MONTH);
 
         Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
@@ -138,10 +138,10 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Programmer";
         Location expectedLocation =  new Location("Maple Tree", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
         long expectedPostExpiry = System.currentTimeMillis();;
-        Optional<Duration> expectedJobDuration = Optional.of(Duration.ONE_MONTH);
+        Optional<JobDuration> expectedJobDuration = Optional.of(JobDuration.ONE_MONTH);
 
         Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,

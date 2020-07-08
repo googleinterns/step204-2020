@@ -1,7 +1,7 @@
 package com.google.job.data;
 
-/** Enumeration for duration. */
-public enum Duration {
+/** Enumeration for duration of a job. */
+public enum JobDuration {
     ONE_WEEK,
     TWO_WEEKS,
     ONE_MONTH,

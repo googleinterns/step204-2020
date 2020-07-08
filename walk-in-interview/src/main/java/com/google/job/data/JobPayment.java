@@ -2,9 +2,9 @@ package com.google.job.data;
 
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
-    private float min;
-    private float max;
-    private Frequency frequency;
+    private int min;
+    private int max;
+    private PaymentFrequency paymentFrequency;
 
     private void validateParameter(float min, float max) throws IllegalArgumentException {
         if (min < 0) {
@@ -19,12 +19,12 @@ public final class JobPayment {
     // For serialization
     public JobPayment() {}
 
-    public JobPayment(float min, float max, Frequency frequency) {
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) {
         validateParameter(min, max);
 
         this.min = min;
         this.max = max;
-        this.frequency = frequency;
+        this.paymentFrequency = paymentFrequency;
     }
 
     /**
@@ -50,8 +50,8 @@ public final class JobPayment {
      *
      * @return Payment frequency.
      */
-    public Frequency getFrequency() {
-        return frequency;
+    public PaymentFrequency getPaymentFrequency() {
+        return paymentFrequency;
     }
 
     @Override
@@ -61,20 +61,20 @@ public final class JobPayment {
         JobPayment that = (JobPayment) o;
         return Float.compare(that.min, min) == 0 &&
                 Float.compare(that.max, max) == 0 &&
-                frequency == that.frequency;
+                paymentFrequency == that.paymentFrequency;
     }
 
     @Override
     public int hashCode() {
         int result = 0;
 
-        int c = ((Float)min).hashCode();
+        int c = ((Integer)min).hashCode();
         result = 31 * result + c;
 
-        c = ((Float)max).hashCode();
+        c = ((Integer)max).hashCode();
         result = 31 * result + c;
 
-        c = frequency.hashCode();
+        c = paymentFrequency.hashCode();
         result = 31 * result + c;
 
         return result;
@@ -85,7 +85,7 @@ public final class JobPayment {
         return "JobPayment{" +
                 "min=" + min +
                 ", max=" + max +
-                ", frequency=" + frequency +
+                ", frequency=" + paymentFrequency +
                 '}';
     }
 }
