@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static com.google.job.data.Constants.*;
+import static com.google.job.data.Requirement.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

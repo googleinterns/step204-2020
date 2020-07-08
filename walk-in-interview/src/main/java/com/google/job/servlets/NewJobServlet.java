@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 /** Servlet that handles posting new job posts. */
 @WebServlet("/jobs")
 public final class NewJobServlet extends HttpServlet {
-    private static final String REDIRECT_LINK = "/new-job.html";
 
     private JobsDatabase jobsDatabase;
 
@@ -40,16 +39,13 @@ public final class NewJobServlet extends HttpServlet {
         } catch (IOException | IllegalArgumentException e) {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } finally {
-            // Redirects back to the HTML page.
-            response.sendRedirect(REDIRECT_LINK);
         }
     }
 
     private Job parseJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
         // Parses job object from the POST request
         BufferedReader bufferedReader = request.getReader();
-        String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator()));
+        String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
 
         if (StringUtils.isBlank(jobPostJsonStr)) {
             throw new IllegalArgumentException("Json for Job object is Empty");

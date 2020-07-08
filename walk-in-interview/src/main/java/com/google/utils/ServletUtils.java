@@ -18,7 +18,7 @@ public final class ServletUtils {
      *         or returns {@code defaultValue} if that parameter does not exist.
      */
     public static String getStringParameter(HttpServletRequest request, String name, String defaultValue) {
-        String value = request.getParameter(name);
+        String value = request.getParameter(name).trim();
         if (value == null || value.isEmpty()) {
             return defaultValue;
         }
@@ -34,7 +34,7 @@ public final class ServletUtils {
      * @return Parsed integer or default value if exception occur
      */
     public static int getIntParameter(HttpServletRequest request, String parameterName, int defaultValue) {
-        String resultStr = request.getParameter(parameterName);
+        String resultStr = request.getParameter(parameterName).trim();
 
         try {
             int result = Integer.parseInt(resultStr);
@@ -56,7 +56,7 @@ public final class ServletUtils {
      * @return Parsed integer or default value if exception occur
      */
     public static long getLongParameter(HttpServletRequest request, String parameterName, long defaultValue) {
-        String resultStr = request.getParameter(parameterName);
+        String resultStr = request.getParameter(parameterName).trim();
 
         try {
             long result = Integer.parseInt(resultStr);
@@ -78,7 +78,7 @@ public final class ServletUtils {
      * @return Parsed float or default value if exception occur
      */
     public static float getFloatParameter(HttpServletRequest request, String parameterName, float defaultValue) {
-        String resultStr = request.getParameter(parameterName);
+        String resultStr = request.getParameter(parameterName).trim();
 
         try {
             float result = Float.parseFloat(resultStr);
@@ -100,7 +100,7 @@ public final class ServletUtils {
      */
     public static Date getDateParameter(HttpServletRequest request,
                                         String parameterName, Date defaultValue) {
-        String resultStr = request.getParameter(parameterName);
+        String resultStr = request.getParameter(parameterName).trim();
 
         try {
             String pattern = "yyyy-MM-dd";

@@ -6,28 +6,19 @@ public enum JobStatus {
     DELETED("DELETED"),
     EXPIRED("EXPIRED");
 
-    private final String status;
+    private final String statusId;
 
     JobStatus(String status) {
-        this.status = status;
+        this.statusId = status;
     }
 
     /**
-     * Gets the String id matching the enum value.
+     * Gets the id string.
      *
-     * @return String id matching the enum value.
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * Gets the name of the enum value.
-     *
-     * @return Name of the enum value.
+     * @return Id string.
      */
     public String getStatusId() {
-        return this.name();
+        return statusId;
     }
 
     /**

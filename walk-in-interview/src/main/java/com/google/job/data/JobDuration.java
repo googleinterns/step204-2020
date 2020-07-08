@@ -9,28 +9,19 @@ public enum JobDuration {
     ONE_YEAR("ONE_YEAR"),
     OTHER("OTHER");
 
-    private final String duration;
+    private final String durationId;
 
-    JobDuration(String duration) {
-        this.duration = duration;
+    JobDuration(String durationId) {
+        this.durationId = durationId;
     }
 
     /**
-     * Gets the String id matching the enum value.
+     * Gets the id string.
      *
-     * @return String id matching the enum value.
-     */
-    public String getDuration() {
-        return duration;
-    }
-
-    /**
-     * Gets the name of the enum value.
-     *
-     * @return Name of the enum value.
+     * @return Id string.
      */
     public String getDurationId() {
-        return this.name();
+        return durationId;
     }
 
     /**
