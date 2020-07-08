@@ -7,28 +7,19 @@ public enum PaymentFrequency {
     MONTHLY("MONTHLY"),
     YEARLY("YEARLY");
 
-    private final String frequency;
+    private final String frequencyId;
 
-    PaymentFrequency(String duration) {
-        this.frequency = duration;
+    PaymentFrequency(String frequencyId) {
+        this.frequencyId = frequencyId;
     }
 
     /**
-     * Gets the String id matching the enum value.
+     * Gets the id string.
      *
-     * @return String id matching the enum value.
-     */
-    public String getFrequency() {
-        return frequency;
-    }
-
-    /**
-     * Gets the name of the enum value.
-     *
-     * @return Name of the enum value.
+     * @return Id string.
      */
     public String getFrequencyId() {
-        return this.name();
+        return frequencyId;
     }
 
     /**

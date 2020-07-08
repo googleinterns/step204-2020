@@ -8,8 +8,8 @@ public enum JobStatus {
 
     private final String statusId;
 
-    JobStatus(String status) {
-        this.statusId = status;
+    JobStatus(String statusId) {
+        this.statusId = statusId;
     }
 
     /**
