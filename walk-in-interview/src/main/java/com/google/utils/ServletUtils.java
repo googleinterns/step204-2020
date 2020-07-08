@@ -48,6 +48,28 @@ public final class ServletUtils {
     }
 
     /**
+     * Gets the long parameter from html form input.
+     *
+     * @param request Http request.
+     * @param parameterName Input id in html element.
+     * @param defaultValue Default integer.
+     * @return Parsed integer or default value if exception occur
+     */
+    public static long getLongParameter(HttpServletRequest request, String parameterName, long defaultValue) {
+        String resultStr = request.getParameter(parameterName);
+
+        try {
+            long result = Integer.parseInt(resultStr);
+
+            return result;
+        } catch (NumberFormatException e) {
+            // TODO(issue/12): error handling; can consider to add logging to log the error
+
+            return defaultValue;
+        }
+    }
+
+    /**
      * Gets the float parameter from html form input.
      *
      * @param request Http request.
@@ -81,7 +103,8 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName);
 
         try {
-            Date result = new SimpleDateFormat().parse(resultStr);
+            String pattern = "yyyy-MM-dd";
+            Date result = new SimpleDateFormat(pattern).parse(resultStr);
 
             return result;
         } catch (NumberFormatException | ParseException e) {
