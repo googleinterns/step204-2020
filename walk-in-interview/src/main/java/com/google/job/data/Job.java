@@ -10,7 +10,7 @@ public final class Job {
     // TODO(issue/25): merge the account stuff into job post.
     private JobStatus jobStatus;
     private String jobTitle;
-    private Location location;
+    private Location jobLocation;
     private String jobDescription;
     private JobPayment jobPay;
     private List<String> requirements;
@@ -23,7 +23,7 @@ public final class Job {
         this.jobId = jobBuilder.jobId;
         this.jobStatus = jobBuilder.jobStatus;
         this.jobTitle = jobBuilder.jobTitle;
-        this.location = jobBuilder.location;
+        this.jobLocation = jobBuilder.location;
         this.jobDescription = jobBuilder.jobDescription;
         this.jobPay = jobBuilder.jobPay;
         this.requirements = jobBuilder.requirements;
@@ -149,8 +149,8 @@ public final class Job {
      *
      * @return Location details of the post.
      */
-    public Location getLocation() {
-        return location;
+    public Location getJobLocation() {
+        return jobLocation;
     }
 
     /**
@@ -207,7 +207,7 @@ public final class Job {
                 jobId.equals(job.jobId) &&
                 jobStatus == job.jobStatus &&
                 jobTitle.equals(job.jobTitle) &&
-                location.equals(job.location) &&
+                jobLocation.equals(job.jobLocation) &&
                 jobDescription.equals(job.jobDescription) &&
                 jobPay.equals(job.jobPay) &&
                 requirements.equals(job.requirements) &&
@@ -229,7 +229,7 @@ public final class Job {
         c = jobTitle.hashCode();
         hashCode = 31 * hashCode + c;
 
-        c = location.hashCode();
+        c = jobLocation.hashCode();
         hashCode = 31 * hashCode + c;
 
         c = jobDescription.hashCode();

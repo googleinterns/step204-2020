@@ -2,7 +2,6 @@ package com.google.job.servlets;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.job.data.*;
-import com.google.utils.FireStoreUtils;
 import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -60,7 +58,7 @@ public final class NewJobServlet extends HttpServlet {
         Job job = Job.newBuilder()
                 .setJobStatus(JobStatus.ACTIVE)
                 .setJobTitle(rawJob.getJobTitle())
-                .setLocation(rawJob.getLocation())
+                .setLocation(rawJob.getJobLocation())
                 .setJobDescription(rawJob.getJobDescription())
                 .setJobPay(rawJob.getJobPay())
                 .setRequirements(rawJob.getRequirements())
