@@ -55,7 +55,20 @@ public final class NewJobServlet extends HttpServlet {
             throw new IllegalArgumentException("Json for Job object is Empty");
         }
 
-        Job job = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
+        Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
+
+        Job job = Job.newBuilder()
+                .setJobStatus(JobStatus.ACTIVE)
+                .setJobTitle(rawJob.getJobTitle())
+                .setLocation(rawJob.getLocation())
+                .setJobDescription(rawJob.getJobDescription())
+                .setJobPay(rawJob.getJobPay())
+                .setRequirements(rawJob.getRequirements())
+                .setPostExpiry(rawJob.getPostExpiry())
+                .setJobDuration(rawJob.getJobDuration())
+                .build();
+
+
         return job;
     }
 
