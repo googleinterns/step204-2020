@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<!-- The content and element attributes for this file will be
+    rendered dynamically from the script.js file. -->
+    
+<body>
+
+    <div class="header-container">
+        <input id="new-job-cancel">
+        <div id="new-job-page-title"></div>
+        <input id="new-job-submit">
+    </div>
+
+    <div class="content-container">
+        <div class="content-container">
+            <input class="job-field" id="new-job-title" />
+            <textarea class="job-field" id="new-job-description"></textarea>
+            <input class="job-field" id="new-job-address" />
+
+            <div class="job-field">
+                <div id="new-job-requirements-title"></div>
+                <ul id="new-job-requirements-list"></ul>
+            </div>
+
+            <div class="job-field">
+                <div id="new-job-pay-title"></div>
+                <select id="new-job-pay-frequency"></select>
+                <div id="new-job-pay-range">
+                    <input id="new-job-pay-min">
+                    -
+                    <input id="new-job-pay-max">
+                </div>
+            </div>
+
+            <div class="job-field">
+                <div id="new-job-duration-title"></div>
+                <select id="new-job-duration"></select>
+            </div>
+
+            <div class="job-field">
+                <div id="new-job-expiry-title"></div>
+                <input id="new-job-expiry">
+            </div>
+        </div>
+
+        <div class="error-message" id="new-job-error-message"></div>
+
+        <div hidden>
+            <li id="requirement-element-template">
+                <input type="checkbox" id="requirement-checkbox-template" name="requirements-list">
+                <label for="requirement-label-template">value</label>
+            </li>
+        </div>
+
+</body>
+
+<script type="module" src="./script.js"></script>
+
+</html>
