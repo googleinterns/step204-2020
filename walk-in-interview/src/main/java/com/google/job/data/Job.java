@@ -1,11 +1,11 @@
 package com.google.job.data;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 /** Class for a job post. */
 public final class Job {
-    private static final String DUMMY = "dummy";
-
     private String jobId;
     // TODO(issue/25): merge the account stuff into job post.
     private JobStatus jobStatus;
@@ -17,46 +17,102 @@ public final class Job {
     private long postExpiry; // a timestamp
     private JobDuration jobDuration;
 
-    private void validateParameters(String jobTitle, String jobDescription) throws IllegalArgumentException {
-        // TODO(issue/19): add more validation check
-        if (jobTitle.isEmpty()) {
-            throw new IllegalArgumentException("Empty job title provided");
-        }
-
-        if (jobDescription.isEmpty()) {
-            throw new IllegalArgumentException("Empty job description provided");
-        }
+    private Job(JobBuilder jobBuilder) {
+        this.jobId = jobBuilder.jobId;
+        this.jobStatus = jobBuilder.jobStatus;
+        this.jobTitle = jobBuilder.jobTitle;
+        this.location = jobBuilder.location;
+        this.jobDescription = jobBuilder.jobDescription;
+        this.jobPay = jobBuilder.jobPay;
+        this.requirements = jobBuilder.requirements;
+        this.postExpiry = jobBuilder.postExpiry;
+        this.jobDuration = jobBuilder.jobDuration;
     }
 
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
     public Job() {}
 
-    public Job(String jobTitle, JobStatus jobStatus,
-               Location location, String jobDescription,
-               JobPayment jobPayment, List<String> requirements,
-               long jobExpiry, JobDuration jobDuration) throws IllegalArgumentException {
-        validateParameters(jobTitle, jobDescription);
-
-        // Assigns to it a dummy id first,
-        // so later can reassign it with the firestore generated id
-        // when retrieve a Job from database and display on the website
-        this.jobId = DUMMY;
-        this.jobStatus = jobStatus;
-        this.jobTitle = jobTitle;
-        this.location = location;
-        this.jobDescription = jobDescription;
-        this.jobPay = jobPayment;
-        this.requirements = requirements;
-        this.postExpiry = jobExpiry;
-        this.jobDuration = jobDuration;
+    public static JobBuilder newBuilder() {
+        return new JobBuilder();
     }
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
+    public static final class JobBuilder {
+        private static final String DUMMY = "dummy";
 
-    public void setJobStatus(JobStatus jobStatus) {
-        this.jobStatus = jobStatus;
+        // Optional parameters - initialized to default values
+        private String jobId = DUMMY;
+
+        // TODO(issue/25): merge the account stuff into job post.
+
+        private JobStatus jobStatus;
+        private String jobTitle;
+        private Location location;
+        private String jobDescription;
+        private JobPayment jobPay;
+        private List<String> requirements;
+        private long postExpiry; // a timestamp
+        private JobDuration jobDuration;
+
+        private JobBuilder() {}
+
+        // TODO(issue/19): add more validation check
+
+        public JobBuilder setJobId(String jobId) {
+            this.jobId = jobId;
+            return this;
+        }
+
+        public JobBuilder setJobStatus(JobStatus jobStatus) {
+            this.jobStatus = jobStatus;
+            return this;
+        }
+
+        public JobBuilder setJobTitle(String jobTitle) throws IllegalArgumentException {
+            if (jobTitle.isEmpty()) {
+                throw new IllegalArgumentException("Empty job title provided");
+            }
+
+            this.jobTitle = jobTitle;
+            return this;
+        }
+
+        public JobBuilder setLocation(Location location) {
+            this.location = location;
+            return this;
+        }
+
+        public JobBuilder setJobDescription(String jobDescription) throws IllegalArgumentException {
+            if (jobDescription.isEmpty()) {
+                throw new IllegalArgumentException("Empty job description provided");
+            }
+
+            this.jobDescription = jobDescription;
+            return this;
+        }
+
+        public JobBuilder setJobPay(JobPayment jobPay) {
+            this.jobPay = jobPay;
+            return this;
+        }
+
+        public JobBuilder setRequirements(List<String> requirements) {
+            this.requirements = ImmutableList.copyOf(requirements);
+            return this;
+        }
+
+        public JobBuilder setPostExpiry(long postExpiry) {
+            this.postExpiry = postExpiry;
+            return this;
+        }
+
+        public JobBuilder setJobDuration(JobDuration jobDuration) {
+            this.jobDuration = jobDuration;
+            return this;
+        }
+
+        public Job build() {
+            return new Job(this);
+        }
     }
 
     /**

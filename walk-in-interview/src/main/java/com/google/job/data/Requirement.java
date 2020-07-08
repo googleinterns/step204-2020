@@ -24,7 +24,7 @@ public enum Requirement {
      * @return Id string.
      */
     public String getRequirementId() {
-        return this.name();
+        return requirementId;
     }
 
     /**

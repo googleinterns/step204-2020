@@ -62,15 +62,22 @@ public final class JobsDatabaseTest {
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList(
-                REQUIREMENTS_LIST.get(O_LEVEL_KEY).get(ENGLISH),
-                REQUIREMENTS_LIST.get(DRIVING_LICENSE_C_KEY).get(ENGLISH));
+                DRIVING_LICENSE_C.getLocalizedName("en"),
+                O_LEVEL.getLocalizedName("en"),
+                ENGLISH.getLocalizedName("en"));
         long expectedPostExpiry = System.currentTimeMillis();
-
         JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
-                expectedJobDescription, expectedJobPayment, expectedRequirements,
-                expectedPostExpiry, expectedJobDuration);
+        Job job = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
 
         // Act.
         Future<DocumentReference> addedJobFuture = jobsDatabase.addJob(job);
@@ -95,13 +102,22 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList(REQUIREMENTS_LIST.get(O_LEVEL_KEY).get(ENGLISH));
+        List<String> expectedRequirements = Arrays.asList(
+                O_LEVEL.getLocalizedName("en"),
+                ENGLISH.getLocalizedName("en"));
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
-        Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedLocation,
-                expectedJobDescription, expectedJobPayment, expectedRequirements,
-                expectedPostExpiry, expectedJobDuration);
+        Job oldJob = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
 
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(oldJob);
 
@@ -114,9 +130,16 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         expectedJobName = "Googler";
-        Job updatedJob = new Job(expectedJobName, expectedJobStatus, expectedLocation,
-                expectedJobDescription, expectedJobPayment, expectedRequirements,
-                expectedPostExpiry, expectedJobDuration);
+        Job updatedJob = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
 
         // Act.
         Future<WriteResult> editedDocRef = jobsDatabase.setJob(jobId, updatedJob);
@@ -142,13 +165,20 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Maple Tree", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList(REQUIREMENTS_LIST.get(DRIVING_LICENSE_C_KEY).get(ENGLISH));
+        List<String> expectedRequirements = Arrays.asList(O_LEVEL.getLocalizedName("en"));
         long expectedPostExpiry = System.currentTimeMillis();;
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
-        Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
-                expectedJobDescription, expectedJobPayment, expectedRequirements,
-                expectedPostExpiry, expectedJobDuration);
+        Job job = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
 
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
 
