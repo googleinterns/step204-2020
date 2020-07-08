@@ -139,9 +139,12 @@ function addJobPayFrequencyOptions() {
 function addJobDurationOptions() {
   const jobDurationSelect =
     document.getElementById('new-job-duration');
+  jobDurationSelect.setAttribute('required', true);
   jobDurationSelect.options.length = 0;
 
-  jobDurationSelect.options[0] = new Option('Other', '');
+  jobDurationSelect.options[0] = new Option('Select', '');
+  jobDurationSelect.options[0].setAttribute('disabled', true);
+
   addSelectOptions(jobDurationSelect,
       STRINGS['new-job-duration']);
 }
@@ -220,11 +223,8 @@ function getJobDetailsFromUserInput() {
     },
     requirements: requirementsList,
     postExpiry: expiry,
+    jobDuration: duration,
   };
-
-  if (duration !== '') {
-    jobDetails.jobDuration = duration;
-  }
 
   return jobDetails;
 }
@@ -249,6 +249,8 @@ function validateRequiredUserInput() {
   const expiry =
     document.getElementById('new-job-expiry')
         .valueAsNumber;
+  const duration =
+    document.getElementById('new-job-duration').value;
 
   if (payMin > payMax) {
     return false;
@@ -256,7 +258,7 @@ function validateRequiredUserInput() {
 
   if (name !== '' && address !== '' && description !== '' &&
     payFrequency !== '' && payMin !== '' && payMax !== '' &&
-    !Number.isNaN(expiry)) {
+    !Number.isNaN(expiry) && duration !== '') {
     return true;
   }
 

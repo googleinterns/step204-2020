@@ -39,6 +39,7 @@ AppStrings['new-job'] = {
     'ONE_MONTH': '1 Month',
     'SIX_MONTHS': '6 Months',
     'ONE_YEAR': '1 Year',
+    'OTHER': 'Other',
   },
   'new-job-expiry-title': 'Job Expiry',
 };
