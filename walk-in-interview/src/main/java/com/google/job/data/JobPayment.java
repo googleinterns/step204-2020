@@ -4,7 +4,7 @@ package com.google.job.data;
 public final class JobPayment {
     private int min;
     private int max;
-    private PaymentFrequency paymentFrequency;
+    private Frequency frequency;
 
     private int hashCode;
 
@@ -21,12 +21,12 @@ public final class JobPayment {
     // For serialization
     public JobPayment() {}
 
-    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) {
+    public JobPayment(int min, int max, Frequency frequency) {
         validateParameter(min, max);
 
         this.min = min;
         this.max = max;
-        this.paymentFrequency = paymentFrequency;
+        this.frequency = frequency;
     }
 
     /**
@@ -52,8 +52,8 @@ public final class JobPayment {
      *
      * @return Payment frequency.
      */
-    public PaymentFrequency getPaymentFrequency() {
-        return paymentFrequency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     @Override
@@ -63,7 +63,7 @@ public final class JobPayment {
         JobPayment that = (JobPayment) o;
         return Float.compare(that.min, min) == 0 &&
                 Float.compare(that.max, max) == 0 &&
-                paymentFrequency == that.paymentFrequency;
+                frequency == that.frequency;
     }
 
     @Override
@@ -78,7 +78,7 @@ public final class JobPayment {
         c = ((Integer)max).hashCode();
         hashCode = 31 * hashCode + c;
 
-        c = paymentFrequency.hashCode();
+        c = frequency.hashCode();
         hashCode = 31 * hashCode + c;
 
         return hashCode;
@@ -89,7 +89,7 @@ public final class JobPayment {
         return "JobPayment{" +
                 "min=" + min +
                 ", max=" + max +
-                ", frequency=" + paymentFrequency +
+                ", frequency=" + frequency +
                 '}';
     }
 }

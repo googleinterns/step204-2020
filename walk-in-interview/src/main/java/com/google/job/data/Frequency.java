@@ -1,7 +1,7 @@
 package com.google.job.data;
 
 /** Enumeration that represents the payment frequency. */
-public enum PaymentFrequency {
+public enum Frequency {
     HOURLY("HOURLY"),
     WEEKLY("WEEKLY"),
     MONTHLY("MONTHLY"),
@@ -9,7 +9,7 @@ public enum PaymentFrequency {
 
     private final String frequencyId;
 
-    PaymentFrequency(String frequencyId) {
+    Frequency(String frequencyId) {
         this.frequencyId = frequencyId;
     }
 
@@ -29,7 +29,7 @@ public enum PaymentFrequency {
      * @return Frequency enum matching the provided id.
      * @throws IllegalArgumentException If a payment frequency cannot be found for provided id.
      */
-    public static PaymentFrequency getFromId(String id) throws IllegalArgumentException {
-        return PaymentFrequency.valueOf(id);
+    public static Frequency getFromId(String id) throws IllegalArgumentException {
+        return Frequency.valueOf(id);
     }
 }

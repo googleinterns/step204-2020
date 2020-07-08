@@ -60,7 +60,7 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Software Engineer";
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "Programming using java";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList(
                 DRIVING_LICENSE_C.getLocalizedName("en"),
                 O_LEVEL.getLocalizedName("en"),
@@ -101,7 +101,7 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Noogler";
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "New employee";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList(
                 O_LEVEL.getLocalizedName("en"),
                 ENGLISH.getLocalizedName("en"));
@@ -164,7 +164,7 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Programmer";
         Location expectedLocation =  new Location("Maple Tree", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, Frequency.MONTHLY);
         List<String> expectedRequirements = Arrays.asList(O_LEVEL.getLocalizedName("en"));
         long expectedPostExpiry = System.currentTimeMillis();;
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;

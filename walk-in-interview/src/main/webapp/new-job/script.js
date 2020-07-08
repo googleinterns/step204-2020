@@ -210,8 +210,8 @@ function getJobDetailsFromUserInput() {
     jobTitle: name,
     jobLocation: {
       address: address,
-      lat: 1.3039, // TODO(issue/13): get these from places api
-      lon: 103.8358,
+      latitude: 1.3039, // TODO(issue/13): get these from places api
+      longitude: 103.8358,
     },
     jobDescription: description,
     jobPay: {
