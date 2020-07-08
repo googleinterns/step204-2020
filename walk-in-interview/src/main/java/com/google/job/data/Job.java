@@ -1,9 +1,6 @@
 package com.google.job.data;
 
-import jdk.internal.jline.internal.Nullable;
-
 import java.util.List;
-import java.util.Optional;
 
 /** Class for a job post. */
 public final class Job {
@@ -18,7 +15,6 @@ public final class Job {
     private JobPayment jobPay;
     private List<String> requirements;
     private long postExpiry; // a timestamp
-    @Nullable
     private JobDuration jobDuration;
 
     private void validateParameters(String jobTitle, String jobDescription) throws IllegalArgumentException {
@@ -38,7 +34,7 @@ public final class Job {
     public Job(String jobTitle, JobStatus jobStatus,
                Location location, String jobDescription,
                JobPayment jobPayment, List<String> requirements,
-               long jobExpiry, Optional<JobDuration> jobDuration) throws IllegalArgumentException {
+               long jobExpiry, JobDuration jobDuration) throws IllegalArgumentException {
         validateParameters(jobTitle, jobDescription);
 
         // Assigns to it a dummy id first,
@@ -52,9 +48,7 @@ public final class Job {
         this.jobPay = jobPayment;
         this.requirements = requirements;
         this.postExpiry = jobExpiry;
-
-        // Cloud firestore cannot handle Optional, so simply store null into it.
-        this.jobDuration = jobDuration.get();
+        this.jobDuration = jobDuration;
     }
 
     public void setJobId(String jobId) {
@@ -138,12 +132,11 @@ public final class Job {
     }
 
     /**
-     * Gets the duration of the job itself. This field is optional, so it can be null.
+     * Gets the duration of the job itself.
      *
      * @return Duration of the job.
      */
-    public @Nullable
-    JobDuration getJobDuration() {
+    public JobDuration getJobDuration() {
         return jobDuration;
     }
 

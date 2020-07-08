@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static com.google.job.data.Constants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -60,10 +61,12 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList("O Level", "Driving License");
+        List<String> expectedRequirements = Arrays.asList(
+                REQUIREMENTS_LIST.get(O_LEVEL_KEY).get(ENGLISH),
+                REQUIREMENTS_LIST.get(DRIVING_LICENSE_C_KEY).get(ENGLISH));
         long expectedPostExpiry = System.currentTimeMillis();
 
-        Optional<JobDuration> expectedJobDuration = Optional.of(JobDuration.SIX_MONTHS);
+        JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
 
         Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
@@ -92,9 +95,9 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
+        List<String> expectedRequirements = Arrays.asList(REQUIREMENTS_LIST.get(O_LEVEL_KEY).get(ENGLISH));
         long expectedPostExpiry = System.currentTimeMillis();
-        Optional<JobDuration> expectedJobDuration = Optional.of(JobDuration.ONE_MONTH);
+        JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
         Job oldJob = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
@@ -139,9 +142,9 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Maple Tree", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList("Bachelor Degree");
+        List<String> expectedRequirements = Arrays.asList(REQUIREMENTS_LIST.get(DRIVING_LICENSE_C_KEY).get(ENGLISH));
         long expectedPostExpiry = System.currentTimeMillis();;
-        Optional<JobDuration> expectedJobDuration = Optional.of(JobDuration.ONE_MONTH);
+        JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
         Job job = new Job(expectedJobName, expectedJobStatus, expectedLocation,
                 expectedJobDescription, expectedJobPayment, expectedRequirements,
