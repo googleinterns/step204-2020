@@ -55,3 +55,7 @@ body {
 textarea {
     height: 100px;
 }
+
+.error-message {
+    color: red;
+}
