@@ -6,6 +6,8 @@ public final class JobPayment {
     private int max;
     private PaymentFrequency paymentFrequency;
 
+    private int hashCode;
+
     private void validateParameter(float min, float max) throws IllegalArgumentException {
         if (min < 0) {
             throw new IllegalArgumentException("\"min\" should not be negative");
@@ -66,18 +68,20 @@ public final class JobPayment {
 
     @Override
     public int hashCode() {
-        int result = 0;
+        if (this.hashCode != 0) {
+            return this.hashCode;
+        }
 
         int c = ((Integer)min).hashCode();
-        result = 31 * result + c;
+        hashCode = 31 * hashCode + c;
 
         c = ((Integer)max).hashCode();
-        result = 31 * result + c;
+        hashCode = 31 * hashCode + c;
 
         c = paymentFrequency.hashCode();
-        result = 31 * result + c;
+        hashCode = 31 * hashCode + c;
 
-        return result;
+        return hashCode;
     }
 
     @Override

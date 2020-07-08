@@ -7,6 +7,8 @@ public final class Location {
     private double latitude;
     private double longitude;
 
+    private int hashCode;
+
     // For serialization
     public Location() {}
 
@@ -55,18 +57,20 @@ public final class Location {
 
     @Override
     public int hashCode() {
-        int result = 0;
+        if (this.hashCode != 0) {
+            return this.hashCode;
+        }
 
         int c = ((Double) latitude).hashCode();
-        result = 31 * result + c;
+        hashCode = 31 * hashCode + c;
 
         c = ((Double) longitude).hashCode();
-        result = 31 * result + c;
+        hashCode = 31 * hashCode + c;
 
         c = address.hashCode();
-        result = 31 * result + c;
+        hashCode = 31 * hashCode + c;
 
-        return result;
+        return hashCode;
     }
 
     @Override
