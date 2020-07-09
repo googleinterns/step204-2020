@@ -185,8 +185,34 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void markJobPostAsDeleted_NormalInput_success() {
+    public void markJobPostAsDeleted_NormalInput_success() throws ExecutionException, InterruptedException {
+        // Arrange.
+        Job job = new Job();
+        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
 
+        DocumentReference documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot document = future.get();
+        String jobId = document.getId();
+
+        // Act.
+        this.jobsDatabase.markJobPostAsDeleted(jobId);
+
+        // Assert.
+        documentReference = firestore.collection(TEST_JOB_COLLECTION).document(jobId);
+        // Asynchronously retrieve the document.
+        future = documentReference.get();
+
+        // future.get() blocks on response.
+        document = future.get();
+
+        Job actualJob = document.toObject(Job.class);
+        JobStatus expectedJobStatus = actualJob.getJobStatus();
+
+        assertEquals(expectedJobStatus, JobStatus.DELETED);
     }
 
     @Test
