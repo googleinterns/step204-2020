@@ -210,9 +210,9 @@ public final class JobsDatabaseTest {
         document = future.get();
 
         Job actualJob = document.toObject(Job.class);
-        JobStatus expectedJobStatus = actualJob.getJobStatus();
+        JobStatus actualJobStatus = actualJob.getJobStatus();
 
-        assertEquals(expectedJobStatus, JobStatus.DELETED);
+        assertEquals(JobStatus.DELETED, actualJobStatus);
     }
 
     @Test
