@@ -1,7 +1,9 @@
 package com.google.job.data;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.List;
 import java.util.Map;
 
 /** Enumeration that represents the requirements of jobs. */
@@ -37,5 +39,27 @@ public enum Requirement {
         }
 
         return localizedName;
+    }
+
+    /**
+     * Gets the localized names of the requirements.
+     *
+     * @param requirements List of target Requirement enum.
+     * @param language Language to be displayed.
+     * @return List of localized names of the requirments corresponding to the Requirement enum value.
+     */
+    public static List<String> getLocalizedNames(List<Requirement> requirements, String language) {
+        ImmutableList.Builder<String> localizedNames = ImmutableList.builder();
+        for (Requirement requirement: requirements) {
+            String localizedName = requirement.getLocalizedName(language);
+            if (localizedName == null) {
+                System.err.println("No such requirement");
+                continue;
+            }
+
+            localizedNames.add(localizedName);
+        }
+
+        return localizedNames.build();
     }
 }

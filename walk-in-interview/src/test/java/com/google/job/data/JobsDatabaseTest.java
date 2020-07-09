@@ -61,10 +61,8 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList(
-                DRIVING_LICENSE_C.getLocalizedName("en"),
-                O_LEVEL.getLocalizedName("en"),
-                ENGLISH.getLocalizedName("en"));
+        List<String> expectedRequirements = Requirement.getLocalizedNames(
+                Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
 
@@ -102,9 +100,8 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList(
-                O_LEVEL.getLocalizedName("en"),
-                ENGLISH.getLocalizedName("en"));
+        List<String> expectedRequirements = Requirement.getLocalizedNames(
+                Arrays.asList(O_LEVEL, ENGLISH), "en");
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
@@ -165,7 +162,7 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Maple Tree", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Arrays.asList(O_LEVEL.getLocalizedName("en"));
+        List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
         long expectedPostExpiry = System.currentTimeMillis();;
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 

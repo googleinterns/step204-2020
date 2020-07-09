@@ -31,11 +31,7 @@ public final class JobPayment {
         return max;
     }
 
-    /**
-     * Gets the payment frequency.
-     *
-     * @return Payment frequency.
-     */
+    /** Returns the payment frequency. */
     public PaymentFrequency getPaymentFrequency() {
         return paymentFrequency;
     }
