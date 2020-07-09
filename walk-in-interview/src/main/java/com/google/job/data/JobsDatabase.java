@@ -14,6 +14,7 @@ import java.util.concurrent.Future;
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
+    private static final String JOB_ID_FIELD = "jobId";
 
     /**
      * Adds a newly created job post.
@@ -40,6 +41,17 @@ public final class JobsDatabase {
         return FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document(jobId)
                 .set(job);
+    }
+
+    /**
+     * Updates a specific field.
+     *
+     * @param jobId Cloud Firestore Id of the job post.
+     */
+    public void updateJobId(String jobId) {
+        DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
+        // (async) Update one field
+        documentReference.update(JOB_ID_FIELD, jobId);
     }
 
     /**

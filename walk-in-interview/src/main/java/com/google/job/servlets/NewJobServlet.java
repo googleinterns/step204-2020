@@ -75,7 +75,8 @@ public final class NewJobServlet extends HttpServlet {
 
         try {
             // Synchronizes and blocks the operation.
-            future.get();
+            String jobId = future.get().getId();
+            this.jobsDatabase.updateJobId(jobId);
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
