@@ -179,7 +179,8 @@ public final class JobsDatabaseTest {
         // future.get() blocks on response.
         document = future.get();
 
-        String actualJobId = document.toObject(Job.class).getJobId();
+        Job actualJob = document.toObject(Job.class);
+        String actualJobId = actualJob.getJobId();
 
         assertEquals(expectedJobId, actualJobId);
     }
