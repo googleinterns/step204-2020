@@ -166,22 +166,22 @@ public final class JobsDatabaseTest {
 
         // future.get() blocks on response.
         DocumentSnapshot document = future.get();
-        String jobId = document.getId();
+        String expectedJobId = document.getId();
 
         // Act.
-        this.jobsDatabase.updateJobId(jobId);
+        this.jobsDatabase.updateJobId(expectedJobId);
 
         // Assert.
-        documentReference = firestore.collection(TEST_JOB_COLLECTION).document(jobId);
+        documentReference = firestore.collection(TEST_JOB_COLLECTION).document(expectedJobId);
         // Asynchronously retrieve the document.
         future = documentReference.get();
 
         // future.get() blocks on response.
         document = future.get();
 
-        Job actualJob = document.toObject(Job.class);
+        String actualJobId = document.toObject(Job.class).getJobId();
 
-        assertEquals(jobId, actualJob.getJobId());
+        assertEquals(expectedJobId, actualJobId);
     }
 
     @Test
