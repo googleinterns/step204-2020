@@ -5,16 +5,40 @@
  * the mocha tests in the walk-in-interview directory.
  */
 
-// TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
-
 /**
- * Import statements are static so its parameters cannot be dynamic.
- * TODO(issue/22): figure out how to use dnamic imports
+ * Unable to import AppStrings into this file so copy/
+ * pasted here instead.
  */
-import {AppStrings} from './strings.en.js';
-
-const STRINGS = AppStrings['new-job'];
+STRINGS = {
+  'new-job-page-title': 'New Job Post',
+  'new-job-cancel': 'Cancel',
+  'new-job-submit': 'Create',
+  'new-job-error-message': 'There is an error in the following field: ',
+  'new-job-title': 'Job Title',
+  'new-job-description': 'Job Description',
+  'new-job-address': 'Job Address',
+  'new-job-requirements-title': 'Requirements',
+  'new-job-requirements-list': 'requirements-list',
+  'new-job-pay-title': 'Job Pay',
+  'new-job-pay-frequency': {
+    'HOURLY': 'Hourly',
+    'WEEKLY': 'Weekly',
+    'MONTHLY': 'Monthly',
+    'YEARLY': 'Yearly',
+  },
+  'new-job-pay-min': 'min (sgd)',
+  'new-job-pay-max': 'max (sgd)',
+  'new-job-duration-title': 'Job Duration',
+  'new-job-duration': {
+    'ONE_WEEK': '1 Week',
+    'TWO_WEEKS': '2 Weeks',
+    'ONE_MONTH': '1 Month',
+    'SIX_MONTHS': '6 Months',
+    'ONE_YEAR': '1 Year',
+    'OTHER': 'Other',
+  },
+  'new-job-expiry-title': 'Job Expiry',
+};
 
 const assert = require('assert');
 const webdriver = require('selenium-webdriver');
@@ -29,7 +53,8 @@ const until = webdriver.until;
 
 let driver;
 
-describe('New Job Tests', () => {
+/** Note that this.timeout() will not work arrow functions. */
+describe('New Job Tests', function() {
   this.timeout(50000);
 
   beforeEach(() => {
@@ -37,7 +62,8 @@ describe('New Job Tests', () => {
         .withCapabilities(webdriver.Capabilities.chrome())
         .build();
     // TODO(issue/31): figure out how to test our local host url
-    return driver.get('https://riyanar-step-2020.appspot.com/');
+    return driver.get('https://riyanar-step-2020.appspot.com/comments.html');
+    // return driver.get('https://library-app.firebaseapp.com/');
   });
 
   afterEach(() => {
@@ -161,8 +187,7 @@ describe('New Job Tests', () => {
             });
       });
 
-      // TODO(issue/xx): add tests to check if correct list rendered
-      // (use the function)
+      // TODO(issue/32): check correct list elements have been rendered
     });
 
     describe('Job Pay', () => {
@@ -178,7 +203,7 @@ describe('New Job Tests', () => {
             });
       });
 
-      // TODO(issue/xx): write tests for the select options
+      // TODO(issue/32): check correct select options have been rendered
 
       it('min: checks the placeholder attribute', () => {
         return driver.findElement(By.id(minId)).getAttribute('placeholder')
@@ -220,7 +245,7 @@ describe('New Job Tests', () => {
             });
       });
 
-      // TODO(issue/xx): write tests for the select options
+      // TODO(issue/32): check correct select options have been rendered
     });
 
     describe('Job Expiry', () => {
@@ -244,14 +269,20 @@ describe('New Job Tests', () => {
       it('checks the min attribute', () => {
         return driver.findElement(By.id(expiryId)).getAttribute('min')
             .then((value) => {
-              // TODO(issue/xx): should equal to todays date
+              const expected = new Date().toISOString().substr(0, 10);
+
+              assert.equal(expected, value);
             });
       });
 
       it('checks the max attribute', () => {
         return driver.findElement(By.id(expiryId)).getAttribute('max')
             .then((value) => {
-              // TODO(issue/xx): should equal to today + one years date
+              const date = new Date();
+              date.setFullYear(date.getFullYear() + 1);
+              const expected = date.toISOString().substr(0, 10);
+
+              assert.equal(expected, value);
             });
       });
     });
