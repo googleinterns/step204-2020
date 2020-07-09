@@ -46,6 +46,7 @@ function addJobPageElements() {
   jobDescription.setAttribute('required', true);
 
   const jobAddress = document.getElementById('new-job-address');
+  jobAddress.setAttribute('type', 'text');
   jobAddress.setAttribute('placeholder', STRINGS['new-job-address']);
   jobAddress.setAttribute('required', true);
 
