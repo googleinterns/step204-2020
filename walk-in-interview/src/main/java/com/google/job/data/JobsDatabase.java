@@ -6,9 +6,11 @@ import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.*;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
+import jdk.nashorn.internal.scripts.JO;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /** Helps persist and retrieve job posts. */
@@ -76,5 +78,13 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+    }
+
+    /** Checks if the job id is a valid existing id. */
+    public static boolean isJobIdExist(String jobId) throws ExecutionException, InterruptedException {
+        DocumentSnapshot documentSnapshot = FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION).document(jobId).get().get();
+
+        return documentSnapshot.exists();
     }
 }
