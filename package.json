@@ -4,7 +4,8 @@
   "description": "walk-in interview capstone projec",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "find ./walk-in-interview -name '*_test.js' | xargs mocha -R spec"
+
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "dependencies": {
     "chromedriver": "^83.0.1",
     "geckodriver": "^1.19.1",
+    "mocha": "^8.0.1",
     "node-fetch": "^2.6.0",
     "selenium-webdriver": "^4.0.0-alpha.7"
   }
