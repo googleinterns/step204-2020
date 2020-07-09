@@ -250,7 +250,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void isJobIdExist_EmptyJobId_false() throws ExecutionException, InterruptedException {
+    public void isJobIdExist_EmptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -263,11 +263,14 @@ public final class JobsDatabaseTest {
         DocumentSnapshot document = future.get();
         String jobId = document.getId();
 
-        // Act.
-        boolean isExist = JobsDatabase.isJobIdExist("");
-
-        // Assert.
-        assertFalse(isExist);
+        try {
+            // Act.
+            boolean isExist = JobsDatabase.isJobIdExist("");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Assert.
+            assertEquals("Empty Job Id", e.getMessage());
+        }
     }
 
     @Test
