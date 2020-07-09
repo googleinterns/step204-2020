@@ -12,8 +12,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static com.google.job.data.Requirement.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
@@ -227,6 +226,69 @@ public final class JobsDatabaseTest {
         Job actualJob = jobOptional.get();
 
         assertEquals(job, actualJob);
+    }
+
+    @Test
+    public void isJobIdExist_NormalInput_true() throws ExecutionException, InterruptedException {
+        // Arrange.
+        Job job = new Job();
+        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
+
+        DocumentReference documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot document = future.get();
+        String jobId = document.getId();
+
+        // Act.
+        boolean isExist = JobsDatabase.isJobIdExist(jobId);
+
+        // Assert.
+        assertTrue(isExist);
+    }
+
+    @Test
+    public void isJobIdExist_EmptyJobId_false() throws ExecutionException, InterruptedException {
+        // Arrange.
+        Job job = new Job();
+        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
+
+        DocumentReference documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot document = future.get();
+        String jobId = document.getId();
+
+        // Act.
+        boolean isExist = JobsDatabase.isJobIdExist("");
+
+        // Assert.
+        assertFalse(isExist);
+    }
+
+    @Test
+    public void isJobIdExist_InvalidJobId_false() throws ExecutionException, InterruptedException {
+        // Arrange.
+        Job job = new Job();
+        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
+
+        DocumentReference documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot document = future.get();
+        String jobId = document.getId();
+
+        // Act.
+        boolean isExist = JobsDatabase.isJobIdExist("dummy");
+
+        // Assert.
+        assertFalse(isExist);
     }
 
     @After
