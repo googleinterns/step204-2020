@@ -3,14 +3,18 @@ package com.google.job.data;
 /** Class that represents the location of a job or an applicant. */
 public final class Location {
     // TODO(issue/23): add "postalCode" and deal with optional address
-    private String address;
-    private double latitude;
-    private double longitude;
+    private final String address;
+    private final double latitude;
+    private final double longitude;
 
     private int hashCode;
 
     // For serialization
-    public Location() {}
+    public Location() {
+        this.address = "";
+        this.latitude = 0;
+        this.longitude = 0;
+    }
 
     public Location(String address, double latitude, double longitude) {
         this.address = address;

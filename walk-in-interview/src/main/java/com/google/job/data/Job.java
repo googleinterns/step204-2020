@@ -6,16 +6,16 @@ import java.util.List;
 
 /** Class for a job post. */
 public final class Job {
-    private String jobId;
+    private final String jobId;
     // TODO(issue/25): merge the account stuff into job post.
-    private JobStatus jobStatus;
-    private String jobTitle;
-    private Location jobLocation;
-    private String jobDescription;
-    private JobPayment jobPay;
-    private List<String> requirements;
-    private long postExpiry; // a timestamp
-    private JobDuration jobDuration;
+    private final JobStatus jobStatus;
+    private final String jobTitle;
+    private final Location jobLocation;
+    private final String jobDescription;
+    private final JobPayment jobPay;
+    private final List<String> requirements;
+    private final long postExpiry; // a timestamp
+    private final JobDuration jobDuration;
 
     private int hashCode;
 
@@ -32,17 +32,25 @@ public final class Job {
     }
 
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
-    public Job() {}
+    public Job() {
+        this.jobId = "";
+        this.jobStatus = null;
+        this.jobTitle = "";
+        this.jobLocation = null;
+        this.jobDescription = "";
+        this.jobPay = null;
+        this.requirements = null;
+        this.postExpiry = 0;
+        this.jobDuration = null;
+    }
 
     public static JobBuilder newBuilder() {
         return new JobBuilder();
     }
 
     public static final class JobBuilder {
-        private static final String DUMMY = "dummy";
-
         // Optional parameters - initialized to default values
-        private String jobId = DUMMY;
+        private String jobId = "";
 
         // TODO(issue/25): merge the account stuff into job post.
 

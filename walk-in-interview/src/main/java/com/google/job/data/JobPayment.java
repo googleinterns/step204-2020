@@ -2,9 +2,9 @@ package com.google.job.data;
 
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
-    private int min;
-    private int max;
-    private Frequency frequency;
+    private final int min;
+    private final int max;
+    private final Frequency frequency;
 
     private int hashCode;
 
@@ -19,7 +19,11 @@ public final class JobPayment {
     }
 
     // For serialization
-    public JobPayment() {}
+    public JobPayment() {
+        this.min = 0;
+        this.max = 0;
+        this.frequency = Frequency.HOURLY;
+    }
 
     public JobPayment(int min, int max, Frequency frequency) {
         validateParameter(min, max);
