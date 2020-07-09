@@ -185,6 +185,11 @@ public final class JobsDatabaseTest {
     }
 
     @Test
+    public void markJobPostAsDeleted_NormalInput_success() {
+
+    }
+
+    @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;

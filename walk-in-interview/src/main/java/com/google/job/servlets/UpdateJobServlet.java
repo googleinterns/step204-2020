@@ -26,7 +26,7 @@ public final class UpdateJobServlet extends MyServlet {
     }
 
     @Override
-    public void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPatch(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Gets the target job post id
             String jobId = getJobId(request);

@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private static final String JOB_ID_FIELD = "jobId";
+    private static final String JOB_STATUS_FIELD = "jobStatus";
 
     /**
      * Adds a newly created job post.
@@ -54,6 +55,11 @@ public final class JobsDatabase {
         DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
         // (async) Update one field
         documentReference.update(JOB_ID_FIELD, jobId);
+    }
+
+    public void markJobPostAsDeleted(String jobId) {
+        DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
+        documentReference.update(JOB_STATUS_FIELD, JobStatus.DELETED);
     }
 
     /**
