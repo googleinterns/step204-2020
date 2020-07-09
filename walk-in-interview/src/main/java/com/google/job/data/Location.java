@@ -79,10 +79,7 @@ public final class Location {
 
     @Override
     public String toString() {
-        return "JobLocation{" +
-                "address='" + address + '\'' +
-                ", lat=" + latitude +
-                ", lon=" + longitude +
-                '}';
+        return String.format("JobLocation{address=%s, latitude=%f, longitude=%f}",
+                address, latitude, longitude);
     }
 }

@@ -62,7 +62,7 @@ public final class NewJobServlet extends HttpServlet {
                 .setJobDescription(rawJob.getJobDescription())
                 .setJobPay(rawJob.getJobPay())
                 .setRequirements(rawJob.getRequirements())
-                .setPostExpiry(rawJob.getPostExpiry())
+                .setPostExpiry(rawJob.getPostExpiryTimestamp())
                 .setJobDuration(rawJob.getJobDuration())
                 .build();
 

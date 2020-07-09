@@ -220,7 +220,7 @@ function getJobDetailsFromUserInput() {
       max: payMax,
     },
     requirements: requirementsList,
-    postExpiry: expiry,
+    postExpiryTimestamp: expiry,
     jobDuration: duration,
   };
 

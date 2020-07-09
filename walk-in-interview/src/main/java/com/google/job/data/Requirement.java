@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
+/** Enumeration that represents the requirements of jobs. */
 public enum Requirement {
     // TODO(issue/26): add more requirements
     O_LEVEL("o-level", ImmutableMap.of("en", "O Level")),
@@ -18,11 +19,7 @@ public enum Requirement {
         this.localizedNameByLanguage = localizedNameByLanguage;
     }
 
-    /**
-     * Gets the id string.
-     *
-     * @return Id string.
-     */
+    /** Returns the stable id representing the requirement. Can be stored in database. */
     public String getRequirementId() {
         return requirementId;
     }
@@ -33,7 +30,12 @@ public enum Requirement {
      * @param language Language version to be displayed.
      * @return Localized name of the requirement.
      */
-    public String getLocalizedName(String language) {
-        return localizedNameByLanguage.get(language);
+    public String getLocalizedName(String language) throws IllegalArgumentException {
+        String localizedName = localizedNameByLanguage.get(language);
+        if (localizedName == null) {
+            throw new IllegalArgumentException("Language is not supported");
+        }
+
+        return localizedName;
     }
 }

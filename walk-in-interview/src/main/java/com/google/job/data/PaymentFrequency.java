@@ -13,11 +13,7 @@ public enum PaymentFrequency {
         this.frequencyId = frequencyId;
     }
 
-    /**
-     * Gets the id string.
-     *
-     * @return Id string.
-     */
+    /** Returns the stable id representing the payment frequency. Can be stored in database. */
     public String getFrequencyId() {
         return frequencyId;
     }
@@ -25,11 +21,15 @@ public enum PaymentFrequency {
     /**
      * Returns the payment frequency enum matching the provided id.
      *
-     * @param id String id matching the enum value.
-     * @return Frequency enum matching the provided id.
-     * @throws IllegalArgumentException If a payment frequency cannot be found for provided id.
+     * @throws IllegalArgumentException If a frequency stable id cannot be found for provided id.
      */
     public static PaymentFrequency getFromId(String id) throws IllegalArgumentException {
-        return PaymentFrequency.valueOf(id);
+        for (PaymentFrequency paymentFrequency: values()){
+            if (paymentFrequency.getFrequencyId().equals(id)){
+                return paymentFrequency;
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid payment frequency id: " + id);
     }
 }

@@ -15,11 +15,7 @@ public enum JobDuration {
         this.durationId = durationId;
     }
 
-    /**
-     * Gets the id string.
-     *
-     * @return Id string.
-     */
+    /** Returns the stable id representing the job duration. Can be stored in database. */
     public String getDurationId() {
         return durationId;
     }

@@ -8,16 +8,6 @@ public final class JobPayment {
 
     private int hashCode;
 
-    private void validateParameter(float min, float max) throws IllegalArgumentException {
-        if (min < 0) {
-            throw new IllegalArgumentException("\"min\" should not be negative");
-        }
-
-        if (max < min) {
-            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
-        }
-    }
-
     // For serialization
     public JobPayment() {
         this.min = 0;
@@ -33,20 +23,12 @@ public final class JobPayment {
         this.paymentFrequency = paymentFrequency;
     }
 
-    /**
-     * Gets the lower limit of the payment.
-     *
-     * @return Lower limit of the payment.
-     */
+    /** Returns the lower limit of the payment, never negative. */
     public float getMin() {
         return min;
     }
 
-    /**
-     * Gets the upper limit of the payment.
-     *
-     * @return Upper limit of the payment.
-     */
+    /** Returns the upper limit of the payment, not less than the lower limit. */
     public float getMax() {
         return max;
     }
@@ -65,9 +47,7 @@ public final class JobPayment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobPayment that = (JobPayment) o;
-        return Float.compare(that.min, min) == 0 &&
-                Float.compare(that.max, max) == 0 &&
-                paymentFrequency == that.paymentFrequency;
+        return this.min == that.min && this.max == that.max && paymentFrequency.equals(that.paymentFrequency);
     }
 
     @Override
@@ -90,10 +70,17 @@ public final class JobPayment {
 
     @Override
     public String toString() {
-        return "JobPayment{" +
-                "min=" + min +
-                ", max=" + max +
-                ", frequency=" + paymentFrequency +
-                '}';
+        return String.format("JobPayment{min=%d, max=%d, paymentFrequency=%s}",
+                min, max, paymentFrequency.name());
+    }
+
+    private static void validateParameter(float min, float max) throws IllegalArgumentException {
+        if (min < 0) {
+            throw new IllegalArgumentException("\"min\" should not be negative");
+        }
+
+        if (max < min) {
+            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
+        }
     }
 }

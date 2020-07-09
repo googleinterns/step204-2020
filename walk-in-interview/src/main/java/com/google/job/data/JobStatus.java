@@ -12,11 +12,7 @@ public enum JobStatus {
         this.statusId = statusId;
     }
 
-    /**
-     * Gets the id string.
-     *
-     * @return Id string.
-     */
+    /** Returns the stable id representing the job status. Can be stored in database. */
     public String getStatusId() {
         return statusId;
     }
@@ -24,11 +20,15 @@ public enum JobStatus {
     /**
      * Returns the job status enum matching the provided id.
      *
-     * @param id String id matching the enum value.
-     * @return Status enum matching the provided id.
-     * @throws IllegalArgumentException If a status cannot be found for provided id.
+     * @throws IllegalArgumentException If a status stable id cannot be found for provided id.
      */
     public static JobStatus getFromId(String id) throws IllegalArgumentException {
-        return JobStatus.valueOf(id);
+        for (JobStatus status: values()){
+            if (status.getStatusId().equals(id)){
+                return status;
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid job status id: " + id);
     }
 }

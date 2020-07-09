@@ -14,7 +14,7 @@ public final class Job {
     private final String jobDescription;
     private final JobPayment jobPay;
     private final List<String> requirements;
-    private final long postExpiry; // a timestamp
+    private final long postExpiryTimestamp;
     private final JobDuration jobDuration;
 
     private int hashCode;
@@ -27,21 +27,21 @@ public final class Job {
         this.jobDescription = jobBuilder.jobDescription;
         this.jobPay = jobBuilder.jobPay;
         this.requirements = jobBuilder.requirements;
-        this.postExpiry = jobBuilder.postExpiry;
+        this.postExpiryTimestamp = jobBuilder.postExpiryTimestamp;
         this.jobDuration = jobBuilder.jobDuration;
     }
 
     // No-argument constructor is needed to deserialize object when interacting with cloud firestore.
     public Job() {
         this.jobId = "";
-        this.jobStatus = null;
+        this.jobStatus = JobStatus.ACTIVE;
         this.jobTitle = "";
-        this.jobLocation = null;
+        this.jobLocation = new Location();
         this.jobDescription = "";
-        this.jobPay = null;
-        this.requirements = null;
-        this.postExpiry = 0;
-        this.jobDuration = null;
+        this.jobPay = new JobPayment();
+        this.requirements = ImmutableList.of();
+        this.postExpiryTimestamp = 0;
+        this.jobDuration = JobDuration.SIX_MONTHS;
     }
 
     public static JobBuilder newBuilder() {
@@ -60,7 +60,7 @@ public final class Job {
         private String jobDescription;
         private JobPayment jobPay;
         private List<String> requirements;
-        private long postExpiry; // a timestamp
+        private long postExpiryTimestamp;
         private JobDuration jobDuration;
 
         private JobBuilder() {}
@@ -78,10 +78,6 @@ public final class Job {
         }
 
         public JobBuilder setJobTitle(String jobTitle) throws IllegalArgumentException {
-            if (jobTitle.isEmpty()) {
-                throw new IllegalArgumentException("Empty job title provided");
-            }
-
             this.jobTitle = jobTitle;
             return this;
         }
@@ -110,8 +106,8 @@ public final class Job {
             return this;
         }
 
-        public JobBuilder setPostExpiry(long postExpiry) {
-            this.postExpiry = postExpiry;
+        public JobBuilder setPostExpiry(long postExpiryTimestamp) {
+            this.postExpiryTimestamp = postExpiryTimestamp;
             return this;
         }
 
@@ -121,7 +117,43 @@ public final class Job {
         }
 
         public Job build() {
+            validateParameter(this.jobStatus, this.jobTitle, this.location,
+                    this.jobDescription, this.jobPay, this.requirements, this.jobDuration);
+            
             return new Job(this);
+        }
+
+        private static void validateParameter(JobStatus jobStatus, String jobTitle,
+                                       Location location, String jobDescription,
+                                       JobPayment  jobPay, List<String> requirements,
+                                       JobDuration jobDuration) throws IllegalArgumentException {
+            if (jobStatus == null) {
+                throw new IllegalArgumentException("Job Status cannot be null");
+            }
+
+            if (jobTitle == null || jobTitle.isEmpty()) {
+                throw new IllegalArgumentException("Job Title should be an non-empty string");
+            }
+
+            if (location == null) {
+                throw new IllegalArgumentException("Location cannot be null");
+            }
+
+            if (jobDescription == null) {
+                throw new IllegalArgumentException("Job Description should be an non-empty string");
+            }
+
+            if (jobPay == null) {
+                throw new IllegalArgumentException("Job Payment cannot be null");
+            }
+
+            if (requirements == null) {
+                throw new IllegalArgumentException("Requirements cannot be null");
+            }
+
+            if (jobDuration == null) {
+                throw new IllegalArgumentException("Job Duration cannot be null");
+            }
         }
     }
 
@@ -193,8 +225,8 @@ public final class Job {
      *
      * @return Expiry date of the post.
      */
-    public long getPostExpiry() {
-        return postExpiry;
+    public long getPostExpiryTimestamp() {
+        return postExpiryTimestamp;
     }
 
     /**
@@ -211,7 +243,7 @@ public final class Job {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Job job = (Job) o;
-        return postExpiry == job.postExpiry &&
+        return postExpiryTimestamp == job.postExpiryTimestamp &&
                 jobId.equals(job.jobId) &&
                 jobStatus == job.jobStatus &&
                 jobTitle.equals(job.jobTitle) &&
@@ -249,7 +281,7 @@ public final class Job {
         c = requirements.hashCode();
         hashCode = 31 * hashCode + c;
 
-        c = ((Long)postExpiry).hashCode();
+        c = ((Long)postExpiryTimestamp).hashCode();
         hashCode = 31 * hashCode + c;
 
         c = jobDuration == null ? 0 : jobDuration.hashCode();
