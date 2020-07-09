@@ -29,7 +29,7 @@ public final class UpdateJobServlet extends MyServlet {
     public void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // Gets the target job post id
-            String jobId = getJobId(request, JOB_ID_FIELD, "");
+            String jobId = getJobId(request);
 
             // Gets job post from the form
             Job job = ServletUtils.parseJobPost(request);
@@ -45,9 +45,9 @@ public final class UpdateJobServlet extends MyServlet {
         }
     }
 
-    private String getJobId(HttpServletRequest request, String paramName, String defaultValue)
+    private String getJobId(HttpServletRequest request)
             throws ServletException, IOException {
-        String jobId = ServletUtils.getStringParameter(request, paramName, defaultValue);
+        String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
 
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Empty Job Id");
