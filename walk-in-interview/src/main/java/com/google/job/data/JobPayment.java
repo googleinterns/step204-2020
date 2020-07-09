@@ -6,7 +6,7 @@ public final class JobPayment {
     private final int max;
     private final PaymentFrequency paymentFrequency;
 
-    private int hashCode;
+    private volatile int hashCode;
 
     // For serialization
     public JobPayment() {
@@ -50,14 +50,18 @@ public final class JobPayment {
             return this.hashCode;
         }
 
+        int result = 0;
+
         int c = ((Integer)min).hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = ((Integer)max).hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = paymentFrequency.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
+
+        this.hashCode = result;
 
         return hashCode;
     }

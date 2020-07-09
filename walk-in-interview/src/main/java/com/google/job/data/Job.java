@@ -17,7 +17,7 @@ public final class Job {
     private final long postExpiryTimestamp;
     private final JobDuration jobDuration;
 
-    private int hashCode;
+    private volatile int hashCode;
 
     private Job(JobBuilder jobBuilder) {
         this.jobId = jobBuilder.jobId;
@@ -224,32 +224,36 @@ public final class Job {
             return this.hashCode;
         }
 
+        int result = 0;
+
         int c = jobId.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = jobStatus.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = jobTitle.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = jobLocation.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = jobDescription.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = jobPay.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = requirements.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = ((Long)postExpiryTimestamp).hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
 
         c = jobDuration == null ? 0 : jobDuration.hashCode();
-        hashCode = 31 * hashCode + c;
+        result = 31 * result + c;
+
+        this.hashCode = result;
 
         return hashCode;
     }
