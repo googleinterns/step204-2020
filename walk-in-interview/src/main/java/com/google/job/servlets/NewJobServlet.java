@@ -79,7 +79,7 @@ public final class NewJobServlet extends HttpServlet {
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
-            throw new ServletException(e);
+            System.err.println("Error occur: " + e.getCause());
         }
     }
 }

@@ -11,9 +11,7 @@ public final class Location {
 
     // For serialization
     public Location() {
-        this.address = "";
-        this.latitude = 0;
-        this.longitude = 0;
+        this(/* address= */"", /* latitude= */0, /* longitude= */0);
     }
 
     public Location(String address, double latitude, double longitude) {

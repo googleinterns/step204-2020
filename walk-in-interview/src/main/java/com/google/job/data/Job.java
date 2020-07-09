@@ -157,83 +157,47 @@ public final class Job {
         }
     }
 
-    /**
-     * Gets the id for the job post.
-     *
-     * @return Id of the job post.
-     */
+    /** Returns the id for the job post. */
     public String getJobId() {
         return jobId;
     }
 
-    /**
-     * Gets the status of the job post, either ACTIVE, DELETED, or EXPIRED.
-     *
-     * @return Status of the job post.
-     */
+    /** Returns the status of the job post, either ACTIVE, DELETED, or EXPIRED. */
     public JobStatus getJobStatus() {
         return jobStatus;
     }
 
-    /**
-     * Gets the job title of that post. Job title cannot be empty.
-     *
-     * @return Job title of the post.
-     */
+    /** Returns the job title of that post. Job title cannot be empty. */
     public String getJobTitle() {
         return jobTitle;
     }
 
-    /**
-     * Gets the location details of the job post.
-     *
-     * @return Location details of the post.
-     */
+    /** Returns the location details of the job post. */
     public Location getJobLocation() {
         return jobLocation;
     }
 
-    /**
-     * Gets the job description of that post. Job description cannot be empty.
-     *
-     * @return Job description of the post.
-     */
+    /** Returns the job description of that post. Job description cannot be empty. */
     public String getJobDescription() {
         return jobDescription;
     }
 
-    /**
-     * Gets the payment details of the job post.
-     *
-     * @return Payment details of the post.
-     */
+    /** Returns the payment details of the job post. */
     public JobPayment getJobPay() {
         return jobPay;
     }
 
-    /**
-     * Gets a list of requirements of the job post.
-     *
-     * @return Requirement list.
-     */
+    /** Returns a list of requirements of the job post. */
     public List<String> getRequirements() {
         return requirements;
     }
 
-    /**
-     * Gets the date when the job post will expire.
-     *
-     * @return Expiry date of the post.
-     */
+    /** Returns the date when the job post will expire. */
     public long getPostExpiryTimestamp() {
         return postExpiryTimestamp;
     }
 
-    /**
-     * Gets the duration of the job itself.
-     *
-     * @return Duration of the job.
-     */
+    /** Returns the duration of the job itself. */
     public JobDuration getJobDuration() {
         return jobDuration;
     }

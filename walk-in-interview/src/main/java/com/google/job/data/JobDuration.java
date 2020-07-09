@@ -21,13 +21,17 @@ public enum JobDuration {
     }
 
     /**
-     * Returns the duration enum matching the provided id.
+     * Returns the job duration enum matching the provided id.
      *
-     * @param id String id matching the enum value.
-     * @return Duration enum matching the provided id.
-     * @throws IllegalArgumentException If a duration cannot be found for provided id.
+     * @throws IllegalArgumentException If a status stable id cannot be found for provided id.
      */
     public static JobDuration getFromId(String id) throws IllegalArgumentException {
-        return JobDuration.valueOf(id);
+        for (JobDuration duration: values()){
+            if (duration.getDurationId().equals(id)){
+                return duration;
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid job status id: " + id);
     }
 }
