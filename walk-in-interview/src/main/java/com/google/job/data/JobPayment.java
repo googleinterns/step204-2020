@@ -4,7 +4,7 @@ package com.google.job.data;
 public final class JobPayment {
     private final int min;
     private final int max;
-    private final Frequency frequency;
+    private final PaymentFrequency paymentFrequency;
 
     private int hashCode;
 
@@ -22,15 +22,15 @@ public final class JobPayment {
     public JobPayment() {
         this.min = 0;
         this.max = 0;
-        this.frequency = Frequency.HOURLY;
+        this.paymentFrequency = PaymentFrequency.HOURLY;
     }
 
-    public JobPayment(int min, int max, Frequency frequency) {
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) {
         validateParameter(min, max);
 
         this.min = min;
         this.max = max;
-        this.frequency = frequency;
+        this.paymentFrequency = paymentFrequency;
     }
 
     /**
@@ -56,8 +56,8 @@ public final class JobPayment {
      *
      * @return Payment frequency.
      */
-    public Frequency getFrequency() {
-        return frequency;
+    public PaymentFrequency getPaymentFrequency() {
+        return paymentFrequency;
     }
 
     @Override
@@ -67,7 +67,7 @@ public final class JobPayment {
         JobPayment that = (JobPayment) o;
         return Float.compare(that.min, min) == 0 &&
                 Float.compare(that.max, max) == 0 &&
-                frequency == that.frequency;
+                paymentFrequency == that.paymentFrequency;
     }
 
     @Override
@@ -82,7 +82,7 @@ public final class JobPayment {
         c = ((Integer)max).hashCode();
         hashCode = 31 * hashCode + c;
 
-        c = frequency.hashCode();
+        c = paymentFrequency.hashCode();
         hashCode = 31 * hashCode + c;
 
         return hashCode;
@@ -93,7 +93,7 @@ public final class JobPayment {
         return "JobPayment{" +
                 "min=" + min +
                 ", max=" + max +
-                ", frequency=" + frequency +
+                ", frequency=" + paymentFrequency +
                 '}';
     }
 }

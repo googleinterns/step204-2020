@@ -215,7 +215,7 @@ function getJobDetailsFromUserInput() {
     },
     jobDescription: description,
     jobPay: {
-      frequency: payFrequency,
+      paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
     },
