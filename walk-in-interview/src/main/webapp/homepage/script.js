@@ -147,8 +147,10 @@ function addJobFilterSubmit() {
   filterBySubmit.setAttribute('type', 'submit');
   filterBySubmit.setAttribute('value', STRINGS['homepage-filter-by-submit']);
 
-  // TODO(issue/35): add filtering event listener
-  // + validation + GET request functions
+  /**
+   * TODO(issue/35): add filtering event listener
+   * + validation + GET request functions
+   */
 }
 
 /**
@@ -161,5 +163,5 @@ function addJobFilterSubmit() {
  * @param {int} pageIndex The page index (starting from 0).
  */
 function getJobListings(sortedBy, order, pageSize, pageIndex) {
-  // TODO(issue/18): get jobs from database
+  // TODO(issue/18): get jobs from database and render them on screen
 }
