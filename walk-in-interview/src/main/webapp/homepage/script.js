@@ -85,6 +85,19 @@ function addHomepageElements() {
     document.getElementById('homepage-sort-by-order').value;
   getJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
+
+  setErrorMessage('', /** includes default msg */ false);
+}
+
+/**
+ * Sets the error message according to the param.
+ * @param {String} msg the message that the error div should display.
+ * @param {boolean} includesDefault whether the deafult
+ * message should be included.
+ */
+function setErrorMessage(msg, includesDefault) {
+  document.getElementById('homepage-error-message').innerText =
+    (includesDefault ? STRINGS['homepage-error-message'] + msg : msg);
 }
 
 /** Dynamically add the options for sorting the jobs. */

@@ -49,27 +49,19 @@
     <div class="job-listings-container">
       <div id="homepage-job-listings-title"></div>
 
-      <!-- TODO(issue/18): render from js function which makes GET request -->
-      <ul id="job-listings">
-        <li id='jobId1' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
-          <div class="job-listing">
-            waiter + info
-          </div>
-        </li>
-        <li id='jobId2' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
-          <div class="job-listing">
-            cashier + info
-          </div>
-        </li>
-        <li id='jobId3' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
-          <div class="job-listing">
-            driver + info
-          </div>
-        </li>
-      </ul>
-
+      <ul id="job-listings"></ul>
     </div>
   </div>
+
+  <div class="error-message" id="homepage-error-message"></div>
+
+  <div hidden>
+      <li class="job-listing" id="job-listing-template">
+        <div class="job-name"></div>
+        <div class="job-address"></div>
+      </li>
+  </div>
+
 </body>
 
 <script type="module" src="./script.js"></script>

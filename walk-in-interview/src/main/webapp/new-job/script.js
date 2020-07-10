@@ -89,7 +89,6 @@ function addJobPageElements() {
  * message should be included.
  */
 function setErrorMessage(msg, includesDefault) {
-  console.log('set error: ', msg, ' & include default: ', includesDefault);
   document.getElementById('new-job-error-message').innerText =
     (includesDefault ? STRINGS['new-job-error-message'] + msg : msg);
 }

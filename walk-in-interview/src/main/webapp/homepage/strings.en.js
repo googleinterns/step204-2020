@@ -7,7 +7,7 @@
  * AppStrings will be set to {} if it is
  * falsy (false, 0, '', null, undefined, NaN)
  */
-export const AppStrings = AppStrings || {};
+export const AppStrings = {};
 
 /**
  * All the strings to be used in the homepage folder.
@@ -17,7 +17,7 @@ AppStrings['homepage'] = {
   'homepage-new-post': 'New Post',
   'homepage-account': 'Create an Account',
   'homepage-error-message': 'There is an error in the following field: ',
-  'homepage-sort-by-title': 'Sort By:',
+  'homepage-sort-by-title': 'Sort By',
   'homepage-sort-by': {
     'DISTANCE': 'Distance',
     'SALARY': 'Salary',
@@ -27,7 +27,7 @@ AppStrings['homepage'] = {
     'DESCENDING': 'Descending',
   },
   'homepage-sort-by-submit': 'Apply',
-  'homepage-filter-by-title': 'Filter By:',
+  'homepage-filter-by-title': 'Filter By',
   'homepage-filter-distance-title': 'Distance',
   'homepage-filter-distance-min': 'min (km)',
   'homepage-filter-distance-max': 'max (km)',
