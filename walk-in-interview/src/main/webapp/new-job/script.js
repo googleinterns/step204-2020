@@ -1,5 +1,5 @@
 /**
- * This file is specific to new-job.html. It renders the fields on the
+ * This file is specific to index.html for new-job. It renders the fields on the
  * page dynamically, and it also makes the POST request when the form
  * is submitted.
  */
@@ -14,7 +14,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['new-job'];
-const HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../homepage/index.html';
 const RESPONSE_ERROR = 'There was an error while creating' +
   'the job listing, please try submitting again';
 

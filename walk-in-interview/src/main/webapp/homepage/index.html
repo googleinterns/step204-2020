@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<!-- The content and element attributes for this file will be
+    rendered dynamically from the script.js file. -->
+
+<body>
+  <div class="header-container">
+    <button id="homepage-new-post"></button>
+    <div id="homepage-page-title"></div>
+    <button id="homepage-account"></button>
+  </div>
+
+  <div class="content-container">
+    <div id="homepage-map">map here</div>
+
+    <div>
+      <div id="homepage-sort-by-title"></div>
+      <select id="homepage-sort-by" ></select>
+      <select id="homepage-sort-by-order"></select>
+      <input id="homepage-sort-by-submit">
+    </div>
+
+    <div>
+      <div id="homepage-filter-by-title"></div>
+
+      <div>
+        <div id="homepage-filter-distance-title"></div>
+        <input id="homepage-filter-distance-min">
+        -
+        <input id="homepage-filter-distance-max">
+      </div>
+
+      <div>
+        <div id="homepage-filter-salary-title"></div>
+        <input id="homepage-filter-salary-min">
+        -
+        <input id="homepage-filter-salary-max">
+      </div>
+
+      <input id="homepage-filter-by-submit">
+    </div>
+
+    <div class="job-listings-container">
+      <div id="homepage-job-listings-title"></div>
+
+      <ul id="job-listings">
+        <li id='jobId1' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
+          <div class="job-listing">
+            waiter + info
+          </div>
+        </li>
+        <li id='jobId2' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
+          <div class="job-listing">
+            cashier + info
+          </div>
+        </li>
+        <li id='jobId3' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
+          <div class="job-listing">
+            driver + info
+          </div>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</body>
+
+<script type="module" src="./script.js"></script>
+
+</html>
