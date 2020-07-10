@@ -15,6 +15,8 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '../new-job/index.html';
+
+// TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
 
@@ -77,6 +79,12 @@ function addHomepageElements() {
   const jobListingsTitle =
     document.getElementById('homepage-job-listings-title');
   jobListingsTitle.innerText = STRINGS['homepage-job-listings-title'];
+
+  const defaultSortBy = document.getElementById('homepage-sort-by').value;
+  const defaultSortOrder =
+    document.getElementById('homepage-sort-by-order').value;
+  getJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
+      DEFAULT_PAGE_INDEX);
 }
 
 /** Dynamically add the options for sorting the jobs. */
@@ -118,8 +126,16 @@ function addJobSortSubmit() {
   sortBySubmit.setAttribute('type', 'submit');
   sortBySubmit.setAttribute('value', STRINGS['homepage-sort-by-submit']);
 
-  // getJobListings(SORT_BY.DISTANCE, ORDER_BY.ASCENDING,
-  //   DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX);
+  sortBySubmit.addEventListener('click', (_) => {
+    if (!validSortByInput()) {
+      return;
+    }
+
+    const sortByParam = document.getElementById('homepage-sort-by').value;
+    const sortOrderParam = document.getElementById('homepage-sort-by-order');
+    getJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
+        DEFAULT_PAGE_INDEX);
+  });
 }
 
 /**
@@ -130,6 +146,9 @@ function addJobFilterSubmit() {
   const filterBySubmit = document.getElementById('homepage-filter-by-submit');
   filterBySubmit.setAttribute('type', 'submit');
   filterBySubmit.setAttribute('value', STRINGS['homepage-filter-by-submit']);
+
+  // TODO(issue/35): add filtering event listener
+  // + validation + GET request functions
 }
 
 /**
