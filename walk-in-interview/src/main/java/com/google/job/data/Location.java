@@ -12,7 +12,7 @@ public final class Location {
 
     // For serialization
     public Location() {
-        this(/* address= */"dummy", /* postalCode= */"",
+        this(/* address= */"", /* postalCode= */"dummy",
                 /* latitude= */0, /* longitude= */0);
     }
 
