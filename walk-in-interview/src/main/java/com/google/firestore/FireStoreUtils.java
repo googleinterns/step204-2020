@@ -8,7 +8,7 @@ import com.google.configuration.ConfigurationFactory;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import jdk.internal.jline.internal.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Optional;
