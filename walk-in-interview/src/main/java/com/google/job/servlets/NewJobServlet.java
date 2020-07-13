@@ -71,11 +71,9 @@ public final class NewJobServlet extends HttpServlet {
     }
 
     private void storeJobPost(Job job) throws ServletException {
-        Future<WriteResult> future = this.jobsDatabase.addJob(job);
-
         try {
             // Synchronizes and blocks the operation.
-            future.get();
+            this.jobsDatabase.addJob(job).get().get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
