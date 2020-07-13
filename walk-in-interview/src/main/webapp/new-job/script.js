@@ -195,7 +195,8 @@ function getJobDetailsFromUserInput() {
   const name = document.getElementById('new-job-title').value;
   const description = document.getElementById('new-job-description').value;
   const address = document.getElementById('new-job-address').value;
-  const postalCode = document.getElementById('new-job-postal-code').value;
+  const postalCode = document.getElementById('new-job-postal-code')
+      .valueAsNumber;
   const payFrequency = document.getElementById('new-job-pay-frequency').value;
   const payMin = document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax = document.getElementById('new-job-pay-max').valueAsNumber;
