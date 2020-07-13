@@ -187,7 +187,7 @@ describe('New Job Tests', function() {
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
             .then((text) => {
-              assert.equal(STRINGS[id], text);
+              assert.equal(STRINGS[titleId], text);
             });
       });
 
@@ -203,7 +203,7 @@ describe('New Job Tests', function() {
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
             .then((text) => {
-              assert.equal(STRINGS[id], text);
+              assert.equal(STRINGS[titleId], text);
             });
       });
 
@@ -212,7 +212,7 @@ describe('New Job Tests', function() {
       it('min: checks the placeholder attribute', () => {
         return driver.findElement(By.id(minId)).getAttribute('placeholder')
             .then((value) => {
-              assert.equal(STRINGS[id], value);
+              assert.equal(STRINGS[minId], value);
             });
       });
 
@@ -226,7 +226,7 @@ describe('New Job Tests', function() {
       it('max: checks the placeholder attribute', () => {
         return driver.findElement(By.id(maxId)).getAttribute('placeholder')
             .then((value) => {
-              assert.equal(STRINGS[id], value);
+              assert.equal(STRINGS[maxId], value);
             });
       });
 
@@ -245,7 +245,7 @@ describe('New Job Tests', function() {
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
             .then((text) => {
-              assert.equal(STRINGS[id], text);
+              assert.equal(STRINGS[titleId], text);
             });
       });
 
@@ -259,7 +259,7 @@ describe('New Job Tests', function() {
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
             .then((text) => {
-              assert.equal(STRINGS[id], text);
+              assert.equal(STRINGS[titleId], text);
             });
       });
 
