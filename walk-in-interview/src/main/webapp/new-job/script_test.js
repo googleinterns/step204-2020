@@ -235,7 +235,19 @@ describe('New Job Tests', function() {
             });
       });
 
-      // TODO(issue/32): check correct select options have been rendered
+      it('checks correct select options rendered', () => {
+        return driver.findElement(By.id(frequencyId)).getText()
+            .then((text) => {
+              const options = STRINGS[frequencyId];
+              for (const key in options) {
+                if (options.hasOwnProperty(key)) {
+                  if (!text.includes(options[key])) {
+                    assert.fail(options[key] + ' option not included');
+                  }
+                }
+              }
+            });
+      });
 
       it('min: checks the placeholder attribute', () => {
         return driver.findElement(By.id(minId)).getAttribute('placeholder')
@@ -277,7 +289,19 @@ describe('New Job Tests', function() {
             });
       });
 
-      // TODO(issue/32): check correct select options have been rendered
+      it('checks correct select options rendered', () => {
+        return driver.findElement(By.id(durationId)).getText()
+            .then((text) => {
+              const options = STRINGS[durationId];
+              for (const key in options) {
+                if (options.hasOwnProperty(key)) {
+                  if (!text.includes(options[key])) {
+                    assert.fail(options[key] + ' option not included');
+                  }
+                }
+              }
+            });
+      });
     });
 
     describe('Job Expiry', () => {

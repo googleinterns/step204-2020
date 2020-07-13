@@ -81,14 +81,29 @@ describe('New Job Tests', function() {
   afterEach(() => {
     // return driver.quit();
   });
+  const STRINGS = {
+    'new-job-pay-frequency': {
+      'HOURLY': 'Hourly',
+      'WEEKLY': 'Weekly',
+      'MONTHLY': 'Monthly',
+      'YEARLY': 'Yearlyo',
+    },
+  };
 
   describe('Error Message', () => {
-    const id = 'new-job-error-message';
+    const id = 'new-job-pay-frequency';
 
-    it('checks initially empty', () => {
+    it('checks select yeee', () => {
       return driver.findElement(By.id(id)).getText()
           .then((text) => {
-            assert.isEmpty(text);
+            const options = STRINGS['new-job-pay-frequency'];
+            for (const key in options) {
+              if (options.hasOwnProperty(key)) {
+                if (!text.includes(options[key])) {
+                  assert.fail(options[key] + ' option not included');
+                }
+              }
+            }
           });
     });
   });
