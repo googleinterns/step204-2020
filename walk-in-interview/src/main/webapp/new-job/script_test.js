@@ -10,6 +10,7 @@
 /**
  * Unable to import AppStrings into this file so copy/
  * pasted here instead.
+ * TODO(issue/38): import AppStrings here
  */
 const STRINGS = {
   'new-job-page-title': 'New Job Post',
@@ -19,6 +20,7 @@ const STRINGS = {
   'new-job-title': 'Job Title',
   'new-job-description': 'Job Description',
   'new-job-address': 'Job Address',
+  'new-job-postal-code': 'Postal Code',
   'new-job-requirements-title': 'Requirements',
   'new-job-requirements-list': 'requirements-list',
   'new-job-pay-title': 'Job Pay',
@@ -165,20 +167,40 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Address', () => {
-      const id = 'new-job-address';
+      const addressId = 'new-job-address';
 
       it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('placeholder')
+        return driver.findElement(By.id(addressId))
+            .getAttribute('placeholder')
             .then((value) => {
-              assert.equal(STRINGS[id], value);
+              assert.equal(STRINGS[addressId], value);
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('type')
+        return driver.findElement(By.id(addressId)).getAttribute('type')
             .then((value) => {
               assert.equal('text', value);
             });
+      });
+
+      describe('Postal Code', () => {
+        const postalCodeId = 'new-job-postal-code';
+
+        it('checks the placeholder attribute', () => {
+          return driver.findElement(By.id(postalCodeId))
+              .getAttribute('placeholder')
+              .then((value) => {
+                assert.equal(STRINGS[postalCodeId], value);
+              });
+        });
+
+        it('checks the type attribute', () => {
+          return driver.findElement(By.id(postalCodeId)).getAttribute('type')
+              .then((value) => {
+                assert.equal('number', value);
+              });
+        });
       });
     });
 
@@ -313,6 +335,7 @@ describe('New Job Tests', function() {
 
     describe('Submit Button', () => {
       const submitId = 'new-job-submit';
+      const errorId = 'new-job-error-message';
 
       /**
        * Add all the correct field values.
@@ -324,13 +347,24 @@ describe('New Job Tests', function() {
             .sendKeys('Wait on tables.');
         driver.findElement(By.id('new-job-address'))
             .sendKeys('290 Orchard Rd, #B1-03 Paragon');
-        // TODO: set pay frequency
+        driver.findElement(By.id('new-job-postal-code'))
+            .sendKeys('238859');
+        driver.findElement(By.id('new-job-pay-frequency'))
+            .sendKeys('HOURLY');
         driver.findElement(By.id('new-job-pay-min'))
             .sendKeys('5');
         driver.findElement(By.id('new-job-pay-max'))
             .sendKeys('6');
-        // TODO: set duraton
-        // TODO: set expiry
+        driver.findElement(By.id('new-job-duration'))
+            .sendKeys('OTHER');
+
+        const date = new Date();
+        const today = (date.getMonth() + 1) +
+          '-' + date.getDate() +
+          '-' + date.getFullYear();
+        console.log('today', today);
+        driver.findElement(By.id('new-job-expiry'))
+            .sendKeys(today);
       });
 
       /**
@@ -339,11 +373,26 @@ describe('New Job Tests', function() {
        */
       describe('Validation Checks', () => {
         it('no job title', () => {
-
+          driver.findElement(By.id('new-job-title'))
+              .sendKeys('');
+          return driver.findElement(By.id(submitId)).click().then(() => {
+            driver.findElement(By.id(errorId)).getText()
+                .then((text) => {
+                  const expected = STRINGS[errorId] + STRINGS['new-job-title'];
+                  assertEqual(expected, text);
+                });
+            return driver.getCurrentUrl();
+          }).then((currUrl) => {
+            assert.equal(JOBPAGE_URL, currUrl);
+          });
         });
 
         it('incorrect job address format', () => {
-          // TODO(issue/33): add testing for address once maps api implemented
+          // TODO(issue/13&33): add tests for address once maps api implemented
+        });
+
+        it('incorrect postal code', () => {
+          // TODO(issue/13&33): add tests for address once maps api implemented
         });
 
         it('min greater than max', () => {
@@ -364,8 +413,13 @@ describe('New Job Tests', function() {
        * user should be returned to the homepage.
        */
       it('should return to homepage', () => {
-
+        driver.findElement(By.id(submitId)).click();
+        return driver.getCurrentUrl().then((currUrl) => {
+          assert.equal(HOMEPAGE_URL, currUrl);
+        });
       });
+
+      // TODO(issue/xx): check that POST request has been made
     });
   });
 });
