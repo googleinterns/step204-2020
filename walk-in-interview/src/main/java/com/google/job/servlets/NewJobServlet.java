@@ -1,6 +1,7 @@
 package com.google.job.servlets;
 
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.WriteResult;
 import com.google.job.data.*;
 import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,13 +71,11 @@ public final class NewJobServlet extends HttpServlet {
     }
 
     private void storeJobPost(Job job) throws ServletException {
-        Future<DocumentReference> future = this.jobsDatabase.addJob(job);
+        Future<WriteResult> future = this.jobsDatabase.addJob(job);
 
         try {
             // Synchronizes and blocks the operation.
-            String databaseJobId = future.get().getId();
-            // Updates the jobId field of the job post with the auto-generated cloud firestore id.
-            this.jobsDatabase.updateJobId(databaseJobId).get();
+            future.get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {

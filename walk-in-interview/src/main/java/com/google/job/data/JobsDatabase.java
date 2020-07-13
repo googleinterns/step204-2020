@@ -20,12 +20,21 @@ public final class JobsDatabase {
      * Adds a newly created job post.
      *
      * @param newJob Newly created job post. Assumes that it is non-nullable.
-     * @return Future for the added job post task, convenient for testing.
+     * @return DocumentReference of the added job post
      */
-    public Future<DocumentReference> addJob(Job newJob) {
-        return FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION)
-                .add(newJob);
+    public DocumentReference addJob(Job newJob) {
+        // Add document data after generating an id.
+        DocumentReference addedDocRef = FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION).document();
+
+        String jobId = addedDocRef.getId();
+
+        addedDocRef.set(newJob);
+
+        // (async) Update jobId field
+        addedDocRef.update(JOB_ID_FIELD, jobId);
+
+        return FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
     }
 
     /**
@@ -43,17 +52,17 @@ public final class JobsDatabase {
                 .set(job);
     }
 
-    /**
-     * Updates the auto-generated cloud firestore id into the jobId field of the specific job post.
-     *
-     * @param jobId Cloud Firestore Id of the job post.
-     * @return A future of the detailed information of the update.
-     */
-    public Future<WriteResult> updateJobId(String jobId) {
-        DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
-        // (async) Update one field
-        return documentReference.update(JOB_ID_FIELD, jobId);
-    }
+//    /**
+//     * Updates the auto-generated cloud firestore id into the jobId field of the specific job post.
+//     *
+//     * @param jobId Cloud Firestore Id of the job post.
+//     * @return A future of the detailed information of the update.
+//     */
+//    public Future<WriteResult> updateJobId(String jobId) {
+//        DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
+//        // (async) Update one field
+//        return documentReference.update(JOB_ID_FIELD, jobId);
+//    }
 
     /**
      * Fetches the snapshot future of a specific job post.

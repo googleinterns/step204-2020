@@ -78,10 +78,9 @@ public final class JobsDatabaseTest {
                 .build();
 
         // Act.
-        Future<DocumentReference> addedJobFuture = jobsDatabase.addJob(job);
+        DocumentReference documentReference = jobsDatabase.addJob(job);
 
         // Assert.
-        DocumentReference documentReference = addedJobFuture.get();
         // Asynchronously retrieve the document.
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
