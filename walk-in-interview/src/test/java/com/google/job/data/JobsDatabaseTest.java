@@ -169,9 +169,12 @@ public final class JobsDatabaseTest {
         String expectedJobId = document.getId();
 
         // Act.
-        this.jobsDatabase.updateJobId(expectedJobId);
+        Future<WriteResult> resultFuture = this.jobsDatabase.updateJobId(expectedJobId);
 
         // Assert.
+        // future.get() blocks on response.
+        resultFuture.get();
+
         documentReference = firestore.collection(TEST_JOB_COLLECTION).document(expectedJobId);
         // Asynchronously retrieve the document.
         future = documentReference.get();
