@@ -58,7 +58,7 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
-        Location expectedLocation =  new Location("Google", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
@@ -97,7 +97,7 @@ public final class JobsDatabaseTest {
     public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
-        Location expectedLocation =  new Location("Google", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
@@ -193,7 +193,7 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
-        Location expectedLocation =  new Location("Maple Tree", 0, 0);
+        Location expectedLocation =  new Location("Maple Tree", "123456", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
