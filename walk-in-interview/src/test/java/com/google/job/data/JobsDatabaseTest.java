@@ -78,16 +78,15 @@ public final class JobsDatabaseTest {
                 .build();
 
         // Act.
-        String jobId = jobsDatabase.addJob(job);
+        AddJobResult addJobResult = jobsDatabase.addJob(job);
 
         // Assert.
-        DocumentReference documentReference = firestore.collection(TEST_JOB_COLLECTION).document(jobId);
-
-        // Asynchronously retrieve the document.
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
+        String jobId = addJobResult.getJobId();
 
         // future.get() blocks on response.
-        DocumentSnapshot document = future.get();
+        addJobResult.getFuture().get();
+
+        DocumentSnapshot document = firestore.collection(TEST_JOB_COLLECTION).document(jobId).get().get();
 
         Job actualJob = document.toObject(Job.class);
         Job expectedJob = Job.newBuilder()
