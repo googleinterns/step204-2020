@@ -131,9 +131,8 @@ function getRequirementsList() {
   // TODO(issue/17): GET request to servlet to get from database
   // returning some hardcoded values for now
   return {
-    'O-LEVEL': 'O Level',
-    'LANGUAGE-ENGLISH': 'English',
-    'DRIVING-LICENSE-C': 'Category C Driving License',
+    'o-levels': 'O Levels',
+    'drivers-license': 'Drivers License',
   };
 }
 
