@@ -56,7 +56,6 @@ public final class NewJobServlet extends HttpServlet {
         Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
 
         Job job = Job.newBuilder()
-                .setJobStatus(JobStatus.ACTIVE)
                 .setJobTitle(rawJob.getJobTitle())
                 .setLocation(rawJob.getJobLocation())
                 .setJobDescription(rawJob.getJobDescription())
@@ -75,9 +74,9 @@ public final class NewJobServlet extends HttpServlet {
 
         try {
             // Synchronizes and blocks the operation.
-            String jobId = future.get().getId();
+            String databaseJobId = future.get().getId();
             // Updates the jobId field of the job post with the auto-generated cloud firestore id.
-            this.jobsDatabase.updateJobId(jobId).get();
+            this.jobsDatabase.updateJobId(databaseJobId).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
