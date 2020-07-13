@@ -73,7 +73,7 @@ public final class UpdateJobServlet extends MyServlet {
         try {
             // Synchronizes and blocks the operation.
             future.get();
-            this.jobsDatabase.updateJobId(jobId);
+            this.jobsDatabase.updateJobId(jobId).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
