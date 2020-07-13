@@ -3,6 +3,8 @@
  * funcions in new-job/script.js using mocha and selenium.
  * Running `npm test` in the command line will run all
  * the mocha tests in the walk-in-interview directory.
+ * Also note that the Dev App Server should be running
+ * using `mvn package appengine:run` before running the tests.
  */
 
 /**
@@ -292,5 +294,51 @@ describe('New Job Tests', function() {
     });
   });
 
-  // TODO(issue/33): add test for page functionality
+  describe('Page Functionality Tests', () => {
+    describe('Cancel Button', () => {
+      /**
+       * Clicking the cancel button should return the user to the homepage
+       * and not make any POST request.
+       */
+      it('should return to homepage', () => {
+
+      });
+    });
+
+    describe('Submit Button', () => {
+      /**
+       * If a field is not valid, then clicking submit will display an error
+       * message with the invalid field, and no POST request will be made.
+       */
+      describe('Validation Checks', () => {
+        it('no job title', () => {
+
+        });
+
+        it('incorrect job address format', () => {
+          // TODO(issue/33): add testing for address once maps api implemented
+        });
+
+        it('min greater than max', () => {
+
+        });
+
+        it('job duration not chosen', () => {
+
+        });
+
+        it('expiry date not chosen', () => {
+
+        });
+      });
+
+      /**
+       * If all the fields are valid, then a POST request should be made and the
+       * user should be returned to the homepage.
+       */
+      it('should return to homepage', () => {
+
+      });
+    });
+  });
 });
