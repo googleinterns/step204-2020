@@ -56,6 +56,7 @@ public final class JobsDatabase {
         // (async) Update one field
         return documentReference.update(JOB_ID_FIELD, jobId);
     }
+
     /**
      * Fetches the snapshot future of a specific job post.
      *
