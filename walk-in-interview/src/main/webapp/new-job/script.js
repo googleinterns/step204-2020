@@ -132,6 +132,7 @@ function getRequirementsList() {
   // returning some hardcoded values for now
   return {
     'O-LEVEL': 'O Level',
+    'LANGUAGE-ENGLISH': 'English',
     'DRIVING-LICENSE-C': 'Category C Driving License',
   };
 }
