@@ -9,9 +9,9 @@ import java.util.Map;
 /** Enumeration that represents the requirements of jobs. */
 public enum Requirement {
     // TODO(issue/26): add more requirements
-    O_LEVEL("o-level", ImmutableMap.of("en", "O Level")),
-    ENGLISH("language-english", ImmutableMap.of("en", "English")),
-    DRIVING_LICENSE_C("driving-license-c", ImmutableMap.of("en", "Category C Driving License"));
+    O_LEVEL("O-LEVEL", ImmutableMap.of("en", "O Level")),
+    ENGLISH("LANGUAGE-ENGLISH", ImmutableMap.of("en", "English")),
+    DRIVING_LICENSE_C("DRIVING-LICENSE-C", ImmutableMap.of("en", "Category C Driving License"));
 
     private final String requirementId;
     private final Map<String, String> localizedNameByLanguage;
