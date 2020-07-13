@@ -4,6 +4,10 @@ import com.google.cloud.firestore.WriteResult;
 
 import java.util.concurrent.Future;
 
+/**
+ * A Result Type class, specific for "addJob" function, that stores both job id and future.
+ * Returns job id so that it can be tracked and returns future so that it can be synchronized.
+ */
 public class AddJobResult {
     private String jobId;
     private Future<WriteResult> future;

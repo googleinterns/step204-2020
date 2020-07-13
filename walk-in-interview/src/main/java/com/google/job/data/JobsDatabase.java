@@ -52,18 +52,6 @@ public final class JobsDatabase {
                 .set(job);
     }
 
-//    /**
-//     * Updates the auto-generated cloud firestore id into the jobId field of the specific job post.
-//     *
-//     * @param jobId Cloud Firestore Id of the job post.
-//     * @return A future of the detailed information of the update.
-//     */
-//    public Future<WriteResult> updateJobId(String jobId) {
-//        DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
-//        // (async) Update one field
-//        return documentReference.update(JOB_ID_FIELD, jobId);
-//    }
-
     /**
      * Fetches the snapshot future of a specific job post.
      *

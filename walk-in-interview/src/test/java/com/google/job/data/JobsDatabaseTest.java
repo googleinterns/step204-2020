@@ -165,40 +165,6 @@ public final class JobsDatabaseTest {
         assertEquals(updatedJob, actualJob);
     }
 
-//    @Test
-//    public void updateJobId_NormalInput_success() throws ExecutionException, InterruptedException {
-//        // Arrange.
-//        Job job = new Job();
-//        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
-//
-//        DocumentReference documentReference = addedJobFuture.get();
-//        // Asynchronously retrieve the document.
-//        ApiFuture<DocumentSnapshot> future = documentReference.get();
-//
-//        // future.get() blocks on response.
-//        DocumentSnapshot document = future.get();
-//        String expectedJobId = document.getId();
-//
-//        // Act.
-//        Future<WriteResult> resultFuture = this.jobsDatabase.updateJobId(expectedJobId);
-//
-//        // Assert.
-//        // future.get() blocks on response.
-//        resultFuture.get();
-//
-//        documentReference = firestore.collection(TEST_JOB_COLLECTION).document(expectedJobId);
-//        // Asynchronously retrieve the document.
-//        future = documentReference.get();
-//
-//        // future.get() blocks on response.
-//        document = future.get();
-//
-//        Job actualJob = document.toObject(Job.class);
-//        String actualJobId = actualJob.getJobId();
-//
-//        assertEquals(expectedJobId, actualJobId);
-//    }
-
     @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
