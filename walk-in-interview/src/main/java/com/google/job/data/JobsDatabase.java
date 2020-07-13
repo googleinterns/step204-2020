@@ -50,22 +50,23 @@ public final class JobsDatabase {
      * Updates a specific field.
      *
      * @param jobId Cloud Firestore Id of the job post.
+     * @return A future of the detailed information of the update.
      */
-    public void updateJobId(String jobId) {
+    public Future<WriteResult> updateJobId(String jobId) {
         DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
         // (async) Update one field
-        documentReference.update(JOB_ID_FIELD, jobId);
+        return documentReference.update(JOB_ID_FIELD, jobId);
     }
 
     /**
      * Marks a job post as DELETED.
      *
      * @param jobId Cloud Firestore Id of the job post.
+     * @return A future of the detailed information of the update.
      */
-    public void markJobPostAsDeleted(String jobId) {
+    public Future<WriteResult> markJobPostAsDeleted(String jobId) {
         DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
-        // Can only update the value with string
-        documentReference.update(JOB_STATUS_FIELD, JobStatus.DELETED.getStatusId());
+        return documentReference.update(JOB_STATUS_FIELD, JobStatus.DELETED);
     }
 
     /**
