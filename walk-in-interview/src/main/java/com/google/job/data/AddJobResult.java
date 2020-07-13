@@ -17,10 +17,12 @@ public class AddJobResult {
         this.future = future;
     }
 
+    /** Returns the auto generated cloud firestore job id so that this entity can be tracked */
     public String getJobId() {
         return jobId;
     }
 
+    /** Returns future of update details so that it can be synchronized. */
     public Future<WriteResult> getFuture() {
         return future;
     }
