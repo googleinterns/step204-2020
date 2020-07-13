@@ -57,6 +57,11 @@ public final class JobsDatabase {
         documentReference.update(JOB_ID_FIELD, jobId);
     }
 
+    /**
+     * Marks a job post as DELETED.
+     *
+     * @param jobId Cloud Firestore Id of the job post.
+     */
     public void markJobPostAsDeleted(String jobId) {
         DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
         documentReference.update(JOB_STATUS_FIELD, JobStatus.DELETED);

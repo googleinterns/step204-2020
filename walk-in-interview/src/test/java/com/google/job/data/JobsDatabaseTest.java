@@ -186,6 +186,7 @@ public final class JobsDatabaseTest {
 
     @Test
     public void markJobPostAsDeleted_NormalInput_success() throws ExecutionException, InterruptedException {
+        // TODO: test fail
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -196,6 +197,7 @@ public final class JobsDatabaseTest {
 
         // future.get() blocks on response.
         DocumentSnapshot document = future.get();
+        // Gets job id.
         String jobId = document.getId();
 
         // Act.
