@@ -22,7 +22,7 @@ public class AddJobResult {
         return jobId;
     }
 
-    /** Returns future of update details so that it can be synchronized. */
+    /** Returns future of the writing details so that it can be synchronized. */
     public Future<WriteResult> getFuture() {
         return future;
     }
