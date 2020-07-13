@@ -64,7 +64,8 @@ public final class JobsDatabase {
      */
     public void markJobPostAsDeleted(String jobId) {
         DocumentReference documentReference = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
-        documentReference.update(JOB_STATUS_FIELD, JobStatus.DELETED);
+        // Can only update the value with string
+        documentReference.update(JOB_STATUS_FIELD, JobStatus.DELETED.getStatusId());
     }
 
     /**
