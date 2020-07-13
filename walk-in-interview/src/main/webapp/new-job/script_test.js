@@ -46,6 +46,7 @@ const STRINGS = {
  * we get the following error: ERR_SSL_PROTOCOL_ERROR
  */
 const JOBPAGE_URL = 'http://localhost:3000/new-job/index.html';
+const HOMEPAGE_URL = 'http://localhost:3000/index.html';
 
 const assert = require('assert');
 const webdriver = require('selenium-webdriver');
@@ -68,7 +69,6 @@ describe('New Job Tests', function() {
     driver = new webdriver.Builder()
         .withCapabilities(webdriver.Capabilities.chrome())
         .build();
-    // TODO(issue/31): figure out how to test our local host url
     return driver.get(JOBPAGE_URL);
   });
 
@@ -296,16 +296,43 @@ describe('New Job Tests', function() {
 
   describe('Page Functionality Tests', () => {
     describe('Cancel Button', () => {
+      const id = 'new-job-cancel';
+
       /**
        * Clicking the cancel button should return the user to the homepage
        * and not make any POST request.
        */
       it('should return to homepage', () => {
-
+        return driver.findElement(By.id(id)).click().then(() => {
+          return driver.getCurrentUrl();
+        }).then((currUrl) => {
+          assert.equal(HOMEPAGE_URL, currUrl);
+        });
       });
     });
 
     describe('Submit Button', () => {
+      const submitId = 'new-job-submit';
+
+      /**
+       * Add all the correct field values.
+       */
+      beforeEach(() => {
+        driver.findElement(By.id('new-job-title'))
+            .sendKeys('Waiter');
+        driver.findElement(By.id('new-job-description'))
+            .sendKeys('Wait on tables.');
+        driver.findElement(By.id('new-job-address'))
+            .sendKeys('290 Orchard Rd, #B1-03 Paragon');
+        // TODO: set pay frequency
+        driver.findElement(By.id('new-job-pay-min'))
+            .sendKeys('5');
+        driver.findElement(By.id('new-job-pay-max'))
+            .sendKeys('6');
+        // TODO: set duraton
+        // TODO: set expiry
+      });
+
       /**
        * If a field is not valid, then clicking submit will display an error
        * message with the invalid field, and no POST request will be made.
