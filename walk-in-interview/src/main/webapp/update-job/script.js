@@ -16,6 +16,14 @@ window.onload = () => {
  * @param {String} jobId 
  */
 function addPageElements(jobId) {
+    const cancelButton = document.getElementById('job-cancel');
+    cancelButton.setAttribute("value", "Cancel");
+    cancelButton.setAttribute("type", "reset");
+
+    const submitButton = document.getElementById("job-submit");
+    submitButton.setAttribute("value","Create");
+    submitButton.setAttribute("type", "submit");
+
     const job = getJobFromId(jobId);
 
     const jobTitle = document.getElementById("job-title");
@@ -30,6 +38,27 @@ function addPageElements(jobId) {
     const jobAddressContent = job.jobLocation.address;
     jobAddress.setAttribute("value", jobAddressContent);
     
+    // TODO: requirement list
+
+    const jobPayFrequency = document.getElementById("job-pay-frequency");
+    // TODO
+    
+    const jobPayMin = document.getElementById("job-pay-min");
+    const jobPayMinContent = job.jobPay.min;
+    jobPayMin.setAttribute("value", jobPayMinContent);
+
+    const jobPayMax = document.getElementById("job-pay-max");
+    const jobPayMaxContent = job.jobPay.max;
+    jobPayMax.setAttribute("value", jobPayMaxContent);
+
+    const jobDuration = document.getElementById("job-duration");
+    // TODO
+
+    const jobExpiry = document.getElementById("job-expiry");
+    const jobExpiryTimestamp = job.postExpiryTimestamp;
+    // Multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    var expiryDate = new Date(jobExpiryTimestamp * 1000);
+    jobExpiry.setAttribute("value", expiryDate);
 }
 
 /**

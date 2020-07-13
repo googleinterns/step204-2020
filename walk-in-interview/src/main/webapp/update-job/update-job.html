@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="../style.css">
     </head>
 
+    <!-- TODO: render the text dynamically according to current locale -->
     <body>
         <div class="header-container">
             <input id="update-job-cancel">
@@ -16,11 +17,35 @@
             <input class="job-field" id="job-title"/>
             <textarea class="job-field" id="job-description"></textarea>
             <input class="job-field" id="job-address" />
-        </div>
 
-        <div class="job-field">
-            <div id="job-requirements-title"></div>
-            <ul id="job-requirements-list"></ul>
+            <div class="job-field">
+                <div id="job-requirements-title">Requirements</div>
+                <ul id="job-requirements-list"></ul>
+                <!--TODO: render all the requirements with those existing requirements ticked-->
+            </div>
+    
+            <div class="job-field">
+                <div id="job-pay-title">Job Pay</div>
+                <select id="job-pay-frequency"></select>
+                <!--TODO: render the choices with the existing choice selected-->
+                <div id="job-pay-range">
+                    <input id="job-pay-min">
+                    -
+                    <input id="job-pay-max">
+                </div>
+            </div>
+    
+            <div class="job-field">
+                <div id="job-duration-title">Job Duration</div>
+                <select id="job-duration"></select>
+                <!--TODO: render the choices with the existing choice selected-->
+            </div>
+    
+            <div class="job-field">
+                <div id="job-expiry-title">Job Expiry</div>
+                <input id="job-expiry">
+                <!--TODO: render the dates with the existing date selected-->
+            </div>
         </div>
     </body>
 
