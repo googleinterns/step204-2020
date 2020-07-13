@@ -55,7 +55,7 @@ public final class Location {
         Location that = (Location) o;
         return Double.compare(that.latitude, latitude) == 0 &&
                 Double.compare(that.longitude, longitude) == 0 &&
-                that.postalCode == postalCode &&
+                postalCode.equals(that.postalCode) &&
                 address.equals(that.address);
     }
 

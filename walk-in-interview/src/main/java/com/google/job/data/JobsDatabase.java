@@ -31,10 +31,10 @@ public final class JobsDatabase {
 
         addedDocRef.set(newJob);
 
-        // (async) Update jobId field
+        // (async) Update jobId field with the auto generated id
         addedDocRef.update(JOB_ID_FIELD, jobId);
 
-        return FireStoreUtils.getFireStore().collection(JOB_COLLECTION).document(jobId);
+        return addedDocRef;
     }
 
     /**
