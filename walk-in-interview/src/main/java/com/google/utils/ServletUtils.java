@@ -3,10 +3,8 @@ package com.google.utils;
 import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 /** Util methods related to servlet. */
