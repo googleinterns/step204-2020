@@ -493,6 +493,7 @@ describe('New Job Tests', function() {
       });
 
       // TODO(issue/40): check that POST request has been made
+      // & also check that the response is what was expected
     });
   });
 });
