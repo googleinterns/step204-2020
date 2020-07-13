@@ -90,7 +90,7 @@ public final class JobsDatabaseTest {
         DocumentSnapshot document = future.get();
 
         Job actualJob = document.toObject(Job.class);
-        job = Job.newBuilder()
+        Job expectedJob = Job.newBuilder()
                 .setJobId(jobId)
                 .setJobStatus(expectedJobStatus)
                 .setJobTitle(expectedJobName)
@@ -102,7 +102,7 @@ public final class JobsDatabaseTest {
                 .setJobDuration(expectedJobDuration)
                 .build();
 
-        assertEquals(job, actualJob);
+        assertEquals(expectedJob, actualJob);
     }
 
     @Test
