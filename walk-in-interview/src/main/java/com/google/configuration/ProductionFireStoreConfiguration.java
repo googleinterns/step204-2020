@@ -1,6 +1,6 @@
 package com.google.configuration;
 
-import jdk.internal.jline.internal.Nullable;
+import javax.annotation.Nullable;
 
 /** Class that specify the configuration details for firestore during production phase. */
 public final class ProductionFireStoreConfiguration implements FireStoreConfiguration {
