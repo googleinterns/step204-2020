@@ -9,7 +9,7 @@
  * Unable to import AppStrings into this file so copy/
  * pasted here instead.
  */
-STRINGS = {
+const STRINGS = {
   'new-job-page-title': 'New Job Post',
   'new-job-cancel': 'Cancel',
   'new-job-submit': 'Create',
@@ -39,6 +39,11 @@ STRINGS = {
   },
   'new-job-expiry-title': 'Job Expiry',
 };
+/**
+ * Note that if https is used instead in the url below then
+ * we get the following error: ERR_SSL_PROTOCOL_ERROR
+ */
+const JOBPAGE_URL = 'http://localhost:3000/new-job/index.html';
 
 const assert = require('assert');
 const webdriver = require('selenium-webdriver');
@@ -62,8 +67,7 @@ describe('New Job Tests', function() {
         .withCapabilities(webdriver.Capabilities.chrome())
         .build();
     // TODO(issue/31): figure out how to test our local host url
-    return driver.get('https://riyanar-step-2020.appspot.com/comments.html');
-    // return driver.get('https://library-app.firebaseapp.com/');
+    return driver.get(JOBPAGE_URL);
   });
 
   afterEach(() => {

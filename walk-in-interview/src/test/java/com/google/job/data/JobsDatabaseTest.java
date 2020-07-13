@@ -55,7 +55,7 @@ public final class JobsDatabaseTest {
         firestore = FireStoreUtils.getFireStore();
     }
 
-    @Test
+    // @Test
     public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         String expectedJobName = "Software Engineer";
@@ -78,7 +78,7 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJobName, actualJobName);
     }
 
-    @Test
+    // @Test
     public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         Job oldJob = new Job("Noogler");
@@ -113,7 +113,7 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJobName, actualJobName);
     }
 
-    @Test
+    // @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job("Programmer");
