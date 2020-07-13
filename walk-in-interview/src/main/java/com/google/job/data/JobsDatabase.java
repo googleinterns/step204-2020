@@ -46,7 +46,7 @@ public final class JobsDatabase {
     }
 
     /**
-     * Updates a specific field.
+     * Updates the auto-generated cloud firestore id into the jobId field of the specific job post.
      *
      * @param jobId Cloud Firestore Id of the job post.
      * @return A future of the detailed information of the update.
