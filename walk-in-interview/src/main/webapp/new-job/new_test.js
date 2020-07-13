@@ -15,6 +15,8 @@
  * pasted here instead.
  * TODO(issue/38): import AppStrings here
  */
+
+// import './script.js';
 const STRINGS = {
   'new-job-page-title': 'New Job Post',
   'new-job-cancel': 'Cancel',
@@ -82,25 +84,21 @@ describe('New Job Tests', function() {
     // return driver.quit();
   });
   const STRINGS = {
-    'new-job-pay-frequency': {
-      'HOURLY': 'Hourly',
-      'WEEKLY': 'Weekly',
-      'MONTHLY': 'Monthly',
-      'YEARLY': 'Yearlyo',
-    },
+    'o-levels': 'O Levels',
+    'drivers-license': 'Drivers License',
   };
 
   describe('Error Message', () => {
-    const id = 'new-job-pay-frequency';
+    const id = 'new-job-requirements-list';
 
     it('checks select yeee', () => {
       return driver.findElement(By.id(id)).getText()
           .then((text) => {
-            const options = STRINGS['new-job-pay-frequency'];
-            for (const key in options) {
-              if (options.hasOwnProperty(key)) {
-                if (!text.includes(options[key])) {
-                  assert.fail(options[key] + ' option not included');
+            const list = STRINGS;
+            for (const key in list) {
+              if (list.hasOwnProperty(key)) {
+                if (!text.includes(list[key])) {
+                  assert.fail(list[key] + ' requirement not included');
                 }
               }
             }

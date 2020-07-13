@@ -47,6 +47,13 @@ const STRINGS = {
   'new-job-expiry-title': 'Job Expiry',
 };
 /**
+ * TODO(issue/38): import getRequirementsList() here.
+ */
+const REQUIREMENTS_LIST = {
+  'o-levels': 'O Levels',
+  'drivers-license': 'Drivers License',
+};
+/**
  * Note that if https is used instead in the url below then
  * we get the following error: ERR_SSL_PROTOCOL_ERROR
  */
@@ -219,7 +226,19 @@ describe('New Job Tests', function() {
             });
       });
 
-      // TODO(issue/32): check correct list elements have been rendered
+      it('checks correct requirement list rendered', () => {
+        return driver.findElement(By.id(listId)).getText()
+            .then((text) => {
+              const list = REQUIREMENTS_LIST;
+              for (const key in list) {
+                if (list.hasOwnProperty(key)) {
+                  if (!text.includes(list[key])) {
+                    assert.fail(list[key] + ' requirement not included');
+                  }
+                }
+              }
+            });
+      });
     });
 
     describe('Job Pay', () => {
@@ -473,7 +492,7 @@ describe('New Job Tests', function() {
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
       });
 
-      // TODO(issue/xx): check that POST request has been made
+      // TODO(issue/40): check that POST request has been made
     });
   });
 });
