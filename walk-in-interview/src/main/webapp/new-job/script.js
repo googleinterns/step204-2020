@@ -50,7 +50,7 @@ function addJobPageElements() {
   jobAddress.setAttribute('required', true);
 
   const postalCode = document.getElementById('new-job-postal-code');
-  postalCode.setAttribute('type', 'number');
+  postalCode.setAttribute('type', 'text');
   postalCode.setAttribute('placeholder', STRINGS['new-job-postal-code']);
   postalCode.setAttribute('required', true);
 
@@ -195,8 +195,7 @@ function getJobDetailsFromUserInput() {
   const name = document.getElementById('new-job-title').value;
   const description = document.getElementById('new-job-description').value;
   const address = document.getElementById('new-job-address').value;
-  const postalCode = document.getElementById('new-job-postal-code')
-      .valueAsNumber;
+  const postalCode = document.getElementById('new-job-postal-code').value;
   const payFrequency = document.getElementById('new-job-pay-frequency').value;
   const payMin = document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax = document.getElementById('new-job-pay-max').valueAsNumber;
@@ -244,8 +243,7 @@ function validateRequiredUserInput() {
   const name = document.getElementById('new-job-title');
   const description = document.getElementById('new-job-description');
   const address = document.getElementById('new-job-address');
-  const postalCode = document.getElementById('new-job-postal-code')
-      .valueAsNumber;
+  const postalCode = document.getElementById('new-job-postal-code').value;
   const payFrequency = document.getElementById('new-job-pay-frequency').value;
   const payMin = document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax = document.getElementById('new-job-pay-max').valueAsNumber;
@@ -264,7 +262,7 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (address.value === '' || Number.isNaN(postalCode)) {
+  if (address.value === '' || postalCode === '') {
     setErrorMessage(address.placeholder,
         /** includes default msg */ true);
     return false;
