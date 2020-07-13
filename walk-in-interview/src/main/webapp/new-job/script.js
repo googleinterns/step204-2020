@@ -50,6 +50,11 @@ function addJobPageElements() {
   jobAddress.setAttribute('placeholder', STRINGS['new-job-address']);
   jobAddress.setAttribute('required', true);
 
+  const postalCode = document.getElementById('new-job-postal-code');
+  postalCode.setAttribute('type', 'number');
+  postalCode.setAttribute('placeholder', STRINGS['new-job-postal-code']);
+  postalCode.setAttribute('required', true);
+
   const requirementsTitle =
     document.getElementById('new-job-requirements-title');
   requirementsTitle.innerText = STRINGS['new-job-requirements-title'];
@@ -189,8 +194,10 @@ function addJobExpiryLimits() {
  */
 function getJobDetailsFromUserInput() {
   const name = document.getElementById('new-job-title').value;
-  const address = document.getElementById('new-job-address').value;
   const description = document.getElementById('new-job-description').value;
+  const address = document.getElementById('new-job-address').value;
+  const postalCode = document.getElementById('new-job-postal-code')
+      .valueAsNumber;
   const payFrequency = document.getElementById('new-job-pay-frequency').value;
   const payMin = document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax = document.getElementById('new-job-pay-max').valueAsNumber;
@@ -211,8 +218,9 @@ function getJobDetailsFromUserInput() {
     jobTitle: name,
     jobLocation: {
       address: address,
-      latitude: 1.3039, // TODO(issue/13): get these from places api
-      longitude: 103.8358,
+      postalCode: postalCode,
+      lat: 1.3039, // TODO(issue/13): get these from places api
+      lon: 103.8358,
     },
     jobDescription: description,
     jobPay: {
@@ -237,6 +245,8 @@ function validateRequiredUserInput() {
   const name = document.getElementById('new-job-title');
   const description = document.getElementById('new-job-description');
   const address = document.getElementById('new-job-address');
+  const postalCode = document.getElementById('new-job-postal-code')
+      .valueAsNumber;
   const payFrequency = document.getElementById('new-job-pay-frequency').value;
   const payMin = document.getElementById('new-job-pay-min').valueAsNumber;
   const payMax = document.getElementById('new-job-pay-max').valueAsNumber;
@@ -255,7 +265,7 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (address.value === '') {
+  if (address.value === '' || Number.isNaN(postalCode)) {
     setErrorMessage(address.placeholder,
         /** includes default msg */ true);
     return false;
