@@ -47,6 +47,7 @@ public final class NewJobServlet extends HttpServlet {
         try {
             // Synchronizes and blocks the operation.
             String jobId = future.get().getId();
+            // Updates the jobId field of the job post with the auto-generated cloud firestore id.
             this.jobsDatabase.updateJobId(jobId).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
