@@ -70,6 +70,9 @@ chrome.setDefaultService(service);
 
 const By = webdriver.By;
 const until = webdriver.until;
+const options = new chrome.Options();
+options.addArguments('headless');
+
 const TIMEOUT = 10000;
 
 let driver;
@@ -79,7 +82,7 @@ describe('New Job Tests', function() {
   this.timeout(TIMEOUT);
 
   beforeEach(() => {
-    driver = new webdriver.Builder()
+    driver = new webdriver.Builder().setChromeOptions(options)
         .withCapabilities(webdriver.Capabilities.chrome())
         .build();
     return driver.get(JOBPAGE_URL);
@@ -209,7 +212,7 @@ describe('New Job Tests', function() {
         it('checks the type attribute', () => {
           return driver.findElement(By.id(postalCodeId)).getAttribute('type')
               .then((value) => {
-                assert.equal(value, 'number');
+                assert.equal(value, 'text');
               });
         });
       });
