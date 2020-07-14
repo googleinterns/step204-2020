@@ -50,15 +50,16 @@ const STRINGS = {
  * TODO(issue/38): import getRequirementsList() here.
  */
 const REQUIREMENTS_LIST = {
-  'o-levels': 'O Levels',
-  'drivers-license': 'Drivers License',
+  'O_LEVEL': 'O Level',
+  'LANGUAGE_ENGLISH': 'English',
+  'DRIVING_LICENSE_C': 'Category C Driving License',
 };
 /**
- * Note that if https is used instead in the url below then
+ * Note that if `https` is used instead in the url below then
  * we get the following error: ERR_SSL_PROTOCOL_ERROR
  */
 const JOBPAGE_URL = 'http://localhost:3000/new-job/index.html';
-const HOMEPAGE_URL = 'http://localhost:3000/index.html';
+const HOMEPAGE_URL = 'http://localhost:3000/homepage/index.html';
 
 const assert = require('chai').assert;
 const webdriver = require('selenium-webdriver');
@@ -73,11 +74,11 @@ const until = webdriver.until;
 const options = new chrome.Options();
 options.addArguments('headless');
 
-const TIMEOUT = 10000;
+const TIMEOUT = 50000;
 
 let driver;
 
-/** Note that this.timeout() will not work arrow functions. */
+/** Note that this.timeout() will not work with arrow functions. */
 describe('New Job Tests', function() {
   this.timeout(TIMEOUT);
 
@@ -430,11 +431,11 @@ describe('New Job Tests', function() {
       });
 
       it('incorrect job address format', () => {
-        // TODO(issue/13&33): add tests for address once maps api implemented
+        // TODO(issue/13&33): add tests for address once places api implemented
       });
 
       it('incorrect postal code', () => {
-        // TODO(issue/13&33): add tests for address once maps api implemented
+        // TODO(issue/13&33): add tests for address once places api implemented
       });
 
       it('min greater than max', () => {
@@ -449,10 +450,10 @@ describe('New Job Tests', function() {
 
       it('job duration not chosen', () => {
         /**
-           * Note that the .clear() function does not work on
-           * non-input/textarea elements. Also .sendKeys() cannot
-           * be used twice on the same element.
-           */
+         * Note that the .clear() function does not work on
+         * non-input/textarea elements. Also .sendKeys() cannot
+         * be used twice on the same element.
+         */
         driver.get(JOBPAGE_URL);
 
         return driver.findElement(By.id('title')).sendKeys('Waiter')

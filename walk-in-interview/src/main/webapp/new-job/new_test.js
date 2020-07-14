@@ -16,27 +16,27 @@
  * TODO(issue/38): import AppStrings here
  */
 const STRINGS = {
-  'new-job-page-title': 'New Job Post',
-  'new-job-cancel': 'Cancel',
-  'new-job-submit': 'Create',
-  'new-job-error-message': 'There is an error in the following field: ',
-  'new-job-title': 'Job Title',
-  'new-job-description': 'Job Description',
-  'new-job-address': 'Job Address',
-  'new-job-postal-code': 'Postal Code',
-  'new-job-requirements-title': 'Requirements',
-  'new-job-requirements-list': 'requirements-list',
-  'new-job-pay-title': 'Job Pay',
-  'new-job-pay-frequency': {
+  'page-title': 'New Job Post',
+  'cancel': 'Cancel',
+  'submit': 'Create',
+  'error-message': 'There is an error in the following field: ',
+  'title': 'Job Title',
+  'description': 'Job Description',
+  'address': 'Job Address',
+  'postal-code': 'Postal Code',
+  'requirements-title': 'Requirements',
+  'requirements-list': 'requirements-list',
+  'pay-title': 'Job Pay',
+  'pay-frequency': {
     'HOURLY': 'Hourly',
     'WEEKLY': 'Weekly',
     'MONTHLY': 'Monthly',
     'YEARLY': 'Yearly',
   },
-  'new-job-pay-min': 'min (sgd)',
-  'new-job-pay-max': 'max (sgd)',
-  'new-job-duration-title': 'Job Duration',
-  'new-job-duration': {
+  'pay-min': 'min (sgd)',
+  'pay-max': 'max (sgd)',
+  'duration-title': 'Job Duration',
+  'duration': {
     'ONE_WEEK': '1 Week',
     'TWO_WEEKS': '2 Weeks',
     'ONE_MONTH': '1 Month',
@@ -44,21 +44,22 @@ const STRINGS = {
     'ONE_YEAR': '1 Year',
     'OTHER': 'Other',
   },
-  'new-job-expiry-title': 'Job Expiry',
+  'expiry-title': 'Job Expiry',
 };
   /**
    * TODO(issue/38): import getRequirementsList() here.
    */
 const REQUIREMENTS_LIST = {
-  'o-levels': 'O Levels',
-  'drivers-license': 'Drivers License',
+  'O_LEVEL': 'O Level',
+  'LANGUAGE_ENGLISH': 'English',
+  'DRIVING_LICENSE_C': 'Category C Driving License',
 };
   /**
    * Note that if https is used instead in the url below then
    * we get the following error: ERR_SSL_PROTOCOL_ERROR
    */
 const JOBPAGE_URL = 'http://localhost:3000/new-job/index.html';
-const HOMEPAGE_URL = 'http://localhost:3000/index.html';
+const HOMEPAGE_URL = 'http://localhost:3000/homepage/index.html';
 
 const assert = require('chai').assert;
 const webdriver = require('selenium-webdriver');
@@ -89,14 +90,29 @@ describe('New Job Tests', function() {
     return driver.quit();
   });
 
-  it('checks the max attribute', () => {
-    return driver.findElement(By.id('new-job-expiry')).getAttribute('max')
-        .then((value) => {
-          const date = new Date();
-          date.setFullYear(date.getFullYear() + 1);
-          const expected = date.toISOString().substr(0, 10);
+  describe('Job Duration', () => {
+    const titleId = 'duration-title';
+    const durationId = 'duration';
 
-          assert.equal(value, expected);
-        });
+    it('checks the title text', () => {
+      return driver.findElement(By.id(titleId)).getText()
+          .then((text) => {
+            assert.equal(text, STRINGS[titleId]);
+          });
+    });
+
+    it('checks correct select options rendered', () => {
+      return driver.findElement(By.id(durationId)).getText()
+          .then((text) => {
+            const options = STRINGS[durationId];
+            for (const key in options) {
+              if (options.hasOwnProperty(key)) {
+                if (!text.includes(options[key])) {
+                  assert.fail(options[key] + ' option not included');
+                }
+              }
+            }
+          });
+    });
   });
 });
