@@ -138,6 +138,7 @@ public final class JobsDatabaseTest {
 
         expectedJobName = "Googler";
         Job updatedJob = Job.newBuilder()
+                .setJobId(jobId)
                 .setJobStatus(expectedJobStatus)
                 .setJobTitle(expectedJobName)
                 .setLocation(expectedLocation)
