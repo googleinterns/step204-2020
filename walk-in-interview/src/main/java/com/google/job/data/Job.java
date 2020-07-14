@@ -49,6 +49,10 @@ public final class Job {
         return new JobBuilder();
     }
 
+    public JobBuilder toBuilder() {
+        return new JobBuilder();
+    }
+
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
