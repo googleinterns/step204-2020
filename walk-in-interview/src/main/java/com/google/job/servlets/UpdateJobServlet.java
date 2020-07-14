@@ -1,7 +1,6 @@
 package com.google.job.servlets;
 
 import com.google.job.data.Job;
-import com.google.job.data.JobStatus;
 import com.google.job.data.JobsDatabase;
 import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
