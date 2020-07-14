@@ -68,13 +68,10 @@ public final class UpdateJobServlet extends MyServlet {
     }
 
     private void storeJobPost(String jobId, Job job) throws ServletException {
-        Future<DocumentReference> future = this.jobsDatabase.addJob(job);
 
         try {
             // Synchronizes and blocks the operation.
-            future.get();
-            // Updates the jobId field of the job post with the auto-generated cloud firestore id.
-            this.jobsDatabase.updateJobId(jobId).get();
+            this.jobsDatabase.setJob(jobId, job).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
