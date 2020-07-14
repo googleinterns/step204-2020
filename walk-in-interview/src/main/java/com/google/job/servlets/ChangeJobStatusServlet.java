@@ -46,8 +46,7 @@ public final class ChangeJobStatusServlet extends MyServlet {
         }
     }
 
-    private JobStatus getTargetStatus(HttpServletRequest request)
-            throws IllegalArgumentException {
+    private JobStatus getTargetStatus(HttpServletRequest request) throws IllegalArgumentException {
         JobStatus targetStatus = ServletUtils.getJobStatusParameter(request, JOB_STATUS_FIELD, /** defaultValue= */ null);
 
         if (targetStatus == null) {
