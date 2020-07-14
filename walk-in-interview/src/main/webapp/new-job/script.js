@@ -19,11 +19,11 @@ const RESPONSE_ERROR = 'There was an error while creating' +
   'the job listing, please try submitting again';
 
 window.onload = () => {
-  addJobPageElements();
+  renderJobPageElements();
 };
 
 /** Adds all the titles to the fields on this page. */
-function addJobPageElements() {
+function renderJobPageElements() {
   const cancelButton = document.getElementById('new-job-cancel');
   cancelButton.setAttribute('value', STRINGS['new-job-cancel']);
   cancelButton.setAttribute('type', 'reset');
@@ -57,11 +57,11 @@ function addJobPageElements() {
   const requirementsTitle =
     document.getElementById('new-job-requirements-title');
   requirementsTitle.innerText = STRINGS['new-job-requirements-title'];
-  addRequirementsList();
+  renderRequirementsList();
 
   const payTitle = document.getElementById('new-job-pay-title');
   payTitle.innerText = STRINGS['new-job-pay-title'];
-  addJobPayFrequencyOptions();
+  renderJobPayFrequencyOptions();
 
   const payMin = document.getElementById('new-job-pay-min');
   payMin.setAttribute('type', 'number');
@@ -75,14 +75,14 @@ function addJobPageElements() {
 
   const durationTitle = document.getElementById('new-job-duration-title');
   durationTitle.innerText = STRINGS['new-job-duration-title'];
-  addJobDurationOptions();
+  renderJobDurationOptions();
 
   const expiryTitle = document.getElementById('new-job-expiry-title');
   expiryTitle.innerText = STRINGS['new-job-expiry-title'];
   const expiryInput = document.getElementById('new-job-expiry');
   expiryInput.setAttribute('type', 'date');
   expiryInput.setAttribute('required', true);
-  addJobExpiryLimits();
+  renderJobExpiryLimits();
 
   setErrorMessage('', /** includes default msg */ false);
 }
@@ -99,7 +99,7 @@ function setErrorMessage(msg, includesDefault) {
 }
 
 /** Add the list of requirements that are stored in the database. */
-function addRequirementsList() {
+function renderRequirementsList() {
   const requirementsList = getRequirementsList();
   const requirementsListElement =
     document.getElementById('new-job-requirements-list');
@@ -141,19 +141,19 @@ function getRequirementsList() {
 }
 
 /** Dynamically add the options for job pay frequency. */
-function addJobPayFrequencyOptions() {
+function renderJobPayFrequencyOptions() {
   const jobPaySelect = document.getElementById('new-job-pay-frequency');
   jobPaySelect.setAttribute('required', true);
 
-  addSelectOptions(jobPaySelect, STRINGS['new-job-pay-frequency']);
+  renderSelectOptions(jobPaySelect, STRINGS['new-job-pay-frequency']);
 }
 
 /** Dynamically add the options for job duration. */
-function addJobDurationOptions() {
+function renderJobDurationOptions() {
   const jobDurationSelect = document.getElementById('new-job-duration');
   jobDurationSelect.setAttribute('required', true);
 
-  addSelectOptions(jobDurationSelect, STRINGS['new-job-duration']);
+  renderSelectOptions(jobDurationSelect, STRINGS['new-job-duration']);
 }
 
 /**
@@ -161,7 +161,7 @@ function addJobDurationOptions() {
  * @param {Element} select The select element.
  * @param {Map} options The map of options to be added.
  */
-function addSelectOptions(select, options) {
+function renderSelectOptions(select, options) {
   select.options.length = 0;
   select.options[0] = new Option('Select', '');
   select.options[0].setAttribute('disabled', true);
@@ -175,7 +175,7 @@ function addSelectOptions(select, options) {
 }
 
 /** Dynamically add the limits for choosing the new job post expiry. */
-function addJobExpiryLimits() {
+function renderJobExpiryLimits() {
   const date = new Date();
   const min = date.toISOString().substr(0, 10);
   date.setFullYear(date.getFullYear() + 1);

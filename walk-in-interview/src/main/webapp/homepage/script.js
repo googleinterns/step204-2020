@@ -21,11 +21,11 @@ const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
 
 window.onload = () => {
-  addHomepageElements();
+  renderHomepageElements();
 };
 
 /** Adds all the titles to the fields on this page. */
-function addHomepageElements() {
+function renderHomepageElements() {
   const homepageTitle = document.getElementById('homepage-page-title');
   homepageTitle.innerText = STRINGS['homepage-page-title'];
 
@@ -40,9 +40,9 @@ function addHomepageElements() {
 
   const sortByTitle = document.getElementById('homepage-sort-by-title');
   sortByTitle.innerText = STRINGS['homepage-sort-by-title'];
-  addJobSortOptions();
-  addJobOrderOptions();
-  addJobSortSubmit();
+  renderJobSortOptions();
+  renderJobOrderOptions();
+  renderJobSortSubmit();
 
   const filterByTitle = document.getElementById('homepage-filter-by-title');
   filterByTitle.innerText = STRINGS['homepage-filter-by-title'];
@@ -74,7 +74,7 @@ function addHomepageElements() {
   salaryMax.setAttribute('type', 'number');
   salaryMax.setAttribute('placeholder',
       STRINGS['homepage-filter-salary-max']);
-  addJobFilterSubmit();
+  renderJobFilterSubmit();
 
   const jobListingsTitle =
     document.getElementById('homepage-job-listings-title');
@@ -83,7 +83,7 @@ function addHomepageElements() {
   const defaultSortBy = document.getElementById('homepage-sort-by').value;
   const defaultSortOrder =
     document.getElementById('homepage-sort-by-order').value;
-  addJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
+  renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
 
   setErrorMessage('', /** includes default msg */ false);
@@ -101,17 +101,17 @@ function setErrorMessage(msg, includesDefault) {
 }
 
 /** Dynamically add the options for sorting the jobs. */
-function addJobSortOptions() {
+function renderJobSortOptions() {
   const jobSortSelect = document.getElementById('homepage-sort-by');
 
-  addSelectOptions(jobSortSelect, STRINGS['homepage-sort-by']);
+  renderSelectOptions(jobSortSelect, STRINGS['homepage-sort-by']);
 }
 
 /** Dynaimcally add the options for orders of the sorting options. */
-function addJobOrderOptions() {
+function renderJobOrderOptions() {
   const jobOrderSelect = document.getElementById('homepage-sort-by-order');
 
-  addSelectOptions(jobOrderSelect, STRINGS['homepage-sort-by-order']);
+  renderSelectOptions(jobOrderSelect, STRINGS['homepage-sort-by-order']);
 }
 
 /**
@@ -119,7 +119,7 @@ function addJobOrderOptions() {
  * @param {Element} select The select element.
  * @param {Map} options The map of options to be added.
  */
-function addSelectOptions(select, options) {
+function renderSelectOptions(select, options) {
   select.options.length = 0;
 
   for (const key in options) {
@@ -134,7 +134,7 @@ function addSelectOptions(select, options) {
  * Add the attributes and on click function to the sorting
  * submit button.
  */
-function addJobSortSubmit() {
+function renderJobSortSubmit() {
   const sortBySubmit = document.getElementById('homepage-sort-by-submit');
   sortBySubmit.setAttribute('type', 'submit');
   sortBySubmit.setAttribute('value', STRINGS['homepage-sort-by-submit']);
@@ -146,7 +146,7 @@ function addJobSortSubmit() {
 
     const sortByParam = document.getElementById('homepage-sort-by').value;
     const sortOrderParam = document.getElementById('homepage-sort-by-order');
-    addJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
+    displayJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
         DEFAULT_PAGE_INDEX);
   });
 }
@@ -155,7 +155,7 @@ function addJobSortSubmit() {
  * Add the attributes and on click function to the filters
  * submit button.
  */
-function addJobFilterSubmit() {
+function renderJobFilterSubmit() {
   const filterBySubmit = document.getElementById('homepage-filter-by-submit');
   filterBySubmit.setAttribute('type', 'submit');
   filterBySubmit.setAttribute('value', STRINGS['homepage-filter-by-submit']);
@@ -173,7 +173,7 @@ function addJobFilterSubmit() {
  * @param {int} pageSize The number of jobs for the page.
  * @param {int} pageIndex The page index (starting from 0).
  */
-function addJobListings(sortBy, order, pageSize, pageIndex) {
+function renderJobListings(sortBy, order, pageSize, pageIndex) {
   const jobListings = getJobListings(sortBy, order, pageSize, pageIndex);
   console.log('jobListings', jobListings);
   const jobListingsElement = document.getElementById('job-listings');
