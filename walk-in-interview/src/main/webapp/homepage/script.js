@@ -9,7 +9,7 @@ const CurrentLocale = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
- * TODO(issue/22): figure out how to use dnamic imports
+ * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
 
@@ -83,7 +83,7 @@ function renderHomepageElements() {
   const defaultSortBy = document.getElementById('homepage-sort-by').value;
   const defaultSortOrder =
     document.getElementById('homepage-sort-by-order').value;
-  renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
+  getJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
 
   setErrorMessage('', /** includes default msg */ false);
@@ -146,7 +146,7 @@ function renderJobSortSubmit() {
 
     const sortByParam = document.getElementById('homepage-sort-by').value;
     const sortOrderParam = document.getElementById('homepage-sort-by-order');
-    displayJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
+    getJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
         DEFAULT_PAGE_INDEX);
   });
 }
@@ -168,14 +168,9 @@ function renderJobFilterSubmit() {
 
 /**
  * Add the list of jobs that are stored in the database.
- * @param {String} sortBy How the jobs should be sorted.
- * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for the page.
- * @param {int} pageIndex The page index (starting from 0).
+ * @param {Array} jobListings The list of jobs to be displayed.
  */
-function renderJobListings(sortBy, order, pageSize, pageIndex) {
-  const jobListings = getJobListings(sortBy, order, pageSize, pageIndex);
-  console.log('jobListings', jobListings);
+function renderJobListings(jobListings) {
   const jobListingsElement = document.getElementById('job-listings');
 
   jobListingsElement.innerHTML = '';
@@ -208,11 +203,8 @@ function renderJobListings(sortBy, order, pageSize, pageIndex) {
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for the page.
  * @param {int} pageIndex The page index (starting from 0).
- * @return {Array} response from the GET request with the list of jobs.
  */
 function getJobListings(sortBy, order, pageSize, pageIndex) {
-  // TODO(issue/18): get jobs from database and render them on screen
-  // returning some hardcoded data for now
   const params = 'sortBy=' + sortBy +
     '&order=' + order +
     '&pageSize=' + pageSize +
@@ -223,11 +215,6 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
       .then((data) => {
         console.log('data', data);
         setErrorMessage('', /** include default msg */ false);
-        return data['jobList'];
-      })
-      .catch((error) => {
-        console.log('error', error);
-        setErrorMessage(RESPONSE_ERROR, /** include default msg */ false);
+        renderJobListings(data['jobList']);
       });
-  return [];
 }
