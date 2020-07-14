@@ -1,17 +1,11 @@
 package com.google.utils;
 
 import com.google.gson.Gson;
-import com.google.job.data.Job;
-import com.google.job.data.JobStatus;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 /** Util methods related to servlet. */
 public final class ServletUtils {
@@ -41,12 +35,9 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName).trim();
 
         try {
-            int result = Integer.parseInt(resultStr);
-
-            return result;
+            return Integer.parseInt(resultStr);
         } catch (NumberFormatException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
@@ -63,12 +54,9 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName).trim();
 
         try {
-            long result = Integer.parseInt(resultStr);
-
-            return result;
+            return Integer.parseInt(resultStr);
         } catch (NumberFormatException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
@@ -85,18 +73,16 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName).trim();
 
         try {
-            float result = Float.parseFloat(resultStr);
-
-            return result;
+            return Float.parseFloat(resultStr);
         } catch (NumberFormatException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
 
     /**
-     * Gets the LocalDate parameter from html form input.
+     * Gets the LocalDate parameter from html form input. The date format will be "yyyy-MM-dd".
+     *
      * @param request Http request.
      * @param parameterName Input id in html element.
      * @param defaultValue Default integer.
@@ -109,11 +95,9 @@ public final class ServletUtils {
         try {
             String pattern = "yyyy-MM-dd";
             Date result = new SimpleDateFormat(pattern).parse(resultStr);
-
             return result;
         } catch (NumberFormatException | ParseException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
@@ -142,32 +126,5 @@ public final class ServletUtils {
         Gson gson = new Gson();
         T object = gson.fromJson(jsonStr, classType);
         return object;
-    }
-
-    /** Parses into Job object from json received from client. */
-    public static Job parseJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
-        // Parses job object from the POST request
-        BufferedReader bufferedReader = request.getReader();
-        String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
-
-        if (StringUtils.isBlank(jobPostJsonStr)) {
-            throw new IllegalArgumentException("Json for Job object is Empty");
-        }
-
-        Job rawJob = parseFromJsonUsingGson(jobPostJsonStr, Job.class);
-
-        Job job = Job.newBuilder()
-                .setJobStatus(JobStatus.ACTIVE)
-                .setJobTitle(rawJob.getJobTitle())
-                .setLocation(rawJob.getJobLocation())
-                .setJobDescription(rawJob.getJobDescription())
-                .setJobPay(rawJob.getJobPay())
-                .setRequirements(rawJob.getRequirements())
-                .setPostExpiry(rawJob.getPostExpiryTimestamp())
-                .setJobDuration(rawJob.getJobDuration())
-                .build();
-
-
-        return job;
     }
 }

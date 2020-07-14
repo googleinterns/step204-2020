@@ -9,9 +9,9 @@ import java.util.Map;
 /** Enumeration that represents the requirements of jobs. */
 public enum Requirement {
     // TODO(issue/26): add more requirements
-    O_LEVEL("O-LEVEL", ImmutableMap.of("en", "O Level")),
-    ENGLISH("LANGUAGE-ENGLISH", ImmutableMap.of("en", "English")),
-    DRIVING_LICENSE_C("DRIVING-LICENSE-C", ImmutableMap.of("en", "Category C Driving License"));
+    O_LEVEL("O_LEVEL", ImmutableMap.of("en", "O Level")),
+    ENGLISH("LANGUAGE_ENGLISH", ImmutableMap.of("en", "English")),
+    DRIVING_LICENSE_C("DRIVING_LICENSE_C", ImmutableMap.of("en", "Category C Driving License"));
 
     private final String requirementId;
     private final Map<String, String> localizedNameByLanguage;
@@ -42,21 +42,15 @@ public enum Requirement {
     }
 
     /**
-     * Gets the localized names of the requirements.
+     * Returns the localized names of the specified requirements.
      *
-     * @param requirements List of target Requirement enum.
-     * @param language Language to be displayed.
-     * @return List of localized names of the requirments corresponding to the Requirement enum value.
+     * @throw IllegalArgumentException If the language is not supported.
      */
-    public static List<String> getLocalizedNames(List<Requirement> requirements, String language) {
+    public static List<String> getLocalizedNames(List<Requirement> requirements, String language)
+            throws IllegalArgumentException {
         ImmutableList.Builder<String> localizedNames = ImmutableList.builder();
         for (Requirement requirement: requirements) {
             String localizedName = requirement.getLocalizedName(language);
-            if (localizedName == null) {
-                System.err.println("No such requirement");
-                continue;
-            }
-
             localizedNames.add(localizedName);
         }
 

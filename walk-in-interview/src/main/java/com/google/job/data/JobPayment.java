@@ -22,12 +22,12 @@ public final class JobPayment {
     }
 
     /** Returns the lower limit of the payment, never negative. */
-    public float getMin() {
+    public int getMin() {
         return min;
     }
 
     /** Returns the upper limit of the payment, not less than the lower limit. */
-    public float getMax() {
+    public int getMax() {
         return max;
     }
 
