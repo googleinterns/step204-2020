@@ -23,32 +23,28 @@ public final class JobsDatabaseTest {
     static JobsDatabase jobsDatabase;
     static Firestore firestore;
 
-    /**
-     * Delete a collection in batches to avoid out-of-memory errors.
-     *
-     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
-     */
-    private void deleteCollection(CollectionReference collection, int batchSize)
-            throws ExecutionException, InterruptedException {
-        // retrieve a small batch of documents to avoid out-of-memory errors
-        ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
-        int deleted = 0;
-        // future.get() blocks on document retrieval
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-        for (QueryDocumentSnapshot document : documents) {
-            document.getReference().delete();
-            ++deleted;
-        }
-        if (deleted >= batchSize) {
-            // retrieve and delete another batch
-            deleteCollection(collection, batchSize);
-        }
-    }
-
     @BeforeClass
     public static void setUp() {
         jobsDatabase = new JobsDatabase();
         firestore = FireStoreUtils.getFireStore();
+    }
+
+    @Before
+    public void clearCollection() {
+        try {
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error deleting collection : " + e.getMessage());
+        }
+    }
+
+    @AfterClass
+    public static void tearDownCollection() {
+        try {
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error tearing down collection : " + e.getMessage());
+        }
     }
 
     @Test
@@ -212,13 +208,25 @@ public final class JobsDatabaseTest {
         assertEquals(job, actualJob);
     }
 
-    @Before
-    @AfterClass
-    public void clearCollection() {
-        try {
-            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error deleting collection : " + e.getMessage());
+    /**
+     * Delete a collection in batches to avoid out-of-memory errors.
+     *
+     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
+     */
+    private static void deleteCollection(CollectionReference collection, int batchSize)
+            throws ExecutionException, InterruptedException {
+        // retrieve a small batch of documents to avoid out-of-memory errors
+        ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
+        int deleted = 0;
+        // future.get() blocks on document retrieval
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            document.getReference().delete();
+            ++deleted;
+        }
+        if (deleted >= batchSize) {
+            // retrieve and delete another batch
+            deleteCollection(collection, batchSize);
         }
     }
 }
