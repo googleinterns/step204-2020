@@ -18,13 +18,20 @@ public final class Location {
 
     public Location(String address, String postalCode, double latitude, double longitude) {
         // TODO(issue/23): add check for user identity, it is only optional for applicant.
-        this.address = address;
-
         if (postalCode.isEmpty()) {
             throw new IllegalArgumentException("Postal Code should be an non-empty string");
         }
-        this.postalCode = postalCode;
 
+        if (latitude < 0) {
+            throw new IllegalArgumentException("Latitude should be non-negative");
+        }
+
+        if (longitude < 0) {
+            throw new IllegalArgumentException("Longitude should be non-negative");
+        }
+
+        this.address = address;
+        this.postalCode = postalCode;
         this.latitude = latitude;
         this.longitude = longitude;
     }

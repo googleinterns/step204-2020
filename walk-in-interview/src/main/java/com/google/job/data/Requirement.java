@@ -41,7 +41,11 @@ public enum Requirement {
         return localizedName;
     }
 
-    /** Returns the localized names of the specified requirements. */
+    /**
+     * Returns the localized names of the specified requirements.
+     *
+     * @throw IllegalArgumentException If the language is not supported.
+     */
     public static List<String> getLocalizedNames(List<Requirement> requirements, String language)
             throws IllegalArgumentException {
         ImmutableList.Builder<String> localizedNames = ImmutableList.builder();

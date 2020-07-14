@@ -52,7 +52,6 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
-        private JobStatus jobStatus = JobStatus.ACTIVE;
         private List<String> requirements = ImmutableList.of();
         private JobDuration jobDuration = JobDuration.OTHER;
 
@@ -60,6 +59,9 @@ public final class Job {
 
         // Required parameters
         private long postExpiryTimestamp;
+
+        @Nullable
+        private JobStatus jobStatus;
 
         @Nullable
         private String jobTitle;
@@ -125,6 +127,10 @@ public final class Job {
         }
 
         public Job build() {
+            if (jobStatus == null) {
+                throw new IllegalArgumentException("Job Status cannot be null. Please set it explicitly");
+            }
+
             if (jobTitle == null || jobTitle.isEmpty()) {
                 throw new IllegalArgumentException("Job Title should be an non-empty string");
             }
