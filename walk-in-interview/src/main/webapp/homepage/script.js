@@ -9,12 +9,13 @@ const CurrentLocale = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
- * TODO(issue/22): figure out how to use dynamic imports
+ * TODO(issue/22): figure out how to use dnamic imports
  */
 import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '../new-job/index.html';
+const RESPONSE_ERROR = 'An error occured while getting the job listings';
 
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
@@ -83,7 +84,7 @@ function renderHomepageElements() {
   const defaultSortBy = document.getElementById('homepage-sort-by').value;
   const defaultSortOrder =
     document.getElementById('homepage-sort-by-order').value;
-  getJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
+  renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
 
   setErrorMessage('', /** includes default msg */ false);
@@ -146,7 +147,7 @@ function renderJobSortSubmit() {
 
     const sortByParam = document.getElementById('homepage-sort-by').value;
     const sortOrderParam = document.getElementById('homepage-sort-by-order');
-    getJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
+    renderJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
         DEFAULT_PAGE_INDEX);
   });
 }
@@ -168,9 +169,17 @@ function renderJobFilterSubmit() {
 
 /**
  * Add the list of jobs that are stored in the database.
- * @param {Array} jobListings The list of jobs to be displayed.
+ * @param {String} sortBy How the jobs should be sorted.
+ * @param {String} order The order of the sorting.
+ * @param {int} pageSize The number of jobs for the page.
+ * @param {int} pageIndex The page index (starting from 0).
  */
-function renderJobListings(jobListings) {
+async function renderJobListings(sortBy, order, pageSize, pageIndex) {
+  const jobListings = await getJobListings(sortBy, order, pageSize, pageIndex)
+      .catch((error) => {
+        console.log('error', error);
+        setErrorMessage(RESPONSE_ERROR, /** include default msg */ false);
+      });
   const jobListingsElement = document.getElementById('job-listings');
 
   jobListingsElement.innerHTML = '';
@@ -205,6 +214,8 @@ function renderJobListings(jobListings) {
  * @param {int} pageIndex The page index (starting from 0).
  */
 function getJobListings(sortBy, order, pageSize, pageIndex) {
+  // TODO(issue/18): get jobs from database and render them on screen
+  // returning some hardcoded data for now
   const params = 'sortBy=' + sortBy +
     '&order=' + order +
     '&pageSize=' + pageSize +
@@ -215,6 +226,6 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
       .then((data) => {
         console.log('data', data);
         setErrorMessage('', /** include default msg */ false);
-        renderJobListings(data['jobList']);
+        return data['jobList'];
       });
 }
