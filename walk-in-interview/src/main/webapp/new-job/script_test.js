@@ -496,8 +496,10 @@ describe('New Job Tests', function() {
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
       });
 
-      // TODO(issue/40): check that POST request has been made
-      // & also check that the response is what was expected
+      /**
+       * TODO(issue/40): check that POST request has been made
+       * & also check that the response is what was expected
+       */
     });
   });
 });
