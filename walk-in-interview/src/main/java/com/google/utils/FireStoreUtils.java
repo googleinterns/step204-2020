@@ -1,4 +1,4 @@
-package com.google.firestore;
+package com.google.utils;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -8,8 +8,8 @@ import com.google.configuration.ConfigurationFactory;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -46,7 +46,7 @@ public final class FireStoreUtils {
             try {
                 init();
             } catch (IOException e) {
-                // TODO(issue/10.1): error handline
+                // TODO(issue/10.1): error handling
                 e.printStackTrace();
             }
         }
