@@ -9,7 +9,7 @@ const CurrentLocale = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
- * TODO(issue/22): figure out how to use dnamic imports
+ * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
 
@@ -84,7 +84,7 @@ function renderJobPageElements() {
   expiryInput.setAttribute('required', true);
   renderJobExpiryLimits();
 
-  setErrorMessage('', /** includes default msg */ false);
+  setErrorMessage(/* msg */ '', /** includes default msg */ false);
 }
 
 /**
@@ -250,38 +250,38 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('new-job-expiry').valueAsNumber;
 
   if (name.value === '') {
-    setErrorMessage(name.placeholder,
+    setErrorMessage(/* msg */ name.placeholder,
         /** includes default msg */ true);
     return false;
   }
 
   if (description.value === '') {
-    setErrorMessage(description.placeholder,
+    setErrorMessage(/* msg */ description.placeholder,
         /** includes default msg */ true);
     return false;
   }
 
   if (address.value === '' || postalCode === '') {
-    setErrorMessage(address.placeholder,
+    setErrorMessage(/* msg */ address.placeholder,
         /** includes default msg */ true);
     return false;
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
     payMin > payMax || payMin < 0 || payMax < 0) {
-    setErrorMessage(document.getElementById('new-job-pay-title').textContent,
-        /** includes default msg */ true);
+    setErrorMessage(/* msg */ document.getElementById('new-job-pay-title')
+        .textContent, /** includes default msg */ true);
     return false;
   }
 
   if (duration === '') {
-    setErrorMessage(document.getElementById('new-job-duration-title')
+    setErrorMessage(/* msg */ document.getElementById('new-job-duration-title')
         .textContent, /** includes default msg */ true);
     return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessage(document.getElementById('new-job-expiry-title')
+    setErrorMessage(/* msg */ document.getElementById('new-job-expiry-title')
         .textContent, /** includes default msg */ true);
     return false;
   }
@@ -304,11 +304,12 @@ submitButton.addEventListener('click', (_) => {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
-        setErrorMessage('', /** include default msg */ false);
+        setErrorMessage(/* msg */ '', /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(RESPONSE_ERROR, /** include default msg */ false);
+        setErrorMessage(/* msg */ RESPONSE_ERROR,
+            /** include default msg */ false);
         console.log('error', error);
       });
 });

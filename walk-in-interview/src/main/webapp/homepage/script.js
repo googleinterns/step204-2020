@@ -9,7 +9,7 @@ const CurrentLocale = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
- * TODO(issue/22): figure out how to use dnamic imports
+ * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
 
@@ -41,6 +41,7 @@ function renderHomepageElements() {
 
   const sortByTitle = document.getElementById('homepage-sort-by-title');
   sortByTitle.innerText = STRINGS['homepage-sort-by-title'];
+
   renderJobSortOptions();
   renderJobOrderOptions();
   renderJobSortSubmit();
@@ -87,13 +88,13 @@ function renderHomepageElements() {
   renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
 
-  setErrorMessage('', /** includes default msg */ false);
+  setErrorMessage(/* msg */ '', /** includes default msg */ false);
 }
 
 /**
  * Sets the error message according to the param.
  * @param {String} msg the message that the error div should display.
- * @param {boolean} includesDefault whether the deafult
+ * @param {boolean} includesDefault whether the default
  * message should be included.
  */
 function setErrorMessage(msg, includesDefault) {
@@ -146,7 +147,8 @@ function renderJobSortSubmit() {
     }
 
     const sortByParam = document.getElementById('homepage-sort-by').value;
-    const sortOrderParam = document.getElementById('homepage-sort-by-order');
+    const sortOrderParam = document.getElementById('homepage-sort-by-order')
+        .value;
     renderJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
         DEFAULT_PAGE_INDEX);
   });
@@ -178,7 +180,7 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
   const jobListings = await getJobListings(sortBy, order, pageSize, pageIndex)
       .catch((error) => {
         console.log('error', error);
-        setErrorMessage(RESPONSE_ERROR, /** include default msg */ false);
+        setErrorMessage(/* msg */ RESPONSE_ERROR, /** include default msg */ false);
       });
   const jobListingsElement = document.getElementById('job-listings');
 
@@ -225,7 +227,7 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
-        setErrorMessage('', /** include default msg */ false);
+        setErrorMessage(/* msg */ '', /** include default msg */ false);
         return data['jobList'];
       });
 }
