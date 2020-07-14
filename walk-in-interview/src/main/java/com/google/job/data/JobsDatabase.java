@@ -15,7 +15,6 @@ import java.util.concurrent.Future;
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
-    private static final String JOB_ID_FIELD = "jobId";
 
     /**
      * Adds a newly created job post.

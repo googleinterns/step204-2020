@@ -1,6 +1,5 @@
 package com.google.job.servlets;
 
-import com.google.cloud.firestore.DocumentReference;
 import com.google.job.data.Job;
 import com.google.job.data.JobsDatabase;
 import com.google.utils.ServletUtils;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /** Servlet that handles updating an existing job posts. */
 @WebServlet("/jobs")
@@ -28,7 +26,7 @@ public final class UpdateJobServlet extends MyServlet {
     @Override
     public void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // Gets the target job post id
+            // Gets the target job post id from the form
             String jobId = getJobId(request);
 
             // Gets job post from the form
@@ -45,37 +43,38 @@ public final class UpdateJobServlet extends MyServlet {
         }
     }
 
-    private String getJobId(HttpServletRequest request)
-            throws ServletException, IOException {
+    private String getJobId(HttpServletRequest request) throws ServletException, IOException {
         String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
 
         if (jobId.isEmpty()) {
-            throw new IllegalArgumentException("Empty Job Id");
+            throw new IllegalArgumentException("Job Id should be an non-empty string");
         }
 
         try {
-            if (JobsDatabase.isJobIdExist(jobId)) {
-                return jobId;
+            if (!JobsDatabase.isJobIdExist(jobId)) {
+                throw new IllegalArgumentException("Invalid Job Id");
             }
 
-            throw new IllegalArgumentException("Invalid Job Id");
+            return jobId;
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
-            System.err.println("Error occur: " + e.getCause());
-            throw new IOException("Error occur");
+            String errorMessage = "Error occur: " + e.getCause();
+            System.err.println(errorMessage);
+            throw new IOException(errorMessage);
         }
     }
 
-    private void storeJobPost(String jobId, Job job) throws ServletException {
-
+    private void storeJobPost(String jobId, Job job) throws ServletException, IOException {
         try {
             // Synchronizes and blocks the operation.
             this.jobsDatabase.setJob(jobId, job).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
-            System.err.println("Error occur: " + e.getCause());
+            String errorMessage = "Error occur: " + e.getCause();
+            System.err.println(errorMessage);
+            throw new IOException(errorMessage);
         }
     }
 }
