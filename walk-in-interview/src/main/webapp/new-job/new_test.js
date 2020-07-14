@@ -74,6 +74,7 @@ const until = webdriver.until;
 const TIMEOUT = 20000;
 
 let driver;
+const app = require('../../../../../walk-in-interview');
 
 /** Note that this.timeout() will not work arrow functions. */
 describe('New Job Tests', function() {
@@ -90,29 +91,38 @@ describe('New Job Tests', function() {
     return driver.quit();
   });
 
-  describe('Job Duration', () => {
-    const titleId = 'duration-title';
-    const durationId = 'duration';
+  const job = {
+    'jobTitle': 'Waiter',
+    'jobLocation': {
+      'address': '290 Orchard Rd, #B1-03 Paragon',
+      'postalCode': '238859',
+      'lat': '1.3039',
+      'lon': '103.8358',
+    },
+    'jobDescription': 'Wait on tables',
+    'jobPay': {
+      'frequency': 'HOURLY',
+      'min': '6',
+      'max': '10',
+    },
+    'requirements': [
+      'O_LEVEL',
+    ],
+    'postExpiry': '1595289600000',
+    'jobDuration': 'OTHER',
+  };
 
-    it('checks the title text', () => {
-      return driver.findElement(By.id(titleId)).getText()
-          .then((text) => {
-            assert.equal(text, STRINGS[titleId]);
-          });
-    });
-
-    it('checks correct select options rendered', () => {
-      return driver.findElement(By.id(durationId)).getText()
-          .then((text) => {
-            const options = STRINGS[durationId];
-            for (const key in options) {
-              if (options.hasOwnProperty(key)) {
-                if (!text.includes(options[key])) {
-                  assert.fail(options[key] + ' option not included');
-                }
-              }
-            }
-          });
-    });
+  it('should respond with redirect on post', function(done) {
+    request(app)
+        .post('/jobs')
+        .send({'body': JSON.stringify(job)})
+        .expect(200)
+        .expect('Content-Type', 'json')
+        .end(function(err, res) {
+          if (err) done(err);
+          console.log('resonsponse', res.body);
+          assert.equal(res.body['status'], 200);
+        });
+    done();
   });
 });
