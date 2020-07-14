@@ -1,15 +1,19 @@
 package com.google.job.servlets;
 
 import com.google.job.data.Job;
+import com.google.job.data.JobStatus;
 import com.google.job.data.JobsDatabase;
 import com.google.utils.ServletUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /** Servlet that handles updating an existing job posts. */
 @WebServlet("/jobs")
@@ -30,7 +34,7 @@ public final class UpdateJobServlet extends MyServlet {
             String jobId = getJobId(request);
 
             // Gets job post from the form
-            Job job = ServletUtils.parseJobPost(request);
+            Job job = parseJobPost(request);
 
             // Stores job post into the database
             storeJobPost(jobId, job);
@@ -63,6 +67,32 @@ public final class UpdateJobServlet extends MyServlet {
             System.err.println(errorMessage);
             throw new IOException(errorMessage);
         }
+    }
+
+    /** Parses into Job object from json received from client. */
+    private Job parseJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
+        // Parses job object from the POST request
+        BufferedReader bufferedReader = request.getReader();
+        String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
+
+        if (StringUtils.isBlank(jobPostJsonStr)) {
+            throw new IllegalArgumentException("Json for Job object is Empty");
+        }
+
+        Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
+
+        Job job = Job.newBuilder()
+                .setJobStatus(rawJob.getJobStatus())
+                .setJobTitle(rawJob.getJobTitle())
+                .setLocation(rawJob.getJobLocation())
+                .setJobDescription(rawJob.getJobDescription())
+                .setJobPay(rawJob.getJobPay())
+                .setRequirements(rawJob.getRequirements())
+                .setPostExpiry(rawJob.getPostExpiryTimestamp())
+                .setJobDuration(rawJob.getJobDuration())
+                .build();
+
+        return job;
     }
 
     private void storeJobPost(String jobId, Job job) throws ServletException, IOException {

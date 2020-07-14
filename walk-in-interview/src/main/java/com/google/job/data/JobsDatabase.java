@@ -29,10 +29,10 @@ public final class JobsDatabase {
 
         String jobId = addedDocRef.getId();
 
-        // Sets the Job with cloud firestore id and ACTIVE status
+        // Sets the Job with cloud firestore id
+        // Status is already set when parsing the job post
         Job job = newJob.toBuilder()
                 .setJobId(jobId)
-                .setJobStatus(JobStatus.ACTIVE)
                 .build();
 
         return addedDocRef.set(job);

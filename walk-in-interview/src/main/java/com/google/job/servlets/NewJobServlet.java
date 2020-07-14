@@ -29,7 +29,7 @@ public final class NewJobServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Gets job post from the form
-            Job job = ServletUtils.parseJobPost(request);
+            Job job = parseJobPost(request);
 
             // Stores job post into the database
             storeJobPost(job);
@@ -42,6 +42,7 @@ public final class NewJobServlet extends HttpServlet {
         }
     }
 
+    /** Parses into Job object from json received from client. */
     private Job parseJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
         // Parses job object from the POST request
         BufferedReader bufferedReader = request.getReader();
@@ -54,6 +55,7 @@ public final class NewJobServlet extends HttpServlet {
         Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
 
         Job job = Job.newBuilder()
+                .setJobStatus(JobStatus.ACTIVE)
                 .setJobTitle(rawJob.getJobTitle())
                 .setLocation(rawJob.getJobLocation())
                 .setJobDescription(rawJob.getJobDescription())
