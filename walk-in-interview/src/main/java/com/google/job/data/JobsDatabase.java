@@ -50,7 +50,6 @@ public final class JobsDatabase {
         // Sets the Job with cloud firestore id and ACTIVE status
         Job job = updatedJob.toBuilder()
                 .setJobId(jobId)
-                .setJobStatus(JobStatus.ACTIVE)
                 .build();
 
         // Overwrites the whole job post
