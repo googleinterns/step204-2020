@@ -45,11 +45,6 @@ public final class Job {
         this.jobDuration = JobDuration.OTHER;
     }
 
-    /** Returns a builder. */
-    public static JobBuilder newBuilder() {
-        return new JobBuilder();
-    }
-
     /** Returns a builder by copying all the fields of an existing Job. */
     public JobBuilder toBuilder() {
         JobBuilder jobBuilder = new JobBuilder();
@@ -65,6 +60,11 @@ public final class Job {
         jobBuilder.jobDuration = this.jobDuration;
 
         return jobBuilder;
+    }
+
+    /** Returns a builder. */
+    public static JobBuilder newBuilder() {
+        return new JobBuilder();
     }
 
     public static final class JobBuilder {
