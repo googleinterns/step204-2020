@@ -20,6 +20,7 @@ AppStrings['new-job'] = {
   'new-job-title': 'Job Title',
   'new-job-description': 'Job Description',
   'new-job-address': 'Job Address',
+  'new-job-postal-code': 'Postal Code',
   'new-job-requirements-title': 'Requirements',
   'new-job-requirements-list': 'requirements-list',
   'new-job-pay-title': 'Job Pay',
