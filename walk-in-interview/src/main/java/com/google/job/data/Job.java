@@ -2,6 +2,7 @@ package com.google.job.data;
 
 import com.google.common.collect.ImmutableList;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /** Class for a job post. */
@@ -41,9 +42,27 @@ public final class Job {
         this.jobPay = new JobPayment();
         this.requirements = ImmutableList.of();
         this.postExpiryTimestamp = 0;
-        this.jobDuration = JobDuration.SIX_MONTHS;
+        this.jobDuration = JobDuration.OTHER;
     }
 
+    /** Returns a builder by copying all the fields of an existing Job. */
+    public JobBuilder toBuilder() {
+        JobBuilder jobBuilder = new JobBuilder();
+
+        jobBuilder.jobId = this.jobId;
+        jobBuilder.jobStatus = this.jobStatus;
+        jobBuilder.jobTitle = this.jobTitle;
+        jobBuilder.location = this.jobLocation;
+        jobBuilder.jobDescription = this.jobDescription;
+        jobBuilder.jobPay = this.jobPay;
+        jobBuilder.requirements = this.requirements;
+        jobBuilder.postExpiryTimestamp = this.postExpiryTimestamp;
+        jobBuilder.jobDuration = this.jobDuration;
+
+        return jobBuilder;
+    }
+
+    /** Returns a builder. */
     public static JobBuilder newBuilder() {
         return new JobBuilder();
     }
@@ -51,21 +70,30 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
+        private List<String> requirements = ImmutableList.of();
+        private JobDuration jobDuration = JobDuration.OTHER;
 
         // TODO(issue/25): merge the account stuff into job post.
 
-        private JobStatus jobStatus;
-        private String jobTitle;
-        private Location location;
-        private String jobDescription;
-        private JobPayment jobPay;
-        private List<String> requirements;
+        // Required parameters
         private long postExpiryTimestamp;
-        private JobDuration jobDuration;
+
+        @Nullable
+        private JobStatus jobStatus;
+
+        @Nullable
+        private String jobTitle;
+
+        @Nullable
+        private Location location;
+
+        @Nullable
+        private String jobDescription;
+
+        @Nullable
+        private JobPayment jobPay;
 
         private JobBuilder() {}
-
-        // TODO(issue/19): add more validation check
 
         public JobBuilder setJobId(String jobId) {
             this.jobId = jobId;
@@ -117,18 +145,8 @@ public final class Job {
         }
 
         public Job build() {
-            validateParameter(this.jobStatus, this.jobTitle, this.location,
-                    this.jobDescription, this.jobPay, this.requirements, this.jobDuration);
-            
-            return new Job(this);
-        }
-
-        private static void validateParameter(JobStatus jobStatus, String jobTitle,
-                                       Location location, String jobDescription,
-                                       JobPayment  jobPay, List<String> requirements,
-                                       JobDuration jobDuration) throws IllegalArgumentException {
             if (jobStatus == null) {
-                throw new IllegalArgumentException("Job Status cannot be null");
+                throw new IllegalArgumentException("Job Status cannot be null. Please set it explicitly");
             }
 
             if (jobTitle == null || jobTitle.isEmpty()) {
@@ -139,7 +157,7 @@ public final class Job {
                 throw new IllegalArgumentException("Location cannot be null");
             }
 
-            if (jobDescription == null) {
+            if (jobDescription == null || jobDescription.isEmpty()) {
                 throw new IllegalArgumentException("Job Description should be an non-empty string");
             }
 
@@ -147,13 +165,11 @@ public final class Job {
                 throw new IllegalArgumentException("Job Payment cannot be null");
             }
 
-            if (requirements == null) {
-                throw new IllegalArgumentException("Requirements cannot be null");
+            if (postExpiryTimestamp == 0) {
+                throw new IllegalArgumentException("Timestamp cannot be 0. Please provide a valid timestamp");
             }
-
-            if (jobDuration == null) {
-                throw new IllegalArgumentException("Job Duration cannot be null");
-            }
+            
+            return new Job(this);
         }
     }
 

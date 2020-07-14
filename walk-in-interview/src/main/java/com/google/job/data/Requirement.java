@@ -42,21 +42,15 @@ public enum Requirement {
     }
 
     /**
-     * Gets the localized names of the requirements.
+     * Returns the localized names of the specified requirements.
      *
-     * @param requirements List of target Requirement enum.
-     * @param language Language to be displayed.
-     * @return List of localized names of the requirments corresponding to the Requirement enum value.
+     * @throw IllegalArgumentException If the language is not supported.
      */
-    public static List<String> getLocalizedNames(List<Requirement> requirements, String language) {
+    public static List<String> getLocalizedNames(List<Requirement> requirements, String language)
+            throws IllegalArgumentException {
         ImmutableList.Builder<String> localizedNames = ImmutableList.builder();
         for (Requirement requirement: requirements) {
             String localizedName = requirement.getLocalizedName(language);
-            if (localizedName == null) {
-                System.err.println("No such requirement");
-                continue;
-            }
-
             localizedNames.add(localizedName);
         }
 
