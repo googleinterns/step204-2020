@@ -209,7 +209,7 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
     `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
 
   fetch(`/jobs?${params}`)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
