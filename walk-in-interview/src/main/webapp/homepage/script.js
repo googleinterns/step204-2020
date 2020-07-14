@@ -42,8 +42,8 @@ function renderHomepageElements() {
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
-  renderJobSortOptions();
-  renderJobOrderOptions();
+  renderSelectOptions(/** for */ 'sort-by');
+  renderSelectOptions(/** for */ 'sort-by-order');
   renderJobSortSubmit();
 
   const filterByTitle = document.getElementById('filter-by-title');
@@ -103,26 +103,14 @@ function setErrorMessage(msg, includesDefault) {
     (includesDefault ? STRINGS['error-message'] + msg : msg);
 }
 
-/** Dynamically add the options for sorting the jobs. */
-function renderJobSortOptions() {
-  const jobSortSelect = document.getElementById('sort-by');
-
-  renderSelectOptions(jobSortSelect, STRINGS['sort-by']);
-}
-
-/** Dynaimcally add the options for orders of the sorting options. */
-function renderJobOrderOptions() {
-  const jobOrderSelect = document.getElementById('sort-by-order');
-
-  renderSelectOptions(jobOrderSelect, STRINGS['sort-by-order']);
-}
-
 /**
  * Add the keys and values from the options map to the select element.
- * @param {Element} select The select element.
- * @param {Map} options The map of options to be added.
+ * @param {String} id The select element id.
  */
-function renderSelectOptions(select, options) {
+function renderSelectOptions(id) {
+  const select = document.getElementById(id);
+  const options = STRINGS[id];
+
   select.options.length = 0;
 
   for (const key in options) {
@@ -174,7 +162,7 @@ function renderJobFilterSubmit() {
  * Add the list of jobs that are stored in the database.
  * @param {String} sortBy How the jobs should be sorted.
  * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for the page.
+ * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  */
 async function renderJobListings(sortBy, order, pageSize, pageIndex) {
@@ -213,7 +201,7 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
  * homepage is loaded and also when the sorting is changed.
  * @param {String} sortBy How the jobs should be sorted.
  * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for the page.
+ * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  */
 function getJobListings(sortBy, order, pageSize, pageIndex) {
@@ -221,7 +209,7 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
     `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
 
   fetch(`/jobs?${params}`)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
