@@ -80,16 +80,8 @@ public final class UpdateJobServlet extends MyServlet {
 
         Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
 
-        Job job = Job.newBuilder()
-                .setJobStatus(rawJob.getJobStatus())
-                .setJobTitle(rawJob.getJobTitle())
-                .setLocation(rawJob.getJobLocation())
-                .setJobDescription(rawJob.getJobDescription())
-                .setJobPay(rawJob.getJobPay())
-                .setRequirements(rawJob.getRequirements())
-                .setPostExpiry(rawJob.getPostExpiryTimestamp())
-                .setJobDuration(rawJob.getJobDuration())
-                .build();
+        // Validates the attributes via build()
+        Job job = rawJob.toBuilder().build();
 
         return job;
     }
