@@ -47,6 +47,14 @@ body {
     border: 1px solid grey;
 }
 
+.job-name {
+    font-weight: bold;
+}
+
+.job-address {
+    font-style: italic;
+}
+
 .job-field {
     width: -webkit-fill-available;
     margin: 10px 0px;
