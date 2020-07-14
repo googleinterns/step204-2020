@@ -201,9 +201,7 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
     const jobAddress = jobListing.children[1];
 
     const location = job['jobLocation'];
-    const address = location['address'];
-    const postalCode = location['postalCode'];
-    jobAddress.innerText = address + ', ' + postalCode;
+    jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
 
     jobListingsElement.appendChild(jobListing);
   });
@@ -219,12 +217,10 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
  * @param {int} pageIndex The page index (starting from 0).
  */
 function getJobListings(sortBy, order, pageSize, pageIndex) {
-  const params = 'sortBy=' + sortBy +
-    '&order=' + order +
-    '&pageSize=' + pageSize +
-    '&pageIndex=' + pageIndex;
+  const params = `sortBy=${sortBy}&order=${order}` +
+    `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
 
-  fetch('/jobs?' + params)
+  fetch(`/jobs?${params}`)
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
