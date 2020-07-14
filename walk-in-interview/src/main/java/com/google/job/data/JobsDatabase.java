@@ -20,9 +20,9 @@ public final class JobsDatabase {
      * Adds a newly created job post.
      *
      * @param newJob Newly created job post. Assumes that it is non-nullable.
-     * @return Auto-generated cloud firestore id and a future of the detailed information of the writing.
+     * @return A future of the detailed information of the writing.
      */
-    public AddJobResult addJob(Job newJob) {
+    public Future<WriteResult> addJob(Job newJob) {
         // Add document data after generating an id.
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document();
@@ -42,7 +42,7 @@ public final class JobsDatabase {
 
         Future<WriteResult> future = addedDocRef.set(job);
 
-        return new AddJobResult(jobId, future);
+        return future;
     }
 
     /**

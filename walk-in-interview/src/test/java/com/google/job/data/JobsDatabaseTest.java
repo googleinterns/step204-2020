@@ -3,9 +3,7 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -22,8 +20,8 @@ public final class JobsDatabaseTest {
     private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
 
-    JobsDatabase jobsDatabase;
-    Firestore firestore;
+    static JobsDatabase jobsDatabase;
+    static Firestore firestore;
 
     /**
      * Delete a collection in batches to avoid out-of-memory errors.
@@ -47,8 +45,8 @@ public final class JobsDatabaseTest {
         }
     }
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         jobsDatabase = new JobsDatabase();
         firestore = FireStoreUtils.getFireStore();
     }
@@ -78,19 +76,24 @@ public final class JobsDatabaseTest {
                 .build();
 
         // Act.
-        AddJobResult addJobResult = jobsDatabase.addJob(job);
+        Future<WriteResult> future = jobsDatabase.addJob(job);
 
         // Assert.
-        String jobId = addJobResult.getJobId();
-
         // future.get() blocks on response.
-        addJobResult.getFuture().get();
+        future.get();
 
-        DocumentSnapshot document = firestore.collection(TEST_JOB_COLLECTION).document(jobId).get().get();
+        //asynchronously retrieve all documents
+        ApiFuture<QuerySnapshot> futures = firestore.collection(TEST_JOB_COLLECTION).get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documents = futures.get().getDocuments();
+
+        // Since clears the collection before each test, it is the only document in the collection
+        QueryDocumentSnapshot document = documents.get(0);
+        String expectedJobId = document.getId();
 
         Job actualJob = document.toObject(Job.class);
         Job expectedJob = Job.newBuilder()
-                .setJobId(jobId)
+                .setJobId(expectedJobId)
                 .setJobStatus(expectedJobStatus)
                 .setJobTitle(expectedJobName)
                 .setLocation(expectedLocation)
@@ -209,7 +212,8 @@ public final class JobsDatabaseTest {
         assertEquals(job, actualJob);
     }
 
-    @After
+    @Before
+    @AfterClass
     public void clearCollection() {
         try {
             deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
