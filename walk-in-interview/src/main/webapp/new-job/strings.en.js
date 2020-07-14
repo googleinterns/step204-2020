@@ -13,27 +13,27 @@ export const AppStrings = {};
  * All the strings to be used in the new-job folder.
  */
 AppStrings['new-job'] = {
-  'new-job-page-title': 'New Job Post',
-  'new-job-cancel': 'Cancel',
-  'new-job-submit': 'Create',
-  'new-job-error-message': 'There is an error in the following field: ',
-  'new-job-title': 'Job Title',
-  'new-job-description': 'Job Description',
-  'new-job-address': 'Job Address',
-  'new-job-postal-code': 'Postal Code',
-  'new-job-requirements-title': 'Requirements',
-  'new-job-requirements-list': 'requirements-list',
-  'new-job-pay-title': 'Job Pay',
-  'new-job-pay-frequency': {
+  'page-title': 'New Job Post',
+  'cancel': 'Cancel',
+  'submit': 'Create',
+  'error-message': 'There is an error in the following field: ',
+  'title': 'Job Title',
+  'description': 'Job Description',
+  'address': 'Job Address',
+  'postal-code': 'Postal Code',
+  'requirements-title': 'Requirements',
+  'requirements-list': 'requirements-list',
+  'pay-title': 'Job Pay',
+  'pay-frequency': {
     'HOURLY': 'Hourly',
     'WEEKLY': 'Weekly',
     'MONTHLY': 'Monthly',
     'YEARLY': 'Yearly',
   },
-  'new-job-pay-min': 'min (sgd)',
-  'new-job-pay-max': 'max (sgd)',
-  'new-job-duration-title': 'Job Duration',
-  'new-job-duration': {
+  'pay-min': 'min (sgd)',
+  'pay-max': 'max (sgd)',
+  'duration-title': 'Job Duration',
+  'duration': {
     'ONE_WEEK': '1 Week',
     'TWO_WEEKS': '2 Weeks',
     'ONE_MONTH': '1 Month',
@@ -41,5 +41,5 @@ AppStrings['new-job'] = {
     'ONE_YEAR': '1 Year',
     'OTHER': 'Other',
   },
-  'new-job-expiry-title': 'Job Expiry',
+  'expiry-title': 'Job Expiry',
 };

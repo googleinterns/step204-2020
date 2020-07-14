@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<!-- The content and element attributes for this file will be
+    rendered dynamically from the script.js file. -->
+
+<body>
+  <div class="header-container">
+    <button id="new-post"></button>
+    <div id="page-title"></div>
+    <button id="account"></button>
+  </div>
+
+  <div class="content-container">
+
+    <!-- TODO(issue/42): need to implement maps api -->
+    <div id="homepage-map">map here</div>
+
+    <div>
+      <div id="sort-by-title"></div>
+      <select id="sort-by"></select>
+      <select id="sort-by-order"></select>
+      <input id="sort-by-submit">
+    </div>
+
+    <div>
+      <div id="filter-by-title"></div>
+
+      <div>
+        <div id="filter-distance-title"></div>
+        <input id="filter-distance-min">
+        -
+        <input id="filter-distance-max">
+      </div>
+
+      <div>
+        <div id="filter-salary-title"></div>
+        <input id="filter-salary-min">
+        -
+        <input id="filter-salary-max">
+      </div>
+
+      <input id="filter-by-submit">
+    </div>
+
+    <div class="job-listings-container">
+      <div id="job-listings-title"></div>
+
+      <ul id="job-listings"></ul>
+    </div>
+  </div>
+
+  <div class="error-message" id="error-message"></div>
+
+  <!-- hidden div to be used as a template to render job listings -->
+  <div hidden>
+      <li class="job-listing" id="job-listing-template">
+        <div class="job-name"></div>
+        <div class="job-address"></div>
+      </li>
+  </div>
+
+</body>
+
+<script type="module" src="./script.js"></script>
+
+</html>
