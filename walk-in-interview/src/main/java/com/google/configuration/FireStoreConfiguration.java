@@ -1,11 +1,7 @@
 package com.google.configuration;
 
-/** Interface that specify the configuration details for firestore. */
+/** Interface that specifies the configuration details for firestore. */
 public interface FireStoreConfiguration {
-    /**
-     * Gets the cloud firestore project id.
-     *
-     * @return Project Id.
-     */
+    /** Returns the cloud firestore project id. */
     String getProjectId();
 }

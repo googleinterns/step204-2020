@@ -55,9 +55,11 @@ public final class Job {
         private JobStatus jobStatus = JobStatus.ACTIVE;
         private List<String> requirements = ImmutableList.of();
         private JobDuration jobDuration = JobDuration.OTHER;
-        private long postExpiryTimestamp = 0;
 
         // TODO(issue/25): merge the account stuff into job post.
+
+        // Required parameters
+        private long postExpiryTimestamp;
 
         @Nullable
         private String jobTitle;
@@ -72,8 +74,6 @@ public final class Job {
         private JobPayment jobPay;
 
         private JobBuilder() {}
-
-        // TODO(issue/19): add more validation check
 
         public JobBuilder setJobId(String jobId) {
             this.jobId = jobId;

@@ -1,7 +1,5 @@
 package com.google.job.servlets;
 
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.WriteResult;
 import com.google.job.data.*;
 import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /** Servlet that handles posting new job posts. */
@@ -65,7 +62,6 @@ public final class NewJobServlet extends HttpServlet {
                 .setPostExpiry(rawJob.getPostExpiryTimestamp())
                 .setJobDuration(rawJob.getJobDuration())
                 .build();
-
 
         return job;
     }

@@ -34,6 +34,7 @@ public final class Location {
         return address;
     }
 
+    /** Returns postal code of a place. */
     public String getPostalCode() {
         return postalCode;
     }
