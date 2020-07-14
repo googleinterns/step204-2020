@@ -42,8 +42,8 @@ function renderHomepageElements() {
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
-  renderJobSortOptions();
-  renderJobOrderOptions();
+  renderSelectOptions(/** for */ 'sort-by');
+  renderSelectOptions(/** for */ 'sort-by-order');
   renderJobSortSubmit();
 
   const filterByTitle = document.getElementById('filter-by-title');
@@ -103,26 +103,14 @@ function setErrorMessage(msg, includesDefault) {
     (includesDefault ? STRINGS['error-message'] + msg : msg);
 }
 
-/** Dynamically add the options for sorting the jobs. */
-function renderJobSortOptions() {
-  const jobSortSelect = document.getElementById('sort-by');
-
-  renderSelectOptions(jobSortSelect, STRINGS['sort-by']);
-}
-
-/** Dynaimcally add the options for orders of the sorting options. */
-function renderJobOrderOptions() {
-  const jobOrderSelect = document.getElementById('sort-by-order');
-
-  renderSelectOptions(jobOrderSelect, STRINGS['sort-by-order']);
-}
-
 /**
  * Add the keys and values from the options map to the select element.
- * @param {Element} select The select element.
- * @param {Map} options The map of options to be added.
+ * @param {String} id The select element id.
  */
-function renderSelectOptions(select, options) {
+function renderSelectOptions(id) {
+  const select = document.getElementById(id);
+  const options = STRINGS[id];
+
   select.options.length = 0;
 
   for (const key in options) {
