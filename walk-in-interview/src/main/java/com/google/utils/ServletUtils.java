@@ -41,12 +41,9 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName).trim();
 
         try {
-            int result = Integer.parseInt(resultStr);
-
-            return result;
+            return Integer.parseInt(resultStr);
         } catch (NumberFormatException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
@@ -63,12 +60,9 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName).trim();
 
         try {
-            long result = Integer.parseInt(resultStr);
-
-            return result;
+            return Integer.parseInt(resultStr);
         } catch (NumberFormatException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
@@ -85,18 +79,16 @@ public final class ServletUtils {
         String resultStr = request.getParameter(parameterName).trim();
 
         try {
-            float result = Float.parseFloat(resultStr);
-
-            return result;
+            return Float.parseFloat(resultStr);
         } catch (NumberFormatException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }
 
     /**
-     * Gets the LocalDate parameter from html form input.
+     * Gets the LocalDate parameter from html form input. The date format will be "yyyy-MM-dd".
+     *
      * @param request Http request.
      * @param parameterName Input id in html element.
      * @param defaultValue Default integer.
@@ -109,11 +101,9 @@ public final class ServletUtils {
         try {
             String pattern = "yyyy-MM-dd";
             Date result = new SimpleDateFormat(pattern).parse(resultStr);
-
             return result;
         } catch (NumberFormatException | ParseException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }

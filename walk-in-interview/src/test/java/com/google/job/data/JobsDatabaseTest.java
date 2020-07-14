@@ -3,9 +3,7 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -21,35 +19,31 @@ public final class JobsDatabaseTest {
     private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
 
-    JobsDatabase jobsDatabase;
-    Firestore firestore;
+    static JobsDatabase jobsDatabase;
+    static Firestore firestore;
 
-    /**
-     * Delete a collection in batches to avoid out-of-memory errors.
-     *
-     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
-     */
-    private void deleteCollection(CollectionReference collection, int batchSize)
-            throws ExecutionException, InterruptedException {
-        // retrieve a small batch of documents to avoid out-of-memory errors
-        ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
-        int deleted = 0;
-        // future.get() blocks on document retrieval
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-        for (QueryDocumentSnapshot document : documents) {
-            document.getReference().delete();
-            ++deleted;
-        }
-        if (deleted >= batchSize) {
-            // retrieve and delete another batch
-            deleteCollection(collection, batchSize);
-        }
+    @BeforeClass
+    public static void setUp() {
+        jobsDatabase = new JobsDatabase();
+        firestore = FireStoreUtils.getFireStore();
     }
 
     @Before
-    public void setUp() {
-        jobsDatabase = new JobsDatabase();
-        firestore = FireStoreUtils.getFireStore();
+    public void clearCollection() {
+        try {
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error deleting collection : " + e.getMessage());
+        }
+    }
+
+    @AfterClass
+    public static void tearDownCollection() {
+        try {
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error tearing down collection : " + e.getMessage());
+        }
     }
 
     @Test
@@ -57,7 +51,7 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
-        Location expectedLocation =  new Location("Google", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
@@ -77,26 +71,42 @@ public final class JobsDatabaseTest {
                 .build();
 
         // Act.
-        Future<DocumentReference> addedJobFuture = jobsDatabase.addJob(job);
+        Future<WriteResult> future = jobsDatabase.addJob(job);
 
         // Assert.
-        DocumentReference documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-
         // future.get() blocks on response.
-        DocumentSnapshot document = future.get();
+        future.get();
+
+        //asynchronously retrieve all documents
+        ApiFuture<QuerySnapshot> futures = firestore.collection(TEST_JOB_COLLECTION).get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documents = futures.get().getDocuments();
+
+        // Since clears the collection before each test, it is the only document in the collection
+        QueryDocumentSnapshot document = documents.get(0);
+        String expectedJobId = document.getId();
 
         Job actualJob = document.toObject(Job.class);
+        Job expectedJob = Job.newBuilder()
+                .setJobId(expectedJobId)
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
 
-        assertEquals(job, actualJob);
+        assertEquals(expectedJob, actualJob);
     }
 
     @Test
     public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
-        Location expectedLocation =  new Location("Google", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
@@ -127,6 +137,7 @@ public final class JobsDatabaseTest {
 
         expectedJobName = "Googler";
         Job updatedJob = Job.newBuilder()
+                .setJobId(jobId)
                 .setJobStatus(expectedJobStatus)
                 .setJobTitle(expectedJobName)
                 .setLocation(expectedLocation)
@@ -154,45 +165,11 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void updateJobId_NormalInput_success() throws ExecutionException, InterruptedException {
-        // Arrange.
-        Job job = new Job();
-        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
-
-        DocumentReference documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-
-        // future.get() blocks on response.
-        DocumentSnapshot document = future.get();
-        String expectedJobId = document.getId();
-
-        // Act.
-        Future<WriteResult> resultFuture = this.jobsDatabase.updateJobId(expectedJobId);
-
-        // Assert.
-        // future.get() blocks on response.
-        resultFuture.get();
-
-        documentReference = firestore.collection(TEST_JOB_COLLECTION).document(expectedJobId);
-        // Asynchronously retrieve the document.
-        future = documentReference.get();
-
-        // future.get() blocks on response.
-        document = future.get();
-
-        Job actualJob = document.toObject(Job.class);
-        String actualJobId = actualJob.getJobId();
-
-        assertEquals(expectedJobId, actualJobId);
-    }
-
-    @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
-        Location expectedLocation =  new Location("Maple Tree", 0, 0);
+        Location expectedLocation =  new Location("Maple Tree", "123456", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
@@ -281,12 +258,25 @@ public final class JobsDatabaseTest {
         assertFalse(isExist);
     }
 
-    @After
-    public void clearCollection() {
-        try {
-            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
-        } catch (ExecutionException | InterruptedException e) {
-            System.err.println("Error deleting collection : " + e.getMessage());
+    /**
+     * Delete a collection in batches to avoid out-of-memory errors.
+     *
+     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
+     */
+    private static void deleteCollection(CollectionReference collection, int batchSize)
+            throws ExecutionException, InterruptedException {
+        // retrieve a small batch of documents to avoid out-of-memory errors
+        ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
+        int deleted = 0;
+        // future.get() blocks on document retrieval
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            document.getReference().delete();
+            ++deleted;
+        }
+        if (deleted >= batchSize) {
+            // retrieve and delete another batch
+            deleteCollection(collection, batchSize);
         }
     }
 }
