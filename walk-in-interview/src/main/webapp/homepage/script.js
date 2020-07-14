@@ -162,7 +162,7 @@ function renderJobFilterSubmit() {
  * Add the list of jobs that are stored in the database.
  * @param {String} sortBy How the jobs should be sorted.
  * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for the page.
+ * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  */
 async function renderJobListings(sortBy, order, pageSize, pageIndex) {
@@ -201,7 +201,7 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
  * homepage is loaded and also when the sorting is changed.
  * @param {String} sortBy How the jobs should be sorted.
  * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for the page.
+ * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  */
 function getJobListings(sortBy, order, pageSize, pageIndex) {
