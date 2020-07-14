@@ -16,27 +16,27 @@
  * TODO(issue/38): import AppStrings here
  */
 const STRINGS = {
-  'new-job-page-title': 'New Job Post',
-  'new-job-cancel': 'Cancel',
-  'new-job-submit': 'Create',
-  'new-job-error-message': 'There is an error in the following field: ',
-  'new-job-title': 'Job Title',
-  'new-job-description': 'Job Description',
-  'new-job-address': 'Job Address',
-  'new-job-postal-code': 'Postal Code',
-  'new-job-requirements-title': 'Requirements',
-  'new-job-requirements-list': 'requirements-list',
-  'new-job-pay-title': 'Job Pay',
-  'new-job-pay-frequency': {
+  'page-title': 'New Job Post',
+  'cancel': 'Cancel',
+  'submit': 'Create',
+  'error-message': 'There is an error in the following field: ',
+  'title': 'Job Title',
+  'description': 'Job Description',
+  'address': 'Job Address',
+  'postal-code': 'Postal Code',
+  'requirements-title': 'Requirements',
+  'requirements-list': 'requirements-list',
+  'pay-title': 'Job Pay',
+  'pay-frequency': {
     'HOURLY': 'Hourly',
     'WEEKLY': 'Weekly',
     'MONTHLY': 'Monthly',
     'YEARLY': 'Yearly',
   },
-  'new-job-pay-min': 'min (sgd)',
-  'new-job-pay-max': 'max (sgd)',
-  'new-job-duration-title': 'Job Duration',
-  'new-job-duration': {
+  'pay-min': 'min (sgd)',
+  'pay-max': 'max (sgd)',
+  'duration-title': 'Job Duration',
+  'duration': {
     'ONE_WEEK': '1 Week',
     'TWO_WEEKS': '2 Weeks',
     'ONE_MONTH': '1 Month',
@@ -44,7 +44,7 @@ const STRINGS = {
     'ONE_YEAR': '1 Year',
     'OTHER': 'Other',
   },
-  'new-job-expiry-title': 'Job Expiry',
+  'expiry-title': 'Job Expiry',
 };
 /**
  * TODO(issue/38): import getRequirementsList() here.
@@ -94,7 +94,7 @@ describe('New Job Tests', function() {
 
   describe('Page Rendering Tests', () => {
     describe('Page Title', () => {
-      const id = 'new-job-page-title';
+      const id = 'page-title';
 
       it('checks the title text', () => {
         return driver.findElement(By.id(id)).getText()
@@ -105,7 +105,7 @@ describe('New Job Tests', function() {
     });
 
     describe('Cancel Button', () => {
-      const id = 'new-job-cancel';
+      const id = 'cancel';
 
       it('checks the value attribute', () => {
         return driver.findElement(By.id(id)).getAttribute('value')
@@ -123,7 +123,7 @@ describe('New Job Tests', function() {
     });
 
     describe('Submit Button', () => {
-      const id = 'new-job-submit';
+      const id = 'submit';
 
       it('checks the value attribute', () => {
         return driver.findElement(By.id(id)).getAttribute('value')
@@ -141,7 +141,7 @@ describe('New Job Tests', function() {
     });
 
     describe('Error Message', () => {
-      const id = 'new-job-error-message';
+      const id = 'error-message';
 
       it('checks initially empty', () => {
         return driver.findElement(By.id(id)).getText()
@@ -152,7 +152,7 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Title', () => {
-      const id = 'new-job-title';
+      const id = 'title';
 
       it('checks the placeholder attribute', () => {
         return driver.findElement(By.id(id)).getAttribute('placeholder')
@@ -170,7 +170,7 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Description', () => {
-      const id = 'new-job-description';
+      const id = 'description';
 
       it('checks the placeholder attribute', () => {
         return driver.findElement(By.id(id)).getAttribute('placeholder')
@@ -181,7 +181,7 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Address', () => {
-      const addressId = 'new-job-address';
+      const addressId = 'address';
 
       it('checks the placeholder attribute', () => {
         return driver.findElement(By.id(addressId))
@@ -199,7 +199,7 @@ describe('New Job Tests', function() {
       });
 
       describe('Postal Code', () => {
-        const postalCodeId = 'new-job-postal-code';
+        const postalCodeId = 'postal-code';
 
         it('checks the placeholder attribute', () => {
           return driver.findElement(By.id(postalCodeId))
@@ -219,8 +219,8 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Requirements', () => {
-      const titleId = 'new-job-requirements-title';
-      const listId = 'new-job-requirements-list';
+      const titleId = 'requirements-title';
+      const listId = 'requirements-list';
 
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
@@ -245,10 +245,10 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Pay', () => {
-      const titleId = 'new-job-pay-title';
-      const frequencyId = 'new-job-pay-frequency';
-      const minId = 'new-job-pay-min';
-      const maxId = 'new-job-pay-max';
+      const titleId = 'pay-title';
+      const frequencyId = 'pay-frequency';
+      const minId = 'pay-min';
+      const maxId = 'pay-max';
 
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
@@ -301,8 +301,8 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Duration', () => {
-      const titleId = 'new-job-duration-title';
-      const durationId = 'new-job-duration';
+      const titleId = 'duration-title';
+      const durationId = 'duration';
 
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
@@ -327,8 +327,8 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Expiry', () => {
-      const titleId = 'new-job-expiry-title';
-      const expiryId = 'new-job-expiry';
+      const titleId = 'expiry-title';
+      const expiryId = 'expiry';
 
       it('checks the title text', () => {
         return driver.findElement(By.id(titleId)).getText()
@@ -368,7 +368,7 @@ describe('New Job Tests', function() {
 
   describe('Page Functionality Tests', () => {
     describe('Cancel Button', () => {
-      const id = 'new-job-cancel';
+      const id = 'cancel';
 
       /**
        * Clicking the cancel button should return the user to the homepage
@@ -387,42 +387,42 @@ describe('New Job Tests', function() {
      * message with the invalid field, and no POST request will be made.
      */
     describe('Submit Button', () => {
-      const submitId = 'new-job-submit';
-      const errorId = 'new-job-error-message';
+      const submitId = 'submit';
+      const errorId = 'error-message';
       const date = new Date();
       const today = (date.getMonth() + 1) + '-' + date.getDate() +
         '-' + date.getFullYear();
 
       beforeEach('add all valid inputs', () => {
-        return driver.findElement(By.id('new-job-title')).sendKeys('Waiter')
-            .then(() => driver.findElement(By.id('new-job-description'))
+        return driver.findElement(By.id('title')).sendKeys('Waiter')
+            .then(() => driver.findElement(By.id('description'))
                 .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('new-job-address'))
+            .then(() => driver.findElement(By.id('address'))
                 .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('new-job-postal-code'))
+            .then(() => driver.findElement(By.id('postal-code'))
                 .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('new-job-pay-frequency'))
+            .then(() => driver.findElement(By.id('pay-frequency'))
                 .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('new-job-pay-min'))
+            .then(() => driver.findElement(By.id('pay-min'))
                 .sendKeys('5'))
-            .then(() => driver.findElement(By.id('new-job-pay-max'))
+            .then(() => driver.findElement(By.id('pay-max'))
                 .sendKeys('6'))
-            .then(() => driver.findElement(By.id('new-job-duration'))
+            .then(() => driver.findElement(By.id('duration'))
                 .sendKeys('OTHER'))
-            .then(() => driver.findElement(By.id('new-job-expiry'))
+            .then(() => driver.findElement(By.id('expiry'))
                 .sendKeys(today));
       });
 
       it('no job title', () => {
-        return driver.findElement(By.id('new-job-title')).clear()
+        return driver.findElement(By.id('title')).clear()
             .then(() => driver.findElement(By.id(submitId)).click())
             .then(() => driver.findElement(By.id(errorId)).getText())
             .then((text) => assert.equal(text,
-                STRINGS[errorId] + STRINGS['new-job-title']));
+                STRINGS[errorId] + STRINGS['title']));
       });
 
       it('should not be false postive', () => {
-        return driver.findElement(By.id('new-job-title')).clear()
+        return driver.findElement(By.id('title')).clear()
             .then(() => driver.findElement(By.id(submitId)).click())
             .then(() => driver.findElement(By.id(errorId)).getText())
             .then((text) => assert.notEqual(text,
@@ -438,13 +438,13 @@ describe('New Job Tests', function() {
       });
 
       it('min greater than max', () => {
-        return driver.findElement(By.id('new-job-pay-min')).clear()
-            .then(() => driver.findElement(By.id('new-job-pay-min'))
+        return driver.findElement(By.id('pay-min')).clear()
+            .then(() => driver.findElement(By.id('pay-min'))
                 .sendKeys('7'))
             .then(() => driver.findElement(By.id(submitId)).click())
             .then(() => driver.findElement(By.id(errorId)).getText())
             .then((text) => assert.equal(text, STRINGS[errorId] +
-                  STRINGS['new-job-pay-title']));
+                  STRINGS['pay-title']));
       });
 
       it('job duration not chosen', () => {
@@ -455,33 +455,33 @@ describe('New Job Tests', function() {
            */
         driver.get(JOBPAGE_URL);
 
-        return driver.findElement(By.id('new-job-title')).sendKeys('Waiter')
-            .then(() => driver.findElement(By.id('new-job-description'))
+        return driver.findElement(By.id('title')).sendKeys('Waiter')
+            .then(() => driver.findElement(By.id('description'))
                 .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('new-job-address'))
+            .then(() => driver.findElement(By.id('address'))
                 .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('new-job-postal-code'))
+            .then(() => driver.findElement(By.id('postal-code'))
                 .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('new-job-pay-frequency'))
+            .then(() => driver.findElement(By.id('pay-frequency'))
                 .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('new-job-pay-min'))
+            .then(() => driver.findElement(By.id('pay-min'))
                 .sendKeys('5'))
-            .then(() => driver.findElement(By.id('new-job-pay-max'))
+            .then(() => driver.findElement(By.id('pay-max'))
                 .sendKeys('6'))
-            .then(() => driver.findElement(By.id('new-job-expiry'))
+            .then(() => driver.findElement(By.id('expiry'))
                 .sendKeys(today))
             .then(() => driver.findElement(By.id(submitId)).click())
             .then(() => driver.findElement(By.id(errorId)).getText())
             .then((text) => assert.equal(text, STRINGS[errorId] +
-                  STRINGS['new-job-duration-title']));
+                  STRINGS['duration-title']));
       });
 
       it('expiry date not chosen', () => {
-        return driver.findElement(By.id('new-job-expiry')).clear()
+        return driver.findElement(By.id('expiry')).clear()
             .then(() => driver.findElement(By.id(submitId)).click())
             .then(() => driver.findElement(By.id(errorId)).getText())
             .then((text) => assert.equal(text, STRINGS[errorId] +
-                  STRINGS['new-job-expiry-title']));
+                  STRINGS['expiry-title']));
       });
 
       /**
