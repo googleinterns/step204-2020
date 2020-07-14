@@ -50,7 +50,19 @@ public final class Job {
     }
 
     public JobBuilder toBuilder() {
-        return new JobBuilder();
+        JobBuilder jobBuilder = new JobBuilder();
+
+        jobBuilder.jobId = this.jobId;
+        jobBuilder.jobStatus = this.jobStatus;
+        jobBuilder.jobTitle = this.jobTitle;
+        jobBuilder.location = this.jobLocation;
+        jobBuilder.jobDescription = this.jobDescription;
+        jobBuilder.jobPay = this.jobPay;
+        jobBuilder.requirements = this.requirements;
+        jobBuilder.postExpiryTimestamp = this.postExpiryTimestamp;
+        jobBuilder.jobDuration = this.jobDuration;
+
+        return jobBuilder;
     }
 
     public static final class JobBuilder {
