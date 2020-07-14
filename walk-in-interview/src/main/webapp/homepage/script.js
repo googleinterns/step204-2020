@@ -168,13 +168,13 @@ function addJobFilterSubmit() {
 
 /**
  * Add the list of jobs that are stored in the database.
- * @param {String} sortedBy How the jobs should be sorted.
+ * @param {String} sortBy How the jobs should be sorted.
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for the page.
  * @param {int} pageIndex The page index (starting from 0).
  */
-function addJobListings(sortedBy, order, pageSize, pageIndex) {
-  const jobListings = getJobListings(sortedBy, order, pageSize, pageIndex);
+function addJobListings(sortBy, order, pageSize, pageIndex) {
+  const jobListings = getJobListings(sortBy, order, pageSize, pageIndex);
   console.log('jobListings', jobListings);
   const jobListingsElement = document.getElementById('job-listings');
 
@@ -204,42 +204,30 @@ function addJobListings(sortedBy, order, pageSize, pageIndex) {
  * Makes GET request to retrieve all the job listings from the database
  * given the sorting and order. This function is called when the
  * homepage is loaded and also when the sorting is changed.
- * @param {String} sortedBy How the jobs should be sorted.
+ * @param {String} sortBy How the jobs should be sorted.
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for the page.
  * @param {int} pageIndex The page index (starting from 0).
  * @return {Array} response from the GET request with the list of jobs.
  */
-function getJobListings(sortedBy, order, pageSize, pageIndex) {
+function getJobListings(sortBy, order, pageSize, pageIndex) {
   // TODO(issue/18): get jobs from database and render them on screen
   // returning some hardcoded data for now
-  const dummyRes = {
-    'jobList': [
-      {
-        'jobId': '1234',
-        'jobTitle': 'Waiter',
-        'jobLocation': {
-          'address': '290 Orchard Rd, #B1-03 Paragon',
-          'postalCode': '238859',
-          'lat': '1.3039',
-          'lon': '103.8358',
-        },
-        'jobDescription': 'Wait on tables',
-        'jobPay': {
-          'frequency': 'HOURLY',
-          'min': '6',
-          'max': '10',
-        },
-        'requirements': [
-          'O-LEVELS',
-        ],
-        'postExpiry': '1595289600000',
-        'jobDuration': 'OTHER',
-      },
-    ],
-    'totalCount': '100',
-    'range': '',
-  };
+  const params = 'sortBy=' + sortBy +
+    '&order=' + order +
+    '&pageSize=' + pageSize +
+    '&pageIndex=' + pageIndex;
 
-  return dummyRes['jobList'];
+  fetch('/jobs?' + params)
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('data', data);
+        setErrorMessage('', /** include default msg */ false);
+        return data['jobList'];
+      })
+      .catch((error) => {
+        console.log('error', error);
+        setErrorMessage(RESPONSE_ERROR, /** include default msg */ false);
+      });
+  return [];
 }
