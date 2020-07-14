@@ -27,64 +27,64 @@ window.onload = () => {
 
 /** Adds all the titles to the fields on this page. */
 function renderHomepageElements() {
-  const homepageTitle = document.getElementById('homepage-page-title');
-  homepageTitle.innerText = STRINGS['homepage-page-title'];
+  const homepageTitle = document.getElementById('page-title');
+  homepageTitle.innerText = STRINGS['page-title'];
 
-  const newPostButton = document.getElementById('homepage-new-post');
-  newPostButton.innerText = STRINGS['homepage-new-post'];
+  const newPostButton = document.getElementById('new-post');
+  newPostButton.innerText = STRINGS['new-post'];
   newPostButton.addEventListener('click', (_) => {
     window.location.href= JOBPAGE_PATH;
   });
 
-  const accountButton = document.getElementById('homepage-account');
-  accountButton.innerText = STRINGS['homepage-account'];
+  const accountButton = document.getElementById('account');
+  accountButton.innerText = STRINGS['account'];
 
-  const sortByTitle = document.getElementById('homepage-sort-by-title');
-  sortByTitle.innerText = STRINGS['homepage-sort-by-title'];
+  const sortByTitle = document.getElementById('sort-by-title');
+  sortByTitle.innerText = STRINGS['sort-by-title'];
 
   renderJobSortOptions();
   renderJobOrderOptions();
   renderJobSortSubmit();
 
-  const filterByTitle = document.getElementById('homepage-filter-by-title');
-  filterByTitle.innerText = STRINGS['homepage-filter-by-title'];
+  const filterByTitle = document.getElementById('filter-by-title');
+  filterByTitle.innerText = STRINGS['filter-by-title'];
 
   const distanceFilterTitle =
-    document.getElementById('homepage-filter-distance-title');
-  distanceFilterTitle.innerText = STRINGS['homepage-filter-distance-title'];
+    document.getElementById('filter-distance-title');
+  distanceFilterTitle.innerText = STRINGS['filter-distance-title'];
 
-  const distanceMin = document.getElementById('homepage-filter-distance-min');
+  const distanceMin = document.getElementById('filter-distance-min');
   distanceMin.setAttribute('type', 'number');
   distanceMin.setAttribute('placeholder',
-      STRINGS['homepage-filter-distance-min']);
+      STRINGS['filter-distance-min']);
 
-  const distanceMax = document.getElementById('homepage-filter-distance-max');
+  const distanceMax = document.getElementById('filter-distance-max');
   distanceMax.setAttribute('type', 'number');
   distanceMax.setAttribute('placeholder',
-      STRINGS['homepage-filter-distance-max']);
+      STRINGS['filter-distance-max']);
 
   const salaryFilterTitle =
-    document.getElementById('homepage-filter-salary-title');
-  salaryFilterTitle.innerText = STRINGS['homepage-filter-salary-title'];
+    document.getElementById('filter-salary-title');
+  salaryFilterTitle.innerText = STRINGS['filter-salary-title'];
 
-  const salaryMin = document.getElementById('homepage-filter-salary-min');
+  const salaryMin = document.getElementById('filter-salary-min');
   salaryMin.setAttribute('type', 'number');
   salaryMin.setAttribute('placeholder',
-      STRINGS['homepage-filter-salary-min']);
+      STRINGS['filter-salary-min']);
 
-  const salaryMax = document.getElementById('homepage-filter-salary-max');
+  const salaryMax = document.getElementById('filter-salary-max');
   salaryMax.setAttribute('type', 'number');
   salaryMax.setAttribute('placeholder',
-      STRINGS['homepage-filter-salary-max']);
+      STRINGS['filter-salary-max']);
   renderJobFilterSubmit();
 
   const jobListingsTitle =
-    document.getElementById('homepage-job-listings-title');
-  jobListingsTitle.innerText = STRINGS['homepage-job-listings-title'];
+    document.getElementById('job-listings-title');
+  jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  const defaultSortBy = document.getElementById('homepage-sort-by').value;
+  const defaultSortBy = document.getElementById('sort-by').value;
   const defaultSortOrder =
-    document.getElementById('homepage-sort-by-order').value;
+    document.getElementById('sort-by-order').value;
   renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
 
@@ -99,22 +99,22 @@ function renderHomepageElements() {
  * message should be included.
  */
 function setErrorMessage(msg, includesDefault) {
-  document.getElementById('homepage-error-message').innerText =
-    (includesDefault ? STRINGS['homepage-error-message'] + msg : msg);
+  document.getElementById('error-message').innerText =
+    (includesDefault ? STRINGS['error-message'] + msg : msg);
 }
 
 /** Dynamically add the options for sorting the jobs. */
 function renderJobSortOptions() {
-  const jobSortSelect = document.getElementById('homepage-sort-by');
+  const jobSortSelect = document.getElementById('sort-by');
 
-  renderSelectOptions(jobSortSelect, STRINGS['homepage-sort-by']);
+  renderSelectOptions(jobSortSelect, STRINGS['sort-by']);
 }
 
 /** Dynaimcally add the options for orders of the sorting options. */
 function renderJobOrderOptions() {
-  const jobOrderSelect = document.getElementById('homepage-sort-by-order');
+  const jobOrderSelect = document.getElementById('sort-by-order');
 
-  renderSelectOptions(jobOrderSelect, STRINGS['homepage-sort-by-order']);
+  renderSelectOptions(jobOrderSelect, STRINGS['sort-by-order']);
 }
 
 /**
@@ -138,17 +138,17 @@ function renderSelectOptions(select, options) {
  * submit button.
  */
 function renderJobSortSubmit() {
-  const sortBySubmit = document.getElementById('homepage-sort-by-submit');
+  const sortBySubmit = document.getElementById('sort-by-submit');
   sortBySubmit.setAttribute('type', 'submit');
-  sortBySubmit.setAttribute('value', STRINGS['homepage-sort-by-submit']);
+  sortBySubmit.setAttribute('value', STRINGS['sort-by-submit']);
 
   sortBySubmit.addEventListener('click', (_) => {
     if (!validSortByInput()) {
       return;
     }
 
-    const sortByParam = document.getElementById('homepage-sort-by').value;
-    const sortOrderParam = document.getElementById('homepage-sort-by-order')
+    const sortByParam = document.getElementById('sort-by').value;
+    const sortOrderParam = document.getElementById('sort-by-order')
         .value;
     renderJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
         DEFAULT_PAGE_INDEX);
@@ -160,9 +160,9 @@ function renderJobSortSubmit() {
  * submit button.
  */
 function renderJobFilterSubmit() {
-  const filterBySubmit = document.getElementById('homepage-filter-by-submit');
+  const filterBySubmit = document.getElementById('filter-by-submit');
   filterBySubmit.setAttribute('type', 'submit');
-  filterBySubmit.setAttribute('value', STRINGS['homepage-filter-by-submit']);
+  filterBySubmit.setAttribute('value', STRINGS['filter-by-submit']);
 
   /**
    * TODO(issue/35): add filtering event listener

@@ -13,27 +13,27 @@ export const AppStrings = {};
  * All the strings to be used in the homepage folder.
  */
 AppStrings['homepage'] = {
-  'homepage-page-title': 'Find Walk-in Interviews',
-  'homepage-new-post': 'New Post',
-  'homepage-account': 'Create an Account',
-  'homepage-error-message': 'There is an error in the following field: ',
-  'homepage-sort-by-title': 'Sort By',
-  'homepage-sort-by': {
+  'page-title': 'Find Walk-in Interviews',
+  'new-post': 'New Post',
+  'account': 'Create an Account',
+  'error-message': 'There is an error in the following field: ',
+  'sort-by-title': 'Sort By',
+  'sort-by': {
     'DISTANCE': 'Distance',
     'SALARY': 'Salary',
   },
-  'homepage-sort-by-order': {
+  'sort-by-order': {
     'ASCENDING': 'Ascending',
     'DESCENDING': 'Descending',
   },
-  'homepage-sort-by-submit': 'Apply',
-  'homepage-filter-by-title': 'Filter By',
-  'homepage-filter-distance-title': 'Distance',
-  'homepage-filter-distance-min': 'min (km)',
-  'homepage-filter-distance-max': 'max (km)',
-  'homepage-filter-salary-title': 'Salary',
-  'homepage-filter-salary-min': 'min (sgd)',
-  'homepage-filter-salary-max': 'max (sgd)',
-  'homepage-filter-by-submit': 'Apply Filters',
-  'homepage-job-listings-title': 'Job Listings:',
+  'sort-by-submit': 'Apply',
+  'filter-by-title': 'Filter By',
+  'filter-distance-title': 'Distance',
+  'filter-distance-min': 'min (km)',
+  'filter-distance-max': 'max (km)',
+  'filter-salary-title': 'Salary',
+  'filter-salary-min': 'min (sgd)',
+  'filter-salary-max': 'max (sgd)',
+  'filter-by-submit': 'Apply Filters',
+  'job-listings-title': 'Job Listings:',
 };
