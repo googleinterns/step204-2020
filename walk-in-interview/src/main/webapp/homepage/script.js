@@ -88,6 +88,7 @@ function renderHomepageElements() {
   renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
       DEFAULT_PAGE_INDEX);
 
+  /** reset the error to make sure no error msg initially present */
   setErrorMessage(/* msg */ '', /** includes default msg */ false);
 }
 
@@ -180,10 +181,12 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
   const jobListings = await getJobListings(sortBy, order, pageSize, pageIndex)
       .catch((error) => {
         console.log('error', error);
-        setErrorMessage(/* msg */ RESPONSE_ERROR, /** include default msg */ false);
+        setErrorMessage(/* msg */ RESPONSE_ERROR,
+            /** include default msg */ false);
       });
   const jobListingsElement = document.getElementById('job-listings');
 
+  /** reset the list so we don't render the same jobs twice */
   jobListingsElement.innerHTML = '';
   const jobListingTemplate = document.getElementById('job-listing-template');
 
@@ -227,6 +230,7 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
+        /** reset the error (there might have been an error msg from earlier) */
         setErrorMessage(/* msg */ '', /** include default msg */ false);
         return data['jobList'];
       });

@@ -84,6 +84,7 @@ function renderJobPageElements() {
   expiryInput.setAttribute('required', true);
   renderJobExpiryLimits();
 
+  /** reset the error to make sure no error msg initially present */
   setErrorMessage(/* msg */ '', /** includes default msg */ false);
 }
 
@@ -104,6 +105,7 @@ function renderRequirementsList() {
   const requirementsListElement =
     document.getElementById('new-job-requirements-list');
 
+  /** reset the list so we don't render the same requirements twice */
   requirementsListElement.innerHTML = '';
   const requirementElementTemplate =
     document.getElementById('requirement-element-template');
@@ -304,6 +306,7 @@ submitButton.addEventListener('click', (_) => {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
+        /** reset the error (there might have been an error msg from earlier) */
         setErrorMessage(/* msg */ '', /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
