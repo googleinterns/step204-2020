@@ -82,9 +82,11 @@ public final class JobServlet extends HttpServlet {
                 .setPostExpiry(expectedPostExpiry)
                 .setJobDuration(expectedJobDuration)
                 .build();
+        Job[] jobArr = new Job[1];
+        jobArr[0] = job;
 
             Gson gson = new Gson();
-            String json = gson.toJson(job);
+            String json = gson.toJson(jobArr);
             response.setContentType("application/json;");
             response.getWriter().println(json);
         } catch(IllegalArgumentException e) {
