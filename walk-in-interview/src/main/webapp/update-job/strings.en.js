@@ -1,6 +1,6 @@
 /**
  * This contains all the constants (language: English) for
- * the new-job.js file.
+ * the update-job.js file.
  */
 
 /**
@@ -12,7 +12,7 @@ export const AppStrings = {};
 /**
  * All the strings to be used in the new-job folder.
  */
-AppStrings['new-job'] = {
+AppStrings['update-job'] = {
   'page-title': 'Update Job Post',
   'cancel': 'Cancel',
   'submit': 'Update',

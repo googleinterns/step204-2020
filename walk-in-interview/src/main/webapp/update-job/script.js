@@ -4,8 +4,16 @@
  * is submitted.
  */
 
-const CurrentLocale = 'en';
+const CurrentLocale = "en";
+
+import {getJobDetailsFromUserInput, validateRequiredUserInput, setErrorMessage} from "../new-job/script.js";
+
+import {AppStrings} from "./strings.en.js";
+
 const JobIdParam = "jobId";
+const HOMEPAGE_PATH = "../job-details/index.html";
+const RESPONSE_ERROR = "There was an error while creating" +
+  "the job listing, please try submitting again";
 
 window.onload = () => {
     var jobId = getJobId();
@@ -54,6 +62,10 @@ function addPageElements(jobId) {
     jobAddress.setAttribute("value", jobAddressContent);
     
     // TODO: requirement list
+    //const requirementsTitle = document.getElementById('requirements-title');
+    //requirementsTitle.innerText = STRINGS['requirements-title'];
+    const requirements = job.requirements;
+    renderRequirementsList();
 
     const jobPayFrequency = document.getElementById("job-pay-frequency");
     // TODO
@@ -90,6 +102,68 @@ function getJobFromId(jobId) {
     })
     .then(response => response.json())
     .catch(error => {
-
+        // TODO
     })
 }
+
+/**
+ * Add the list of requirements that are stored in the database.
+ * 
+ * @param {Array} requirements An array of requirements(string) of the job post.
+ */
+function renderRequirementsList(requirements) {
+    const requirementsListElement = document.getElementById('requirements-list');
+
+    /** reset the list so we don't render the same requirements twice */
+  requirementsListElement.innerHTML = '';
+  const requirementElementTemplate = document.getElementById('requirement-element-template');
+  for (const key in requirementsList) {
+    if (requirementsList.hasOwnProperty(key)) {
+      const requirementElement = requirementElementTemplate
+          .cloneNode( /** and child elements */ true);
+      requirementElement.setAttribute('id', key);
+
+      const checkbox = requirementElement.children[0];
+      checkbox.setAttribute('id', key);
+      checkbox.setAttribute('value', key);
+
+      const label = requirementElement.children[1];
+      label.setAttribute('for', key);
+      label.innerText = requirementsList[key];
+
+      requirementsListElement.appendChild(requirementElement);
+    }
+  }
+}
+
+const submitButton = document.getElementById('submit');
+submitButton.addEventListener('click', (_) => {
+  if (!validateRequiredUserInput()) {
+    return;
+  }
+
+  const jobDetails = getJobDetailsFromUserInput();
+
+  fetch('/jobs', {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(jobDetails),
+  })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('data', data);
+        /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* msg */ '', /** include default msg */ false);
+        window.location.href= HOMEPAGE_PATH;
+      })
+      .catch((error) => {
+        setErrorMessage(/* msg */ RESPONSE_ERROR,
+            /** include default msg */ false);
+        console.log('error', error);
+      });
+});
+
+const cancelButton = document.getElementById('cancel');
+cancelButton.addEventListener('click', (_) => {
+  window.location.href= HOMEPAGE_PATH;
+});
