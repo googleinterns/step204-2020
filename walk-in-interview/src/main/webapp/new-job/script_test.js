@@ -11,42 +11,6 @@
  */
 
 /**
- * Unable to import AppStrings into this file so copy/
- * pasted here instead.
- * TODO(issue/38): import AppStrings here
- */
-const STRINGS = {
-  'page-title': 'New Job Post',
-  'cancel': 'Cancel',
-  'submit': 'Create',
-  'error-message': 'There is an error in the following field: ',
-  'title': 'Job Title',
-  'description': 'Job Description',
-  'address': 'Job Address',
-  'postal-code': 'Postal Code',
-  'requirements-title': 'Requirements',
-  'requirements-list': 'requirements-list',
-  'pay-title': 'Job Pay',
-  'pay-frequency': {
-    'HOURLY': 'Hourly',
-    'WEEKLY': 'Weekly',
-    'MONTHLY': 'Monthly',
-    'YEARLY': 'Yearly',
-  },
-  'pay-min': 'min (sgd)',
-  'pay-max': 'max (sgd)',
-  'duration-title': 'Job Duration',
-  'duration': {
-    'ONE_WEEK': '1 Week',
-    'TWO_WEEKS': '2 Weeks',
-    'ONE_MONTH': '1 Month',
-    'SIX_MONTHS': '6 Months',
-    'ONE_YEAR': '1 Year',
-    'OTHER': 'Other',
-  },
-  'expiry-title': 'Job Expiry',
-};
-/**
  * TODO(issue/38): import getRequirementsList() here.
  */
 const REQUIREMENTS_LIST = {
@@ -95,28 +59,24 @@ describe('New Job Tests', function() {
 
   describe('Page Rendering Tests', () => {
     describe('Page Title', () => {
-      const id = 'page-title';
-
       it('checks the title text', () => {
-        return driver.findElement(By.id(id)).getText()
-            .then((text) => {
-              assert.equal(text, STRINGS[id]);
+        return driver.findElement(By.id('page-title')).getText()
+            .then((title) => {
+              assert.equal(title, 'New Job Post');
             });
       });
     });
 
     describe('Cancel Button', () => {
-      const id = 'cancel';
-
       it('checks the value attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('value')
+        return driver.findElement(By.id('cancel')).getAttribute('value')
             .then((value) => {
-              assert.equal(value, STRINGS[id]);
+              assert.equal(value, 'Cancel');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('type')
+        return driver.findElement(By.id('cancel')).getAttribute('type')
             .then((value) => {
               assert.equal(value, 'reset');
             });
@@ -124,17 +84,15 @@ describe('New Job Tests', function() {
     });
 
     describe('Submit Button', () => {
-      const id = 'submit';
-
       it('checks the value attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('value')
+        return driver.findElement(By.id('submit')).getAttribute('value')
             .then((value) => {
-              assert.equal(value, STRINGS[id]);
+              assert.equal(value, 'Create');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('type')
+        return driver.findElement(By.id('submit')).getAttribute('type')
             .then((value) => {
               assert.equal(value, 'submit');
             });
@@ -142,28 +100,24 @@ describe('New Job Tests', function() {
     });
 
     describe('Error Message', () => {
-      const id = 'error-message';
-
       it('checks initially empty', () => {
-        return driver.findElement(By.id(id)).getText()
-            .then((text) => {
-              assert.isEmpty(text);
+        return driver.findElement(By.id('error-message')).getText()
+            .then((msg) => {
+              assert.isEmpty(msg);
             });
       });
     });
 
     describe('Job Title', () => {
-      const id = 'title';
-
       it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('placeholder')
+        return driver.findElement(By.id('title')).getAttribute('placeholder')
             .then((value) => {
-              assert.equal(value, STRINGS[id]);
+              assert.equal(value, 'Job Title');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('type')
+        return driver.findElement(By.id('title')).getAttribute('type')
             .then((value) => {
               assert.equal(value, 'text');
             });
@@ -171,47 +125,44 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Description', () => {
-      const id = 'description';
-
       it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id(id)).getAttribute('placeholder')
+        return driver.findElement(By.id('description'))
+            .getAttribute('placeholder')
             .then((value) => {
-              assert.equal(value, STRINGS[id]);
+              assert.equal(value, 'Job Description');
             });
       });
     });
 
     describe('Job Address', () => {
-      const addressId = 'address';
-
       it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id(addressId))
+        return driver.findElement(By.id('address'))
             .getAttribute('placeholder')
             .then((value) => {
-              assert.equal(value, STRINGS[addressId]);
+              assert.equal(value, 'Job Address');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id(addressId)).getAttribute('type')
+        return driver.findElement(By.id('address'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'text');
             });
       });
 
       describe('Postal Code', () => {
-        const postalCodeId = 'postal-code';
-
         it('checks the placeholder attribute', () => {
-          return driver.findElement(By.id(postalCodeId))
+          return driver.findElement(By.id('postal-code'))
               .getAttribute('placeholder')
               .then((value) => {
-                assert.equal(value, STRINGS[postalCodeId]);
+                assert.equal(value, 'Postal Code');
               });
         });
 
         it('checks the type attribute', () => {
-          return driver.findElement(By.id(postalCodeId)).getAttribute('type')
+          return driver.findElement(By.id('postal-code'))
+              .getAttribute('type')
               .then((value) => {
                 assert.equal(value, 'text');
               });
@@ -220,18 +171,17 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Requirements', () => {
-      const titleId = 'requirements-title';
-      const listId = 'requirements-list';
-
       it('checks the title text', () => {
-        return driver.findElement(By.id(titleId)).getText()
-            .then((text) => {
-              assert.equal(text, STRINGS[titleId]);
+        return driver.findElement(By.id('requirements-title'))
+            .getText()
+            .then((title) => {
+              assert.equal(title, 'Requirements');
             });
       });
 
       it('checks correct requirement list rendered', () => {
-        return driver.findElement(By.id(listId)).getText()
+        return driver.findElement(By.id('requirements-list'))
+            .getText()
             .then((text) => {
               const list = REQUIREMENTS_LIST;
               for (const key in list) {
@@ -246,22 +196,22 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Pay', () => {
-      const titleId = 'pay-title';
-      const frequencyId = 'pay-frequency';
-      const minId = 'pay-min';
-      const maxId = 'pay-max';
-
       it('checks the title text', () => {
-        return driver.findElement(By.id(titleId)).getText()
-            .then((text) => {
-              assert.equal(text, STRINGS[titleId]);
+        return driver.findElement(By.id('pay-title')).getText()
+            .then((title) => {
+              assert.equal(title, 'Job Pay');
             });
       });
 
       it('checks correct select options rendered', () => {
-        return driver.findElement(By.id(frequencyId)).getText()
+        return driver.findElement(By.id('pay-frequency')).getText()
             .then((text) => {
-              const options = STRINGS[frequencyId];
+              const options = {
+                'HOURLY': 'Hourly',
+                'WEEKLY': 'Weekly',
+                'MONTHLY': 'Monthly',
+                'YEARLY': 'Yearly',
+              };
               for (const key in options) {
                 if (options.hasOwnProperty(key)) {
                   if (!text.includes(options[key])) {
@@ -273,28 +223,30 @@ describe('New Job Tests', function() {
       });
 
       it('min: checks the placeholder attribute', () => {
-        return driver.findElement(By.id(minId)).getAttribute('placeholder')
+        return driver.findElement(By.id('pay-min')).getAttribute('placeholder')
             .then((value) => {
-              assert.equal(value, STRINGS[minId]);
+              assert.equal(value, 'min (sgd)');
             });
       });
 
       it('min: checks the type attribute', () => {
-        return driver.findElement(By.id(minId)).getAttribute('type')
+        return driver.findElement(By.id('pay-min')).getAttribute('type')
             .then((value) => {
               assert.equal(value, 'number');
             });
       });
 
       it('max: checks the placeholder attribute', () => {
-        return driver.findElement(By.id(maxId)).getAttribute('placeholder')
+        return driver.findElement(By.id('pay-max'))
+            .getAttribute('placeholder')
             .then((value) => {
-              assert.equal(value, STRINGS[maxId]);
+              assert.equal(value, 'max (sgd)');
             });
       });
 
       it('max: checks the type attribute', () => {
-        return driver.findElement(By.id(maxId)).getAttribute('type')
+        return driver.findElement(By.id('pay-max'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'number');
             });
@@ -302,20 +254,24 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Duration', () => {
-      const titleId = 'duration-title';
-      const durationId = 'duration';
-
       it('checks the title text', () => {
-        return driver.findElement(By.id(titleId)).getText()
-            .then((text) => {
-              assert.equal(text, STRINGS[titleId]);
+        return driver.findElement(By.id('duration-title')).getText()
+            .then((title) => {
+              assert.equal(title, 'Job Duration');
             });
       });
 
       it('checks correct select options rendered', () => {
-        return driver.findElement(By.id(durationId)).getText()
+        return driver.findElement(By.id('duration')).getText()
             .then((text) => {
-              const options = STRINGS[durationId];
+              const options = {
+                'ONE_WEEK': '1 Week',
+                'TWO_WEEKS': '2 Weeks',
+                'ONE_MONTH': '1 Month',
+                'SIX_MONTHS': '6 Months',
+                'ONE_YEAR': '1 Year',
+                'OTHER': 'Other',
+              };
               for (const key in options) {
                 if (options.hasOwnProperty(key)) {
                   if (!text.includes(options[key])) {
@@ -328,25 +284,22 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Expiry', () => {
-      const titleId = 'expiry-title';
-      const expiryId = 'expiry';
-
       it('checks the title text', () => {
-        return driver.findElement(By.id(titleId)).getText()
-            .then((text) => {
-              assert.equal(text, STRINGS[titleId]);
+        return driver.findElement(By.id('expiry-title')).getText()
+            .then((title) => {
+              assert.equal(title, 'Job Expiry');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id(expiryId)).getAttribute('type')
+        return driver.findElement(By.id('expiry')).getAttribute('type')
             .then((value) => {
               assert.equal(value, 'date');
             });
       });
 
       it('checks the min attribute', () => {
-        return driver.findElement(By.id(expiryId)).getAttribute('min')
+        return driver.findElement(By.id('expiry')).getAttribute('min')
             .then((value) => {
               const expected = new Date().toISOString().substr(0, 10);
 
@@ -355,7 +308,7 @@ describe('New Job Tests', function() {
       });
 
       it('checks the max attribute', () => {
-        return driver.findElement(By.id(expiryId)).getAttribute('max')
+        return driver.findElement(By.id('expiry')).getAttribute('max')
             .then((value) => {
               const date = new Date();
               date.setFullYear(date.getFullYear() + 1);
@@ -369,14 +322,12 @@ describe('New Job Tests', function() {
 
   describe('Page Functionality Tests', () => {
     describe('Cancel Button', () => {
-      const id = 'cancel';
-
       /**
        * Clicking the cancel button should return the user to the homepage
        * and not make any POST request.
        */
       it('should return to homepage', () => {
-        return driver.findElement(By.id(id)).click()
+        return driver.findElement(By.id('cancel')).click()
             .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
             .then(() => driver.getCurrentUrl())
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
@@ -388,11 +339,9 @@ describe('New Job Tests', function() {
      * message with the invalid field, and no POST request will be made.
      */
     describe('Submit Button', () => {
-      const submitId = 'submit';
-      const errorId = 'error-message';
       const date = new Date();
-      const today = (date.getMonth() + 1) + '-' + date.getDate() +
-        '-' + date.getFullYear();
+      const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
+        `-${date.getFullYear()}`;
 
       beforeEach('add all valid inputs', () => {
         return driver.findElement(By.id('title')).sendKeys('Waiter')
@@ -416,18 +365,18 @@ describe('New Job Tests', function() {
 
       it('no job title', () => {
         return driver.findElement(By.id('title')).clear()
-            .then(() => driver.findElement(By.id(submitId)).click())
-            .then(() => driver.findElement(By.id(errorId)).getText())
+            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
-                STRINGS[errorId] + STRINGS['title']));
+                'There is an error in the following field: Job Title'));
       });
 
       it('should not be false postive', () => {
         return driver.findElement(By.id('title')).clear()
-            .then(() => driver.findElement(By.id(submitId)).click())
-            .then(() => driver.findElement(By.id(errorId)).getText())
+            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.notEqual(text,
-                STRINGS[errorId]));
+                'There is an error in the following field: '));
       });
 
       it('incorrect job address format', () => {
@@ -442,10 +391,10 @@ describe('New Job Tests', function() {
         return driver.findElement(By.id('pay-min')).clear()
             .then(() => driver.findElement(By.id('pay-min'))
                 .sendKeys('7'))
-            .then(() => driver.findElement(By.id(submitId)).click())
-            .then(() => driver.findElement(By.id(errorId)).getText())
-            .then((text) => assert.equal(text, STRINGS[errorId] +
-                  STRINGS['pay-title']));
+            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Pay'));
       });
 
       it('job duration not chosen', () => {
@@ -471,18 +420,18 @@ describe('New Job Tests', function() {
                 .sendKeys('6'))
             .then(() => driver.findElement(By.id('expiry'))
                 .sendKeys(today))
-            .then(() => driver.findElement(By.id(submitId)).click())
-            .then(() => driver.findElement(By.id(errorId)).getText())
-            .then((text) => assert.equal(text, STRINGS[errorId] +
-                  STRINGS['duration-title']));
+            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Duration'));
       });
 
       it('expiry date not chosen', () => {
         return driver.findElement(By.id('expiry')).clear()
-            .then(() => driver.findElement(By.id(submitId)).click())
-            .then(() => driver.findElement(By.id(errorId)).getText())
-            .then((text) => assert.equal(text, STRINGS[errorId] +
-                  STRINGS['expiry-title']));
+            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Expiry'));
       });
 
       /**
@@ -490,7 +439,7 @@ describe('New Job Tests', function() {
        * user should be returned to the homepage.
        */
       it('should return to homepage', () => {
-        return driver.findElement(By.id(submitId)).click()
+        return driver.findElement(By.id('submit')).click()
             .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
             .then(() => driver.getCurrentUrl())
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
