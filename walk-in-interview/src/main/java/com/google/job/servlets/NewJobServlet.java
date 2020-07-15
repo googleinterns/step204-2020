@@ -53,15 +53,7 @@ public final class NewJobServlet extends HttpServlet {
 
         Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
 
-        Job job = Job.newBuilder()
-                .setJobTitle(rawJob.getJobTitle())
-                .setLocation(rawJob.getJobLocation())
-                .setJobDescription(rawJob.getJobDescription())
-                .setJobPay(rawJob.getJobPay())
-                .setRequirements(rawJob.getRequirements())
-                .setPostExpiry(rawJob.getPostExpiryTimestamp())
-                .setJobDuration(rawJob.getJobDuration())
-                .build();
+        Job job = rawJob.toBuilder().setJobStatus(JobStatus.ACTIVE).build();
 
         return job;
     }
