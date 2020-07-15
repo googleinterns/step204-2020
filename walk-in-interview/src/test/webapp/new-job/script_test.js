@@ -21,6 +21,7 @@ const REQUIREMENTS_LIST = {
   'LANGUAGE_ENGLISH': 'English',
   'DRIVING_LICENSE_C': 'Category C Driving License',
 };
+
 /**
  * Note that if `https` is used instead in the url below then
  * we get the following error: ERR_SSL_PROTOCOL_ERROR
@@ -45,6 +46,9 @@ const options = new chrome.Options();
  */
 options.addArguments('headless');
 
+/**
+ * Set timeout to 50s so tests all have a chance to run.
+ */
 const TIMEOUT = 50000;
 
 let driver;

@@ -1,7 +1,7 @@
 {
   "name": "step204-2020",
   "version": "1.0.0",
-  "description": "walk-in interview capstone projec",
+  "description": "walk-in interview capstone project",
   "main": "index.js",
   "scripts": {
     "test": "find ./walk-in-interview -name '*_test.js' | xargs mocha -R spec"
