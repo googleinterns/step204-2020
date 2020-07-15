@@ -11,11 +11,13 @@
         <button onclick="location.href='../index.html'">Back to Homepage</button>
 
         <!--Add a button for update-->
-        <form action="/walk-in-interview/src/main/webapp/update-job/update-job.html" method="POST">
-            <!--TODO: acquires jobId of the current job post-->
-            <input type="hidden" id="jobId" name="jobId" value="xxxx">
-            <input type="submit" value="Update">
-        </form>
+        <button onclick="sendJobId()">Update</button>
+        <script>
+            // TODO: get jobId from the current job post
+            function sendJobId() {
+                localStorage.setItem("jobId","xxxx");
+            }
+        </script>
     </div>
     <div class="content-container">
         <div id="jobpage-map">map here</div>
