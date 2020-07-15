@@ -4,6 +4,7 @@ import com.google.job.data.*;
 import com.google.utils.ServletUtils;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Range;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -82,11 +83,13 @@ public final class JobServlet extends HttpServlet {
                 .setPostExpiry(expectedPostExpiry)
                 .setJobDuration(expectedJobDuration)
                 .build();
-        Job[] jobArr = new Job[1];
-        jobArr[0] = job;
+        List<Job> jobArr = new LinkedList<>();
+        jobArr.add(job);
+
+        JobPage jobPage = new JobPage(jobArr, 1, Range.between(1, 1));
 
             Gson gson = new Gson();
-            String json = gson.toJson(jobArr);
+            String json = gson.toJson(jobPage);
             response.setContentType("application/json;");
             response.getWriter().println(json);
         } catch(IllegalArgumentException e) {

@@ -36,4 +36,5 @@ AppStrings['homepage'] = {
   'filter-salary-max': 'max (sgd)',
   'filter-by-submit': 'Apply Filters',
   'job-listings-title': 'Job Listings:',
+  'job-listings-showing': 'out of',
 };

@@ -166,12 +166,13 @@ function renderJobFilterSubmit() {
  * @param {int} pageIndex The page index (starting from 0).
  */
 async function renderJobListings(sortBy, order, pageSize, pageIndex) {
-  const jobListings = await getJobListings(sortBy, order, pageSize, pageIndex)
+  const jobPageData = await getJobListings(sortBy, order, pageSize, pageIndex)
       .catch((error) => {
         console.log('error', error);
         setErrorMessage(/* msg */ RESPONSE_ERROR,
             /** include default msg */ false);
       });
+  const jobListings = jobPageData['jobList']
   const jobListingsElement = document.getElementById('job-listings');
 
   /** reset the list so we don't render the same jobs twice */
@@ -193,6 +194,11 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
 
     jobListingsElement.appendChild(jobListing);
   });
+
+  const jobShowing = document.getElementById('job-listings-showing');
+  jobShowing.innerText = `${jobPageData['range'].minimum} -` +
+    ` ${jobPageData['range'].maximum} ${STRINGS['job-listings-showing']} ` +
+    `${jobPageData['totalCount']}`;
 }
 
 /**
@@ -208,12 +214,12 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
   const params = `sortBy=${sortBy}&order=${order}` +
     `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
 
-  fetch(`/jobs?${params}`)
+  return fetch(`/jobs?${params}`)
       .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
         setErrorMessage(/* msg */ '', /** include default msg */ false);
-        return data['jobList'];
+        return data;
       });
 }
