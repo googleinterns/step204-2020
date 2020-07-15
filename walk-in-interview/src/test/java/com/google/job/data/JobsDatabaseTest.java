@@ -47,7 +47,7 @@ public final class JobsDatabaseTest {
         }
     }
 
-    // @Test
+    @Test
     public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
@@ -103,7 +103,7 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJob, actualJob);
     }
 
-    // @Test
+    @Test
     public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
@@ -165,7 +165,7 @@ public final class JobsDatabaseTest {
         assertEquals(updatedJob, actualJob);
     }
 
-    // @Test
+    @Test
     public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
