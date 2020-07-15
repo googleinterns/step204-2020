@@ -54,7 +54,7 @@ public final class JobServlet extends HttpServlet {
     }
 
     /** Handles the PATCH request from client. */
-    public void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPatch(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Gets the target job post id from the form
             String jobId = getJobId(request);
