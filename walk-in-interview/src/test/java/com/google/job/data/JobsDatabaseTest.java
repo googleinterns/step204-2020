@@ -209,7 +209,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void isJobIdExist_NormalInput_true() throws ExecutionException, InterruptedException {
+    public void hasJobId_NormalInput_true() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -223,21 +223,21 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         // Act.
-        boolean isExist = JobsDatabase.isJobIdExist(jobId);
+        boolean isExist = JobsDatabase.hasJobId(jobId);
 
         // Assert.
         assertTrue(isExist);
     }
 
     @Test
-    public void isJobIdExist_EmptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
+    public void hasJobId_EmptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
         try {
             // Act.
-            boolean isExist = JobsDatabase.isJobIdExist("");
+            boolean isExist = JobsDatabase.hasJobId("");
             fail();
         } catch (IllegalArgumentException e) {
             // Assert.
@@ -246,13 +246,14 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void isJobIdExist_InvalidJobId_false() throws ExecutionException, InterruptedException {
+    public void hasJobId_InvalidJobId_false() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
         // Act.
-        boolean isExist = JobsDatabase.isJobIdExist("dummy");
+        // Cloud Firestore id will not be as short as "dummy"
+        boolean isExist = JobsDatabase.hasJobId("dummy");
 
         // Assert.
         assertFalse(isExist);
