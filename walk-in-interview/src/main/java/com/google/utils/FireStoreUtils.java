@@ -80,27 +80,4 @@ public final class FireStoreUtils {
 
         return Optional.ofNullable(item);
     }
-
-    /**
-     * Verifies if it is a valid job id that this user can update.
-     *
-     * @throws IllegalArgumentException If given id is empty.
-     */
-    // TODO(issue/25): incorporate the account stuff into job post.
-    public static void verifyUserCanUpdateJob(String jobId) throws
-            IllegalArgumentException ,ServletException, ExecutionException, TimeoutException {
-        if (jobId.isEmpty()) {
-            throw new IllegalArgumentException("Job Id should be an non-empty string");
-        }
-
-        try {
-            // Use timeout in case it blocks forever.
-            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-            if (!hasJob) {
-                throw new IllegalArgumentException("Invalid Job Id");
-            }
-        } catch (InterruptedException e) {
-            throw new ServletException(e);
-        }
-    }
 }
