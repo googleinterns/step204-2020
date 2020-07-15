@@ -245,7 +245,7 @@ function validateRequiredUserInput() {
   const name = document.getElementById('title');
   const description = document.getElementById('description');
   const address = document.getElementById('address');
-  const postalCode = document.getElementById('postal-code').value;
+  const postalCode = document.getElementById('postal-code');
   const payFrequency = document.getElementById('pay-frequency').value;
   const payMin = document.getElementById('pay-min').valueAsNumber;
   const payMax = document.getElementById('pay-max').valueAsNumber;
@@ -264,8 +264,14 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (address.value === '' || postalCode === '') {
+  if (address.value === '') {
     setErrorMessage(/* msg */ address.placeholder,
+        /** includes default msg */ true);
+    return false;
+  }
+
+  if (postalCode.value === '') {
+    setErrorMessage(/* msg */ postalCode.placeholder,
         /** includes default msg */ true);
     return false;
   }
