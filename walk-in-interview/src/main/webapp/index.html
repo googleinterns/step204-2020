@@ -3,62 +3,70 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
+
+<!-- The content and element attributes for this file will be
+    rendered dynamically from the script.js file. -->
 
 <body>
   <div class="header-container">
-    <button onclick="location.href='new-job/index.html'">New Post</button>
-    <div>Find Walk-in Interviews</div>
-    <button>Create an Account</button>
+    <button id="new-post"></button>
+    <div id="page-title"></div>
+    <button id="account"></button>
   </div>
+
   <div class="content-container">
+
+    <!-- TODO(issue/42): need to implement maps api -->
     <div id="homepage-map">map here</div>
-    <form class="filters-container">
+
+    <div>
+      <div id="sort-by-title"></div>
+      <select id="sort-by"></select>
+      <select id="sort-by-order"></select>
+      <input id="sort-by-submit">
+    </div>
+
+    <div>
+      <div id="filter-by-title"></div>
+
       <div>
-        Sort by:
-        <select id="sort-by-select" name="sort-by-select">
-          <option selected value="dist-asc">Distance (low to high)</option>
-          <option value="dist-desc">Distance (high to low)</option>
-          <option value="sal-asc">Salary (low to high)</option>
-          <option value="sal-desc">Salary (high to low)</option>
-          <!-- TODO(issue/8): render dynamically -->
-        </select>
+        <div id="filter-distance-title"></div>
+        <input id="filter-distance-min">
+        -
+        <input id="filter-distance-max">
       </div>
+
       <div>
-        Filter by:
-        Distance:
-        <input type="number" id="dist-min" name="dist-min" placeholder="min (km)">
+        <div id="filter-salary-title"></div>
+        <input id="filter-salary-min">
         -
-        <input type="number" id="dist-max" name="dist-max" placeholder="max (km)">
-        Salary:
-        <input type="number" id="sal-min" name="sal-min" placeholder="min (sgd)">
-        -
-        <input type="number" id="sal-max" name="sal-max" placeholder="max (sgd)">
+        <input id="filter-salary-max">
       </div>
-      <input type="submit" value="Apply">
-    </form>
+
+      <input id="filter-by-submit">
+    </div>
+
     <div class="job-listings-container">
-      <div>Jobs:</div>
-      <ul id="job-listings">
-        <li id='jobId1' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
-          <div class="job-listing">
-            waiter + info
-          </div>
-        </li>
-        <li id='jobId2' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
-          <div class="job-listing">
-            cashier + info
-          </div>
-        </li>
-        <li id='jobId3' onclick="location.href='/walk-in-interview/src/main/webapp/job-details.html'">
-          <div class="job-listing">
-            driver + info
-          </div>
-        </li>
-      </ul>
+      <div id="job-listings-title"></div>
+
+      <ul id="job-listings"></ul>
     </div>
   </div>
+
+  <div class="error-message" id="error-message"></div>
+
+  <!-- hidden div to be used as a template to render job listings -->
+  <div hidden>
+      <li class="job-listing" id="job-listing-template">
+        <div class="job-name"></div>
+        <div class="job-address"></div>
+      </li>
+  </div>
+
 </body>
+
+<script type="module" src="./script.js"></script>
 
 </html>
