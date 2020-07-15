@@ -1,7 +1,6 @@
 package com.google.job.servlets;
 
 import com.google.job.data.*;
-import com.google.utils.FireStoreUtils;
 import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,7 +32,7 @@ public final class JobServlet extends HttpServlet {
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Explicitly routes PATCH requests to a doPatch method since by default HttpServlet doesn't do it for us
+        // Explicitly routes PATCH requests to a doPatch method since by default HttpServlet doesn't do it for us.
         if (request.getMethod().equalsIgnoreCase(PATCH_METHOD_TYPE)){
             doPatch(request, response);
         } else {
