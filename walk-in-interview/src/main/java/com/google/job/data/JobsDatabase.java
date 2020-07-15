@@ -83,8 +83,7 @@ public final class JobsDatabase {
     }
 
     /** Returns a future of boolean to check if the job matching the given id is valid. */
-    public static Future<Boolean> hasJob(String jobId)
-            throws IllegalArgumentException, ExecutionException, InterruptedException {
+    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Empty Job Id");
         }

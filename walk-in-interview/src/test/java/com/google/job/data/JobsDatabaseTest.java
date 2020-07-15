@@ -209,7 +209,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJobId_normalInput_true() throws ExecutionException, InterruptedException {
+    public void hasJob_normalInput_true() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -222,22 +222,26 @@ public final class JobsDatabaseTest {
         DocumentSnapshot document = future.get();
         String jobId = document.getId();
 
-        // Act.
-        boolean isExist = JobsDatabase.hasJob(jobId);
+        try {
+            // Act.
+            Future<Boolean> result = JobsDatabase.hasJob(jobId);
 
-        // Assert.
-        assertTrue(isExist);
+            // Assert.
+            assertTrue(result.get());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
     }
 
     @Test
-    public void hasJobId_emptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
+    public void hasJob_emptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
         try {
             // Act.
-            boolean isExist = JobsDatabase.hasJob("");
+            Future<Boolean> result = JobsDatabase.hasJob("");
             fail();
         } catch (IllegalArgumentException e) {
             // Assert.
@@ -246,18 +250,24 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJobId_invalidJobId_false() throws ExecutionException, InterruptedException {
+    public void hasJob_invalidJobId_false() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
-        // Act.
-        // Cloud Firestore id will not be as short as "dummy"
-        boolean isExist = JobsDatabase.hasJob("dummy");
+        try {
+            // Act.
+            // Cloud Firestore id will not be as short as "dummy"
+            Future<Boolean> result = JobsDatabase.hasJob("dummy");
 
-        // Assert.
-        assertFalse(isExist);
+            // Assert.
+            assertFalse(result.get());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
     }
+
+    // TODO(issue/15): Add future fail test case for hasJob
 
     /**
      * Delete a collection in batches to avoid out-of-memory errors.
