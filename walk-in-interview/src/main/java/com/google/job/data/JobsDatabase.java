@@ -83,7 +83,7 @@ public final class JobsDatabase {
     }
 
     /** Checks if the job id is a valid existing id. */
-    public static boolean isJobIdExist(String jobId)
+    public static boolean hasJobId(String jobId)
             throws IllegalArgumentException, ExecutionException, InterruptedException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Empty Job Id");

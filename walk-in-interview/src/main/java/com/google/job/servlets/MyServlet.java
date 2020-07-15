@@ -8,9 +8,11 @@ import java.io.IOException;
 
 /** Class to handle PATCH request. */
 public abstract class MyServlet extends HttpServlet {
+    private static final String PATCH = "PATCH";
+
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getMethod().equalsIgnoreCase("PATCH")){
+        if (request.getMethod().equalsIgnoreCase(PATCH)){
             doPatch(request, response);
         } else {
             super.service(request, response);
