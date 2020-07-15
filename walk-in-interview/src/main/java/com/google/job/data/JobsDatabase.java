@@ -29,7 +29,7 @@ public final class JobsDatabase {
 
         String jobId = addedDocRef.getId();
 
-        // Sets the Job with cloud firestore id
+        // Updates the Job with cloud firestore id
         // Status is already set when parsing the job post
         Job job = newJob.toBuilder()
                 .setJobId(jobId)
@@ -82,16 +82,20 @@ public final class JobsDatabase {
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
     }
 
-    /** Checks if the job id is a valid existing id. */
-    public static boolean hasJobId(String jobId)
-            throws IllegalArgumentException, ExecutionException, InterruptedException {
+    /**
+     * Returns a future of boolean to check if the job matching the given id is valid.
+     * @throws IllegalArgumentException If the input jobId is empty.
+     */
+    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Empty Job Id");
         }
 
-        DocumentSnapshot documentSnapshot = FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION).document(jobId).get().get();
+        ApiFuture<DocumentSnapshot> snapshotFuture = FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION).document(jobId).get();
 
-        return documentSnapshot.exists();
+        return ApiFutures.transform(snapshotFuture,
+                documentSnapshot -> documentSnapshot.exists(),
+                MoreExecutors.directExecutor());
     }
 }
