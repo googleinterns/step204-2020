@@ -223,7 +223,7 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         // Act.
-        boolean isExist = JobsDatabase.hasJobId(jobId);
+        boolean isExist = JobsDatabase.hasJob(jobId);
 
         // Assert.
         assertTrue(isExist);
@@ -237,7 +237,7 @@ public final class JobsDatabaseTest {
 
         try {
             // Act.
-            boolean isExist = JobsDatabase.hasJobId("");
+            boolean isExist = JobsDatabase.hasJob("");
             fail();
         } catch (IllegalArgumentException e) {
             // Assert.
@@ -253,7 +253,7 @@ public final class JobsDatabaseTest {
 
         // Act.
         // Cloud Firestore id will not be as short as "dummy"
-        boolean isExist = JobsDatabase.hasJobId("dummy");
+        boolean isExist = JobsDatabase.hasJob("dummy");
 
         // Assert.
         assertFalse(isExist);
