@@ -67,24 +67,7 @@ public final class ChangeJobStatusServlet extends HttpServlet {
         }
     }
 
-//    /** Verifies if it is a valid job id that this user can update. */
-//    // TODO(issue/25): incorporate the account stuff into job post.
-//    private void verifyUserCanUpdateJob(String jobId) throws ServletException, ExecutionException, TimeoutException {
-//        if (jobId.isEmpty()) {
-//            throw new IllegalArgumentException("Job Id should be an non-empty string");
-//        }
-//
-//        try {
-//            // Use timeout in case it blocks forever.
-//            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-//            if (!hasJob) {
-//                throw new IllegalArgumentException("Invalid Job Id");
-//            }
-//        } catch (InterruptedException e) {
-//            throw new ServletException(e);
-//        }
-//    }
-
+    /** Gets the updated status from the client. */
     private JobStatus getTargetStatus(HttpServletRequest request) throws IllegalArgumentException {
         JobStatus targetStatus = ServletUtils.getJobStatusParameter(request, JOB_STATUS_FIELD, /** defaultValue= */ null);
 

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.Time;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -129,22 +128,4 @@ public final class JobServlet extends HttpServlet {
             throw new ServletException(e);
         }
     }
-
-//    /** Verifies if it is a valid job id that this user can update. */
-//    // TODO(issue/25): incorporate the account stuff into job post.
-//    private void verifyUserCanUpdateJob(String jobId) throws ServletException, ExecutionException, TimeoutException {
-//        if (jobId.isEmpty()) {
-//            throw new IllegalArgumentException("Job Id should be an non-empty string");
-//        }
-//
-//        try {
-//            // Use timeout in case it blocks forever.
-//            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-//            if (!hasJob) {
-//                throw new IllegalArgumentException("Invalid Job Id");
-//            }
-//        } catch (InterruptedException e) {
-//            throw new ServletException(e);
-//        }
-//    }
 }
