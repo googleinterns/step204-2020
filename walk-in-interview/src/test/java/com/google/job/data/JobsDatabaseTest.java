@@ -252,6 +252,7 @@ public final class JobsDatabaseTest {
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
         // Act.
+        // Cloud Firestore id will not be as short as "dummy"
         boolean isExist = JobsDatabase.hasJobId("dummy");
 
         // Assert.

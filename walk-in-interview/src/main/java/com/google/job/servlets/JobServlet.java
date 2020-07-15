@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -15,7 +16,8 @@ import java.util.stream.Collectors;
 
 /** Servlet that handles posting new job posts and updating existing job posts. */
 @WebServlet("/jobs")
-public final class JobServlet extends MyServlet {
+public final class JobServlet extends HttpServlet {
+    private static final String PATCH = "PATCH";
     private static final String JOB_ID_FIELD = "jobId";
 
     private JobsDatabase jobsDatabase;
@@ -23,6 +25,15 @@ public final class JobServlet extends MyServlet {
     @Override
     public void init() {
         this.jobsDatabase = new JobsDatabase();
+    }
+
+    @Override
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getMethod().equalsIgnoreCase(PATCH)){
+            doPatch(request, response);
+        } else {
+            super.service(request, response);
+        }
     }
 
     @Override
@@ -42,8 +53,8 @@ public final class JobServlet extends MyServlet {
         }
     }
 
-    @Override
-    public void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /** Handles the PATCH request from client. */
+    public void doPatch(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Gets the target job post id from the form
             String jobId = getJobId(request);
