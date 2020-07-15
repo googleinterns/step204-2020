@@ -5,6 +5,8 @@
  * the mocha tests in the walk-in-interview directory.
  * Also note that the Dev App Server should be running
  * using `mvn package appengine:run` before running the tests.
+ * The tests can also be run by cd-ing into this directory and
+ * running `mocha script_test.js` in the command line.
  * To get test report formatted nicely, cd into this folder and
  * run `mocha script_test.js --reporter mochawesome --reporter-options
  * autoOpen=true`.
@@ -12,7 +14,7 @@
 
 /**
  * Unable to make imports from other files.
- *  TODO(issue/38): import getRequirementsList() here.
+ * TODO(issue/38): import getRequirementsList() here.
  */
 const REQUIREMENTS_LIST = {
   'O_LEVEL': 'O Level',
@@ -37,6 +39,10 @@ chrome.setDefaultService(service);
 const By = webdriver.By;
 const until = webdriver.until;
 const options = new chrome.Options();
+/**
+ * Note that these tests are headless.
+ * To see the test browser pop up, remove this line.
+ */
 options.addArguments('headless');
 
 const TIMEOUT = 50000;
@@ -61,7 +67,8 @@ describe('New Job Tests', function() {
   describe('Page Rendering Tests', () => {
     describe('Page Title', () => {
       it('checks the title text', () => {
-        return driver.findElement(By.id('page-title')).getText()
+        return driver.findElement(By.id('page-title'))
+            .getText()
             .then((title) => {
               assert.equal(title, 'New Job Post');
             });
@@ -70,14 +77,16 @@ describe('New Job Tests', function() {
 
     describe('Cancel Button', () => {
       it('checks the value attribute', () => {
-        return driver.findElement(By.id('cancel')).getAttribute('value')
+        return driver.findElement(By.id('cancel'))
+            .getAttribute('value')
             .then((value) => {
               assert.equal(value, 'Cancel');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id('cancel')).getAttribute('type')
+        return driver.findElement(By.id('cancel'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'reset');
             });
@@ -86,14 +95,16 @@ describe('New Job Tests', function() {
 
     describe('Submit Button', () => {
       it('checks the value attribute', () => {
-        return driver.findElement(By.id('submit')).getAttribute('value')
+        return driver.findElement(By.id('submit'))
+            .getAttribute('value')
             .then((value) => {
               assert.equal(value, 'Create');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id('submit')).getAttribute('type')
+        return driver.findElement(By.id('submit'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'submit');
             });
@@ -102,7 +113,8 @@ describe('New Job Tests', function() {
 
     describe('Error Message', () => {
       it('checks initially empty', () => {
-        return driver.findElement(By.id('error-message')).getText()
+        return driver.findElement(By.id('error-message'))
+            .getText()
             .then((msg) => {
               assert.isEmpty(msg);
             });
@@ -111,14 +123,16 @@ describe('New Job Tests', function() {
 
     describe('Job Title', () => {
       it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id('title')).getAttribute('placeholder')
+        return driver.findElement(By.id('title'))
+            .getAttribute('placeholder')
             .then((value) => {
               assert.equal(value, 'Job Title');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id('title')).getAttribute('type')
+        return driver.findElement(By.id('title'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'text');
             });
@@ -198,14 +212,16 @@ describe('New Job Tests', function() {
 
     describe('Job Pay', () => {
       it('checks the title text', () => {
-        return driver.findElement(By.id('pay-title')).getText()
+        return driver.findElement(By.id('pay-title'))
+            .getText()
             .then((title) => {
               assert.equal(title, 'Job Pay');
             });
       });
 
       it('checks correct select options rendered', () => {
-        return driver.findElement(By.id('pay-frequency')).getText()
+        return driver.findElement(By.id('pay-frequency'))
+            .getText()
             .then((text) => {
               const options = {
                 'HOURLY': 'Hourly',
@@ -224,14 +240,16 @@ describe('New Job Tests', function() {
       });
 
       it('min: checks the placeholder attribute', () => {
-        return driver.findElement(By.id('pay-min')).getAttribute('placeholder')
+        return driver.findElement(By.id('pay-min'))
+            .getAttribute('placeholder')
             .then((value) => {
               assert.equal(value, 'min (sgd)');
             });
       });
 
       it('min: checks the type attribute', () => {
-        return driver.findElement(By.id('pay-min')).getAttribute('type')
+        return driver.findElement(By.id('pay-min'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'number');
             });
@@ -256,14 +274,16 @@ describe('New Job Tests', function() {
 
     describe('Job Duration', () => {
       it('checks the title text', () => {
-        return driver.findElement(By.id('duration-title')).getText()
+        return driver.findElement(By.id('duration-title'))
+            .getText()
             .then((title) => {
               assert.equal(title, 'Job Duration');
             });
       });
 
       it('checks correct select options rendered', () => {
-        return driver.findElement(By.id('duration')).getText()
+        return driver.findElement(By.id('duration'))
+            .getText()
             .then((text) => {
               const options = {
                 'ONE_WEEK': '1 Week',
@@ -286,21 +306,24 @@ describe('New Job Tests', function() {
 
     describe('Job Expiry', () => {
       it('checks the title text', () => {
-        return driver.findElement(By.id('expiry-title')).getText()
+        return driver.findElement(By.id('expiry-title'))
+            .getText()
             .then((title) => {
               assert.equal(title, 'Job Expiry');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id('expiry')).getAttribute('type')
+        return driver.findElement(By.id('expiry'))
+            .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'date');
             });
       });
 
       it('checks the min attribute', () => {
-        return driver.findElement(By.id('expiry')).getAttribute('min')
+        return driver.findElement(By.id('expiry'))
+            .getAttribute('min')
             .then((value) => {
               const expected = new Date().toISOString().substr(0, 10);
 
@@ -309,7 +332,8 @@ describe('New Job Tests', function() {
       });
 
       it('checks the max attribute', () => {
-        return driver.findElement(By.id('expiry')).getAttribute('max')
+        return driver.findElement(By.id('expiry'))
+            .getAttribute('max')
             .then((value) => {
               const date = new Date();
               date.setFullYear(date.getFullYear() + 1);
@@ -328,7 +352,7 @@ describe('New Job Tests', function() {
        * and not make any POST request.
        */
       it('should return to homepage', () => {
-        return driver.findElement(By.id('cancel')).click()
+        return clickCancel(driver)
             .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
             .then(() => driver.getCurrentUrl())
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
@@ -487,4 +511,14 @@ describe('New Job Tests', function() {
  */
 function clickSubmit(driver) {
   return driver.findElement(By.id('submit')).click();
+};
+
+/**
+ * This function just to click the cancel button and return
+ * to the homepage.
+ * @param {webdriver} driver the current driver being tested.
+ * @return {webdriver} the altered driver.
+ */
+function clickCancel(driver) {
+  return driver.findElement(By.id('cancel')).click();
 };
