@@ -7,6 +7,7 @@ import com.google.cloud.firestore.*;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+import org.apache.commons.lang3.Range;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -114,22 +115,29 @@ public final class JobsDatabase {
      * @return Future of the JobPage object.
      */
     public static Future<JobPage> fetchJobPage(Filter sortBy, Order order, int pageSize, int pageIndex) {
-//asynchronously retrieve all documents
         ApiFuture<QuerySnapshot> future = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).get();
-// future.get() blocks on response
-        log.log('hiii');
-        try {
-            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-//                System.out.println(document.getId() + " => " + document.toObject(Job.class));
-                log.log('doc:  ' + document.getId() + " => " + document.toObject(Job.class))
+
+        ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
+            @NullableDecl
+            public JobPage apply(@NullableDecl QuerySnapshot future) {
+                List<QueryDocumentSnapshot> documents = future.getDocuments();
+                List<Job> jobList = new LinkedList<>();
+
+                for (QueryDocumentSnapshot document : documents) {
+                    Job job = document.toObject(Job.class);
+                    jobList.add(job);
+                }
+
+                long totalCount = documents.size();
+                Range<Integer> range = Range.between(1, documents.size());
+
+                JobPage jobPage = new JobPage(jobList, totalCount, range);
+                log.info(jobPage.toString());
+
+                return jobPage;
             }
-        } catch(InterruptedException | ExecutionException e) {
+        };
 
-        }
-
-
-        return null;
-
+        return ApiFutures.transform(future, jobFunction, MoreExecutors.directExecutor());
     }
 }

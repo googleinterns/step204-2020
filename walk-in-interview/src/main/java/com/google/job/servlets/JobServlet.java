@@ -128,8 +128,6 @@ public final class JobServlet extends HttpServlet {
     private JobPage fetchJobPageDetails(Filter sortBy, Order order, int pageSize, int pageIndex)
             throws ServletException, ExecutionException, TimeoutException {
         try {
-            // Blocks the operation.
-            // Use timeout in case it blocks forever.
             return this.jobsDatabase.fetchJobPage(sortBy, order, pageSize, pageIndex)
                     .get(TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {

@@ -1,6 +1,7 @@
 package com.google.job.data;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -272,5 +273,10 @@ public final class Job {
         this.hashCode = result;
 
         return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
