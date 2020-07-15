@@ -61,35 +61,10 @@ public final class JobServlet extends HttpServlet {
             Order order = parseOrder(request);
             int pageSize = parsePageSize(request);
             int pageIndex = parsePageIndex(request);
-            // TODO(issue/44): get jobs from the database
 
-            JobStatus expectedJobStatus = JobStatus.ACTIVE;
-            String expectedJobName = "Software Engineer";
-        Location expectedLocation =  new Location("Google", "123456", 0, 0);
-        String expectedJobDescription = "Programming using java";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<String> expectedRequirements = Requirement.getLocalizedNames(
-                Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
-        long expectedPostExpiry = System.currentTimeMillis();
-        JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
+            JobPage jobPage = getJobPageDetails(sortBy, order, pageSize, pageIndex);
 
-        Job job = Job.newBuilder()
-                .setJobStatus(expectedJobStatus)
-                .setJobTitle(expectedJobName)
-                .setLocation(expectedLocation)
-                .setJobDescription(expectedJobDescription)
-                .setJobPay(expectedJobPayment)
-                .setRequirements(expectedRequirements)
-                .setPostExpiry(expectedPostExpiry)
-                .setJobDuration(expectedJobDuration)
-                .build();
-        List<Job> jobArr = new LinkedList<>();
-        jobArr.add(job);
-
-        JobPage jobPage = new JobPage(jobArr, 1, Range.between(1, 1));
-
-            Gson gson = new Gson();
-            String json = gson.toJson(jobPage);
+            String json = new Gson().toJson(jobPage);
             response.setContentType("application/json;");
             response.getWriter().println(json);
         } catch(IllegalArgumentException e) {
@@ -139,6 +114,44 @@ public final class JobServlet extends HttpServlet {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    /**
+     * Gets all the jobs given the params from the database.
+     *
+     * @param sortBy The sorting of the list of jobs.
+     * @param order The ordering of the sorting.
+     * @param pageSize The number of job listings to be returned.
+     * @param pageIndex The page which we are on (pagination).
+     * @return JobPage object with all the details for the GET response.
+     */
+    private JobPage getJobPageDetails(Filter sortBy, Order order, int pageSize, int pageIndex) {
+        // TODO(issue/44): get jobs from the database
+
+        JobStatus expectedJobStatus = JobStatus.ACTIVE;
+        String expectedJobName = "Software Engineer";
+        Location expectedLocation =  new Location("Google", "123456", 0, 0);
+        String expectedJobDescription = "Programming using java";
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        List<String> expectedRequirements = Requirement.getLocalizedNames(
+                Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
+        long expectedPostExpiry = System.currentTimeMillis();
+        JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
+
+        Job job = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
+        List<Job> jobArr = new LinkedList<>();
+        jobArr.add(job);
+
+        return new JobPage(jobArr, 1, Range.between(1, 1));
     }
 
     /**
