@@ -6,14 +6,15 @@
 
 const CurrentLocale = "en";
 
-import {getJobDetailsFromUserInput, validateRequiredUserInput, setErrorMessage} from "../new-job/script.js";
+import {getRequirementsList, getJobDetailsFromUserInput, 
+    validateRequiredUserInput, setErrorMessage} from "../new-job/script.js";
 
 import {AppStrings} from "./strings.en.js";
 
+const STRINGS = AppStrings["update-job"];
 const JobIdParam = "jobId";
 const HOMEPAGE_PATH = "../job-details/index.html";
-const RESPONSE_ERROR = "There was an error while creating" +
-  "the job listing, please try submitting again";
+const RESPONSE_ERROR = "There was an error while loading the job post. Please try again";
 
 window.onload = () => {
     var jobId = getJobId();
@@ -49,26 +50,27 @@ function addPageElements(jobId) {
 
     const job = getJobFromId(jobId);
 
-    const jobTitle = document.getElementById("job-title");
+    const jobTitle = document.getElementById("title");
     const jobTitleContent = job.jobTitle;
     jobTitle.setAttribute("value", jobTitleContent);
 
-    const jobDescription = document.getElementById("job-description");
+    const jobDescription = document.getElementById("description");
     const jobDescriptionContent = job.jobDescription;
     jobDescription.setAttribute("value", jobDescriptionContent);
 
-    const jobAddress = document.getElementById("job-address");
+    const jobAddress = document.getElementById("address");
     const jobAddressContent = job.jobLocation.address;
     jobAddress.setAttribute("value", jobAddressContent);
     
-    // TODO: requirement list
     //const requirementsTitle = document.getElementById('requirements-title');
     //requirementsTitle.innerText = STRINGS['requirements-title'];
     const requirements = job.requirements;
-    renderRequirementsList();
+    renderRequirementsList(requirements);
 
-    const jobPayFrequency = document.getElementById("job-pay-frequency");
-    // TODO
+    // const payTitle = document.getElementById("pay-title");
+    // payTitle.innerText = STRINGS["pay-title"];
+    const jobPayFrequency = document.getElementById("pay-frequency");
+    renderJobPayFrequencyOptions(jobPayFrequency);
     
     const jobPayMin = document.getElementById("job-pay-min");
     const jobPayMinContent = job.jobPay.min;
@@ -78,8 +80,10 @@ function addPageElements(jobId) {
     const jobPayMaxContent = job.jobPay.max;
     jobPayMax.setAttribute("value", jobPayMaxContent);
 
+    // const durationTitle = document.getElementById('duration-title');
+    // durationTitle.innerText = STRINGS['duration-title'];
     const jobDuration = document.getElementById("job-duration");
-    // TODO
+    renderJobDurationOptions(jobDuration);
 
     const jobExpiry = document.getElementById("job-expiry");
     const jobExpiryTimestamp = job.postExpiryTimestamp;
@@ -98,46 +102,116 @@ function getJobFromId(jobId) {
     const url = "/jobs?jobId=" + jobId;
     fetch(url, {
         method: "GET",
-        headers: {'Content-Type': 'application/json'},
+        headers: {"Content-Type": "application/json"},
     })
     .then(response => response.json())
     .catch(error => {
-        // TODO
+        setErrorMessage(/* msg */ RESPONSE_ERROR,
+            /** include default msg */ false);
+        console.log("error", error);
     })
 }
 
 /**
- * Add the list of requirements that are stored in the database.
+ * Adds the list of requirements that are stored in the database.
  * 
  * @param {Array} requirements An array of requirements(string) of the job post.
  */
 function renderRequirementsList(requirements) {
-    const requirementsListElement = document.getElementById('requirements-list');
+    const requirementsMap = getRequirementsList();
+    const requirementsListElement = document.getElementById("requirements-list");
 
-    /** reset the list so we don't render the same requirements twice */
-  requirementsListElement.innerHTML = '';
-  const requirementElementTemplate = document.getElementById('requirement-element-template');
-  for (const key in requirementsList) {
-    if (requirementsList.hasOwnProperty(key)) {
-      const requirementElement = requirementElementTemplate
-          .cloneNode( /** and child elements */ true);
-      requirementElement.setAttribute('id', key);
+    // Resets the list in case renders the same requirements twice
+    requirementsListElement.innerHTML = "";
+    const requirementElementTemplate = document.getElementById("requirement-element-template");
 
-      const checkbox = requirementElement.children[0];
-      checkbox.setAttribute('id', key);
-      checkbox.setAttribute('value', key);
+    for (const key in requirementsMap) {
+        if (!requirementsMap.hasOwnProperty(key)) {
+            continue;
+        }
 
-      const label = requirementElement.children[1];
-      label.setAttribute('for', key);
-      label.innerText = requirementsList[key];
+        const requirementElement = requirementElementTemplate.cloneNode(/** includes child elements **/ true);
+        requirementElement.setAttribute("id", key);
 
-      requirementsListElement.appendChild(requirementElement);
+        // tick box
+        const checkbox = requirementElement.children[0];
+        checkbox.setAttribute("id", key);
+        checkbox.setAttribute("value", key);
+
+        // If this requirement is one of the criteria for this job box, tick it
+        tickExistingRequirements(requirementsMap[key], requirements, checkbox);
+
+        // text label
+        const label = requirementElement.children[1];
+        label.setAttribute("for", key);
+        label.innerHTML = requirementsMap[key];
+
+        requirementsListElement.appendChild(requirementElement);
     }
-  }
 }
 
-const submitButton = document.getElementById('submit');
-submitButton.addEventListener('click', (_) => {
+/**
+ * Ticks the existing requirement.
+ * 
+ * @param {String} requirement Requirement localized name.
+ * @param {String} requirements Requirements list of current job post.
+ * @param {HTMLElement} requirementElement HTML checkbox for that requirement
+ */
+function tickExistingRequirements(requirement, requirements, requirementCheckbox) {
+    if (requirements.includes(requirement)) {
+        requirementCheckbox.setAttribute("checked", true);
+    }
+}
+
+/**
+ * Dynamically adds the options for job pay frequency.
+ * 
+ * @param {String} jobPayFrequency Payment frequency of the current job.
+ */
+function renderJobPayFrequencyOptions(jobPayFrequency) {
+    const jobPaySelectElement = document.getElementById("pay-frequency");
+    jobPaySelectElement.setAttribute("required", true);
+  
+    renderSelectOptions(jobPaySelectElement, STRINGS["pay-frequency"], jobPayFrequency);
+}
+
+/**
+ * Dynamically add the options for job duration. 
+ * 
+ * @param {String} jobDuration Duration of the current job.
+ */
+function renderJobDurationOptions(jobDuration) {
+    const jobDurationSelect = document.getElementById("duration");
+    jobDurationSelect.setAttribute("required", true);
+  
+    renderSelectOptions(jobDurationSelect, STRINGS["duration"], jobDuration);
+  }
+
+/**
+ * Adds the keys and values from the options map to the select element.
+ * Chooses the existing options.
+ * 
+ * @param {Element} selectElement The select element.
+ * @param {Map} options The map of options to be added.
+ * @param {String} existingOption Existing options.
+ */
+function renderSelectOptions(selectElement, options, existingOption) {
+    selectElement.options.length = 0;
+    selectElement.options[0] = new Option("Select", "");
+    selectElement.options[0].setAttribute("disabled", true);
+  
+    for (const key in options) {
+        if (!options.hasOwnProperty(key)) {
+            continue;
+        }
+
+        var defaultSelected = key == existingOption;
+        selectElement.options[selectElement.options.length] = new Option(options[key], key, defaultSelected);
+    }
+}
+
+const submitButton = document.getElementById("submit");
+submitButton.addEventListener("click", (_) => {
   if (!validateRequiredUserInput()) {
     return;
   }
@@ -151,19 +225,19 @@ submitButton.addEventListener('click', (_) => {
   })
       .then((response) => response.text())
       .then((data) => {
-        console.log('data', data);
+        console.log("data", data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false);
+        setErrorMessage(/* msg */ "", /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
         setErrorMessage(/* msg */ RESPONSE_ERROR,
             /** include default msg */ false);
-        console.log('error', error);
+        console.log("error", error);
       });
 });
 
-const cancelButton = document.getElementById('cancel');
-cancelButton.addEventListener('click', (_) => {
-  window.location.href= HOMEPAGE_PATH;
+const cancelButton = document.getElementById("cancel");
+cancelButton.addEventListener("click", (_) => {
+    window.location.href= HOMEPAGE_PATH;
 });

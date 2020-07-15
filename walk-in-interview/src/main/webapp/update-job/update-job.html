@@ -14,38 +14,52 @@
         </div>
 
         <div class="content-container">
-            <input class="job-field" id="job-title"/>
-            <textarea class="job-field" id="job-description"></textarea>
-            <input class="job-field" id="job-address" />
+            <input class="job-field" id="title"/>
+            <textarea class="job-field" id="description"></textarea>
+            
+            <div class="job-field">
+                <input id="address" />
+                <input id="postal-code" />
+            </div>
 
             <div class="job-field">
-                <div id="job-requirements-title">Requirements</div>
-                <ul id="job-requirements-list"></ul>
+                <div id="requirements-title">Requirements</div>
+                <ul id="requirements-list"></ul>
                 <!--TODO: render all the requirements with those existing requirements ticked-->
             </div>
     
             <div class="job-field">
-                <div id="job-pay-title">Job Pay</div>
-                <select id="job-pay-frequency"></select>
+                <div id="pay-title">Job Pay</div>
+                <select id="pay-frequency"></select>
                 <!--TODO: render the choices with the existing choice selected-->
-                <div id="job-pay-range">
-                    <input id="job-pay-min">
+                <div id="pay-range">
+                    <input id="pay-min">
                     -
-                    <input id="job-pay-max">
+                    <input id="pay-max">
                 </div>
             </div>
     
             <div class="job-field">
-                <div id="job-duration-title">Job Duration</div>
-                <select id="job-duration"></select>
+                <div id="duration-title">Job Duration</div>
+                <select id="duration"></select>
                 <!--TODO: render the choices with the existing choice selected-->
             </div>
     
             <div class="job-field">
-                <div id="job-expiry-title">Job Expiry</div>
-                <input id="job-expiry">
+                <div id="expiry-title">Job Expiry</div>
+                <input id="expiry">
                 <!--TODO: render the dates with the existing date selected-->
             </div>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <!-- hidden div to be used as a template to render requirements list elements -->
+        <div hidden>
+            <li id="requirement-element-template">
+                <input type="checkbox" id="requirement-checkbox-template" name="requirements-list">
+                <label>value</label>
+            </li>
         </div>
     </body>
 
