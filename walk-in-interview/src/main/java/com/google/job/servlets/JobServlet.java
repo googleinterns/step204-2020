@@ -40,14 +40,17 @@ public final class JobServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Gets job post from the form
-            Job job = parseJobPost(request);
+            Job rawJob = parseRawJobPost(request);
+
+            // Sets the status to be ACTIVE and validates the attributes via build().
+            Job job = rawJob.toBuilder().setJobStatus(JobStatus.ACTIVE).build();
 
             // Stores job post into the database
             storeJobPost(job);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException | IllegalArgumentException | ServletException e) {
+        } catch (ExecutionException | IllegalArgumentException | ServletException | IOException e) {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -57,24 +60,31 @@ public final class JobServlet extends HttpServlet {
     public void doPatch(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Gets the target job post id from the form
-            String jobId = getJobId(request);
+            String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
 
-            // Gets job post from the form
-            Job updatedJob = parseUpdatedJobPost(request);
+            // Verifies if the current user can update the job post with this job id.
+            // TODO(issue/25): incorporate the account stuff into job post.
+            verifyUserCanUpdateJob(jobId);
+
+            // Gets raw job post from the form
+            Job rawJob = parseRawJobPost(request);
+
+            // Validates the attributes via build()
+            Job updatedJob = rawJob.toBuilder().build();
 
             // Stores job post into the database
             updateJobPost(jobId, updatedJob);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException | IllegalArgumentException | ServletException e) {
+        } catch (ExecutionException | IllegalArgumentException | ServletException | IOException e) {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    /** Parses into Job object from json received from client. */
-    private Job parseJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
+    /** Parses into raw Job object from json received from client. */
+    private Job parseRawJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
         // Parses job object from the POST request
         BufferedReader bufferedReader = request.getReader();
         String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
@@ -85,30 +95,25 @@ public final class JobServlet extends HttpServlet {
 
         Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
 
-        // Sets the status to be ACTIVE and validates the attributes via build().
-        Job job = rawJob.toBuilder().setJobStatus(JobStatus.ACTIVE).build();
-
-        return job;
+        return rawJob;
     }
 
     /** Stores the job post into the database. */
-    private void storeJobPost(Job job) throws ServletException, IOException {
+    private void storeJobPost(Job job) throws ServletException, ExecutionException {
         try {
             // Synchronizes and blocks the operation.
             this.jobsDatabase.addJob(job).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
-            String errorMessage = "Error occur: " + e.getCause();
-            System.err.println(errorMessage);
-            throw new IOException(errorMessage);
+            System.err.println("Error occur: " + e.getCause());
+            throw e;
         }
     }
 
-    /** Gets the job id from the client. */
-    private String getJobId(HttpServletRequest request) throws ServletException, IOException {
-        String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
-
+    /** Verifies if it is a valid job id that this user can update. */
+    // TODO(issue/25): incorporate the account stuff into job post.
+    private void verifyUserCanUpdateJob(String jobId) throws ServletException, ExecutionException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Job Id should be an non-empty string");
         }
@@ -117,46 +122,24 @@ public final class JobServlet extends HttpServlet {
             if (!JobsDatabase.hasJobId(jobId)) {
                 throw new IllegalArgumentException("Invalid Job Id");
             }
-
-            return jobId;
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
-            String errorMessage = "Error occur: " + e.getCause();
-            System.err.println(errorMessage);
-            throw new IOException(errorMessage);
+            System.err.println("Error occur: " + e.getCause());
+            throw e;
         }
-    }
-
-    /** Parses into Job object from json received from client. */
-    private Job parseUpdatedJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
-        // Parses job object from the POST request
-        BufferedReader bufferedReader = request.getReader();
-        String jobPostJsonStr = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
-
-        if (StringUtils.isBlank(jobPostJsonStr)) {
-            throw new IllegalArgumentException("Json for Job object is Empty");
-        }
-
-        Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
-
-        // Validates the attributes via build()
-        Job job = rawJob.toBuilder().build();
-
-        return job;
     }
 
     /** Updates the target job post in the database. */
-    private void updateJobPost(String jobId, Job job) throws ServletException, IOException {
+    private void updateJobPost(String jobId, Job job) throws ServletException, ExecutionException {
         try {
             // Synchronizes and blocks the operation.
             this.jobsDatabase.setJob(jobId, job).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
         } catch (ExecutionException e) {
-            String errorMessage = "Error occur: " + e.getCause();
-            System.err.println(errorMessage);
-            throw new IOException(errorMessage);
+            System.err.println("Error occur: " + e.getCause());
+            throw e;
         }
     }
 }
