@@ -43,7 +43,7 @@ public final class JobServlet extends HttpServlet {
             // Gets job post from the form
             Job rawJob = parseRawJobPost(request);
 
-            // Sets the status to be ACTIVE and validates the attributes via build().
+            // New jobs always start in ACTIVE status.
             Job job = rawJob.toBuilder().setJobStatus(JobStatus.ACTIVE).build();
 
             // Stores job post into the database
@@ -101,12 +101,10 @@ public final class JobServlet extends HttpServlet {
     /** Stores the job post into the database. */
     private void storeJobPost(Job job) throws ServletException, ExecutionException {
         try {
-            // Synchronizes and blocks the operation.
+            // Blocks the operation.
             this.jobsDatabase.addJob(job).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
-        } catch (ExecutionException e) {
-            throw e;
         }
     }
 
@@ -117,12 +115,10 @@ public final class JobServlet extends HttpServlet {
             // TODO(issue/25): incorporate the account stuff into job post.
             verifyUserCanUpdateJob(jobId);
 
-            // Synchronizes and blocks the operation.
+            // Blocks the operation.
             this.jobsDatabase.setJob(jobId, job).get();
         } catch (InterruptedException e) {
             throw new ServletException(e);
-        } catch (ExecutionException e) {
-            throw e;
         }
     }
 
@@ -140,8 +136,6 @@ public final class JobServlet extends HttpServlet {
             }
         } catch (InterruptedException e) {
             throw new ServletException(e);
-        } catch (ExecutionException e) {
-            throw e;
         }
     }
 }

@@ -82,7 +82,10 @@ public final class JobsDatabase {
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
     }
 
-    /** Returns a future of boolean to check if the job matching the given id is valid. */
+    /**
+     * Returns a future of boolean to check if the job matching the given id is valid.
+     * @throws IllegalArgumentException If the input jobId is empty.
+     */
     public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Empty Job Id");
