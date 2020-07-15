@@ -53,14 +53,14 @@ let driver;
 describe('New Job Tests', function() {
   this.timeout(TIMEOUT);
 
-  beforeEach(() => {
+  before(() => {
     driver = new webdriver.Builder().setChromeOptions(options)
         .withCapabilities(webdriver.Capabilities.chrome())
         .build();
     return driver.get(JOBPAGE_URL);
   });
 
-  afterEach(() => {
+  after(() => {
     return driver.quit();
   });
 
@@ -346,6 +346,21 @@ describe('New Job Tests', function() {
   });
 
   describe('Page Functionality Tests', () => {
+    beforeEach(() => {
+      /**
+       * For the functionality tests, since we are testing the
+       * cancel/submit buttons, the page url may have changed
+       * in the test. This will check if that is the case, and
+       * reset it to the job page for the rest of the tests.
+       */
+      return driver.getCurrentUrl()
+          .then((currUrl) => {
+            if (currUrl !== JOBPAGE_URL) {
+              return driver.get(JOBPAGE_URL);
+            }
+          });
+    });
+
     describe('Cancel Button', () => {
       /**
        * Clicking the cancel button should return the user to the homepage
