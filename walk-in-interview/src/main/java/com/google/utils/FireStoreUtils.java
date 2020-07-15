@@ -8,19 +8,13 @@ import com.google.configuration.ConfigurationFactory;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.job.data.JobsDatabase;
 
 import javax.annotation.Nullable;
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /** Util methods related to Cloud Firestore database. */
 public final class FireStoreUtils {
-    private static final long TIMEOUT = 5;
     @Nullable
     private static Firestore firestore;
 

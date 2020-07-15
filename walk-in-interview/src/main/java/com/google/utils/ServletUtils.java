@@ -115,7 +115,6 @@ public final class ServletUtils {
             return result;
         } catch (IllegalArgumentException e) {
             // TODO(issue/12): error handling; can consider to add logging to log the error
-
             return defaultValue;
         }
     }

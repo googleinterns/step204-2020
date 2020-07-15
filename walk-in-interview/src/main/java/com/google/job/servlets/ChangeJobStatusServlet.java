@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/** Servlet that handles changing status of the existing job posts. */
 @WebServlet("/jobs/change-job-status")
 public final class ChangeJobStatusServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
@@ -44,12 +45,12 @@ public final class ChangeJobStatusServlet extends HttpServlet {
             // Gets the target job post id
             String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
 
+            // Gets the target status
+            JobStatus jobStatus = getTargetStatus(request);
+
             // Verifies if the current user can update the job post with this job id.
             // TODO(issue/25): incorporate the account stuff into job post.
             verifyUserCanUpdateJob(jobId);
-
-            // Gets the target status
-            JobStatus jobStatus = getTargetStatus(request);
 
             // Change the status
             switch (jobStatus) {
