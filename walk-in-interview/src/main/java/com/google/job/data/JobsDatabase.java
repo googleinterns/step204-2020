@@ -9,12 +9,12 @@ import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
-    private static final String JOB_ID_FIELD = "jobId";
 
     /**
      * Adds a newly created job post.
@@ -29,10 +29,10 @@ public final class JobsDatabase {
 
         String jobId = addedDocRef.getId();
 
-        // Sets the Job with cloud firestore id and ACTIVE status
+        // Updates the Job with cloud firestore id
+        // Status is already set when parsing the job post
         Job job = newJob.toBuilder()
                 .setJobId(jobId)
-                .setJobStatus(JobStatus.ACTIVE)
                 .build();
 
         return addedDocRef.set(job);
@@ -80,5 +80,22 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+    }
+
+    /**
+     * Returns a future of boolean to check if the job matching the given id is valid.
+     * @throws IllegalArgumentException If the input jobId is empty.
+     */
+    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {
+        if (jobId.isEmpty()) {
+            throw new IllegalArgumentException("Empty Job Id");
+        }
+
+        ApiFuture<DocumentSnapshot> snapshotFuture = FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION).document(jobId).get();
+
+        return ApiFutures.transform(snapshotFuture,
+                documentSnapshot -> documentSnapshot.exists(),
+                MoreExecutors.directExecutor());
     }
 }
