@@ -11,6 +11,9 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.List;
+
+import java.util.logging.Logger;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
@@ -97,5 +100,36 @@ public final class JobsDatabase {
         return ApiFutures.transform(snapshotFuture,
                 documentSnapshot -> documentSnapshot.exists(),
                 MoreExecutors.directExecutor());
+    }
+
+    private static final Logger log = Logger.getLogger(JobsDatabase.class.getName());
+
+    /**
+     * Gets all the jobs given the params from the database.
+     *
+     * @param sortBy The sorting of the list of jobs.
+     * @param order The ordering of the sorting.
+     * @param pageSize The number of job listings to be returned.
+     * @param pageIndex The page which we are on (pagination).
+     * @return Future of the JobPage object.
+     */
+    public static Future<JobPage> fetchJobPage(Filter sortBy, Order order, int pageSize, int pageIndex) {
+//asynchronously retrieve all documents
+        ApiFuture<QuerySnapshot> future = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).get();
+// future.get() blocks on response
+        log.log('hiii');
+        try {
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+//                System.out.println(document.getId() + " => " + document.toObject(Job.class));
+                log.log('doc:  ' + document.getId() + " => " + document.toObject(Job.class))
+            }
+        } catch(InterruptedException | ExecutionException e) {
+
+        }
+
+
+        return null;
+
     }
 }
