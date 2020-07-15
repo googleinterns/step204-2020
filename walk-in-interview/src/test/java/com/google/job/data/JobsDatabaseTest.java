@@ -47,7 +47,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void addJob_normalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
@@ -103,7 +103,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void setJob_normalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
@@ -165,7 +165,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void fetchJob_normalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
@@ -209,7 +209,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJobId_NormalInput_true() throws ExecutionException, InterruptedException {
+    public void hasJobId_normalInput_true() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -230,7 +230,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJobId_EmptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
+    public void hasJobId_emptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -246,7 +246,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJobId_InvalidJobId_false() throws ExecutionException, InterruptedException {
+    public void hasJobId_invalidJobId_false() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
