@@ -62,6 +62,8 @@ public final class ChangeJobStatusServlet extends HttpServlet {
             }
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
+            // TODO(issue/47): use custom exceptions
+            System.err.println("Error occur: " + e.getCause());
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
