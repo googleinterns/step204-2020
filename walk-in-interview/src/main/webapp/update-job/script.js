@@ -5,10 +5,25 @@
  */
 
 const CurrentLocale = 'en';
+const JobIdParam = "jobId";
 
 window.onload = () => {
-    addPageElements(); // how to deal with job id?????
+    var jobId = getJobId();
+    addPageElements(jobId);
 };
+
+/**
+ * Gets the jobId from job-details.html page.
+ */
+function getJobId() {
+    var jobId = localStorage.getItem(JobIdParam).trim();
+
+    if (jobId === "") {
+        // TODO: error handling
+    }
+
+    return jobId;
+}
 
 /**
  * Adds all the titles to the fields on this page.
