@@ -106,6 +106,7 @@ public final class JobServlet extends HttpServlet {
     private void storeJobPost(Job job) throws ServletException, ExecutionException, TimeoutException {
         try {
             // Blocks the operation.
+            // Use timeout in case it blocks forever.
             this.jobsDatabase.addJob(job).get(TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new ServletException(e);
@@ -120,6 +121,7 @@ public final class JobServlet extends HttpServlet {
             verifyUserCanUpdateJob(jobId);
 
             // Blocks the operation.
+            // Use timeout in case it blocks forever.
             this.jobsDatabase.setJob(jobId, job).get(TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new ServletException(e);
@@ -134,6 +136,7 @@ public final class JobServlet extends HttpServlet {
         }
 
         try {
+            // Use timeout in case it blocks forever.
             boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
             if (!hasJob) {
                 throw new IllegalArgumentException("Invalid Job Id");
