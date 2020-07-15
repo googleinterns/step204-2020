@@ -24,7 +24,7 @@ const REQUIREMENTS_LIST = {
  * we get the following error: ERR_SSL_PROTOCOL_ERROR
  */
 const JOBPAGE_URL = 'http://localhost:3000/new-job/index.html';
-const HOMEPAGE_URL = 'http://localhost:3000/homepage/index.html';
+const HOMEPAGE_URL = 'http://localhost:3000/index.html';
 
 const assert = require('chai').assert;
 const webdriver = require('selenium-webdriver');
@@ -374,7 +374,7 @@ describe('New Job Tests', function() {
          * The job title must be cleared here to test it.
          */
         return driver.findElement(By.id('title')).clear()
-            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => clickSubmit(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Title'));
@@ -383,9 +383,12 @@ describe('New Job Tests', function() {
       it('should not be false postive', () => {
         /**
          * The job title must be cleared here to test it.
+         * This test is making sure that the test is actually working
+         * properly and not just passing for any string.
+         * Note the use of assert.notEqual().
          */
         return driver.findElement(By.id('title')).clear()
-            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => clickSubmit(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.notEqual(text,
                 'There is an error in the following field: '));
@@ -408,7 +411,7 @@ describe('New Job Tests', function() {
             .then(() => driver.findElement(By.id('pay-max')).clear())
             .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
             .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
-            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => clickSubmit(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Pay'));
@@ -440,7 +443,7 @@ describe('New Job Tests', function() {
                 .sendKeys('6'))
             .then(() => driver.findElement(By.id('expiry'))
                 .sendKeys(today))
-            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => clickSubmit(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Duration'));
@@ -451,7 +454,7 @@ describe('New Job Tests', function() {
          * The job expiry must be cleared here to test it.
          */
         return driver.findElement(By.id('expiry')).clear()
-            .then(() => driver.findElement(By.id('submit')).click())
+            .then(() => clickSubmit(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Expiry'));
@@ -462,7 +465,7 @@ describe('New Job Tests', function() {
        * user should be returned to the homepage.
        */
       it('should return to homepage', () => {
-        return driver.findElement(By.id('submit')).click()
+        return clickSubmit(driver)
             .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
             .then(() => driver.getCurrentUrl())
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
@@ -475,3 +478,13 @@ describe('New Job Tests', function() {
     });
   });
 });
+
+/**
+ * This function just to submit the new job with the
+ * filled out fields.
+ * @param {webdriver} driver the current driver being tested.
+ * @return {webdriver} the altered driver.
+ */
+function clickSubmit(driver) {
+  return driver.findElement(By.id('submit')).click();
+};
