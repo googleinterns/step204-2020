@@ -8,13 +8,19 @@ import com.google.configuration.ConfigurationFactory;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.job.data.JobsDatabase;
 
 import javax.annotation.Nullable;
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /** Util methods related to Cloud Firestore database. */
 public final class FireStoreUtils {
+    private static final long TIMEOUT = 5;
     @Nullable
     private static Firestore firestore;
 
@@ -73,5 +79,28 @@ public final class FireStoreUtils {
         }
 
         return Optional.ofNullable(item);
+    }
+
+    /**
+     * Verifies if it is a valid job id that this user can update.
+     *
+     * @throws IllegalArgumentException If given id is empty.
+     */
+    // TODO(issue/25): incorporate the account stuff into job post.
+    public static void verifyUserCanUpdateJob(String jobId) throws
+            IllegalArgumentException ,ServletException, ExecutionException, TimeoutException {
+        if (jobId.isEmpty()) {
+            throw new IllegalArgumentException("Job Id should be an non-empty string");
+        }
+
+        try {
+            // Use timeout in case it blocks forever.
+            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
+            if (!hasJob) {
+                throw new IllegalArgumentException("Invalid Job Id");
+            }
+        } catch (InterruptedException e) {
+            throw new ServletException(e);
+        }
     }
 }

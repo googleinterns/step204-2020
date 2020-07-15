@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 
 import static com.google.job.data.Requirement.*;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
@@ -47,7 +48,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void addJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void addJob_normalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
@@ -103,7 +104,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void setJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void setJob_normalInput_success() throws ExecutionException, InterruptedException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
@@ -165,7 +166,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void markJobPostAsDeleted_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void markJobPostAsDeleted_normalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -200,7 +201,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void fetchJob_NormalInput_success() throws ExecutionException, InterruptedException {
+    public void fetchJob_normalInput_success() throws ExecutionException, InterruptedException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
@@ -244,7 +245,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void isJobIdExist_NormalInput_true() throws ExecutionException, InterruptedException {
+    public void hasJob_normalInput_true() throws ExecutionException, InterruptedException, IllegalArgumentException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -258,40 +259,37 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         // Act.
-        boolean isExist = JobsDatabase.isJobIdExist(jobId);
+        Future<Boolean> result = JobsDatabase.hasJob(jobId);
 
         // Assert.
-        assertTrue(isExist);
+        assertTrue(result.get());
     }
 
     @Test
-    public void isJobIdExist_EmptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
+    public void hasJob_emptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
-        try {
-            // Act.
-            boolean isExist = JobsDatabase.isJobIdExist("");
-            fail();
-        } catch (IllegalArgumentException e) {
-            // Assert.
-            assertEquals("Empty Job Id", e.getMessage());
-        }
+        // Assert.
+        assertThrows(IllegalArgumentException.class, () -> JobsDatabase.hasJob(""));
     }
 
     @Test
-    public void isJobIdExist_InvalidJobId_false() throws ExecutionException, InterruptedException {
+    public void hasJob_invalidJobId_false() throws ExecutionException, InterruptedException, IllegalArgumentException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);
 
         // Act.
-        boolean isExist = JobsDatabase.isJobIdExist("dummy");
+        // Cloud Firestore id will not be as short as "dummy"
+        Future<Boolean> result = JobsDatabase.hasJob("dummy");
 
         // Assert.
-        assertFalse(isExist);
+        assertFalse(result.get());
     }
+
+    // TODO(issue/15): Add future fail test case for hasJob
 
     /**
      * Delete a collection in batches to avoid out-of-memory errors.
