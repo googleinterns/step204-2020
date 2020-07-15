@@ -2,6 +2,7 @@ package com.google.job.servlets;
 
 import com.google.job.data.*;
 import com.google.utils.ServletUtils;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
@@ -17,12 +18,23 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-/** Servlet that handles posting new job posts and updating existing job posts. */
+import java.util.*;
+import static com.google.job.data.Requirement.*;
+
+/**
+ * Servlet that handles posting new job posts, updating existing job posts,
+ * and getting the job listings.
+ */
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
     private static final String JOB_ID_FIELD = "jobId";
     private static final long TIMEOUT = 5;
+
+    public static final String SORT_BY_PARAM = "sortBy";
+    public static final String ORDER_PARAM = "order";
+    public static final String PAGE_SIZE_PARAM = "pageSize";
+    public static final String PAGE_INDEX_PARAM = "pageIndex";
 
     private JobsDatabase jobsDatabase;
 
@@ -38,6 +50,45 @@ public final class JobServlet extends HttpServlet {
             doPatch(request, response);
         } else {
             super.service(request, response);
+        }
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Filter sortBy = parseSortBy(request);
+            Order order = parseOrder(request);
+            int pageSize = parsePageSize(request);
+            int pageIndex = parsePageIndex(request);
+            // TODO(issue/44): get jobs from the database
+
+            JobStatus expectedJobStatus = JobStatus.ACTIVE;
+            String expectedJobName = "Software Engineer";
+        Location expectedLocation =  new Location("Google", "123456", 0, 0);
+        String expectedJobDescription = "Programming using java";
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        List<String> expectedRequirements = Requirement.getLocalizedNames(
+                Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
+        long expectedPostExpiry = System.currentTimeMillis();
+        JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
+
+        Job job = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setLocation(expectedLocation)
+                .setJobDescription(expectedJobDescription)
+                .setJobPay(expectedJobPayment)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .build();
+
+            Gson gson = new Gson();
+            String json = gson.toJson(job);
+            response.setContentType("application/json;");
+            response.getWriter().println(json);
+        } catch(IllegalArgumentException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
@@ -82,6 +133,84 @@ public final class JobServlet extends HttpServlet {
             System.err.println("Error occur: " + e.getCause());
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Returns the sorting as a Filter enum.
+     *
+     * @param request From the GET request.
+     * @return Filter enum given the id in the request params.
+     * @throws IllegalArgumentException if the id is invalid.
+     */
+    private Filter parseSortBy(HttpServletRequest request) throws IllegalArgumentException {
+        String sortById = (String) request.getParameter(SORT_BY_PARAM);
+
+        if (sortById == null || sortById.isEmpty()) {
+            throw new IllegalArgumentException("sort by param should not be null or empty");
+        }
+
+        return Filter.getFromId(sortById); // IAE may be thrown
+    }
+
+    /**
+     * Returns the ordering as an Order enum.
+     *
+     * @param request From the GET request.
+     * @return Order enum given the id in the request params.
+     * @throws IllegalArgumentException if the id is invalid.
+     */
+    private Order parseOrder(HttpServletRequest request) throws IllegalArgumentException {
+        String orderId = (String) request.getParameter(ORDER_PARAM);
+
+        if (orderId == null || orderId.isEmpty()) {
+            throw new IllegalArgumentException("order param should not be null or empty");
+        }
+
+        return Order.getFromId(orderId); // IAE may be thrown
+    }
+
+    /**
+     * Returns the page size as an int.
+     *
+     * @param request From the GET request.
+     * @return the page size.
+     * @throws IllegalArgumentException if the page size is invalid.
+     */
+    private int parsePageSize(HttpServletRequest request) throws IllegalArgumentException {
+        String pageSizeStr = (String) request.getParameter(PAGE_SIZE_PARAM);
+
+        if (pageSizeStr == null || pageSizeStr.isEmpty()) {
+            throw new IllegalArgumentException("page size param should not be null or empty");
+        }
+
+        try {
+            int pageSize =  Integer.parseInt(pageSizeStr);
+            return pageSize;
+        } catch(NumberFormatException e) {
+            throw new IllegalArgumentException("page size param should be an int");
+        }
+    }
+
+    /**
+     * Returns the page index as an int.
+     *
+     * @param request From the GET request.
+     * @return the page index.
+     * @throws IllegalArgumentException if the page index is invalid.
+     */
+    private int parsePageIndex(HttpServletRequest request) throws IllegalArgumentException {
+        String pageIndexStr = (String) request.getParameter(PAGE_INDEX_PARAM);
+
+        if (pageIndexStr == null || pageIndexStr.isEmpty()) {
+            throw new IllegalArgumentException("page index param should not be null or empty");
+        }
+
+        try {
+            int pageIndex =  Integer.parseInt(pageIndexStr);
+            return pageIndex;
+        } catch(NumberFormatException e) {
+            throw new IllegalArgumentException("page index param should be an int");
         }
     }
 
