@@ -11,7 +11,8 @@
  */
 
 /**
- * TODO(issue/38): import getRequirementsList() here.
+ * Unable to make imports from other files.
+ *  TODO(issue/38): import getRequirementsList() here.
  */
 const REQUIREMENTS_LIST = {
   'O_LEVEL': 'O Level',
@@ -344,6 +345,11 @@ describe('New Job Tests', function() {
         `-${date.getFullYear()}`;
 
       beforeEach('add all valid inputs', () => {
+        /**
+         * This will add all valid values to the job creation fields.
+         * The fields that need to be tested can be cleared in the
+         * individual test accordingly.
+         */
         return driver.findElement(By.id('title')).sendKeys('Waiter')
             .then(() => driver.findElement(By.id('description'))
                 .sendKeys('wait on tables'))
@@ -364,6 +370,9 @@ describe('New Job Tests', function() {
       });
 
       it('no job title', () => {
+        /**
+         * The job title must be cleared here to test it.
+         */
         return driver.findElement(By.id('title')).clear()
             .then(() => driver.findElement(By.id('submit')).click())
             .then(() => driver.findElement(By.id('error-message')).getText())
@@ -372,6 +381,9 @@ describe('New Job Tests', function() {
       });
 
       it('should not be false postive', () => {
+        /**
+         * The job title must be cleared here to test it.
+         */
         return driver.findElement(By.id('title')).clear()
             .then(() => driver.findElement(By.id('submit')).click())
             .then(() => driver.findElement(By.id('error-message')).getText())
@@ -388,9 +400,14 @@ describe('New Job Tests', function() {
       });
 
       it('min greater than max', () => {
+        /**
+         * The pay-min and pay-max fields must be cleared before sending
+         * another key.
+         */
         return driver.findElement(By.id('pay-min')).clear()
-            .then(() => driver.findElement(By.id('pay-min'))
-                .sendKeys('7'))
+            .then(() => driver.findElement(By.id('pay-max')).clear())
+            .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
+            .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
             .then(() => driver.findElement(By.id('submit')).click())
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
@@ -405,6 +422,9 @@ describe('New Job Tests', function() {
          */
         driver.get(JOBPAGE_URL);
 
+        /**
+         * Job duration not set below since we are testing it.
+         */
         return driver.findElement(By.id('title')).sendKeys('Waiter')
             .then(() => driver.findElement(By.id('description'))
                 .sendKeys('wait on tables'))
@@ -427,6 +447,9 @@ describe('New Job Tests', function() {
       });
 
       it('expiry date not chosen', () => {
+        /**
+         * The job expiry must be cleared here to test it.
+         */
         return driver.findElement(By.id('expiry')).clear()
             .then(() => driver.findElement(By.id('submit')).click())
             .then(() => driver.findElement(By.id('error-message')).getText())
