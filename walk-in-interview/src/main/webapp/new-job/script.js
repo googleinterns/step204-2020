@@ -14,7 +14,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['new-job'];
-const HOMEPAGE_PATH = '../homepage/index.html';
+const HOMEPAGE_PATH = '../index.html';
 const RESPONSE_ERROR = 'There was an error while creating' +
   'the job listing, please try submitting again';
 

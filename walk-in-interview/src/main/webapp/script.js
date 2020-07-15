@@ -14,7 +14,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['homepage'];
-const JOBPAGE_PATH = '../new-job/index.html';
+const JOBPAGE_PATH = '/new-job/index.html';
 const RESPONSE_ERROR = 'An error occured while getting the job listings';
 
 // TODO(issue/34): implement pagination for job listings
