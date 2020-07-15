@@ -72,24 +72,22 @@ function addPageElements(jobId) {
     const jobPayFrequency = document.getElementById("pay-frequency");
     renderJobPayFrequencyOptions(jobPayFrequency);
     
-    const jobPayMin = document.getElementById("job-pay-min");
+    const jobPayMin = document.getElementById("pay-min");
     const jobPayMinContent = job.jobPay.min;
     jobPayMin.setAttribute("value", jobPayMinContent);
 
-    const jobPayMax = document.getElementById("job-pay-max");
+    const jobPayMax = document.getElementById("pay-max");
     const jobPayMaxContent = job.jobPay.max;
     jobPayMax.setAttribute("value", jobPayMaxContent);
 
     // const durationTitle = document.getElementById('duration-title');
     // durationTitle.innerText = STRINGS['duration-title'];
-    const jobDuration = document.getElementById("job-duration");
+    const jobDuration = document.getElementById("duration");
     renderJobDurationOptions(jobDuration);
 
-    const jobExpiry = document.getElementById("job-expiry");
+    const jobExpiry = document.getElementById("expiry");
     const jobExpiryTimestamp = job.postExpiryTimestamp;
-    // Multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    var expiryDate = new Date(jobExpiryTimestamp * 1000);
-    jobExpiry.setAttribute("value", expiryDate);
+    renderJobExpiryLimits(jobExpiryTimestamp);
 }
 
 /**
@@ -209,6 +207,27 @@ function renderSelectOptions(selectElement, options, existingOption) {
         selectElement.options[selectElement.options.length] = new Option(options[key], key, defaultSelected);
     }
 }
+
+/**
+ * Dynamically adds the limits for choosing the new job post expiry.
+ * 
+ * @param {long} jobExpiryTimestamp Timestamp of the expiry date for this job post.
+ */
+function renderJobExpiryLimits(jobExpiryTimestamp) {
+    // Multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    const expiryDate = new Date(jobExpiryTimestamp * 1000);
+    
+    const date = new Date();
+    const min = date.toISOString().substr(0, 10);
+    date.setFullYear(date.getFullYear() + 1);
+    const max = date.toISOString().substr(0, 10);
+  
+    const datePicker = document.getElementById("expiry");
+    datePicker.setAttribute('min', min);
+    datePicker.setAttribute('max', max);
+    datePicker.setAttribute("type", "date");
+    datePicker.setAttribute("value", expiryDate);
+  }
 
 const submitButton = document.getElementById("submit");
 submitButton.addEventListener("click", (_) => {

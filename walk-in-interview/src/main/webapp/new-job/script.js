@@ -330,4 +330,4 @@ cancelButton.addEventListener('click', (_) => {
 });
 
 // To be called in update-job/script.js
-export {getJobDetailsFromUserInput, validateRequiredUserInput,setErrorMessage};
+export {getRequirementsList, getJobDetailsFromUserInput, validateRequiredUserInput, setErrorMessage};
