@@ -11,12 +11,13 @@ const CurrentLocale = "en";
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from "./strings.en.js";
+import {AppStrings} from "../strings.en.js";
 
 import {getRequirementsList, getJobDetailsFromUserInput, 
     validateRequiredUserInput, setErrorMessage} from "../common-functions.js";
 
-const STRINGS = AppStrings["update-job"];
+const STRINGS = AppStrings["job"];
+const UPDATE_JOB_STRINGS = AppStrings["update-job"];
 const HOMEPAGE_PATH = "../job-details/index.html";
 const RESPONSE_ERROR = "There was an error while loading the job post. Please try again";
 
@@ -60,10 +61,10 @@ function addPageElements(jobId) {
     cancelButton.setAttribute("type", "reset");
 
     const jobPageTitle = document.getElementById("page-title");
-    jobPageTitle.innerText = STRINGS["page-title"];
+    jobPageTitle.innerText = UPDATE_JOB_STRINGS["page-title"];
 
     const submitButton = document.getElementById("update");
-    submitButton.setAttribute("value", STRINGS["update"]);
+    submitButton.setAttribute("value", UPDATE_JOB_STRINGS["update"]);
     submitButton.setAttribute("type", "submit");
 
     const job = getJobFromId(jobId);

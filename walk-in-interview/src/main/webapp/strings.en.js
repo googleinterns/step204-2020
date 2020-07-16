@@ -45,12 +45,11 @@ AppStrings['homepage'] = {
 };
 
 /**
- * All the strings to be used in the new-job folder.
+ * All the common strings to be used in the job information related page.
  */
-AppStrings['new-job'] = {
-  'page-title': 'New Job Post',
+AppStrings['job'] = {
   'cancel': 'Cancel',
-  'submit': 'Create',
+  'error-message': 'There is an error in the following field: ',
   'title': 'Job Title',
   'description': 'Job Description',
   'address': 'Job Address',
@@ -76,4 +75,20 @@ AppStrings['new-job'] = {
     'OTHER': 'Other',
   },
   'expiry-title': 'Job Expiry',
+};
+
+/**
+ * Strings to be used in the new-job folder.
+ */
+AppStrings['new-job'] = {
+  'page-title': 'New Job Post',
+  'submit': 'Create',
+};
+
+/**
+ * Strings to be used in the update-job folder.
+ */
+AppStrings['update-job'] = {
+  'page-title': 'Update Job Post',
+  'update': 'Update',
 };

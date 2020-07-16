@@ -14,13 +14,10 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../strings.en.js';
 
 import {getRequirementsList, getJobDetailsFromUserInput, 
-<<<<<<< HEAD
-  validateRequiredUserInput, setErrorMessage} from "../common-function.js";
-=======
   validateRequiredUserInput, setErrorMessage} from "../common-functions.js";
->>>>>>> extract-common-js-method
 
-const STRINGS = AppStrings['new-job'];
+const STRINGS = AppStrings['job'];
+const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
 const RESPONSE_ERROR = 'There was an error while creating' +
   'the job listing, please try submitting again';
@@ -39,12 +36,12 @@ function renderJobPageElements() {
   jobPageTitle.innerText = STRINGS['page-title'];
 
   const submitButton = document.getElementById('submit');
-  submitButton.setAttribute('value', STRINGS['submit']);
+  submitButton.setAttribute('value', NEW_JOB_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
 
   const jobTitle = document.getElementById('title');
   jobTitle.setAttribute('type', 'text');
-  jobTitle.setAttribute('placeholder', STRINGS['title']);
+  jobTitle.setAttribute('placeholder', NEW_JOB_STRINGS['title']);
   jobTitle.setAttribute('required', true);
 
   const jobDescription = document.getElementById('description');
