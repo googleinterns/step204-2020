@@ -14,6 +14,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.List;
+import java.util.LinkedList;
+import java.io.IOException;
 
 import java.util.logging.Logger;
 
@@ -132,7 +134,7 @@ public final class JobsDatabase {
 //                //no break needed
 //        }
 
-        Query query = jobsCollection.orderBy("jobPay.annualMax", Direction.DESCENDING);
+        Query query = jobsCollection.orderBy("jobPay.annualMax", Order.getQueryDirection(order));
 
         ApiFuture<QuerySnapshot> future = query.get();
 

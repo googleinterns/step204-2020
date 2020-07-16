@@ -231,7 +231,7 @@ function getJobDetailsFromUserInput() {
       paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
-      annualMax: calculateAnnualMax(max, payFrequency),
+      annualMax: calculateAnnualMax(payMax, payFrequency),
     },
     requirements: requirementsList,
     postExpiryTimestamp: expiry,
@@ -245,28 +245,28 @@ function getJobDetailsFromUserInput() {
  * This function calculates and returns the annual pay depending
  * on the maximum pay and the frequency.
  * @param {int} max the upper limit on the pay.
- * @param {String} payFrequency how often the employee will be paid.
+ * @param {String} frequency how often the employee will be paid.
  * @return {int} the annual pay.
  */
-function calculateAnnualMax(max, payFrequency) {
-  let annualPay = max; // default
+function calculateAnnualMax(max, fequency) {
+  let annualMax = max; // default
 
-  switch (payFrequency) {
+  switch (frequency) {
     case 'HOURLY':
-      annualPay = max * HOURS_PER_YEAR;
+      annualMax = max * HOURS_PER_YEAR;
       break;
     case 'WEEKLY':
-      annualPay = max * WEEKS_PER_YEAR;
+      annualMax = max * WEEKS_PER_YEAR;
       break;
     case 'MONTHLY':
-      annualPay = max * MONTHS_PER_YEAR;
+      annualMax = max * MONTHS_PER_YEAR;
       break;
     case 'YEARLY':
-      annualPay = max;
+      annualMax = max;
       break;
   };
 
-  return annualPay;
+  return annualMax;
 }
 
 /**

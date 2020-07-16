@@ -1,5 +1,7 @@
 package com.google.job.data;
 
+import com.google.cloud.firestore.Query.Direction;
+
 /** Enumeration for order that can be applied to sorting for job listings. */
 public enum Order {
     ASCENDING("ASCENDING"),
@@ -33,5 +35,16 @@ public enum Order {
         }
 
         throw new IllegalArgumentException("Invalid order id: " + id);
+    }
+
+    public Direction getQueryDirection(Order order) {
+        switch(order) {
+            case ASCENDING:
+                return Direction.ASCENDING;
+            case DESCENDING:
+                return Direction.DESCENDING;
+        }
+
+        throw new IllegalArgumentException("Invalid order: " + order);
     }
 }
