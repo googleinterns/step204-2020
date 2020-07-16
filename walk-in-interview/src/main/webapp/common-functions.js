@@ -2,6 +2,17 @@
  * This file wraps some commonly used job related function as a reusable module.
  */
 
+// TODO(issue/21): get the language from the browser
+const CurrentLocale = 'en';
+
+/**
+ * Import statements are static so its parameters cannot be dynamic.
+ * TODO(issue/22): figure out how to use dynamic imports
+ */
+import {AppStrings} from './strings.en.js';
+
+const STRINGS = AppStrings['constant'];
+
 /**
  * Gets the requirements list from the servlet
  * (which gets it from the database).
@@ -130,11 +141,10 @@ function validateRequiredUserInput() {
  * Sets the error message according to the param.
  * @param {String} msg the message that the error div should display.
  * @param {boolean} includesDefault whether the default.
- * @param {String} defaultMessage default messages to be displayed.
  * message should be included.
  */
-function setErrorMessage(msg, includesDefault, defaultMessage) {
-    document.getElementById('error-message').innerText = (includesDefault ? defaultMessage + msg : msg);
-}
+function setErrorMessage(msg, includesDefault) {
+    document.getElementById('error-message').innerText = (includesDefault ? STRINGS['error-message'] + msg : msg);
+  }
 
 export {getRequirementsList, getJobDetailsFromUserInput, validateRequiredUserInput, setErrorMessage};
