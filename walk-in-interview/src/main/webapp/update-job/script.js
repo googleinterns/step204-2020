@@ -131,6 +131,7 @@ function addPageElements(jobId) {
  * @returns Job json.
  */
 function getJobFromId(jobId) {
+    // TODO(issue/53): run the webpage to test once doGet finishes in JobServlet
     const url = "/jobs?jobId=" + jobId;
     fetch(url, {
         method: "GET",
@@ -257,8 +258,8 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
     const max = date.toISOString().substr(0, 10);
   
     const datePicker = document.getElementById("expiry");
-    datePicker.setAttribute('min', min);
-    datePicker.setAttribute('max', max);
+    datePicker.setAttribute("min", min);
+    datePicker.setAttribute("max", max);
     datePicker.setAttribute("type", "date");
     datePicker.setAttribute("value", expiryDate);
   }
