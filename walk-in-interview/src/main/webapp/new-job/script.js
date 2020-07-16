@@ -11,9 +11,10 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from './strings.en.js';
+import {AppStrings} from '../strings.en.js';
 
-import {getRequirementsList, getJobDetailsFromUserInput, validateRequiredUserInput, setErrorMessage} from "../common-function.js";
+import {getRequirementsList, getJobDetailsFromUserInput, 
+  validateRequiredUserInput, setErrorMessage} from "../common-functions.js";
 
 const STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
@@ -87,7 +88,7 @@ function renderJobPageElements() {
   renderJobExpiryLimits();
 
   /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /** includes default msg */ false, STRINGS['error-message']);
+  setErrorMessage(/* msg */ '', /** includes default msg */ false);
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -181,12 +182,11 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false, STRINGS['error-message']);
+        setErrorMessage(/* msg */ '', /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false, STRINGS['error-message']);
+        setErrorMessage(/* msg */ RESPONSE_ERROR, /** include default msg */ false);
         console.log('error', error);
       });
 });
