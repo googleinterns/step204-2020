@@ -17,6 +17,10 @@ const STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
 const RESPONSE_ERROR = 'There was an error while creating' +
   'the job listing, please try submitting again';
+const HOURS_PER_YEAR = 8760;
+/** Note that is an approximate value */
+const WEEKS_PER_YEAR = 52;
+const MONTHS_PER_YEAR = 12;
 
 window.onload = () => {
   renderJobPageElements();
@@ -227,6 +231,7 @@ function getJobDetailsFromUserInput() {
       paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
+      annualMax: calculateAnnualMax(max, payFrequency),
     },
     requirements: requirementsList,
     postExpiryTimestamp: expiry,
@@ -234,6 +239,34 @@ function getJobDetailsFromUserInput() {
   };
 
   return jobDetails;
+}
+
+/**
+ * This function calculates and returns the annual pay depending
+ * on the maximum pay and the frequency.
+ * @param {int} max the upper limit on the pay.
+ * @param {String} payFrequency how often the employee will be paid.
+ * @return {int} the annual pay.
+ */
+function calculateAnnualMax(max, payFrequency) {
+  let annualPay = max; // default
+
+  switch (payFrequency) {
+    case 'HOURLY':
+      annualPay = max * HOURS_PER_YEAR;
+      break;
+    case 'WEEKLY':
+      annualPay = max * WEEKS_PER_YEAR;
+      break;
+    case 'MONTHLY':
+      annualPay = max * MONTHS_PER_YEAR;
+      break;
+    case 'YEARLY':
+      annualPay = max;
+      break;
+  };
+
+  return annualPay;
 }
 
 /**

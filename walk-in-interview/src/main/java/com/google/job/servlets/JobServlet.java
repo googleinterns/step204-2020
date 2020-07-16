@@ -130,7 +130,7 @@ public final class JobServlet extends HttpServlet {
         try {
             return this.jobsDatabase.fetchJobPage(sortBy, order, pageSize, pageIndex)
                     .get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }

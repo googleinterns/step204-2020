@@ -115,7 +115,8 @@ public final class JobsDatabase {
      * @param pageIndex The page which we are on (pagination).
      * @return Future of the JobPage object.
      */
-    public static Future<JobPage> fetchJobPage(Filter sortBy, Order order, int pageSize, int pageIndex) {
+    public static Future<JobPage> fetchJobPage(Filter sortBy, Order order, int pageSize, int pageIndex) 
+        throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
 //        Query query;

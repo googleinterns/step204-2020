@@ -3,11 +3,6 @@ package com.google.job.data;
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
 
-    private final int HOURS_PER_YEAR = 8760;
-    /** Note that is an approximate value */
-    private final int WEEKS_PER_YEAR = 52;
-    private final int MONTHS_PER_YEAR = 12;
-
     private final int min;
     private final int max;
     private final PaymentFrequency paymentFrequency;
@@ -20,13 +15,13 @@ public final class JobPayment {
         this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax */ 0);
     }
 
-    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) {
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency, int annualMax) {
         validateParameter(min, max);
 
         this.min = min;
         this.max = max;
         this.paymentFrequency = paymentFrequency;
-        this.annualMax = calculateAnnualMax(max, paymentFrequency);
+        this.annualMax = annualMax;
     }
 
     /** Returns the lower limit of the payment, never negative. */
@@ -97,24 +92,5 @@ public final class JobPayment {
         if (max < min) {
             throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
         }
-    }
-
-    private static int calculateAnnualMax(int max, PaymentFrequency paymentFrequency) {
-        int annualMax;
-        switch(paymentFrequency) {
-            case HOURLY:
-                annualMax = max * HOURS_PER_YEAR;
-                break;
-            case WEEKLY:
-                annualMax = max * WEEKS_PER_YEAR;
-                break;
-            case MONTHLY:
-                annualMax = max * MONTHS_PER_YEAR;
-                break;
-            case YEARLY:
-                annualMax = max;
-                break;
-        }
-        return annualMax;
     }
 }
