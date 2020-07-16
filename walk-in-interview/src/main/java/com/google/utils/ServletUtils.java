@@ -1,7 +1,6 @@
 package com.google.utils;
 
 import com.google.gson.Gson;
-import com.google.job.data.JobStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
