@@ -9,7 +9,6 @@ import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /** Helps persist and retrieve job posts. */
@@ -96,6 +95,7 @@ public final class JobsDatabase {
 
     /**
      * Returns a future of boolean to check if the job matching the given id is valid.
+     *
      * @throws IllegalArgumentException If the input jobId is empty.
      */
     public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {

@@ -104,22 +104,6 @@ public final class ServletUtils {
     }
 
     /**
-     * @return the value of parameter with the {@code name} in the {@code request}
-     *         or returns {@code defaultValue} if that parameter does not exist.
-     */
-    public static JobStatus getJobStatusParameter(HttpServletRequest request, String name, JobStatus defaultValue) {
-        String resultStr = request.getParameter(name).trim();
-
-        try {
-            JobStatus result = JobStatus.getFromId(resultStr);
-            return result;
-        } catch (IllegalArgumentException e) {
-            // TODO(issue/12): error handling; can consider to add logging to log the error
-            return defaultValue;
-        }
-    }
-
-    /**
      * Converts the target item into json format.
      *
      * @param item Target item.

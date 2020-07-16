@@ -1,6 +1,5 @@
 package com.google.job.servlets;
 
-import com.google.job.data.JobStatus;
 import com.google.job.data.JobsDatabase;
 import com.google.utils.ServletUtils;
 
@@ -14,12 +13,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/** Servlet that handles changing status of the existing job posts. */
-@WebServlet("/jobs/change-job-status")
-public final class ChangeJobStatusServlet extends HttpServlet {
+/** Servlet that handles changing status of the existing job posts to DELETED. */
+@WebServlet("/jobs/delete")
+public final class MarkJobDeleteServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
     private static final String JOB_ID_FIELD = "jobId";
-    private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final long TIMEOUT = 5;
 
     private JobsDatabase jobsDatabase;
@@ -45,22 +43,17 @@ public final class ChangeJobStatusServlet extends HttpServlet {
             // Gets the target job post id
             String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
 
-            // Gets the target status
-            JobStatus jobStatus = getTargetStatus(request);
-
             // Verifies if the current user can update the job post with this job id.
             // TODO(issue/25): incorporate the account stuff into job post.
             verifyUserCanUpdateJob(jobId);
 
-            // Change the status
-            switch (jobStatus) {
-                // TODO(issue/28): deal with expired job post/re-activate job post
-                case ACTIVE:
-                case EXPIRED:
-                    throw new UnsupportedOperationException("Not implemented");
-                case DELETED:
-                    this.jobsDatabase.markJobPostAsDeleted(jobId);
-            }
+            // Changes the status to DELETED
+            this.jobsDatabase.markJobPostAsDeleted(jobId);
+
+            // TODO(issue/51): after "interest list" is involved,
+            //  remove the DELETED job post from applicant's interest list
+
+            // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
             // TODO(issue/47): use custom exceptions
@@ -68,17 +61,6 @@ public final class ChangeJobStatusServlet extends HttpServlet {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-    }
-
-    /** Gets the updated status from the client. */
-    private JobStatus getTargetStatus(HttpServletRequest request) throws IllegalArgumentException {
-        JobStatus targetStatus = ServletUtils.getJobStatusParameter(request, JOB_STATUS_FIELD, /** defaultValue= */ null);
-
-        if (targetStatus == null) {
-            throw new IllegalArgumentException("Invalid Status Requested");
-        }
-
-        return targetStatus;
     }
 
     /**
