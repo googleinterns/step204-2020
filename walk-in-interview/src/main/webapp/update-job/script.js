@@ -4,11 +4,16 @@
  * is submitted.
  */
 
+ // TODO(issue/21): get the language from the browser
 const CurrentLocale = "en";
 
 import {getRequirementsList, getJobDetailsFromUserInput, 
     validateRequiredUserInput, setErrorMessage} from "../new-job/script.js";
 
+/**
+ * Import statements are static so its parameters cannot be dynamic.
+ * TODO(issue/22): figure out how to use dynamic imports
+ */
 import {AppStrings} from "./strings.en.js";
 
 const STRINGS = AppStrings["update-job"];
@@ -114,6 +119,9 @@ function addPageElements(jobId) {
     const jobExpiryTimestamp = job.postExpiryTimestamp;
     jobExpiry.setAttribute("type", "date");
     renderJobExpiryLimits(jobExpiryTimestamp);
+
+    // Resets the error to make sure no error msg initially present.
+    setErrorMessage(/* msg */ "", /** includes default msg */ false);
 }
 
 /**
