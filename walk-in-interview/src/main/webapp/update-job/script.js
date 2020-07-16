@@ -37,7 +37,7 @@ function getJobId() {
     }
     
     var jobIdPair = document.URL.substring(idx + 1, document.URL.length).split("&");
-    nameVal = jobIdPair[0].split("=");
+    var nameVal = jobIdPair[0].split("=");
     jobId = nameVal[1];
 
     return jobId;
