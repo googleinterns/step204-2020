@@ -14,7 +14,7 @@ const CurrentLocale = "en";
 import {AppStrings} from "./strings.en.js";
 
 import {getRequirementsList, getJobDetailsFromUserInput, 
-    validateRequiredUserInput, setErrorMessage} from "../common-function.js";
+    validateRequiredUserInput, setErrorMessage} from "../common-functions.js";
 
 const STRINGS = AppStrings["update-job"];
 const HOMEPAGE_PATH = "../job-details/index.html";
@@ -76,7 +76,7 @@ function addPageElements(jobId) {
     const jobDescription = document.getElementById("description");
     const jobDescriptionContent = job.jobDescription;
     jobDescription.setAttribute("type", "text");
-    jobDescription.setAttribute("value", jobDescriptionContent);
+    jobDescription.innerText = jobDescriptionContent;
 
     const jobAddress = document.getElementById("address");
     const jobAddressContent = job.jobLocation.address;
