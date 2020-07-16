@@ -54,6 +54,7 @@ public final class ChangeJobStatusServlet extends HttpServlet {
 
             // Change the status
             switch (jobStatus) {
+                // TODO(issue/28): deal with expired job post/re-activate job post
                 case ACTIVE:
                 case EXPIRED:
                     throw new UnsupportedOperationException("Not implemented");
