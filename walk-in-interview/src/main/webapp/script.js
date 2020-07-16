@@ -122,6 +122,24 @@ function renderSelectOptions(id) {
 }
 
 /**
+ * Checks that the sorting and ordering are valid.
+ * @return {boolean} indication of whether they are valid.
+ */
+function validSortByInput() {
+  // check that the sort by input is valid (non empty i think should be enough)
+  const sortByParam = document.getElementById('sort-by').value;
+  const sortOrderParam = document.getElementById('sort-by-order').value;
+
+  if (sortByParam == '' || sortOrderParam == '') {
+    /** no need to show error message as this would not be the user's fault */
+    console.log('error', 'sorting or ordering was empty');
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Add the attributes and on click function to the sorting
  * submit button.
  */
@@ -166,6 +184,10 @@ function renderJobFilterSubmit() {
  * @param {int} pageIndex The page index (starting from 0).
  */
 async function renderJobListings(sortBy, order, pageSize, pageIndex) {
+  if (!validSortByInput()) {
+    return;
+  }
+
   const jobPageData = await getJobListings(sortBy, order, pageSize, pageIndex)
       .catch((error) => {
         console.log('error', error);
@@ -209,6 +231,7 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
+ * @return {Object} The data returned from the servlet.
  */
 function getJobListings(sortBy, order, pageSize, pageIndex) {
   const params = `sortBy=${sortBy}&order=${order}` +

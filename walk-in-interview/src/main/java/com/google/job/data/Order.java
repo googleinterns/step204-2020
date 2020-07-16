@@ -37,7 +37,7 @@ public enum Order {
         throw new IllegalArgumentException("Invalid order id: " + id);
     }
 
-    public Direction getQueryDirection(Order order) {
+    public static Direction getQueryDirection(Order order) {
         switch(order) {
             case ASCENDING:
                 return Direction.ASCENDING;
