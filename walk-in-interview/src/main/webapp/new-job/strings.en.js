@@ -22,7 +22,6 @@ AppStrings['new-job'] = {
   'address': 'Job Address',
   'postal-code': 'Postal Code',
   'requirements-title': 'Requirements',
-  'requirements-list': 'requirements-list',
   'pay-title': 'Job Pay',
   'pay-frequency': {
     'HOURLY': 'Hourly',

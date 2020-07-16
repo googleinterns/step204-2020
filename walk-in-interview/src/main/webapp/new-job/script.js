@@ -207,7 +207,7 @@ function getJobDetailsFromUserInput() {
   const payMax = document.getElementById('pay-max').valueAsNumber;
 
   const requirementsCheckboxes =
-    document.getElementsByName(STRINGS['requirements-list']);
+    document.getElementsByName('requirements-list');
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
     if (checked) {
@@ -248,7 +248,7 @@ function getJobDetailsFromUserInput() {
  * @param {String} frequency how often the employee will be paid.
  * @return {int} the annual pay.
  */
-function calculateAnnualMax(max, fequency) {
+function calculateAnnualMax(max, frequency) {
   let annualMax = max; // default
 
   switch (frequency) {

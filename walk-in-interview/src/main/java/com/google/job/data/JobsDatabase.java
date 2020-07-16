@@ -121,20 +121,7 @@ public final class JobsDatabase {
         throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
-//        Query query;
-//        swtich (sortBy) {
-//            case DISTANCE:
-////                query = jobsCollection.orderBy("jobLocation").orderBy(distance,);
-//                break;
-//            case SALARY:
-//                query = jobsCollection.orderBy("jobPay").orderBy("max", Direction.DESCENDING);
-//                break;
-//            default:
-//                //distance
-//                //no break needed
-//        }
-
-        Query query = jobsCollection.orderBy("jobPay.annualMax", Order.getQueryDirection(order));
+        Query query = getSortingQuery(jobsCollection, sortBy, order);
 
         ApiFuture<QuerySnapshot> future = query.get();
 
@@ -160,5 +147,18 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(future, jobFunction, MoreExecutors.directExecutor());
+    }
+
+    /**
+     * Returns the query to be applied when getting the jobs.
+     *
+     * @param collection The collection on which to query.
+     * @param sortBy The sorting of the list of jobs.
+     * @param order The ordering of the sorting.
+     * @return Future of the JobPage object.
+     */
+    public static Query getSortingQuery(CollectionReference collection, Filter sortBy, Order order) {
+        // TODO(issue/55): add sort by distance query
+        return collection.orderBy("jobPay.annualMax", Order.getQueryDirection(order));
     }
 }

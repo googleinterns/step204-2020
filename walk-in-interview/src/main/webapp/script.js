@@ -124,7 +124,7 @@ function renderSelectOptions(id) {
 
 /**
  * Checks that the sorting and ordering are valid.
- * @return {boolean} indication of whether they are valid.
+ * @return {boolean} Indication of whether the fields are valid.
  */
 function validSortByInput() {
   // check that the sort by input is valid (non empty i think should be enough)
