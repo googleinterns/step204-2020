@@ -31,7 +31,7 @@ function getJobDetailsFromUserInput() {
     const payMax = document.getElementById('pay-max').valueAsNumber;
 
     const requirementsCheckboxes =
-        document.getElementsByName(STRINGS['requirements-list']);
+        document.getElementsByName('requirements-list');
     const requirementsList = [];
     requirementsCheckboxes.forEach(({checked, id}) => {
         if (checked) {

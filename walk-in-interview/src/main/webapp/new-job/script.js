@@ -13,7 +13,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from './strings.en.js';
 
-import {getRequirementsList, getJobDetailsFromUserInput, setErrorMessage} from "../common-function.js";
+import {getRequirementsList, getJobDetailsFromUserInput, validateRequiredUserInput, setErrorMessage} from "../common-function.js";
 
 const STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
