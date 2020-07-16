@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
 import org.junit.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -24,7 +25,7 @@ public final class JobsDatabaseTest {
     static Firestore firestore;
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws IOException {
         jobsDatabase = new JobsDatabase();
         firestore = FireStoreUtils.getFireStore();
     }
@@ -48,7 +49,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void addJob_normalInput_success() throws ExecutionException, InterruptedException {
+    public void addJob_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
@@ -104,7 +105,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void setJob_normalInput_success() throws ExecutionException, InterruptedException {
+    public void setJob_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
@@ -201,7 +202,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void fetchJob_normalInput_success() throws ExecutionException, InterruptedException {
+    public void fetchJob_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
@@ -245,7 +246,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJob_normalInput_true() throws ExecutionException, InterruptedException, IllegalArgumentException {
+    public void hasJob_normalInput_true() throws ExecutionException, InterruptedException, IllegalArgumentException, IOException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -276,7 +277,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void hasJob_invalidJobId_false() throws ExecutionException, InterruptedException, IllegalArgumentException {
+    public void hasJob_invalidJobId_false() throws ExecutionException, InterruptedException, IllegalArgumentException, IOException {
         // Arrange.
         Job job = new Job();
         firestore.collection(TEST_JOB_COLLECTION).add(job);

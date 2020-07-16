@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
@@ -22,7 +23,7 @@ public final class JobsDatabase {
      * @param newJob Newly created job post. Assumes that it is non-nullable.
      * @return A future of the detailed information of the writing.
      */
-    public Future<WriteResult> addJob(Job newJob) {
+    public Future<WriteResult> addJob(Job newJob) throws IOException {
         // Add document data after generating an id.
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document();
@@ -46,7 +47,7 @@ public final class JobsDatabase {
      * @return A future of the detailed information of the update.
      * @throws IllegalArgumentException If the job id is invalid.
      */
-    public Future<WriteResult> setJob(String jobId, Job updatedJob) throws IllegalArgumentException {
+    public Future<WriteResult> setJob(String jobId, Job updatedJob) throws IllegalArgumentException, IOException {
         // Sets the Job with cloud firestore id and ACTIVE status
         Job job = updatedJob.toBuilder()
                 .setJobId(jobId)
@@ -76,7 +77,7 @@ public final class JobsDatabase {
      * @return Future of the target job post.
      * @throws IllegalArgumentException If the job id is invalid.
      */
-    public Future<Optional<Job>> fetchJob(String jobId) throws IllegalArgumentException {
+    public Future<Optional<Job>> fetchJob(String jobId) throws IllegalArgumentException, IOException {
         DocumentReference docRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document(jobId);
 
@@ -98,7 +99,7 @@ public final class JobsDatabase {
      *
      * @throws IllegalArgumentException If the input jobId is empty.
      */
-    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {
+    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException, IOException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Empty Job Id");
         }
