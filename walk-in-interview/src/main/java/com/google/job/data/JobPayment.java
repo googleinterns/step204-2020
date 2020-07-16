@@ -2,15 +2,22 @@ package com.google.job.data;
 
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
+
+    private final int HOURS_PER_YEAR = 8760;
+    /** Note that is an approximate value */
+    private final int WEEKS_PER_YEAR = 52;
+    private final int MONTHS_PER_YEAR = 12;
+
     private final int min;
     private final int max;
     private final PaymentFrequency paymentFrequency;
+    private final int annualMax;
 
     private volatile int hashCode;
 
     // For serialization
     public JobPayment() {
-        this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY);
+        this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax */ 0);
     }
 
     public JobPayment(int min, int max, PaymentFrequency paymentFrequency) {
@@ -19,6 +26,7 @@ public final class JobPayment {
         this.min = min;
         this.max = max;
         this.paymentFrequency = paymentFrequency;
+        this.annualMax = calculateAnnualMax(max, paymentFrequency);
     }
 
     /** Returns the lower limit of the payment, never negative. */
@@ -36,12 +44,18 @@ public final class JobPayment {
         return paymentFrequency;
     }
 
+    /** Returns the annual pay given the upper limit of the payment and its frequency */
+    public int getAnnualMax() {
+        return annualMax;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobPayment that = (JobPayment) o;
-        return this.min == that.min && this.max == that.max && paymentFrequency.equals(that.paymentFrequency);
+        return this.min == that.min && this.max == that.max && paymentFrequency.equals(that.paymentFrequency) &&
+                this.annualMax == that.annualMax;
     }
 
     @Override
@@ -61,6 +75,9 @@ public final class JobPayment {
         c = paymentFrequency.hashCode();
         result = 31 * result + c;
 
+        c = ((Integer)annualMax).hashCode();
+        result = 31 * result + c;
+
         this.hashCode = result;
 
         return hashCode;
@@ -68,8 +85,8 @@ public final class JobPayment {
 
     @Override
     public String toString() {
-        return String.format("JobPayment{min=%d, max=%d, paymentFrequency=%s}",
-                min, max, paymentFrequency.name());
+        return String.format("JobPayment{min=%d, max=%d, paymentFrequency=%s, annualMax=%d}",
+                min, max, paymentFrequency.name(), annualMax);
     }
 
     private static void validateParameter(float min, float max) throws IllegalArgumentException {
@@ -80,5 +97,24 @@ public final class JobPayment {
         if (max < min) {
             throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
         }
+    }
+
+    private static int calculateAnnualMax(int max, PaymentFrequency paymentFrequency) {
+        int annualMax;
+        switch(paymentFrequency) {
+            case HOURLY:
+                annualMax = max * HOURS_PER_YEAR;
+                break;
+            case WEEKLY:
+                annualMax = max * WEEKS_PER_YEAR;
+                break;
+            case MONTHLY:
+                annualMax = max * MONTHS_PER_YEAR;
+                break;
+            case YEARLY:
+                annualMax = max;
+                break;
+        }
+        return annualMax;
     }
 }

@@ -4,6 +4,7 @@ import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.Query.Direction;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
@@ -115,7 +116,24 @@ public final class JobsDatabase {
      * @return Future of the JobPage object.
      */
     public static Future<JobPage> fetchJobPage(Filter sortBy, Order order, int pageSize, int pageIndex) {
-        ApiFuture<QuerySnapshot> future = FireStoreUtils.getFireStore().collection(JOB_COLLECTION).get();
+        CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
+
+//        Query query;
+//        swtich (sortBy) {
+//            case DISTANCE:
+////                query = jobsCollection.orderBy("jobLocation").orderBy(distance,);
+//                break;
+//            case SALARY:
+//                query = jobsCollection.orderBy("jobPay").orderBy("max", Direction.DESCENDING);
+//                break;
+//            default:
+//                //distance
+//                //no break needed
+//        }
+
+        Query query = jobsCollection.orderBy("jobPay.annualMax", Direction.DESCENDING);
+
+        ApiFuture<QuerySnapshot> future = query.get();
 
         ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
             @NullableDecl
