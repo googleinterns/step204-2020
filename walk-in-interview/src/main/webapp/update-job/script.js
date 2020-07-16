@@ -239,7 +239,7 @@ function renderSelectOptions(selectElement, options, existingOption) {
             continue;
         }
 
-        var defaultSelected = key == existingOption;
+        var defaultSelected = (key == existingOption);
         selectElement.options[selectElement.options.length] = new Option(options[key], key, defaultSelected);
     }
 }
