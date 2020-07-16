@@ -263,7 +263,7 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
     datePicker.setAttribute("value", expiryDate);
   }
 
-const submitButton = document.getElementById("submit");
+const submitButton = document.getElementById("update");
 submitButton.addEventListener("click", (_) => {
   if (!validateRequiredUserInput()) {
     return;
