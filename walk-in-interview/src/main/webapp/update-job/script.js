@@ -7,14 +7,13 @@
  // TODO(issue/21): get the language from the browser
 const CurrentLocale = "en";
 
-import {getRequirementsList, getJobDetailsFromUserInput, 
-    validateRequiredUserInput, setErrorMessage} from "../new-job/script.js";
+import {getRequirementsList, getJobDetailsFromUserInput, setErrorMessage} from "../new-job/script.js";
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from "/strings.en.js";
+import {AppStrings} from "./strings.en.js";
 
 const STRINGS = AppStrings["update-job"];
 const HOMEPAGE_PATH = "../job-details/index.html";
@@ -262,33 +261,92 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
     datePicker.setAttribute("max", max);
     datePicker.setAttribute("type", "date");
     datePicker.setAttribute("value", expiryDate);
-  }
+}
+
+/**
+ * Validates the user input.
+ * Cannot import from other file since "document" is different.
+ *
+ * @return {boolean} depending on whether the input is valid or not.
+ */
+function validateRequiredUserInput() {
+    // TODO(issue/19): add more validation checks
+    const name = document.getElementById("title");
+    const description = document.getElementById("description");
+    const address = document.getElementById("address");
+    const postalCode = document.getElementById("postal-code");
+    const payFrequency = document.getElementById("pay-frequency").value;
+    const payMin = document.getElementById("pay-min").valueAsNumber;
+    const payMax = document.getElementById("pay-max").valueAsNumber;
+    const duration = document.getElementById("duration").value;
+    const expiry = document.getElementById("expiry").valueAsNumber;
+
+    if (name.value === "") {
+        setErrorMessage(/* msg */ name.placeholder, /** includes default msg */ true);
+        return false;
+    }
+
+    if (description.value === "") {
+        setErrorMessage(/* msg */ description.placeholder, /** includes default msg */ true);
+        return false;
+    }
+
+    if (address.value === "") {
+        setErrorMessage(/* msg */ address.placeholder,/** includes default msg */ true);
+        return false;
+    }
+
+    if (postalCode.value === "") {
+        setErrorMessage(/* msg */ postalCode.placeholder,/** includes default msg */ true);
+        return false;
+    }
+
+    if (payFrequency === "" || Number.isNaN(payMin) || Number.isNaN(payMax) ||
+    payMin > payMax || payMin < 0 || payMax < 0) {
+        setErrorMessage(/* msg */ document.getElementById('pay-title').textContent, /** includes default msg */ true);
+        return false;
+    }
+
+    if (duration === "") {
+        setErrorMessage(/* msg */ document.getElementById('duration-title').textContent, 
+        /** includes default msg */ true);
+        return false;
+    }
+
+    if (Number.isNaN(expiry)) {
+        setErrorMessage(/* msg */ document.getElementById('expiry-title').textContent, 
+        /** includes default msg */ true);
+        return false;
+    }
+
+    return true;
+}
 
 const submitButton = document.getElementById("update");
 submitButton.addEventListener("click", (_) => {
-  if (!validateRequiredUserInput()) {
+    if (!validateRequiredUserInput()) {
     return;
-  }
+    }
 
-  const jobDetails = getJobDetailsFromUserInput();
+    const jobDetails = getJobDetailsFromUserInput();
 
-  fetch('/jobs', {
+    fetch('/jobs', {
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
-  })
-      .then((response) => response.text())
-      .then((data) => {
+    })
+        .then((response) => response.text())
+        .then((data) => {
         console.log("data", data);
         /** reset the error (there might have been an error msg from earlier) */
         setErrorMessage(/* msg */ "", /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
-      })
-      .catch((error) => {
+        })
+        .catch((error) => {
         setErrorMessage(/* msg */ RESPONSE_ERROR,
             /** include default msg */ false);
         console.log("error", error);
-      });
+        });
 });
 
 const cancelButton = document.getElementById("cancel");
