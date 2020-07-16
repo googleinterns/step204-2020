@@ -8,9 +8,9 @@
     <!-- TODO: render the text dynamically according to current locale -->
     <body>
         <div class="header-container">
-            <input id="update-job-cancel">
-            <div id="update-job-page-title">Update Job Post</div>
-            <input id="update-job-submit">
+            <input id="cancel">
+            <div id="page-title"></div>
+            <input id="update">
         </div>
 
         <div class="content-container">
@@ -23,13 +23,13 @@
             </div>
 
             <div class="job-field">
-                <div id="requirements-title">Requirements</div>
+                <div id="requirements-title"></div>
                 <ul id="requirements-list"></ul>
                 <!--TODO: render all the requirements with those existing requirements ticked-->
             </div>
     
             <div class="job-field">
-                <div id="pay-title">Job Pay</div>
+                <div id="pay-title"></div>
                 <select id="pay-frequency"></select>
                 <!--TODO: render the choices with the existing choice selected-->
                 <div id="pay-range">
@@ -40,13 +40,13 @@
             </div>
     
             <div class="job-field">
-                <div id="duration-title">Job Duration</div>
+                <div id="duration-title"></div>
                 <select id="duration"></select>
                 <!--TODO: render the choices with the existing choice selected-->
             </div>
     
             <div class="job-field">
-                <div id="expiry-title">Job Expiry</div>
+                <div id="expiry-title"></div>
                 <input id="expiry">
                 <!--TODO: render the dates with the existing date selected-->
             </div>

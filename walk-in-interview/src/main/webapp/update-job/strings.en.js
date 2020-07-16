@@ -15,7 +15,7 @@ export const AppStrings = {};
 AppStrings['update-job'] = {
   'page-title': 'Update Job Post',
   'cancel': 'Cancel',
-  'submit': 'Update',
+  'update': 'Update',
   'error-message': 'There is an error in the following field: ',
   'title': 'Job Title',
   'description': 'Job Description',

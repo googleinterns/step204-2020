@@ -12,7 +12,6 @@ import {getRequirementsList, getJobDetailsFromUserInput,
 import {AppStrings} from "./strings.en.js";
 
 const STRINGS = AppStrings["update-job"];
-const JobIdParam = "jobId";
 const HOMEPAGE_PATH = "../job-details/index.html";
 const RESPONSE_ERROR = "There was an error while loading the job post. Please try again";
 
@@ -22,14 +21,19 @@ window.onload = () => {
 };
 
 /**
- * Gets the jobId from job-details.html page.
+ * Gets the jobId from job-details/index.html page.
  */
 function getJobId() {
-    var jobId = localStorage.getItem(JobIdParam).trim();
-
-    if (jobId === "") {
-        // TODO: error handling
+    var idx = document.URL.indexOf("?");
+    var jobId = "";
+    if (idx != -1) {
+        setErrorMessage(/* msg */ "No Job Id found. " + RESPONSE_ERROR,
+            /** include default msg */ false);
     }
+    
+    var jobIdPair = document.URL.substring(idx + 1, document.URL.length).split("&");
+    nameVal = jobIdPair[0].split("=");
+    jobId = nameVal[1];
 
     return jobId;
 }
@@ -40,53 +44,75 @@ function getJobId() {
  * @param {String} jobId 
  */
 function addPageElements(jobId) {
-    const cancelButton = document.getElementById('job-cancel');
-    cancelButton.setAttribute("value", "Cancel");
+    if (jobId === "") {
+        setErrorMessage(/* msg */ "Empty Job Id found. " + RESPONSE_ERROR,
+            /** include default msg */ false);
+        return;
+    }
+
+    const cancelButton = document.getElementById("cancel");
+    cancelButton.setAttribute("value", STRINGS["cancel"]);
     cancelButton.setAttribute("type", "reset");
 
-    const submitButton = document.getElementById("job-submit");
-    submitButton.setAttribute("value","Create");
+    const jobPageTitle = document.getElementById("page-title");
+    jobPageTitle.innerText = STRINGS["page-title"];
+
+    const submitButton = document.getElementById("update");
+    submitButton.setAttribute("value", STRINGS["update"]);
     submitButton.setAttribute("type", "submit");
 
     const job = getJobFromId(jobId);
 
     const jobTitle = document.getElementById("title");
     const jobTitleContent = job.jobTitle;
+    jobTitle.setAttribute("type", "text");
     jobTitle.setAttribute("value", jobTitleContent);
 
     const jobDescription = document.getElementById("description");
     const jobDescriptionContent = job.jobDescription;
+    jobDescription.setAttribute("type", "text");
     jobDescription.setAttribute("value", jobDescriptionContent);
 
     const jobAddress = document.getElementById("address");
     const jobAddressContent = job.jobLocation.address;
+    jobAddress.setAttribute("type", "text");
     jobAddress.setAttribute("value", jobAddressContent);
+
+    const postalCode = document.getElementById('postal-code');
+    const postalCodeContent = job.jobLocation.postalCode;
+    postalCode.setAttribute("type", "text");
+    postalCode.setAttribute("value", postalCodeContent);
     
-    //const requirementsTitle = document.getElementById('requirements-title');
-    //requirementsTitle.innerText = STRINGS['requirements-title'];
+    const requirementsTitle = document.getElementById("requirements-title");
+    requirementsTitle.innerText = STRINGS["requirements-title"];
     const requirements = job.requirements;
     renderRequirementsList(requirements);
 
-    // const payTitle = document.getElementById("pay-title");
-    // payTitle.innerText = STRINGS["pay-title"];
-    const jobPayFrequency = document.getElementById("pay-frequency");
+    const payTitle = document.getElementById("pay-title");
+    payTitle.innerText = STRINGS["pay-title"];
+    const jobPayFrequency = job.jobPay.paymentFrequency;
     renderJobPayFrequencyOptions(jobPayFrequency);
     
     const jobPayMin = document.getElementById("pay-min");
     const jobPayMinContent = job.jobPay.min;
+    jobPayMin.setAttribute("type", "number");
     jobPayMin.setAttribute("value", jobPayMinContent);
 
     const jobPayMax = document.getElementById("pay-max");
     const jobPayMaxContent = job.jobPay.max;
+    jobPayMax.setAttribute("type", "number");
     jobPayMax.setAttribute("value", jobPayMaxContent);
 
-    // const durationTitle = document.getElementById('duration-title');
-    // durationTitle.innerText = STRINGS['duration-title'];
-    const jobDuration = document.getElementById("duration");
+    const durationTitle = document.getElementById("duration-title");
+    durationTitle.innerText = STRINGS["duration-title"];
+    const jobDuration = job.jobDuration;
     renderJobDurationOptions(jobDuration);
 
+    const expiryTitle = document.getElementById("expiry-title");
+    expiryTitle.innerText = STRINGS["expiry-title"];
     const jobExpiry = document.getElementById("expiry");
     const jobExpiryTimestamp = job.postExpiryTimestamp;
+    jobExpiry.setAttribute("type", "date");
     renderJobExpiryLimits(jobExpiryTimestamp);
 }
 
@@ -164,7 +190,7 @@ function tickExistingRequirements(requirement, requirements, requirementCheckbox
 /**
  * Dynamically adds the options for job pay frequency.
  * 
- * @param {String} jobPayFrequency Payment frequency of the current job.
+ * @param {String} jobPayFrequency Original payment frequency of the current job.
  */
 function renderJobPayFrequencyOptions(jobPayFrequency) {
     const jobPaySelectElement = document.getElementById("pay-frequency");
@@ -176,7 +202,7 @@ function renderJobPayFrequencyOptions(jobPayFrequency) {
 /**
  * Dynamically add the options for job duration. 
  * 
- * @param {String} jobDuration Duration of the current job.
+ * @param {String} jobDuration Original duration of the current job.
  */
 function renderJobDurationOptions(jobDuration) {
     const jobDurationSelect = document.getElementById("duration");

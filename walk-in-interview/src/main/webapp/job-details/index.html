@@ -11,13 +11,11 @@
         <button onclick="location.href='../index.html'">Back to Homepage</button>
 
         <!--Add a button for update-->
-        <button onclick="sendJobId()">Update</button>
-        <script>
-            // TODO: get jobId from the current job post
-            function sendJobId() {
-                localStorage.setItem("jobId","xxxx");
-            }
-        </script>
+        <form method="GET" action="../update-job/update-job.html">
+            <!--TODO: gets the job Id-->
+            <input type="hidden" id="jobId" name="jobId" value="xxxxx">
+            <input type="submit" value="Update">
+        </form>
     </div>
     <div class="content-container">
         <div id="jobpage-map">map here</div>
