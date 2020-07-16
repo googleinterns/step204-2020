@@ -196,7 +196,8 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
             /** include default msg */ false);
       });
 
-  if (!jobPageData.hasOwnProperty('jobList')) {
+  if (jobPageData === undefined ||
+      !jobPageData.hasOwnProperty('jobList')) {
     setErrorMessage(/* msg */ NO_JOBS_ERROR,
         /** includes default msg */ false);
   }
