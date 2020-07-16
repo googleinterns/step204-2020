@@ -240,7 +240,7 @@ function renderSelectOptions(selectElement, options, existingOption) {
         }
 
         var defaultSelected = (key == existingOption);
-        selectElement.options[selectElement.options.length] = new Option(options[key], key, defaultSelected);
+        selectElement.options[selectElement.options.length] = new Option(options[key], key, defaultSelected, defaultSelected);
     }
 }
 
@@ -250,8 +250,7 @@ function renderSelectOptions(selectElement, options, existingOption) {
  * @param {long} jobExpiryTimestamp Timestamp of the expiry date for this job post.
  */
 function renderJobExpiryLimits(jobExpiryTimestamp) {
-    // Multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    const expiryDate = new Date(jobExpiryTimestamp * 1000);
+    const expiryDate = new Date(jobExpiryTimestamp).toISOString().substr(0, 10);
     
     const date = new Date();
     const min = date.toISOString().substr(0, 10);
