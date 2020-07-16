@@ -15,7 +15,8 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
-const RESPONSE_ERROR = 'An error occured while getting the job listings';
+const RESPONSE_ERROR = 'An error occured while getting the job listings.';
+const NO_JOBS_ERROR = 'There are no jobs to display at this moment.';
 
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
@@ -194,7 +195,13 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
         setErrorMessage(/* msg */ RESPONSE_ERROR,
             /** include default msg */ false);
       });
-  const jobListings = jobPageData['jobList']
+
+  if (!jobPageData.hasOwnProperty('jobList')) {
+    setErrorMessage(/* msg */ NO_JOBS_ERROR,
+        /** includes default msg */ false);
+  }
+
+  const jobListings = jobPageData['jobList'];
   const jobListingsElement = document.getElementById('job-listings');
 
   /** reset the list so we don't render the same jobs twice */
