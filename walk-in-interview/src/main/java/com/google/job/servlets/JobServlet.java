@@ -108,7 +108,7 @@ public final class JobServlet extends HttpServlet {
             // Blocks the operation.
             // Use timeout in case it blocks forever.
             this.jobsDatabase.addJob(job).get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }
@@ -123,7 +123,7 @@ public final class JobServlet extends HttpServlet {
             // Blocks the operation.
             // Use timeout in case it blocks forever.
             this.jobsDatabase.setJob(jobId, job).get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }
@@ -141,7 +141,7 @@ public final class JobServlet extends HttpServlet {
             if (!hasJob) {
                 throw new IllegalArgumentException("Invalid Job Id");
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }
