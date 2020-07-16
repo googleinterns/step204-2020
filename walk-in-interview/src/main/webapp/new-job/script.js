@@ -33,7 +33,7 @@ function renderJobPageElements() {
   cancelButton.setAttribute('type', 'reset');
 
   const jobPageTitle = document.getElementById('page-title');
-  jobPageTitle.innerText = STRINGS['page-title'];
+  jobPageTitle.innerText = NEW_JOB_STRINGS['page-title'];
 
   const submitButton = document.getElementById('submit');
   submitButton.setAttribute('value', NEW_JOB_STRINGS['submit']);
@@ -41,7 +41,7 @@ function renderJobPageElements() {
 
   const jobTitle = document.getElementById('title');
   jobTitle.setAttribute('type', 'text');
-  jobTitle.setAttribute('placeholder', NEW_JOB_STRINGS['title']);
+  jobTitle.setAttribute('placeholder', STRINGS['title']);
   jobTitle.setAttribute('required', true);
 
   const jobDescription = document.getElementById('description');
