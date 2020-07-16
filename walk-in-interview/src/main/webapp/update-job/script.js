@@ -14,7 +14,7 @@ import {getRequirementsList, getJobDetailsFromUserInput,
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from "./strings.en.js";
+import {AppStrings} from "/strings.en.js";
 
 const STRINGS = AppStrings["update-job"];
 const HOMEPAGE_PATH = "../job-details/index.html";
