@@ -41,14 +41,10 @@ public final class FireStoreUtils {
      * @return The only cloud firestore database.
      * @throws IOException If error occurs when creating database.
      */
-    public static Firestore getFireStore() {
+    public static Firestore getFireStore() throws IOException {
         if (firestore == null) {
-            try {
-                init();
-            } catch (IOException e) {
-                // TODO(issue/10.1): error handling
-                e.printStackTrace();
-            }
+            init();
+            // TODO(issue/10.1): error handling for IOException
         }
 
         return firestore;
