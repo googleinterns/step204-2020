@@ -60,8 +60,19 @@ body {
     margin: 10px 0px;
 }
 
+.button {
+    border: 1px solid grey;
+}
+
+input {
+    border: none;
+    border-bottom: 1px solid grey;
+}
+
 textarea {
     height: 100px;
+    border: none;
+    border-bottom: 1px solid grey;
 }
 
 .error-message {
