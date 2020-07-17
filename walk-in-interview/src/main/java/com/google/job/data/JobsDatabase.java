@@ -128,15 +128,20 @@ public final class JobsDatabase {
         Query query;
 
         if (region.equals(SingaporeRegion.ENTIRE)) {
-            query = collection.orderBy(SALARY_SORT, Order.getQueryDirection(order));
+            query = jobsCollection.orderBy(SALARY_SORT, Order.getQueryDirection(order));
         } else {
-            query = collection.whereEqualTo(REGION_FILTER, region.name())
-                .orderBy(SALARY_SORT, Order.getQueryDirection(order));
+            query = jobsCollection.whereEqualTo(REGION_FILTER, region.name());
+                // .orderBy(SALARY_SORT, Order.getQueryDirection(order));
         }
 
         // TODO(issue/xx): add the query to include pagination
 
         ApiFuture<QuerySnapshot> future = query.get();
+
+        if (!future.exists) {
+            JobPage jobPage = new JobPage(new LinkedList<>(), 0, Range.between(0, 0));
+            return ApiFutures.transform(future, jobPage, MoreExecutors.directExecutor());
+        }
 
         ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
             @NullableDecl

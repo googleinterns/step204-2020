@@ -142,7 +142,7 @@ public final class JobServlet extends HttpServlet {
      * @return Filter enum given the id in the request params.
      * @throws IllegalArgumentException if the id is invalid.
      */
-    public Filter parseSortBy(HttpServletRequest request) throws IllegalArgumentException {
+    public static Filter parseSortBy(HttpServletRequest request) throws IllegalArgumentException {
         String sortById = (String) request.getParameter(SORT_BY_PARAM);
 
         if (sortById == null || sortById.isEmpty()) {
@@ -159,7 +159,7 @@ public final class JobServlet extends HttpServlet {
      * @return Order enum given the id in the request params.
      * @throws IllegalArgumentException if the id is invalid.
      */
-    public Order parseOrder(HttpServletRequest request) throws IllegalArgumentException {
+    public static Order parseOrder(HttpServletRequest request) throws IllegalArgumentException {
         String orderId = (String) request.getParameter(ORDER_PARAM);
 
         if (orderId == null || orderId.isEmpty()) {
@@ -176,7 +176,7 @@ public final class JobServlet extends HttpServlet {
      * @return the page size.
      * @throws IllegalArgumentException if the page size is invalid.
      */
-    public int parsePageSize(HttpServletRequest request) throws IllegalArgumentException {
+    public static int parsePageSize(HttpServletRequest request) throws IllegalArgumentException {
         String pageSizeStr = (String) request.getParameter(PAGE_SIZE_PARAM);
 
         if (pageSizeStr == null || pageSizeStr.isEmpty()) {
@@ -198,7 +198,7 @@ public final class JobServlet extends HttpServlet {
      * @return the page index.
      * @throws IllegalArgumentException if the page index is invalid.
      */
-    public int parsePageIndex(HttpServletRequest request) throws IllegalArgumentException {
+    public static int parsePageIndex(HttpServletRequest request) throws IllegalArgumentException {
         String pageIndexStr = (String) request.getParameter(PAGE_INDEX_PARAM);
 
         if (pageIndexStr == null || pageIndexStr.isEmpty()) {

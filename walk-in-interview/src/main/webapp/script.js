@@ -236,17 +236,20 @@ function renderJobFilterSubmit() {
  * @param {Object} jobPageData The details to be shown on the homepage.
  */
 function displayJobListings(jobPageData) {
-  if (jobPageData === undefined ||
-    !jobPageData.hasOwnProperty('jobList')) {
-    setErrorMessage(/* msg */ NO_JOBS_ERROR,
-        /** includes default msg */ false);
-  }
-
-  const jobListings = jobPageData['jobList'];
   const jobListingsElement = document.getElementById('job-listings');
 
   /** reset the list so we don't render the same jobs twice */
   jobListingsElement.innerHTML = '';
+
+  if (jobPageData === undefined ||
+    !jobPageData.hasOwnProperty('jobList')) {
+    setErrorMessage(/* msg */ NO_JOBS_ERROR,
+        /** includes default msg */ false);
+    return;
+  }
+
+  const jobListings = jobPageData['jobList'];
+
   const jobListingTemplate = document.getElementById('job-listing-template');
 
   jobListings.forEach((job) => {
@@ -363,7 +366,6 @@ function getJobListingsByRegion(region, sortBy, order, pageSize, pageIndex) {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
         setErrorMessage(/* msg */ '', /** include default msg */ false);
-        return;
         return data;
       });
 }
