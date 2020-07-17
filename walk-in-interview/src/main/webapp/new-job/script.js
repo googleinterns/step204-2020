@@ -310,6 +310,7 @@ function validateRequiredUserInput() {
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
+    !Number.isInteger(payMin) || !Number.isInteger(payMax) ||
     payMin > payMax || payMin < 0 || payMax < 0) {
     setErrorMessage(/* msg */ document.getElementById('pay-title')
         .textContent, /** includes default msg */ true);
