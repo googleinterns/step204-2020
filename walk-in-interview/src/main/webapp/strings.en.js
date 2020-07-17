@@ -12,7 +12,7 @@ export const AppStrings = {};
 /**
  * Common strings used in all pages.
  */
-AppStrings['constant'] = {
+AppStrings['common'] = {
   'error-message': 'There is an error in the following field: ',
 };
 
