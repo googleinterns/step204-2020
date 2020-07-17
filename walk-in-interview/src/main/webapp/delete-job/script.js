@@ -13,7 +13,7 @@ import {AppStrings} from "../strings.en.js";
 import {setErrorMessage} from "../common-functions.js";
 
 const STRINGS = AppStrings["delete-job"];
-const HOMEPAGE_PATH = "../job-details/index.html";
+const HOMEPAGE_PATH = "../index.html";
 const RESPONSE_ERROR = "There was an error while deleting the job post. Please try again";
 
 window.onload = () => {
