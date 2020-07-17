@@ -273,4 +273,12 @@ public final class Job {
 
         return hashCode;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Job{jobId=%s, jobStatus=%s, jobTitle=%s, jobLocation=%s, "
+                + "jobDescription=%s, jobPay=%s, requirements=%s, postExpiryTimestamp=%d, jobDuration=%s}",
+                jobId, jobStatus, jobTitle, jobLocation,
+                jobDescription, jobPay, requirements, postExpiryTimestamp, jobDuration);
+    }
 }
