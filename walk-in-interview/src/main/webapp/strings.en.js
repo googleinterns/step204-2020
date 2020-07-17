@@ -77,3 +77,10 @@ AppStrings['new-job'] = {
   },
   'expiry-title': 'Job Expiry',
 };
+
+/**
+ * Strings used in delete-job.
+ */
+AppStrings['delete-job'] = {
+  'delete': 'Delete',
+};

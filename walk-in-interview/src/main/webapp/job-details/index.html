@@ -3,12 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
+    <script type="module" src="../delete-job/script.js"></script>
 </head>
 
 <body>
     <div class="header-container">
         <button onclick="location.href='../index.html'">Back to Homepage</button>
+
+        <!--Add a button for delete-->
+        <!--TODO(issue/53): gets the job Id-->
+        <button id="delete" onclick="deleteJobPost('xxxxx')"></button>
     </div>
     <div class="content-container">
         <div id="jobpage-map">map here</div>
