@@ -156,7 +156,11 @@ public final class JobsDatabaseTest {
         // future.get() blocks on response.
         DocumentReference editedDocRef = editedDocRefFuture.get();
 
-        DocumentSnapshot documentSnapshot = editedDocRef.get().get();
+        // Asynchronously retrieve the document.
+        Future<DocumentSnapshot> documentSnapshoFuture = editedDocRef.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot documentSnapshot = documentSnapshoFuture.get();
 
         Job actualJob = documentSnapshot.toObject(Job.class);
 
