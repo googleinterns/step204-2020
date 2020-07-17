@@ -393,15 +393,15 @@ submitButton.addEventListener("click", (_) => {
     })
         .then((response) => response.text())
         .then((data) => {
-        console.log("data", data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "", /* includesDefault= */false);
-        window.location.href= HOMEPAGE_PATH;
+            console.log("data", data);
+            /** reset the error (there might have been an error msg from earlier) */
+            setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "", /* includesDefault= */false);
+            window.location.href= HOMEPAGE_PATH;
         })
         .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ RESPONSE_ERROR,
-            /* includesDefault= */false);
-        console.log("error", error);
+            setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ RESPONSE_ERROR,
+                /* includesDefault= */false);
+            console.log("error", error);
         });
 });
 
