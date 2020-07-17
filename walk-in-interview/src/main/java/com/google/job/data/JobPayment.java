@@ -6,7 +6,7 @@ public final class JobPayment {
     private final int min;
     private final int max;
     private final PaymentFrequency paymentFrequency;
-    private final int annualMax;
+    private final long annualMax;
 
     private volatile int hashCode;
 
@@ -15,7 +15,7 @@ public final class JobPayment {
         this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax */ 0);
     }
 
-    public JobPayment(int min, int max, PaymentFrequency paymentFrequency, int annualMax) {
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency, long annualMax) {
         validateParameter(min, max);
 
         this.min = min;
@@ -40,7 +40,7 @@ public final class JobPayment {
     }
 
     /** Returns the annual pay given the upper limit of the payment and its frequency */
-    public int getAnnualMax() {
+    public long getAnnualMax() {
         return annualMax;
     }
 
@@ -70,7 +70,7 @@ public final class JobPayment {
         c = paymentFrequency.hashCode();
         result = 31 * result + c;
 
-        c = ((Integer)annualMax).hashCode();
+        c = ((Long)annualMax).hashCode();
         result = 31 * result + c;
 
         this.hashCode = result;
