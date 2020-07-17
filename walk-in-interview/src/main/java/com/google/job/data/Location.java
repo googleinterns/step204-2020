@@ -5,6 +5,7 @@ public final class Location {
     // TODO(issue/23): Add a postalCode attribute to Location; address is only optional for applicant
     private final String address;
     private final String postalCode;
+    private final SingaporeRegion region;
     private final double latitude;
     private final double longitude;
 
@@ -12,11 +13,12 @@ public final class Location {
 
     // For serialization
     public Location() {
-        this(/* address= */"", /* postalCode= */"dummy",
+        this(/* address= */"", /* postalCode= */"01dummy", /* region */ SingaporeRegion.CENTRAL,
                 /* latitude= */0, /* longitude= */0);
     }
 
-    public Location(String address, String postalCode, double latitude, double longitude) {
+    public Location(String address, String postalCode, SingaporeRegion region, 
+        double latitude, double longitude) {
         // TODO(issue/23): add check for user identity, it is only optional for applicant.
         if (postalCode.isEmpty()) {
             throw new IllegalArgumentException("Postal Code should be an non-empty string");
@@ -32,6 +34,7 @@ public final class Location {
 
         this.address = address;
         this.postalCode = postalCode;
+        this.region = region;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -44,6 +47,11 @@ public final class Location {
     /** Returns postal code of a place. */
     public String getPostalCode() {
         return postalCode;
+    }
+
+    /** Returns the region. */
+    public SingaporeRegion getRegion() {
+        return region;
     }
 
     /** Returns the latitude of the place. */
@@ -64,7 +72,8 @@ public final class Location {
         return Double.compare(that.latitude, latitude) == 0 &&
                 Double.compare(that.longitude, longitude) == 0 &&
                 postalCode.equals(that.postalCode) &&
-                address.equals(that.address);
+                address.equals(that.address) &&
+                region.equals(that.region);
     }
 
     @Override
@@ -87,6 +96,9 @@ public final class Location {
         c = postalCode.hashCode();
         result = 31 * result + c;
 
+        c = region.hashCode();
+        result = 31 * result + c;
+
         this.hashCode = result;
 
         return hashCode;
@@ -94,7 +106,7 @@ public final class Location {
 
     @Override
     public String toString() {
-        return String.format("JobLocation{address=%s, postalCode=%s, latitude=%f, longitude=%f}",
-                address, postalCode, latitude, longitude);
+        return String.format("JobLocation{address=%s, postalCode=%s, region=%s, latitude=%f, longitude=%f}",
+                address, postalCode, region.name(), latitude, longitude);
     }
 }

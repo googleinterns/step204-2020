@@ -22,6 +22,13 @@ AppStrings['homepage'] = {
     'DISTANCE': 'Distance',
     'SALARY': 'Salary',
   },
+  'show-by-region': {
+    'CENTRAL': 'Central Singapore',
+    'WEST': 'West Singapore',
+    'EAST': 'East Singapore',
+    'NORTH': 'North Singapore',
+    'NORTH_EAST': 'North-East Singapore',
+  },
   'sort-by-order': {
     'ASCENDING': 'Ascending',
     'DESCENDING': 'Descending',

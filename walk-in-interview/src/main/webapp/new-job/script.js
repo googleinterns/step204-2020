@@ -223,6 +223,7 @@ function getJobDetailsFromUserInput() {
     jobLocation: {
       address: address,
       postalCode: postalCode,
+      region: findRegion(postalCode),
       lat: 1.3039, // TODO(issue/13): get these from places api
       lon: 103.8358,
     },
@@ -239,6 +240,42 @@ function getJobDetailsFromUserInput() {
   };
 
   return jobDetails;
+}
+
+/**
+ * Returns the Singapore region based on the postal code.
+ * This is done by taking the first two digits of the postal
+ * code and seeing which region it corresponds to.
+ * Central: 01-45
+ * West:  58-71
+ * East: 46-52, 81
+ * North: 72-73, 75-80
+ * North-East: 53-57, 82
+ * @param {String} postalCode The Singapore postal code.
+ * @return {String} The Singapore region.
+ */
+function findRegion(postalCode) {
+  /**
+   * We have made the assumption that if the user's
+   * postal code region is 01, they would have written
+   * 01xxx rather than 1xxx.
+   */
+  const digits = parseInt(postalCode.substring(0, 2));
+
+  if (digits >= 1 && digits <= 45) {
+    return 'CENTRAL';
+  } else if (digits >= 58 && digits <= 71) {
+    return 'WEST';
+  } else if ((digits >= 46 && digits <= 52) ||
+      digits === 81) {
+    return 'EAST';
+  } else if ((digits >= 72 && digits <= 73) ||
+      (digits >= 75 && digits <= 80)) {
+    return 'NORTH';
+  } else if ((digits >= 53 && digits <= 57) ||
+      digits === 82) {
+    return 'NORTH_EAST';
+  }
 }
 
 /**
@@ -303,7 +340,11 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (postalCode.value === '') {
+  if (postalCode.value === '' ||
+    !Number.isInteger(parseInt(postalCode.value[0])) ||
+    !Number.isInteger(parseInt(postalCode.value[1])) ||
+    parseInt(postalCode.value.substring(0, 2)) <= 0 ||
+    parseInt(postalCode.value.substring(0, 2)) > 82) {
     setErrorMessage(/* msg */ postalCode.placeholder,
         /** includes default msg */ true);
     return false;
