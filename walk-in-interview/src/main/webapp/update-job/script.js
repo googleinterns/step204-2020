@@ -292,12 +292,6 @@ function getJobDetailsFromUserInput() {
     const jobId = getJobId();
     const status = getJobFromId().jobStatus;
 
-    if (jobId === "") {
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found. " + RESPONSE_ERROR,
-            /* includesDefault= */false);
-        return;
-    }
-
     if (status === "") {
         status = "ACTIVE";
     }
@@ -332,6 +326,7 @@ function getJobDetailsFromUserInput() {
 */
 function validateRequiredUserInput() {
     // TODO(issue/19): add more validation checks
+    const jobId = getJobId();
     const name = document.getElementById('title');
     const description = document.getElementById('description');
     const address = document.getElementById('address');
@@ -341,6 +336,12 @@ function validateRequiredUserInput() {
     const payMax = document.getElementById('pay-max').valueAsNumber;
     const duration = document.getElementById('duration').value;
     const expiry = document.getElementById('expiry').valueAsNumber;
+
+    if (jobId === "") {
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found. " + RESPONSE_ERROR,
+            /* includesDefault= */false);
+        return false;
+    }
   
     if (name.value === '') {
         setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
@@ -387,7 +388,7 @@ function validateRequiredUserInput() {
 const submitButton = document.getElementById("update");
 submitButton.addEventListener("click", (_) => {
     if (!validateRequiredUserInput()) {
-    return;
+        return;
     }
 
     const jobDetails = getJobDetailsFromUserInput();
