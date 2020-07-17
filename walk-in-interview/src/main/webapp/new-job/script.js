@@ -11,7 +11,9 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from './strings.en.js';
+import {AppStrings} from '../strings.en.js';
+
+import {getRequirementsList, setErrorMessage} from "../common-functions.js";
 
 const STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
@@ -85,18 +87,7 @@ function renderJobPageElements() {
   renderJobExpiryLimits();
 
   /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /** includes default msg */ false);
-}
-
-/**
- * Sets the error message according to the param.
- * @param {String} msg the message that the error div should display.
- * @param {boolean} includesDefault whether the deafult
- * message should be included.
- */
-function setErrorMessage(msg, includesDefault) {
-  document.getElementById('error-message').innerText =
-    (includesDefault ? STRINGS['error-message'] + msg : msg);
+  setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */'', /* includesDefault= */false);
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -126,21 +117,6 @@ function renderRequirementsList() {
       requirementsListElement.appendChild(requirementElement);
     }
   }
-}
-
-/**
- * Gets the requirements list from the servlet
- * (which gets it from the database).
- * @return {Object} the requirements list in a key-value mapping format.
- */
-function getRequirementsList() {
-  // TODO(issue/17): GET request to servlet to get from database
-  // returning some hardcoded values for now
-  return {
-    'O_LEVEL': 'O Level',
-    'LANGUAGE_ENGLISH': 'English',
-    'DRIVING_LICENSE_C': 'Category C Driving License',
-  };
 }
 
 /** Dynamically add the options for job pay frequency. */
@@ -203,43 +179,43 @@ function getJobDetailsFromUserInput() {
   const payMax = document.getElementById('pay-max').valueAsNumber;
 
   const requirementsCheckboxes =
-    document.getElementsByName(STRINGS['requirements-list']);
+      document.getElementsByName('requirements-list');
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
-    if (checked) {
+      if (checked) {
       requirementsList.push(id);
-    }
+      }
   });
 
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
   const jobDetails = {
-    jobTitle: name,
-    jobLocation: {
+      jobTitle: name,
+      jobLocation: {
       address: address,
       postalCode: postalCode,
       lat: 1.3039, // TODO(issue/13): get these from places api
       lon: 103.8358,
-    },
-    jobDescription: description,
-    jobPay: {
+      },
+      jobDescription: description,
+      jobPay: {
       paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
-    },
-    requirements: requirementsList,
-    postExpiryTimestamp: expiry,
-    jobDuration: duration,
+      },
+      requirements: requirementsList,
+      postExpiryTimestamp: expiry,
+      jobDuration: duration,
   };
 
   return jobDetails;
 }
 
 /**
- * Validates the user input
- * @return {boolean} depending on whether the input is valid or not.
- */
+* Validates the user input
+* @return {boolean} depending on whether the input is valid or not.
+*/
 function validateRequiredUserInput() {
   // TODO(issue/19): add more validation checks
   const name = document.getElementById('title');
@@ -253,46 +229,42 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-    setErrorMessage(/* msg */ name.placeholder,
-        /** includes default msg */ true);
-    return false;
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
+      return false;
   }
 
   if (description.value === '') {
-    setErrorMessage(/* msg */ description.placeholder,
-        /** includes default msg */ true);
-    return false;
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
+      return false;
   }
 
   if (address.value === '') {
-    setErrorMessage(/* msg */ address.placeholder,
-        /** includes default msg */ true);
-    return false;
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
+      return false;
   }
 
   if (postalCode.value === '') {
-    setErrorMessage(/* msg */ postalCode.placeholder,
-        /** includes default msg */ true);
-    return false;
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
+      return false;
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
-    payMin > payMax || payMin < 0 || payMax < 0) {
-    setErrorMessage(/* msg */ document.getElementById('pay-title')
-        .textContent, /** includes default msg */ true);
-    return false;
+      payMin > payMax || payMin < 0 || payMax < 0) {
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
+          .textContent);
+      return false;
   }
 
   if (duration === '') {
-    setErrorMessage(/* msg */ document.getElementById('duration-title')
-        .textContent, /** includes default msg */ true);
-    return false;
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
+          .textContent);
+      return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessage(/* msg */ document.getElementById('expiry-title')
-        .textContent, /** includes default msg */ true);
-    return false;
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
+          .textContent);
+      return false;
   }
 
   return true;
@@ -314,12 +286,11 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR, /* includesDefault= */false);
         console.log('error', error);
       });
 });
