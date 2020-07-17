@@ -42,19 +42,18 @@ function getJobId() {
  * @param {String} jobId Job id for this job post.
  */
 function deleteJobPost(jobId) {
-    const params = new URLSearchParams();
-    params.append("jobId", jobId);
-    fetch("/jobs/delete", {method: "PATCH", body: params})
+    fetch("/jobs/delete", {method: "PATCH", body: jobId})
     .then((response) => response.text())
     .then((data) => {
-      console.log('data', data);
-      /** reset the error (there might have been an error msg from earlier) */
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-      window.location.href= HOMEPAGE_PATH;
+        console.log("data", data);
+        /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "", /* includesDefault= */false);
+        window.location.href= HOMEPAGE_PATH;
     })
     .catch((error) => {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR, /* includesDefault= */false);
-      console.log('error', error);
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ RESPONSE_ERROR,
+            /* includesDefault= */false);
+        console.log("error", error);
     });
 }
 
