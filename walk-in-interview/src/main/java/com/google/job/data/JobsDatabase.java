@@ -29,7 +29,7 @@ public final class JobsDatabase {
      * @return A future of the detailed information of the writing.
      */
     public Future<WriteResult> addJob(Job newJob) throws IOException {
-        // Add document data after generating an id.
+        // Add document data after generating an id
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document();
 
@@ -67,7 +67,7 @@ public final class JobsDatabase {
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
                     .collection(JOB_COLLECTION).document(jobId);
 
-            // Verifies if the current user can update the job post with this job id.
+            // Verifies if the current user can update the job post with this job id
             // TODO(issue/25): incorporate the account stuff into job post.
             verifyUserCanUpdateJob(jobId);
 
@@ -96,11 +96,11 @@ public final class JobsDatabase {
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
                     .collection(JOB_COLLECTION).document(jobId);
 
-            // Verifies if the current user can update the job post with this job id.
+            // Verifies if the current user can update the job post with this job id
             // TODO(issue/25): incorporate the account stuff into job post.
             verifyUserCanUpdateJob(jobId);
 
-            // Updates the jobStatus field to DELETED.
+            // Updates the jobStatus field to DELETED
             transaction.update(documentReference, JOB_STATUS_FIELD, JobStatus.DELETED);
 
             return documentReference;
@@ -142,7 +142,7 @@ public final class JobsDatabase {
     private static void verifyUserCanUpdateJob(String jobId) throws
             IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
         try {
-            // Use timeout in case it blocks forever.
+            // Use timeout in case it blocks forever
             boolean hasJob = hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
             if (!hasJob) {
                 throw new IllegalArgumentException("Invalid Job Id");
