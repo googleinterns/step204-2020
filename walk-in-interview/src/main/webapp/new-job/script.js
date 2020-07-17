@@ -251,7 +251,7 @@ function validateRequiredUserInput() {
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
       payMin > payMax || payMin < 0 || payMax < 0) {
       setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
-          .textContent, /** includes default msg */ true);
+          .textContent);
       return false;
   }
 
