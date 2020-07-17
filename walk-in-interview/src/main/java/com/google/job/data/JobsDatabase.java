@@ -49,10 +49,10 @@ public final class JobsDatabase {
      *
      * @param jobId Id for the target job post in the database.
      * @param updatedJob Updated job post.
-     * @return A future of transaction.
+     * @return A future of document reference for the updated job post.
      * @throws IllegalArgumentException If the job id is invalid.
      */
-    public Future<Void> setJob(String jobId, Job updatedJob) throws IllegalArgumentException, IOException {
+    public Future<DocumentReference> setJob(String jobId, Job updatedJob) throws IllegalArgumentException, IOException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Job Id should be an non-empty string");
         }
@@ -63,7 +63,7 @@ public final class JobsDatabase {
                 .build();
 
         // Runs an asynchronous transaction
-        ApiFuture<Void> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
+        ApiFuture<DocumentReference> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
                     .collection(JOB_COLLECTION).document(jobId);
 
@@ -73,8 +73,8 @@ public final class JobsDatabase {
 
             // Overwrites the whole job post
             transaction.set(documentReference, job);
-            
-            return null;
+
+            return documentReference;
         });
         
         return futureTransaction;
@@ -84,15 +84,15 @@ public final class JobsDatabase {
      * Marks a job post as DELETED.
      *
      * @param jobId Cloud Firestore Id of the job post.
-     * @return A future of transaction.
+     * @return A future of document reference for the updated job post.
      */
-    public Future<Void> markJobPostAsDeleted(String jobId) throws IOException {
+    public Future<DocumentReference> markJobPostAsDeleted(String jobId) throws IOException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Job Id should be an non-empty string");
         }
         
         // Runs an asynchronous transaction
-        ApiFuture<Void> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
+        ApiFuture<DocumentReference> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
                     .collection(JOB_COLLECTION).document(jobId);
 
@@ -103,7 +103,7 @@ public final class JobsDatabase {
             // Updates the jobStatus field to DELETED.
             transaction.update(documentReference, JOB_STATUS_FIELD, JobStatus.DELETED);
 
-            return null;
+            return documentReference;
         });
 
         return futureTransaction;
@@ -134,11 +134,30 @@ public final class JobsDatabase {
     }
 
     /**
+     * Verifies if it is a valid job id that this user can update.
+     *
+     * @throws IllegalArgumentException If there is no such id in database.
+     */
+    // TODO(issue/25): incorporate the account stuff into job post.
+    private static void verifyUserCanUpdateJob(String jobId) throws
+            IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
+        try {
+            // Use timeout in case it blocks forever.
+            boolean hasJob = hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
+            if (!hasJob) {
+                throw new IllegalArgumentException("Invalid Job Id");
+            }
+        } catch (InterruptedException | IOException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    /**
      * Returns a future of boolean to check if the job matching the given id is valid.
      *
      * @throws IllegalArgumentException If the input jobId is empty.
      */
-    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException, IOException {
+    private static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException, IOException {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Job Id should be an non-empty string");
         }
@@ -149,24 +168,5 @@ public final class JobsDatabase {
         return ApiFutures.transform(snapshotFuture,
                 documentSnapshot -> documentSnapshot.exists(),
                 MoreExecutors.directExecutor());
-    }
-
-    /**
-     * Verifies if it is a valid job id that this user can update.
-     *
-     * @throws IllegalArgumentException If there is no such id in database.
-     */
-    // TODO(issue/25): incorporate the account stuff into job post.
-    private void verifyUserCanUpdateJob(String jobId) throws
-            IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
-        try {
-            // Use timeout in case it blocks forever.
-            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-            if (!hasJob) {
-                throw new IllegalArgumentException("Invalid Job Id");
-            }
-        } catch (InterruptedException | IOException e) {
-            throw new ServletException(e);
-        }
     }
 }

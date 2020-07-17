@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 
 import static com.google.job.data.Requirement.*;
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** Tests for {@link JobsDatabase} class. */
 public final class JobsDatabaseTest {
@@ -151,15 +150,13 @@ public final class JobsDatabaseTest {
                 .build();
 
         // Act.
-        Future<WriteResult> editedDocRef = jobsDatabase.setJob(jobId, updatedJob);
+        Future<DocumentReference> editedDocRefFuture = jobsDatabase.setJob(jobId, updatedJob);
 
         // Assert.
         // future.get() blocks on response.
-        editedDocRef.get();
+        DocumentReference editedDocRef = editedDocRefFuture.get();
 
-        ApiFuture<DocumentSnapshot> documentSnapshotApiFuture = firestore.collection(TEST_JOB_COLLECTION).
-                document(jobId).get();
-        DocumentSnapshot documentSnapshot = documentSnapshotApiFuture.get();
+        DocumentSnapshot documentSnapshot = editedDocRef.get().get();
 
         Job actualJob = documentSnapshot.toObject(Job.class);
 
@@ -167,7 +164,7 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void markJobPostAsDeleted_normalInput_success() throws ExecutionException, InterruptedException {
+    public void markJobPostAsDeleted_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -182,13 +179,12 @@ public final class JobsDatabaseTest {
         String jobId = document.getId();
 
         // Act.
-        Future<WriteResult> resultFuture = this.jobsDatabase.markJobPostAsDeleted(jobId);
+        Future<DocumentReference> resultFuture = this.jobsDatabase.markJobPostAsDeleted(jobId);
 
         // Assert.
         // future.get() blocks on response.
-        resultFuture.get();
+        documentReference = resultFuture.get();
 
-        documentReference = firestore.collection(TEST_JOB_COLLECTION).document(jobId);
         // Asynchronously retrieve the document.
         future = documentReference.get();
 
@@ -244,53 +240,6 @@ public final class JobsDatabaseTest {
 
         assertEquals(job, actualJob);
     }
-
-    @Test
-    public void hasJob_normalInput_true() throws ExecutionException, InterruptedException, IllegalArgumentException, IOException {
-        // Arrange.
-        Job job = new Job();
-        Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
-
-        DocumentReference documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-
-        // future.get() blocks on response.
-        DocumentSnapshot document = future.get();
-        String jobId = document.getId();
-
-        // Act.
-        Future<Boolean> result = JobsDatabase.hasJob(jobId);
-
-        // Assert.
-        assertTrue(result.get());
-    }
-
-    @Test
-    public void hasJob_emptyJobId_illegalArgumentException() throws ExecutionException, InterruptedException {
-        // Arrange.
-        Job job = new Job();
-        firestore.collection(TEST_JOB_COLLECTION).add(job);
-
-        // Assert.
-        assertThrows(IllegalArgumentException.class, () -> JobsDatabase.hasJob(""));
-    }
-
-    @Test
-    public void hasJob_invalidJobId_false() throws ExecutionException, InterruptedException, IllegalArgumentException, IOException {
-        // Arrange.
-        Job job = new Job();
-        firestore.collection(TEST_JOB_COLLECTION).add(job);
-
-        // Act.
-        // Cloud Firestore id will not be as short as "dummy"
-        Future<Boolean> result = JobsDatabase.hasJob("dummy");
-
-        // Assert.
-        assertFalse(result.get());
-    }
-
-    // TODO(issue/15): Add future fail test case for hasJob
 
     /**
      * Delete a collection in batches to avoid out-of-memory errors.
