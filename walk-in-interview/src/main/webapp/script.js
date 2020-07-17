@@ -242,7 +242,8 @@ function displayJobListings(jobPageData) {
   jobListingsElement.innerHTML = '';
 
   if (jobPageData === undefined ||
-    !jobPageData.hasOwnProperty('jobList')) {
+    !jobPageData.hasOwnProperty('jobList') ||
+    jobsPageData['jobList'].length === 0) {
     setErrorMessage(/* msg */ NO_JOBS_ERROR,
         /** includes default msg */ false);
     return;
