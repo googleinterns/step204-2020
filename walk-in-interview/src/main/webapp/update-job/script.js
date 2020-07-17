@@ -376,10 +376,13 @@ submitButton.addEventListener("click", (_) => {
 
     const jobDetails = getJobDetailsFromUserInput();
 
-    fetch('/jobs', {
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(jobDetails),
+    const params = new URLSearchParams();
+    params.append("updatedJob", JSON.stringify(jobDetails));
+
+    fetch("/jobs", {
+        method: "PATCH",
+        headers: {"Content-Type": "application/json"},
+        body: params,
     })
         .then((response) => response.text())
         .then((data) => {
