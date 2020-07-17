@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../style.css">
-    <script type="module" src="../delete-job/script.js"></script>
 </head>
+
+<script type="module" src="../delete-job/script.js"></script>
 
 <body>
     <div class="header-container">
@@ -13,7 +14,7 @@
 
         <!--Add a button for delete-->
         <!--TODO(issue/53): gets the job Id-->
-        <button id="delete" onclick="deleteJobPost('xxxxx')"></button>
+        <button id="delete"></button>
     </div>
     <div class="content-container">
         <div id="jobpage-map">map here</div>
@@ -39,6 +40,8 @@
             Job Duration:
             <div id="job-duration">Not Specified</div>
         </div>
+
+        <div class="error-message" id="error-message"></div>
 
     </div>
 </body>
