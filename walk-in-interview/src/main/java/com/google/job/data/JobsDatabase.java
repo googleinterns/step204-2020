@@ -8,13 +8,9 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
@@ -69,7 +65,12 @@ public final class JobsDatabase {
 
             // Verifies if the current user can update the job post with this job id
             // TODO(issue/25): incorporate the account stuff into job post.
-            verifyUserCanUpdateJob(jobId);
+            DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
+
+            // Job does not exist
+            if (!documentSnapshot.exists()) {
+                throw new IllegalArgumentException("Invalid jobId");
+            }
 
             // Overwrites the whole job post
             transaction.set(documentReference, job);
@@ -98,7 +99,12 @@ public final class JobsDatabase {
 
             // Verifies if the current user can update the job post with this job id
             // TODO(issue/25): incorporate the account stuff into job post.
-            verifyUserCanUpdateJob(jobId);
+            DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
+
+            // Job does not exist
+            if (!documentSnapshot.exists()) {
+                throw new IllegalArgumentException("Invalid jobId");
+            }
 
             // Updates the jobStatus field to DELETED
             transaction.update(documentReference, JOB_STATUS_FIELD, JobStatus.DELETED);
@@ -131,42 +137,5 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
-    }
-
-    /**
-     * Verifies if it is a valid job id that this user can update.
-     *
-     * @throws IllegalArgumentException If there is no such id in database.
-     */
-    // TODO(issue/25): incorporate the account stuff into job post.
-    private static void verifyUserCanUpdateJob(String jobId) throws
-            IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
-        try {
-            // Use timeout in case it blocks forever
-            boolean hasJob = hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-            if (!hasJob) {
-                throw new IllegalArgumentException("Invalid Job Id");
-            }
-        } catch (InterruptedException | IOException e) {
-            throw new ServletException(e);
-        }
-    }
-
-    /**
-     * Returns a future of boolean to check if the job matching the given id is valid.
-     *
-     * @throws IllegalArgumentException If the input jobId is empty.
-     */
-    private static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException, IOException {
-        if (jobId.isEmpty()) {
-            throw new IllegalArgumentException("Job Id should be an non-empty string");
-        }
-
-        ApiFuture<DocumentSnapshot> snapshotFuture = FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION).document(jobId).get();
-
-        return ApiFutures.transform(snapshotFuture,
-                documentSnapshot -> documentSnapshot.exists(),
-                MoreExecutors.directExecutor());
     }
 }
