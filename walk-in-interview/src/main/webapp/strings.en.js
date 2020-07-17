@@ -19,16 +19,19 @@ AppStrings['homepage'] = {
   'error-message': 'There is an error in the following field: ',
   'sort-by-title': 'Sort By',
   'sort-by': {
-    'DISTANCE': 'Distance',
-    'SALARY': 'Salary',
+    'SALARY-DESCENDING': 'Salary (high to low)',
+    'SALARY-ASCENDING': 'Salary (low to high)',
   },
+  'show-by-region-title': 'Show By Region',
   'show-by-region': {
+    'ENTIRE': 'Entire Singapore',
     'CENTRAL': 'Central Singapore',
     'WEST': 'West Singapore',
     'EAST': 'East Singapore',
     'NORTH': 'North Singapore',
     'NORTH_EAST': 'North-East Singapore',
   },
+  'show-by-region-submit': 'Apply',
   'sort-by-order': {
     'ASCENDING': 'Ascending',
     'DESCENDING': 'Descending',

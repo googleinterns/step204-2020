@@ -44,8 +44,13 @@ function renderHomepageElements() {
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
   renderSelectOptions(/** for */ 'sort-by');
-  renderSelectOptions(/** for */ 'sort-by-order');
   renderJobSortSubmit();
+
+  const showByTitle = document.getElementById('show-by-region-title');
+  showByTitle.innerText = STRINGS['show-by-region-title'];
+
+  renderSelectOptions(/** for */ 'show-by-region');
+  renderShowRegionSubmit();
 
   const filterByTitle = document.getElementById('filter-by-title');
   filterByTitle.innerText = STRINGS['filter-by-title'];
@@ -84,10 +89,14 @@ function renderHomepageElements() {
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
   const defaultSortBy = document.getElementById('sort-by').value;
-  const defaultSortOrder =
-    document.getElementById('sort-by-order').value;
-  renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
-      DEFAULT_PAGE_INDEX);
+
+  /** Note that this platform currently only sorts by Salary.*/
+  if (defaultSortBy.includes('SALARY')) {
+    const sortByParam = 'SALARY';
+    const orderByParam = defaultSortBy.substring(7);
+    renderJobListings(sortByParam, orderByParam, DEFAULT_PAGE_SIZE,
+        DEFAULT_PAGE_INDEX);
+  }
 
   /** reset the error to make sure no error msg initially present */
   setErrorMessage(/* msg */ '', /** includes default msg */ false);
@@ -123,17 +132,31 @@ function renderSelectOptions(id) {
 }
 
 /**
- * Checks that the sorting and ordering are valid.
+ * Checks that the sorting is valid.
  * @return {boolean} Indication of whether the fields are valid.
  */
 function validSortByInput() {
-  // check that the sort by input is valid (non empty i think should be enough)
   const sortByParam = document.getElementById('sort-by').value;
-  const sortOrderParam = document.getElementById('sort-by-order').value;
 
-  if (sortByParam == '' || sortOrderParam == '') {
+  if (sortByParam == '') {
     /** no need to show error message as this would not be the user's fault */
-    console.log('error', 'sorting or ordering was empty');
+    console.log('error', 'sorting was empty');
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Checks that the region and sorting are valid.
+ * @return {boolean} Indication of whether the fields are valid.
+ */
+function validShowRegionInput() {
+  const showByParam = document.getElementById('show-by-region').value;
+
+  if (showByParam == '' || !validSortByInput()) {
+    /** no need to show error message as this would not be the user's fault */
+    console.log('error', 'region or sorting was empty');
     return false;
   }
 
@@ -154,11 +177,42 @@ function renderJobSortSubmit() {
       return;
     }
 
-    const sortByParam = document.getElementById('sort-by').value;
-    const sortOrderParam = document.getElementById('sort-by-order')
-        .value;
-    renderJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
-        DEFAULT_PAGE_INDEX);
+    const sortingParam = document.getElementById('sort-by').value;
+
+    /** Note that this platform currently only sorts by Salary.*/
+    if (sortingParam.includes('SALARY')) {
+      const sortByParam = 'SALARY';
+      const orderByParam = sortingParam.substring(7);
+      renderJobListings(sortByParam, orderByParam, DEFAULT_PAGE_SIZE,
+          DEFAULT_PAGE_INDEX);
+    }
+  });
+}
+
+/**
+ * Add the attributes and on click function to the region
+ * submit button.
+ */
+function renderShowRegionSubmit() {
+  const showBySubmit = document.getElementById('show-by-region-submit');
+  showBySubmit.setAttribute('type', 'submit');
+  showBySubmit.setAttribute('value', STRINGS['show-by-region-submit']);
+
+  showBySubmit.addEventListener('click', (_) => {
+    if (!validShowRegionInput()) {
+      return;
+    }
+
+    const sortingParam = document.getElementById('sort-by').value;
+    const regionParam = document.getElementById('show-by-region').value;
+
+    /** Note that this platform currently only sorts by Salary.*/
+    if (sortingParam.includes('SALARY')) {
+      const sortByParam = 'SALARY';
+      const orderByParam = sortingParam.substring(7);
+      renderJobListingsByRegion(regionParam, sortByParam, orderByParam,
+          DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX);
+    }
   });
 }
 
@@ -178,26 +232,12 @@ function renderJobFilterSubmit() {
 }
 
 /**
- * Add the list of jobs that are stored in the database.
- * @param {String} sortBy How the jobs should be sorted.
- * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for one page.
- * @param {int} pageIndex The page index (starting from 0).
+ * This will add all the job listings onto the homepage.
+ * @param {Object} jobPageData The details to be shown on the homepage.
  */
-async function renderJobListings(sortBy, order, pageSize, pageIndex) {
-  if (!validSortByInput()) {
-    return;
-  }
-
-  const jobPageData = await getJobListings(sortBy, order, pageSize, pageIndex)
-      .catch((error) => {
-        console.log('error', error);
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
-      });
-
+function displayJobListings(jobPageData) {
   if (jobPageData === undefined ||
-      !jobPageData.hasOwnProperty('jobList')) {
+    !jobPageData.hasOwnProperty('jobList')) {
     setErrorMessage(/* msg */ NO_JOBS_ERROR,
         /** includes default msg */ false);
   }
@@ -232,6 +272,28 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
 }
 
 /**
+ * Add the list of jobs that are stored in the database.
+ * @param {String} sortBy How the jobs should be sorted.
+ * @param {String} order The order of the sorting.
+ * @param {int} pageSize The number of jobs for one page.
+ * @param {int} pageIndex The page index (starting from 0).
+ */
+async function renderJobListings(sortBy, order, pageSize, pageIndex) {
+  if (!validSortByInput()) {
+    return;
+  }
+
+  const jobPageData = await getJobListings(sortBy, order, pageSize, pageIndex)
+      .catch((error) => {
+        console.log('error', error);
+        setErrorMessage(/* msg */ RESPONSE_ERROR,
+            /** include default msg */ false);
+      });
+
+  displayJobListings(jobPageData);
+}
+
+/**
  * Makes GET request to retrieve all the job listings from the database
  * given the sorting and order. This function is called when the
  * homepage is loaded and also when the sorting is changed.
@@ -251,6 +313,57 @@ function getJobListings(sortBy, order, pageSize, pageIndex) {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
         setErrorMessage(/* msg */ '', /** include default msg */ false);
+        return data;
+      });
+}
+
+/**
+ * Add the list of jobs that are stored in the database based on region.
+ * @param {String} region The region of Singapore.
+ * @param {String} sortBy How the jobs should be sorted.
+ * @param {String} order The order of the sorting.
+ * @param {int} pageSize The number of jobs for one page.
+ * @param {int} pageIndex The page index (starting from 0).
+ */
+async function renderJobListingsByRegion(region, sortBy, order,
+    pageSize, pageIndex) {
+  if (!validShowRegionInput()) {
+    return;
+  }
+
+  const jobPageData = await getJobListingsByRegion(region, sortBy, order,
+      pageSize, pageIndex)
+      .catch((error) => {
+        console.log('error', error);
+        setErrorMessage(/* msg */ RESPONSE_ERROR,
+            /** include default msg */ false);
+      });
+
+  displayJobListings(jobPageData);
+}
+
+/**
+ * Makes GET request to retrieve all the job listings from the database
+ * given the sorting and order. This function is called when the
+ * homepage is loaded and also when the sorting is changed.
+ * @param {String} region The region in Singapore.
+ * @param {String} sortBy How the jobs should be sorted.
+ * @param {String} order The order of the sorting.
+ * @param {int} pageSize The number of jobs for one page.
+ * @param {int} pageIndex The page index (starting from 0).
+ * @return {Object} The data returned from the servlet.
+ */
+function getJobListingsByRegion(region, sortBy, order, pageSize, pageIndex) {
+  const params = `region=${region}&sortBy=${sortBy}&order=${order}` +
+    `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
+
+  return fetch(`/jobs/by-region?${params}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data', data);
+        /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* msg */ '', /** include default msg */ false);
+        return;
         return data;
       });
 }
