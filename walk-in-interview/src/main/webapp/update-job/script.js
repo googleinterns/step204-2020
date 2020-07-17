@@ -32,8 +32,8 @@ function getJobId() {
     var idx = document.URL.indexOf("?");
     var jobId = "";
     if (idx != -1) {
-        setErrorMessage(/* msg */ "No Job Id found. " + RESPONSE_ERROR,
-            /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ "No Job Id found. " + RESPONSE_ERROR,
+            /* includesDefault= */false);
     }
     
     var jobIdPair = document.URL.substring(idx + 1, document.URL.length).split("&");
@@ -50,8 +50,8 @@ function getJobId() {
  */
 function addPageElements(jobId) {
     if (jobId === "") {
-        setErrorMessage(/* msg */ "Empty Job Id found. " + RESPONSE_ERROR,
-            /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found. " + RESPONSE_ERROR,
+            /* includesDefault= */false);
         return;
     }
 
@@ -121,7 +121,7 @@ function addPageElements(jobId) {
     renderJobExpiryLimits(jobExpiryTimestamp);
 
     // Resets the error to make sure no error msg initially present.
-    setErrorMessage(/* msg */ "", /** includes default msg */ false);
+    setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "", /* includesDefault= */false);
 }
 
 /**
@@ -139,8 +139,8 @@ function getJobFromId(jobId) {
     })
     .then(response => response.json())
     .catch(error => {
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ RESPONSE_ERROR,
+            /* includesDefault= */false);
         console.log("error", error);
     })
 }
@@ -163,7 +163,7 @@ function renderRequirementsList(requirements) {
             continue;
         }
 
-        const requirementElement = requirementElementTemplate.cloneNode(/** includes child elements **/ true);
+        const requirementElement = requirementElementTemplate.cloneNode(/* includes child elements */ true);
         requirementElement.setAttribute("id", key);
 
         // tick box
@@ -311,9 +311,9 @@ function getJobDetailsFromUserInput() {
 }
   
 /**
- * Validates the user input
- * @return {boolean} depending on whether the input is valid or not.
- */
+* Validates the user input
+* @return {boolean} depending on whether the input is valid or not.
+*/
 function validateRequiredUserInput() {
     // TODO(issue/19): add more validation checks
     const name = document.getElementById('title');
@@ -327,45 +327,41 @@ function validateRequiredUserInput() {
     const expiry = document.getElementById('expiry').valueAsNumber;
   
     if (name.value === '') {
-        setErrorMessage(/* msg */ name.placeholder,
-            /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
         return false;
     }
   
     if (description.value === '') {
-        setErrorMessage(/* msg */ description.placeholder,
-            /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
         return false;
     }
   
     if (address.value === '') {
-        setErrorMessage(/* msg */ address.placeholder,
-            /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
         return false;
     }
   
     if (postalCode.value === '') {
-        setErrorMessage(/* msg */ postalCode.placeholder,
-            /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
         return false;
     }
   
     if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
         payMin > payMax || payMin < 0 || payMax < 0) {
-        setErrorMessage(/* msg */ document.getElementById('pay-title')
-            .textContent, /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
+            .textContent);
         return false;
     }
   
     if (duration === '') {
-        setErrorMessage(/* msg */ document.getElementById('duration-title')
-            .textContent, /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
+            .textContent);
         return false;
     }
   
     if (Number.isNaN(expiry)) {
-        setErrorMessage(/* msg */ document.getElementById('expiry-title')
-            .textContent, /** includes default msg */ true);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
+            .textContent);
         return false;
     }
   
@@ -389,12 +385,12 @@ submitButton.addEventListener("click", (_) => {
         .then((data) => {
         console.log("data", data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ "", /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "", /* includesDefault= */false);
         window.location.href= HOMEPAGE_PATH;
         })
         .catch((error) => {
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ RESPONSE_ERROR,
+            /* includesDefault= */false);
         console.log("error", error);
         });
 });
