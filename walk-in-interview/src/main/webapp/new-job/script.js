@@ -194,16 +194,16 @@ function getJobDetailsFromUserInput() {
   const jobDetails = {
       jobTitle: name,
       jobLocation: {
-      address: address,
-      postalCode: postalCode,
-      lat: 1.3039, // TODO(issue/13): get these from places api
-      lon: 103.8358,
+          address: address,
+          postalCode: postalCode,
+          lat: 1.3039, // TODO(issue/13): get these from places api
+          lon: 103.8358,
       },
       jobDescription: description,
       jobPay: {
-      paymentFrequency: payFrequency,
-      min: payMin,
-      max: payMax,
+          paymentFrequency: payFrequency,
+          min: payMin,
+          max: payMax,
       },
       requirements: requirementsList,
       postExpiryTimestamp: expiry,

@@ -265,9 +265,10 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
 
 /**
  * Gets job detail from user input.
+ * @param {String} status Status for the current job post.
  * @return {Object} containing the user inputs.
  */
-function getJobDetailsFromUserInput() {
+function getJobDetailsFromUserInput(status) {
     const name = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const address = document.getElementById('address').value;
@@ -287,20 +288,25 @@ function getJobDetailsFromUserInput() {
   
     const expiry = document.getElementById('expiry').valueAsNumber;
     const duration = document.getElementById('duration').value;
+
+    if (status === "") {
+        status = "ACTIVE";
+    }
   
     const jobDetails = {
+        jobStatus: status,
         jobTitle: name,
         jobLocation: {
-        address: address,
-        postalCode: postalCode,
-        lat: 1.3039, // TODO(issue/13): get these from places api
-        lon: 103.8358,
+            address: address,
+            postalCode: postalCode,
+            lat: 1.3039, // TODO(issue/13): get these from places api
+            lon: 103.8358,
         },
         jobDescription: description,
         jobPay: {
-        paymentFrequency: payFrequency,
-        min: payMin,
-        max: payMax,
+            paymentFrequency: payFrequency,
+            min: payMin,
+            max: payMax,
         },
         requirements: requirementsList,
         postExpiryTimestamp: expiry,
@@ -374,7 +380,7 @@ submitButton.addEventListener("click", (_) => {
     return;
     }
 
-    const jobDetails = getJobDetailsFromUserInput();
+    const jobDetails = getJobDetailsFromUserInput(getJobFromId().jobStatus);
 
     const params = new URLSearchParams();
     params.append("jobId", getJobId());
