@@ -2,6 +2,7 @@ package com.google.job.data;
 
 /** Enumeration for the different regions of Singapore. */
 public enum SingaporeRegion {
+    ENTIRE("ENTIRE"),
     CENTRAL("CENTRAL"),
     WEST("WEST"),
     NORTH("NORTH"),

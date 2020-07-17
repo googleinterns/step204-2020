@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
+    private static final String SALARY_SORT = "jobPay.annualMax";
+    private static final String REGION_FILTER = "jobLocation.region";
 
     /**
      * Adds a newly created job post.
@@ -110,18 +112,29 @@ public final class JobsDatabase {
 
     /**
      * Gets all the jobs given the params from the database.
+     * Currently, they can only be sorted by salary.
      *
+     * @param region The region in Singapore.
      * @param sortBy The sorting of the list of jobs.
      * @param order The ordering of the sorting.
      * @param pageSize The number of job listings to be returned.
      * @param pageIndex The page which we are on (pagination).
      * @return Future of the JobPage object.
      */
-    public static Future<JobPage> fetchJobPage(Filter sortBy, Order order, int pageSize, int pageIndex) 
-        throws IOException {
+    public static Future<JobPage> fetchJobPage(SingaporeRegion region, Filter sortBy, Order order,
+        int pageSize, int pageIndex) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
-        Query query = getSortingQuery(jobsCollection, sortBy, order);
+        Query query;
+
+        if (region.equals(SingaporeRegion.ENTIRE)) {
+            query = collection.orderBy(SALARY_SORT, Order.getQueryDirection(order));
+        } else {
+            query = collection.whereEqualTo(REGION_FILTER, region.name())
+                .orderBy(SALARY_SORT, Order.getQueryDirection(order));
+        }
+
+        // TODO(issue/xx): add the query to include pagination
 
         ApiFuture<QuerySnapshot> future = query.get();
 
@@ -147,18 +160,5 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(future, jobFunction, MoreExecutors.directExecutor());
-    }
-
-    /**
-     * Returns the query to be applied when getting the jobs.
-     *
-     * @param collection The collection on which to query.
-     * @param sortBy The sorting of the list of jobs.
-     * @param order The ordering of the sorting.
-     * @return Future of the JobPage object.
-     */
-    public static Query getSortingQuery(CollectionReference collection, Filter sortBy, Order order) {
-        // TODO(issue/55): add sort by distance query
-        return collection.orderBy("jobPay.annualMax", Order.getQueryDirection(order));
     }
 }
