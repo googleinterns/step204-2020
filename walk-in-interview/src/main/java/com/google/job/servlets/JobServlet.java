@@ -66,18 +66,16 @@ public final class JobServlet extends HttpServlet {
     /** Handles the PATCH request from client. */
     public void doPatch(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // Gets the target job post id from the form
-            String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
-
-            // Gets job post from the form
-            Job updatedJob = parseUpdatedJobPost(request);
+            // Gets job post (with cloud firestore id) from the form
+            Job updatedJob = parseRawJobPost(request);
+            String jobId = updatedJob.getJobId();
 
             // Stores job post into the database
             updateJobPost(jobId, updatedJob);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (ExecutionException | IllegalArgumentException | ServletException | TimeoutException e) {
+        } catch (ExecutionException | IllegalArgumentException | ServletException | TimeoutException | IOException e) {
             // TODO(issue/47): use custom exceptions
             System.err.println("Error occur: " + e.getCause());
             // Sends the fail status code in the response
@@ -85,7 +83,7 @@ public final class JobServlet extends HttpServlet {
         }
     }
 
-    /** Parses into valid Job object from json received from client POST request. */
+    /** Parses into valid Job object from json received from client request. */
     private Job parseRawJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
         // Parses job object from the POST request
         try (BufferedReader bufferedReader = request.getReader()) {
@@ -111,22 +109,6 @@ public final class JobServlet extends HttpServlet {
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
-    }
-
-    /** Parses into valid Job object from json received from client PATCH request. */
-    private Job parseUpdatedJobPost(HttpServletRequest request) throws IllegalArgumentException {
-        // Parses job object from the PATCH request
-        String jobPostJsonStr = ServletUtils.getStringParameter(
-                request, PARAM_UPDATED_JOB, /* defaultValue= */"");
-
-        if (StringUtils.isBlank(jobPostJsonStr)) {
-            throw new IllegalArgumentException("Json for Job object is Empty");
-        }
-
-        Job rawJob = ServletUtils.parseFromJsonUsingGson(jobPostJsonStr, Job.class);
-
-        // Validates the attributes via build()
-        return rawJob.toBuilder().build();
     }
 
     /** Updates the target job post in the database. */

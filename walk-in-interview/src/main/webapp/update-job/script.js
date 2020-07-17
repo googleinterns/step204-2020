@@ -268,7 +268,7 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
  * @param {String} status Status for the current job post.
  * @return {Object} containing the user inputs.
  */
-function getJobDetailsFromUserInput(status) {
+function getJobDetailsFromUserInput() {
     const name = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const address = document.getElementById('address').value;
@@ -289,11 +289,21 @@ function getJobDetailsFromUserInput(status) {
     const expiry = document.getElementById('expiry').valueAsNumber;
     const duration = document.getElementById('duration').value;
 
+    const jobId = getJobId();
+    const status = getJobFromId().jobStatus;
+
+    if (jobId === "") {
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found. " + RESPONSE_ERROR,
+            /* includesDefault= */false);
+        return;
+    }
+
     if (status === "") {
         status = "ACTIVE";
     }
   
     const jobDetails = {
+        jobId: getJobId(),
         jobStatus: status,
         jobTitle: name,
         jobLocation: {
@@ -380,16 +390,12 @@ submitButton.addEventListener("click", (_) => {
     return;
     }
 
-    const jobDetails = getJobDetailsFromUserInput(getJobFromId().jobStatus);
-
-    const params = new URLSearchParams();
-    params.append("jobId", getJobId());
-    params.append("updatedJob", JSON.stringify(jobDetails));
+    const jobDetails = getJobDetailsFromUserInput();
 
     fetch("/jobs", {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
-        body: params,
+        body: JSON.stringify(jobDetails),
     })
         .then((response) => response.text())
         .then((data) => {
