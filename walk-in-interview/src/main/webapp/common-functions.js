@@ -32,7 +32,7 @@ function getRequirementsList() {
  * Sets the error message according to the param.
  * @param {String} errorMessageElementId the element id for html error message div.
  * @param {String} msg the message that the error div should display.
- * @param {boolean} includesDefault whether the default.
+ * @param {boolean} includesDefault whether the includes default message. Default to be true.
  * message should be included.
  */
 function setErrorMessage(errorMessageElementId, msg, includesDefault=true) {
