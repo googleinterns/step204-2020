@@ -377,6 +377,7 @@ submitButton.addEventListener("click", (_) => {
     const jobDetails = getJobDetailsFromUserInput();
 
     const params = new URLSearchParams();
+    params.append("jobId", getJobId());
     params.append("updatedJob", JSON.stringify(jobDetails));
 
     fetch("/jobs", {
