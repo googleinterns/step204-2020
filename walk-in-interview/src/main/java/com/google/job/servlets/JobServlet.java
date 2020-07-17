@@ -116,32 +116,9 @@ public final class JobServlet extends HttpServlet {
     private void updateJobPost(String jobId, Job job)
             throws IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
         try {
-            // Verifies if the current user can update the job post with this job id.
-            // TODO(issue/25): incorporate the account stuff into job post.
-            verifyUserCanUpdateJob(jobId);
-
             // Blocks the operation.
             // Use timeout in case it blocks forever.
             this.jobsDatabase.setJob(jobId, job).get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException | IOException e) {
-            throw new ServletException(e);
-        }
-    }
-
-    /**
-     * Verifies if it is a valid job id that this user can update.
-     *
-     * @throws IllegalArgumentException If there is no such id in database.
-     */
-    // TODO(issue/25): incorporate the account stuff into job post.
-    private void verifyUserCanUpdateJob(String jobId) throws
-            IllegalArgumentException ,ServletException, ExecutionException, TimeoutException {
-        try {
-            // Use timeout in case it blocks forever.
-            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-            if (!hasJob) {
-                throw new IllegalArgumentException("Invalid Job Id");
-            }
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
