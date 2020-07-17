@@ -138,13 +138,6 @@ public final class JobsDatabase {
 
         ApiFuture<QuerySnapshot> future = query.get();
 
-        if (!future.exists) {
-            JobPage jobPage = new JobPage(new LinkedList<>(), 0, Range.between(0, 0));
-            // TODO(issue/xx): need to figure out how to send back an empty this thing is the snapshot doesnt exist
-            // maybe do query.get inside the function below??
-            return ApiFutures.transform(future, jobPage, MoreExecutors.directExecutor());
-        }
-
         ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
             @NullableDecl
             public JobPage apply(@NullableDecl QuerySnapshot future) {
@@ -158,7 +151,7 @@ public final class JobsDatabase {
 
                 long totalCount = documents.size();
                 // TODO(issue/xx): implement pagination
-                Range<Integer> range = Range.between(Math.min(0, document.size()), documents.size());
+                Range<Integer> range = Range.between(Math.max(0, documents.size()), documents.size());
 
                 JobPage jobPage = new JobPage(jobList, totalCount, range);
                 log.info(jobPage.toString());

@@ -16,7 +16,7 @@ import {AppStrings} from './strings.en.js';
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
 const RESPONSE_ERROR = 'An error occured while getting the job listings.';
-const NO_JOBS_ERROR = 'There are no jobs to display at this moment.';
+const NO_JOBS_ERROR = 'There are no jobs to display at the moment.';
 
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
@@ -243,7 +243,7 @@ function displayJobListings(jobPageData) {
 
   if (jobPageData === undefined ||
     !jobPageData.hasOwnProperty('jobList') ||
-    jobsPageData['jobList'].length === 0) {
+    jobPageData['jobList'].length === 0) {
     setErrorMessage(/* msg */ NO_JOBS_ERROR,
         /** includes default msg */ false);
     return;
@@ -262,9 +262,17 @@ function displayJobListings(jobPageData) {
     jobTitle.innerText = job['jobTitle'];
 
     const jobAddress = jobListing.children[1];
-
     const location = job['jobLocation'];
     jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
+
+    const jobPay = jobListing.children[2];
+    const pay = job['jobPay'];
+    jobPay.innerText = `${pay['min']} - ${pay['max']} ` +
+      `(per ${pay['paymentFrequency'].toLowerCase()})`;
+
+    const requirementsList = jobListing.children[3];
+    // TODO(issue/xx): temporary
+    requirementsList.innerText = job['requirements'];
 
     jobListingsElement.appendChild(jobListing);
   });
