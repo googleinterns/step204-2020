@@ -88,7 +88,7 @@ function renderJobPageElements() {
   renderJobExpiryLimits();
 
   /** reset the error to make sure no error msg initially present */
-  setErrorMessage(errorMessageElementId='error-message', msg='', includesDefault=false);
+  setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */'', /* includesDefault= */false);
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -230,45 +230,41 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ name.placeholder,
-          /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
       return false;
   }
 
   if (description.value === '') {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ description.placeholder,
-          /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
       return false;
   }
 
   if (address.value === '') {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ address.placeholder,
-          /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
       return false;
   }
 
   if (postalCode.value === '') {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ postalCode.placeholder,
-          /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
       return false;
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
       payMin > payMax || payMin < 0 || payMax < 0) {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ document.getElementById('pay-title')
-          .textContent, /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
+          .textContent);
       return false;
   }
 
   if (duration === '') {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ document.getElementById('duration-title')
-          .textContent, /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
+          .textContent);
       return false;
   }
 
   if (Number.isNaN(expiry)) {
-      setErrorMessage(errorMessageElementId='error-message', /* msg */ document.getElementById('expiry-title')
-          .textContent, /** includes default msg */ true);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
+          .textContent);
       return false;
   }
 
@@ -291,11 +287,11 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(errorMessageElementId='error-message', /* msg */ '', /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(errorMessageElementId='error-message', /* msg */ RESPONSE_ERROR, /** include default msg */ false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR, /* includesDefault= */false);
         console.log('error', error);
       });
 });
