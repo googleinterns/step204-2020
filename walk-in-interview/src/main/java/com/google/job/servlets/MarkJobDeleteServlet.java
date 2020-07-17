@@ -50,9 +50,6 @@ public final class MarkJobDeleteServlet extends HttpServlet {
             // Changes the status to DELETED
             this.jobsDatabase.markJobPostAsDeleted(jobId);
 
-            // TODO(issue/51): after "interest list" is involved,
-            //  remove the DELETED job post from applicant's interest list
-
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
@@ -77,7 +74,7 @@ public final class MarkJobDeleteServlet extends HttpServlet {
             if (!hasJob) {
                 throw new IllegalArgumentException("Invalid Job Id");
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }
