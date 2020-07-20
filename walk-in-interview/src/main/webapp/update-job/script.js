@@ -32,7 +32,7 @@ function getJobId() {
     var idx = document.URL.indexOf("?");
     var jobId = "";
     if (idx == -1) {
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "No Job Id found. " + RESPONSE_ERROR,
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "No Job Id found.",
             /* includesDefault= */false);
         return jobId;
     }
@@ -51,7 +51,7 @@ function getJobId() {
  */
 function addPageElements(jobId) {
     if (jobId === "") {
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found. " + RESPONSE_ERROR,
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found.",
             /* includesDefault= */false);
         return;
     }
@@ -133,7 +133,7 @@ function addPageElements(jobId) {
  */
 function getJobFromId(jobId) {
     // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
-    const url = "/jobs?jobId=" + jobId;
+    const url = `/jobs?jobId=${jobId}`;
     fetch(url, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
@@ -231,7 +231,6 @@ function renderJobDurationOptions(jobDuration) {
  */
 function renderSelectOptions(selectElement, options, existingOption) {
     selectElement.options.length = 0;
-    selectElement.options[0] = new Option("Select", "");
     selectElement.options[0].setAttribute("disabled", true);
   
     for (const key in options) {
@@ -239,7 +238,7 @@ function renderSelectOptions(selectElement, options, existingOption) {
             continue;
         }
 
-        var defaultSelected = (key == existingOption);
+        var defaultSelected = (key === existingOption);
         selectElement.options[selectElement.options.length] =
             new Option(options[key], key, defaultSelected, defaultSelected);
     }
