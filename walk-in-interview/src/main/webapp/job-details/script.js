@@ -30,7 +30,6 @@ submitButton.addEventListener('click', (_) => {
     headers: {'Content-Type': 'application/json'},
     credentials: 'include',
   })
-  .then((response) => response.text())
   .then(() => {
       /** reset the error (there might have been an error msg from earlier) */
       setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
