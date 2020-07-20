@@ -18,6 +18,8 @@ const JOBPAGE_PATH = '/new-job/index.html';
 const RESPONSE_ERROR = 'An error occured while getting the job listings.';
 const NO_JOBS_ERROR = 'There are no jobs to display at the moment.';
 
+const SALARY_PARAM = 'SALARY';
+
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
@@ -44,45 +46,24 @@ function renderHomepageElements() {
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
   renderSelectOptions(/** for */ 'sort-by');
-  renderJobSortSubmit();
 
   const showByTitle = document.getElementById('show-by-region-title');
   showByTitle.innerText = STRINGS['show-by-region-title'];
 
   renderSelectOptions(/** for */ 'show-by-region');
-  renderShowRegionSubmit();
 
-  const filterByTitle = document.getElementById('filter-by-title');
-  filterByTitle.innerText = STRINGS['filter-by-title'];
+  const LimitsTitle = document.getElementById('filter-limits-title');
+  LimitsTitle.innerText = STRINGS['filter-limits-title'];
 
-  const distanceFilterTitle =
-    document.getElementById('filter-distance-title');
-  distanceFilterTitle.innerText = STRINGS['filter-distance-title'];
+  const minLimit = document.getElementById('filter-min-limit');
+  minLimit.setAttribute('type', 'number');
+  minLimit.setAttribute('placeholder', STRINGS['filter-min-limit']);
 
-  const distanceMin = document.getElementById('filter-distance-min');
-  distanceMin.setAttribute('type', 'number');
-  distanceMin.setAttribute('placeholder',
-      STRINGS['filter-distance-min']);
+  const maxLimit = document.getElementById('filter-max-limit');
+  maxLimit.setAttribute('type', 'number');
+  maxLimit.setAttribute('placeholder', STRINGS['filter-max-limit']);
 
-  const distanceMax = document.getElementById('filter-distance-max');
-  distanceMax.setAttribute('type', 'number');
-  distanceMax.setAttribute('placeholder',
-      STRINGS['filter-distance-max']);
-
-  const salaryFilterTitle =
-    document.getElementById('filter-salary-title');
-  salaryFilterTitle.innerText = STRINGS['filter-salary-title'];
-
-  const salaryMin = document.getElementById('filter-salary-min');
-  salaryMin.setAttribute('type', 'number');
-  salaryMin.setAttribute('placeholder',
-      STRINGS['filter-salary-min']);
-
-  const salaryMax = document.getElementById('filter-salary-max');
-  salaryMax.setAttribute('type', 'number');
-  salaryMax.setAttribute('placeholder',
-      STRINGS['filter-salary-max']);
-  renderJobFilterSubmit();
+  renderJobFiltersSubmit();
 
   const jobListingsTitle =
     document.getElementById('job-listings-title');
@@ -91,8 +72,8 @@ function renderHomepageElements() {
   const defaultSortBy = document.getElementById('sort-by').value;
 
   /** Note that this platform currently only sorts by Salary.*/
-  if (defaultSortBy.includes('SALARY')) {
-    const sortByParam = 'SALARY';
+  if (defaultSortBy.includes(SALARY_PARAM)) {
+    const sortByParam = SALARY_PARAM;
     const orderByParam = defaultSortBy.substring(7);
     renderJobListings(sortByParam, orderByParam, DEFAULT_PAGE_SIZE,
         DEFAULT_PAGE_INDEX);
@@ -132,103 +113,89 @@ function renderSelectOptions(id) {
 }
 
 /**
- * Checks that the sorting is valid.
+ * Checks that the filter fields are valid.
+ * Note that the lower and upper limits can be left empty, by default
+ * the lower limit is 0 and the upper limit is Integer.MAX_VALUE
  * @return {boolean} Indication of whether the fields are valid.
  */
-function validSortByInput() {
+function validateFilters() {
   const sortByParam = document.getElementById('sort-by').value;
-
-  if (sortByParam == '') {
-    /** no need to show error message as this would not be the user's fault */
-    console.log('error', 'sorting was empty');
-    return false;
-  }
-
-  return true;
-}
-
-/**
- * Checks that the region and sorting are valid.
- * @return {boolean} Indication of whether the fields are valid.
- */
-function validShowRegionInput() {
   const showByParam = document.getElementById('show-by-region').value;
+  const minLimitParam = document.getElementById('filter-min-limit')
+      .valueAsNumber;
+  const maxLimitParam = document.getElementById('filter-max-limit')
+      .valueAsNumber;
 
-  if (showByParam == '' || !validSortByInput()) {
+  if (showByParam == '' || sortByParam == '') {
     /** no need to show error message as this would not be the user's fault */
     console.log('error', 'region or sorting was empty');
     return false;
   }
 
+  /** If the field has been filled out, we check that it's a positive int */
+  if (!Number.isNaN(minLimitParam) &&
+    (!Number.isInteger(minLimitParam) || minLimitParam < 0)) {
+    setErrorMessage(/* msg */ STRINGS['filter-min-limit'],
+        /** includes default msg */ true);
+    return false;
+  }
+
+  /** If the field has been filled out, we check that it's a positive int */
+  if (!Number.isNaN(maxLimitParam) &&
+  (!Number.isInteger(maxLimitParam) || maxLimitParam < 0)) {
+    setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
+        /** includes default msg */ true);
+    return false;
+  }
+
+  /** If both fields have been filled out, we check that max >= min */
+  if (!Number.isNaN(maxLimitParam) && !Number.isNaN(minLimitParam) &&
+    maxLimitParam < minLimitParam) {
+    setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
+        /** includes default msg */ true);
+    return false;
+  }
+
   return true;
-}
-
-/**
- * Add the attributes and on click function to the sorting
- * submit button.
- */
-function renderJobSortSubmit() {
-  const sortBySubmit = document.getElementById('sort-by-submit');
-  sortBySubmit.setAttribute('type', 'submit');
-  sortBySubmit.setAttribute('value', STRINGS['sort-by-submit']);
-
-  sortBySubmit.addEventListener('click', (_) => {
-    if (!validSortByInput()) {
-      return;
-    }
-
-    const sortingParam = document.getElementById('sort-by').value;
-
-    /** Note that this platform currently only sorts by Salary.*/
-    if (sortingParam.includes('SALARY')) {
-      const sortByParam = 'SALARY';
-      const orderByParam = sortingParam.substring(7);
-      renderJobListings(sortByParam, orderByParam, DEFAULT_PAGE_SIZE,
-          DEFAULT_PAGE_INDEX);
-    }
-  });
-}
-
-/**
- * Add the attributes and on click function to the region
- * submit button.
- */
-function renderShowRegionSubmit() {
-  const showBySubmit = document.getElementById('show-by-region-submit');
-  showBySubmit.setAttribute('type', 'submit');
-  showBySubmit.setAttribute('value', STRINGS['show-by-region-submit']);
-
-  showBySubmit.addEventListener('click', (_) => {
-    if (!validShowRegionInput()) {
-      return;
-    }
-
-    const sortingParam = document.getElementById('sort-by').value;
-    const regionParam = document.getElementById('show-by-region').value;
-
-    /** Note that this platform currently only sorts by Salary.*/
-    if (sortingParam.includes('SALARY')) {
-      const sortByParam = 'SALARY';
-      const orderByParam = sortingParam.substring(7);
-      renderJobListingsByRegion(regionParam, sortByParam, orderByParam,
-          DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX);
-    }
-  });
 }
 
 /**
  * Add the attributes and on click function to the filters
  * submit button.
  */
-function renderJobFilterSubmit() {
-  const filterBySubmit = document.getElementById('filter-by-submit');
-  filterBySubmit.setAttribute('type', 'submit');
-  filterBySubmit.setAttribute('value', STRINGS['filter-by-submit']);
+function renderJobFiltersSubmit() {
+  const filtersSubmit = document.getElementById('filters-submit');
+  filtersSubmit.setAttribute('type', 'submit');
+  filtersSubmit.setAttribute('value', STRINGS['filters-submit']);
 
-  /**
-   * TODO(issue/35): add filtering event listener
-   * + validation + GET request functions
-   */
+  filtersSubmit.addEventListener('click', (_) => {
+    if (!validateFilters()) {
+      return;
+    }
+
+    const sortingParam = document.getElementById('sort-by').value;
+    const regionParam = document.getElementById('show-by-region').value;
+    const minLimitParam = document.getElementById('filter-min-limit')
+        .valueAsNumber;
+    const maxLimitParam = document.getElementById('filter-max-limit')
+        .valueAsNumber;
+
+    if (Number.isNaN(minLimitParam)) {
+      minLimitParam = 0;
+    }
+
+    if (Number.isNaN(maxLimitParam)) {
+      maxLimitParam = Number.MAX_SAFE_INTEGER;
+    }
+
+    /** Note that this platform currently only sorts by Salary.*/
+    if (sortingParam.includes(SALARY_PARAM)) {
+      const sortByParam = SALARY_PARAM;
+      const orderByParam = sortingParam.substring(7);
+      renderJobListings(regionParam, sortByParam, minLimitParam,
+          maxLimitParam, orderByParam, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX);
+    }
+  });
 }
 
 /**
@@ -286,17 +253,22 @@ function displayJobListings(jobPageData) {
 
 /**
  * Add the list of jobs that are stored in the database.
+ * @param {String} region The Singapore region.
  * @param {String} sortBy How the jobs should be sorted.
+ * @param {int} minLimit The lower limit for filtering.
+ * @param {int} maxLimit The upper limit for filtering.
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  */
-async function renderJobListings(sortBy, order, pageSize, pageIndex) {
-  if (!validSortByInput()) {
+async function renderJobListings(region, sortBy, minLimit, maxLimit,
+    order, pageSize, pageIndex) {
+  if (!validateFilters()) {
     return;
   }
 
-  const jobPageData = await getJobListings(sortBy, order, pageSize, pageIndex)
+  const jobPageData = await getJobListings(region, sortBy, minLimit, maxLimit,
+      order, pageSize, pageIndex)
       .catch((error) => {
         console.log('error', error);
         setErrorMessage(/* msg */ RESPONSE_ERROR,
@@ -310,67 +282,22 @@ async function renderJobListings(sortBy, order, pageSize, pageIndex) {
  * Makes GET request to retrieve all the job listings from the database
  * given the sorting and order. This function is called when the
  * homepage is loaded and also when the sorting is changed.
+ * @param {String} region The Singapore region.
  * @param {String} sortBy How the jobs should be sorted.
+ * @param {int} minLimit The lower limit for filtering.
+ * @param {int} maxLimit The upper limit for filtering.
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  * @return {Object} The data returned from the servlet.
  */
-function getJobListings(sortBy, order, pageSize, pageIndex) {
-  const params = `sortBy=${sortBy}&order=${order}` +
-    `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
+function getJobListings(region, sortBy, minLimit, maxLimit,
+    order, pageSize, pageIndex) {
+  const params = `region=${region}&sortBy=${sortBy}&minLimit=${minLimit}&` +
+    `maxLimit=${maxLimit}&order=${order}&pageSize=${pageSize}` +
+    `&pageIndex=${pageIndex}`;
 
-  return fetch(`/jobs?${params}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('data', data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false);
-        return data;
-      });
-}
-
-/**
- * Add the list of jobs that are stored in the database based on region.
- * @param {String} region The region of Singapore.
- * @param {String} sortBy How the jobs should be sorted.
- * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for one page.
- * @param {int} pageIndex The page index (starting from 0).
- */
-async function renderJobListingsByRegion(region, sortBy, order,
-    pageSize, pageIndex) {
-  if (!validShowRegionInput()) {
-    return;
-  }
-
-  const jobPageData = await getJobListingsByRegion(region, sortBy, order,
-      pageSize, pageIndex)
-      .catch((error) => {
-        console.log('error', error);
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
-      });
-
-  displayJobListings(jobPageData);
-}
-
-/**
- * Makes GET request to retrieve all the job listings from the database
- * given the sorting and order. This function is called when the
- * homepage is loaded and also when the sorting is changed.
- * @param {String} region The region in Singapore.
- * @param {String} sortBy How the jobs should be sorted.
- * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for one page.
- * @param {int} pageIndex The page index (starting from 0).
- * @return {Object} The data returned from the servlet.
- */
-function getJobListingsByRegion(region, sortBy, order, pageSize, pageIndex) {
-  const params = `region=${region}&sortBy=${sortBy}&order=${order}` +
-    `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
-
-  return fetch(`/jobs/by-region?${params}`)
+  return fetch(`/jobs/listings?${params}`)
       .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
