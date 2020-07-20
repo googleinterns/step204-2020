@@ -185,7 +185,7 @@ public final class JobsDatabase {
                 .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
         }
 
-        // TODO(issue/xx): add the query to include pagination
+        // TODO(issue/34): add to the query to include pagination
 
         ApiFuture<QuerySnapshot> future = query.get();
 
@@ -200,9 +200,10 @@ public final class JobsDatabase {
                     jobList.add(job);
                 }
 
+                
+                // TODO(issue/34): adjust range/total count based on pagination
                 long totalCount = documents.size();
-                // TODO(issue/xx): implement pagination
-                Range<Integer> range = Range.between(Math.max(0, documents.size()), documents.size());
+                Range<Integer> range = Range.between(1, documents.size());
 
                 JobPage jobPage = new JobPage(jobList, totalCount, range);
                 log.info(jobPage.toString());

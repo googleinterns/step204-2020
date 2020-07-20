@@ -100,7 +100,8 @@ function renderJobPageElements() {
 
   currErrorField = 'title';
   /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /** includes default msg */ false);
+  setErrorMessage(/** error div id */ 'error-message', /* msg */ '',
+      /** includes default msg */ false);
 }
 
 /**
@@ -408,12 +409,13 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false);
+        setErrorMessage(/** error div id */ 'error-message', /* msg */ '',
+            /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
+        setErrorMessage(/** error div id */ 'error-message',
+            /* msg */ RESPONSE_ERROR, /** include default msg */ false);
         console.log('error', error);
       });
 });
