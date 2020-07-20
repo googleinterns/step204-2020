@@ -2,7 +2,6 @@ package com.google.job.data;
 
 /** Enumeration for filters that can be applied to the job listings. */
 public enum Filter {
-    DISTANCE("DISTANCE"),
     SALARY("SALARY");
 
     private final String filterId;

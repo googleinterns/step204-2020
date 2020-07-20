@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.apache.commons.lang3.Range;
+import java.lang.UnsupportedOperationException;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -22,8 +23,8 @@ import java.util.logging.Logger;
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
-    private static final String SALARY_SORT = "jobPay.annualMax";
-    private static final String REGION_FILTER = "jobLocation.region";
+    private static final String SALARY_FIELD = "jobPay.annualMax";
+    private static final String REGION_FIELD = "jobLocation.region";
 
     /**
      * Adds a newly created job post.
@@ -112,8 +113,10 @@ public final class JobsDatabase {
 
     /**
      * Gets all the jobs given the params from the database.
-     * Currently, they can only be sorted by salary.
+     * Currently, they can only be sorted/filtered by salary.
      *
+     * @param minLimit The lower limit to be shown (inclusive).
+     * @param maxLimit The upper limit to be shown (inclusive).
      * @param region The region in Singapore.
      * @param sortBy The sorting of the list of jobs.
      * @param order The ordering of the sorting.
@@ -121,17 +124,25 @@ public final class JobsDatabase {
      * @param pageIndex The page which we are on (pagination).
      * @return Future of the JobPage object.
      */
-    public static Future<JobPage> fetchJobPage(SingaporeRegion region, Filter sortBy, Order order,
+    public static Future<JobPage> fetchJobPage(int minLimit, int maxLimit, SingaporeRegion region, Filter sortBy, Order order,
         int pageSize, int pageIndex) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
+        if (!sortBy.equals(Filter.SALARY)) {
+            throw new UnsupportedOperationException("currently this app only supports sorting/filtering by salary");
+        }
+        
         Query query;
 
         if (region.equals(SingaporeRegion.ENTIRE)) {
-            query = jobsCollection.orderBy(SALARY_SORT, Order.getQueryDirection(order));
+            query = jobsCollection.whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
+                .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
+                .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
         } else {
-            query = jobsCollection.whereEqualTo(REGION_FILTER, region.name());
-                // .orderBy(SALARY_SORT, Order.getQueryDirection(order));
+            query = jobsCollection.whereEqualTo(REGION_FIELD, region)
+                .whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
+                .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
+                .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
         }
 
         // TODO(issue/xx): add the query to include pagination
