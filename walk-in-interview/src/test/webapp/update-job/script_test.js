@@ -278,7 +278,7 @@ describe('Update Job Tests', function() {
         return driver.findElement(By.id('pay-frequency'))
             .getAttribute('value')
             .then((value) => {
-              assert.equal(value, 'Monthly');
+              assert.equal(value, 'MONTHLY');
             });
       });
 
@@ -347,10 +347,10 @@ describe('Update Job Tests', function() {
       });
 
       it('checks if default option properly selected', () => {
-        return driver.findElement(By.id('duration')
-            .getAttribute('value'))
+        return driver.findElement(By.id('duration'))
+            .getAttribute('value')
             .then((value) => {
-              assert.equal(value, '1 Week');
+              assert.equal(value, 'ONE_WEEK');
             });
       });
     });
@@ -526,7 +526,9 @@ describe('Update Job Tests', function() {
         /**
          * Job duration not set below since we are testing it.
          */
-        return driver.findElement(By.id('title')).sendKeys('Waiter')
+        return driver.findElement(By.id('duration')).clear()
+            .then(() => driver.findElement(By.id('title'))
+                .sendKeys('Waiter'))
             .then(() => driver.findElement(By.id('description'))
                 .sendKeys('wait on tables'))
             .then(() => driver.findElement(By.id('address'))
