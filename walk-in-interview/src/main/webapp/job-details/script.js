@@ -28,11 +28,18 @@ submitButton.addEventListener('click', (_) => {
   fetch('../update-job/index.html', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: document.cookie,
+    credentials: 'include',
   })
-      .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ "There is error when transferring jobId", 
+  .then((response) => response.text())
+  .then((data) => {
+      console.log('data', data);
+      /** reset the error (there might have been an error msg from earlier) */
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+      window.location.href= "../update-job/index.html";
+  })
+  .catch((error) => {
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ "Error occur when sending jobId",
           /* includesDefault= */false);
-        console.log('error', error);
-      });
+      console.log('error', error);
+  });
 });
