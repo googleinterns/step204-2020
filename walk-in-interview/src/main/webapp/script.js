@@ -17,8 +17,13 @@ const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
 const RESPONSE_ERROR = 'An error occured while getting the job listings.';
 const NO_JOBS_ERROR = 'There are no jobs to display at the moment.';
-
 const SALARY_PARAM = 'SALARY';
+
+/**
+ * Note that this is needed because in JS we can hold bigger Integer
+ * values than in Java.
+ */
+const JAVA_INTEGER_MAX_VALUE = 2147483647;
 
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
@@ -126,7 +131,7 @@ function validateFilters() {
 
   /** If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(minLimitParam) &&
-    (!Number.isInteger(minLimitParam) || minLimitParam < 0)) {
+    (minLimitParam > JAVA_INTEGER_MAX_VALUE || minLimitParam < 0)) {
     setErrorMessage(/* msg */ STRINGS['filter-min-limit'],
         /** includes default msg */ true);
     return false;
@@ -134,7 +139,7 @@ function validateFilters() {
 
   /** If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(maxLimitParam) &&
-  (!Number.isInteger(maxLimitParam) || maxLimitParam < 0)) {
+  (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
     setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
         /** includes default msg */ true);
     return false;
@@ -249,7 +254,7 @@ async function renderJobListings() {
   }
 
   if (Number.isNaN(maxLimitParam)) {
-    maxLimitParam = Number.MAX_SAFE_INTEGER;
+    maxLimitParam = JAVA_INTEGER_MAX_VALUE;
   }
 
   const jobPageData = await getJobListings(regionParam, sortByParam,

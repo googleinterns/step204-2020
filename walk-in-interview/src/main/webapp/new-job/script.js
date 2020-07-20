@@ -22,6 +22,12 @@ const HOURS_PER_YEAR = 8760;
 const WEEKS_PER_YEAR = 52;
 const MONTHS_PER_YEAR = 12;
 
+/**
+ * Note that this is needed because in JS we can hold bigger Integer
+ * values than in Java.
+ */
+const JAVA_INTEGER_MAX_VALUE = 2147483647;
+
 let currErrorField;
 
 window.onload = () => {
@@ -352,8 +358,8 @@ function validateRequiredUserInput() {
   }
 
   if (postalCode.value === '' ||
-    !Number.isInteger(parseInt(postalCode.value[0])) ||
-    !Number.isInteger(parseInt(postalCode.value[1])) ||
+    (parseInt(postalCode.value[0]) > JAVA_INTEGER_MAX_VALUE) ||
+    (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE) ||
     parseInt(postalCode.value.substring(0, 2)) <= 0 ||
     parseInt(postalCode.value.substring(0, 2)) > 82) {
     setErrorMessage(/* msg */ postalCode.placeholder,
@@ -369,14 +375,14 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (Number.isNaN(payMin) || !Number.isInteger(payMin) || payMin < 0) {
+  if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
     setErrorMessage(/* msg */ document.getElementById('pay-title')
         .textContent, /** includes default msg */ true,
     /** error element id */ 'pay-min');
     return false;
   }
 
-  if (Number.isNaN(payMax) || !Number.isInteger(payMax) ||
+  if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
     payMin > payMax || payMax < 0) {
     setErrorMessage(/* msg */ document.getElementById('pay-title')
         .textContent, /** includes default msg */ true,

@@ -25,8 +25,8 @@ import java.util.*;
 public final class JobsListingsServlet extends HttpServlet {
     private static final long TIMEOUT = 5;
 
-    public static final String MIN_LIMIT_PARAM = "min";
-    public static final String MAX_LIMIT_PARAM = "max";
+    public static final String MIN_LIMIT_PARAM = "minLimit";
+    public static final String MAX_LIMIT_PARAM = "maxLimit";
     public static final String REGION_PARAM = "region";
     public static final String SORT_BY_PARAM = "sortBy";
     public static final String ORDER_PARAM = "order";
