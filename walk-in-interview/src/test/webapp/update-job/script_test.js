@@ -40,6 +40,7 @@ chrome.setDefaultService(service);
 const By = webdriver.By;
 const until = webdriver.until;
 const options = new chrome.Options();
+
 /**
  * Note that these tests are headless.
  * To see the test browser pop up, remove this line.
@@ -99,7 +100,7 @@ describe('Update Job Tests', function() {
 
     describe('Submit Button', () => {
       it('checks the value attribute', () => {
-        return driver.findElement(By.id('submit'))
+        return driver.findElement(By.id('update'))
             .getAttribute('value')
             .then((value) => {
               assert.equal(value, 'Update');
@@ -107,7 +108,7 @@ describe('Update Job Tests', function() {
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id('submit'))
+        return driver.findElement(By.id('update'))
             .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'submit');
@@ -148,7 +149,7 @@ describe('Update Job Tests', function() {
         return driver.findElement(By.id('description'))
             .getAttribute('type')
             .then((value) => {
-              assert.equal(value, 'text');
+              assert.equal(value, 'textarea');
             });
       });
 
@@ -274,8 +275,8 @@ describe('Update Job Tests', function() {
       });
 
       it('checks if default option properly selected', () => {
-        return driver.findElement(By.id('pay-frequency')
-            .getAttribute('value'))
+        return driver.findElement(By.id('pay-frequency'))
+            .getAttribute('value')
             .then((value) => {
               assert.equal(value, 'Monthly');
             });
@@ -306,7 +307,7 @@ describe('Update Job Tests', function() {
       });
 
       it('max: checks the default value text', () => {
-        return driver.findElement(By.id('pay-min'))
+        return driver.findElement(By.id('pay-max'))
             .getAttribute('value')
             .then((value) => {
               assert.equal(value, '4');
@@ -394,8 +395,8 @@ describe('Update Job Tests', function() {
       });
 
       it('checks if default option properly selected', () => {
-        return driver.findElement(By.id('expiry')
-            .getAttribute('value'))
+        return driver.findElement(By.id('expiry'))
+            .getAttribute('value')
             .then((value) => {
               assert.equal(value, '2020-07-21');
             });
@@ -471,7 +472,7 @@ describe('Update Job Tests', function() {
          * The job title must be cleared here to test it.
          */
         return driver.findElement(By.id('title')).clear()
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Title'));
@@ -485,7 +486,7 @@ describe('Update Job Tests', function() {
          * Note the use of assert.notEqual().
          */
         return driver.findElement(By.id('title')).clear()
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.notEqual(text,
                 'There is an error in the following field: '));
@@ -508,7 +509,7 @@ describe('Update Job Tests', function() {
             .then(() => driver.findElement(By.id('pay-max')).clear())
             .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
             .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Pay'));
@@ -540,7 +541,7 @@ describe('Update Job Tests', function() {
                 .sendKeys('6'))
             .then(() => driver.findElement(By.id('expiry'))
                 .sendKeys(today))
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Duration'));
@@ -551,7 +552,7 @@ describe('Update Job Tests', function() {
          * The job expiry must be cleared here to test it.
          */
         return driver.findElement(By.id('expiry')).clear()
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Expiry'));
@@ -562,7 +563,7 @@ describe('Update Job Tests', function() {
        * user should be returned to the homepage.
        */
       it('should return to homepage', () => {
-        return clickSubmit(driver)
+        return clickUpdate(driver)
             .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
             .then(() => driver.getCurrentUrl())
             .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
@@ -577,13 +578,13 @@ describe('Update Job Tests', function() {
 });
 
 /**
- * This function just to submit the new job with the
+ * This function just to submit the updated job with the
  * filled out fields.
  * @param {webdriver} driver the current driver being tested.
  * @return {webdriver} the altered driver.
  */
-function clickSubmit(driver) {
-  return driver.findElement(By.id('submit')).click();
+function clickUpdate(driver) {
+  return driver.findElement(By.id('update')).click();
 };
 
 /**

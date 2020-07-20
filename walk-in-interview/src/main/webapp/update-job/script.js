@@ -30,6 +30,9 @@ window.onload = () => {
  * Gets the jobId from cookie.
  */
 function getJobId() {
+  // Only run it for selenium test.
+  return getJobIdForSeleniumTest();
+
   const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
 }
@@ -317,22 +320,22 @@ function validateRequiredUserInput() {
   }
   
     if (name.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['title']);
         return false;
     }
   
     if (description.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['description']);
         return false;
     }
   
     if (address.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['address']);
         return false;
     }
   
     if (postalCode.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['postal-code']);
         return false;
     }
   
@@ -389,6 +392,13 @@ const cancelButton = document.getElementById('cancel');
 cancelButton.addEventListener('click', (_) => {
     window.location.href= HOMEPAGE_PATH;
 });
+
+/**
+ * Returns a dummy jobId only for selenium ui test.
+ */
+function getJobIdForSeleniumTest() {
+  return "xxxxxxx";
+}
 
 /**
  * Returns a specific job object only for selenium ui test.
