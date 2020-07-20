@@ -35,7 +35,7 @@ public final class JobsDatabase {
     public Future<WriteResult> addJob(Job newJob) {
         // Add document data after generating an id.
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION).collectionGroup(newJob.getRegion().name()).document();
+                .collection(JOB_COLLECTION).document();
 
         String jobId = addedDocRef.getId();
 
@@ -139,7 +139,7 @@ public final class JobsDatabase {
                 .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
                 .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
         } else {
-            query = jobsCollection.whereEqualTo(REGION_FIELD, region)
+            query = jobsCollection.whereEqualTo(REGION_FIELD, region.name())
                 .whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
                 .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
                 .orderBy(SALARY_FIELD, Order.getQueryDirection(order));

@@ -69,15 +69,7 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  const defaultSortBy = document.getElementById('sort-by').value;
-
-  /** Note that this platform currently only sorts by Salary.*/
-  if (defaultSortBy.includes(SALARY_PARAM)) {
-    const sortByParam = SALARY_PARAM;
-    const orderByParam = defaultSortBy.substring(7);
-    renderJobListings(sortByParam, orderByParam, DEFAULT_PAGE_SIZE,
-        DEFAULT_PAGE_INDEX);
-  }
+  renderJobListings();
 
   /** reset the error to make sure no error msg initially present */
   setErrorMessage(/* msg */ '', /** includes default msg */ false);
@@ -169,32 +161,7 @@ function renderJobFiltersSubmit() {
   filtersSubmit.setAttribute('value', STRINGS['filters-submit']);
 
   filtersSubmit.addEventListener('click', (_) => {
-    if (!validateFilters()) {
-      return;
-    }
-
-    const sortingParam = document.getElementById('sort-by').value;
-    const regionParam = document.getElementById('show-by-region').value;
-    const minLimitParam = document.getElementById('filter-min-limit')
-        .valueAsNumber;
-    const maxLimitParam = document.getElementById('filter-max-limit')
-        .valueAsNumber;
-
-    if (Number.isNaN(minLimitParam)) {
-      minLimitParam = 0;
-    }
-
-    if (Number.isNaN(maxLimitParam)) {
-      maxLimitParam = Number.MAX_SAFE_INTEGER;
-    }
-
-    /** Note that this platform currently only sorts by Salary.*/
-    if (sortingParam.includes(SALARY_PARAM)) {
-      const sortByParam = SALARY_PARAM;
-      const orderByParam = sortingParam.substring(7);
-      renderJobListings(regionParam, sortByParam, minLimitParam,
-          maxLimitParam, orderByParam, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX);
-    }
+    renderJobListings();
   });
 }
 
@@ -252,23 +219,42 @@ function displayJobListings(jobPageData) {
 }
 
 /**
- * Add the list of jobs that are stored in the database.
- * @param {String} region The Singapore region.
- * @param {String} sortBy How the jobs should be sorted.
- * @param {int} minLimit The lower limit for filtering.
- * @param {int} maxLimit The upper limit for filtering.
- * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for one page.
- * @param {int} pageIndex The page index (starting from 0).
+ * Add the list of jobs that are stored in the database
+ * given the filter fields.
  */
-async function renderJobListings(region, sortBy, minLimit, maxLimit,
-    order, pageSize, pageIndex) {
+async function renderJobListings() {
   if (!validateFilters()) {
     return;
   }
 
-  const jobPageData = await getJobListings(region, sortBy, minLimit, maxLimit,
-      order, pageSize, pageIndex)
+  const sortingParam = document.getElementById('sort-by').value;
+
+  /** Note that this platform currently only sorts by Salary.*/
+  if (!sortingParam.includes(SALARY_PARAM)) {
+    console.log('error', 'this app currently only sorts by salary');
+    return;
+  }
+
+  const sortByParam = SALARY_PARAM;
+  const orderByParam = sortingParam.substring(7);
+
+  const regionParam = document.getElementById('show-by-region').value;
+  let minLimitParam = document.getElementById('filter-min-limit')
+      .valueAsNumber;
+  let maxLimitParam = document.getElementById('filter-max-limit')
+      .valueAsNumber;
+
+  if (Number.isNaN(minLimitParam)) {
+    minLimitParam = 0;
+  }
+
+  if (Number.isNaN(maxLimitParam)) {
+    maxLimitParam = Number.MAX_SAFE_INTEGER;
+  }
+
+  const jobPageData = await getJobListings(regionParam, sortByParam,
+      minLimitParam, maxLimitParam, orderByParam,
+      DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
       .catch((error) => {
         console.log('error', error);
         setErrorMessage(/* msg */ RESPONSE_ERROR,

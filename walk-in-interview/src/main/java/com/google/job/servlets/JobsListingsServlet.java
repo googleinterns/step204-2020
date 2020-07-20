@@ -74,10 +74,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @param pageIndex The page which we are on (pagination).
      * @return JobPage object with all the details for the GET response.
      */
-    private JobPage fetchJobPageDetails(Filter filterBy, int minSalary, int maxSalary, SingaporeRegion region,
+    private JobPage fetchJobPageDetails(int minSalary, int maxSalary, SingaporeRegion region,
         Filter sortBy, Order order, int pageSize, int pageIndex) throws ServletException, ExecutionException, TimeoutException {
         try {
-            return this.jobsDatabase.fetchJobPage(filterBy, minSalary, maxSalary, region, sortBy, order, pageSize, pageIndex)
+            return this.jobsDatabase.fetchJobPage(minSalary, maxSalary, region, sortBy, order, pageSize, pageIndex)
                     .get(TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
@@ -120,7 +120,7 @@ public final class JobsListingsServlet extends HttpServlet {
         }
 
         try {
-            return Integer.parseInt(maxLimitStr);;
+            return Integer.parseInt(maxLimitStr);
         } catch(NumberFormatException e) {
             throw new IllegalArgumentException("max limit param should be an int");
         }
