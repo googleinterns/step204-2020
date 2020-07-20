@@ -31,9 +31,10 @@ window.onload = () => {
 function getJobId() {
     var idx = document.URL.indexOf("?");
     var jobId = "";
-    if (idx != -1) {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ "No Job Id found. " + RESPONSE_ERROR,
+    if (idx == -1) {
+        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "No Job Id found. " + RESPONSE_ERROR,
             /* includesDefault= */false);
+        return jobId;
     }
     
     var jobIdPair = document.URL.substring(idx + 1, document.URL.length).split("&");
@@ -131,7 +132,7 @@ function addPageElements(jobId) {
  * @returns Job json.
  */
 function getJobFromId(jobId) {
-    // TODO(issue/53): run the webpage to test once doGet finishes in JobServlet
+    // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
     const url = "/jobs?jobId=" + jobId;
     fetch(url, {
         method: "GET",
@@ -218,7 +219,7 @@ function renderJobDurationOptions(jobDuration) {
     jobDurationSelect.setAttribute("required", true);
   
     renderSelectOptions(jobDurationSelect, STRINGS["duration"], jobDuration);
-  }
+}
 
 /**
  * Adds the keys and values from the options map to the select element.
@@ -239,7 +240,8 @@ function renderSelectOptions(selectElement, options, existingOption) {
         }
 
         var defaultSelected = (key == existingOption);
-        selectElement.options[selectElement.options.length] = new Option(options[key], key, defaultSelected, defaultSelected);
+        selectElement.options[selectElement.options.length] =
+            new Option(options[key], key, defaultSelected, defaultSelected);
     }
 }
 
@@ -270,7 +272,7 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
  */
 function getJobDetailsFromUserInput() {
     const name = document.getElementById("title").value;
-    const description = document.getElementById("descriptionv").value;
+    const description = document.getElementById("description").value;
     const address = document.getElementById("address").value;
     const postalCode = document.getElementById("postal-code").value;
     const payFrequency = document.getElementById("pay-frequency").value;
@@ -282,7 +284,7 @@ function getJobDetailsFromUserInput() {
     const requirementsList = [];
     requirementsCheckboxes.forEach(({checked, id}) => {
         if (checked) {
-        requirementsList.push(id);
+            requirementsList.push(id);
         }
     });
   
@@ -329,7 +331,7 @@ function validateRequiredUserInput() {
     const jobId = getJobId();
     const name = document.getElementById("title");
     const description = document.getElementById("description");
-    const address = document.getElementById("addressaddress");
+    const address = document.getElementById("address");
     const postalCode = document.getElementById("postal-code");
     const payFrequency = document.getElementById("pay-frequency").value;
     const payMin = document.getElementById("pay-min").valueAsNumber;
