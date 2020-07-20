@@ -13,7 +13,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
-import {getRequirementsList, setErrorMessage} from "../common-functions.js";
+import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
 const STRINGS = AppStrings['job'];
 const NEW_JOB_STRINGS = AppStrings['new-job'];
@@ -134,24 +134,6 @@ function renderJobDurationOptions() {
   jobDurationSelect.setAttribute('required', true);
 
   renderSelectOptions(jobDurationSelect, STRINGS['duration']);
-}
-
-/**
- * Add the keys and values from the options map to the select element.
- * @param {Element} select The select element.
- * @param {Map} options The map of options to be added.
- */
-function renderSelectOptions(select, options) {
-  select.options.length = 0;
-  select.options[0] = new Option('Select', '');
-  select.options[0].setAttribute('disabled', true);
-
-  for (const key in options) {
-    if (options.hasOwnProperty(key)) {
-      select.options[select.options.length] =
-        new Option(options[key], key);
-    }
-  }
 }
 
 /** Dynamically add the limits for choosing the new job post expiry. */

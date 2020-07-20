@@ -19,13 +19,13 @@ const STRINGS = AppStrings['common'];
  * @return {Object} the requirements list in a key-value mapping format.
  */
 function getRequirementsList() {
-    // TODO(issue/17): GET request to servlet to get from database
-    // returning some hardcoded values for now
-    return {
-      'O_LEVEL': 'O Level',
-      'LANGUAGE_ENGLISH': 'English',
-      'DRIVING_LICENSE_C': 'Category C Driving License',
-    };
+  // TODO(issue/17): GET request to servlet to get from database
+  // returning some hardcoded values for now
+  return {
+    'O_LEVEL': 'O Level',
+    'LANGUAGE_ENGLISH': 'English',
+    'DRIVING_LICENSE_C': 'Category C Driving License',
+  };
 }
 
 /**
@@ -35,7 +35,25 @@ function getRequirementsList() {
  * @param {boolean} includesDefault whether the includes default message. Default to be true.
  */
 function setErrorMessage(errorMessageElementId, msg, includesDefault=true) {
-    document.getElementById(errorMessageElementId).innerText = (includesDefault ? STRINGS['error-message'] + msg : msg);
+  document.getElementById(errorMessageElementId).innerText = (includesDefault ? STRINGS['error-message'] + msg : msg);
 }
 
-export {getRequirementsList, setErrorMessage};
+/**
+ * Add the keys and values from the options map to the select element.
+ * @param {Element} select The select element.
+ * @param {Map} options The map of options to be added.
+ */
+function renderSelectOptions(select, options) {
+  select.options.length = 0;
+  select.options[0] = new Option('Select', '');
+  select.options[0].setAttribute('disabled', true);
+
+  for (const key in options) {
+    if (options.hasOwnProperty(key)) {
+      select.options[select.options.length] =
+        new Option(options[key], key);
+    }
+  }
+}
+
+export {getRequirementsList, setErrorMessage, renderSelectOptions};

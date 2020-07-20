@@ -13,7 +13,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
-import {getRequirementsList, setErrorMessage} from '../common-functions.js';
+import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
@@ -206,7 +206,8 @@ function renderJobPayFrequencyOptions(jobPayFrequency) {
   const jobPaySelectElement = document.getElementById('pay-frequency');
   jobPaySelectElement.setAttribute('required', true);
   
-  renderSelectOptions(jobPaySelectElement, STRINGS['pay-frequency'], jobPayFrequency);
+  renderSelectOptions(jobPaySelectElement, STRINGS['pay-frequency']);
+  jobPaySelectElement.value = jobPayFrequency;
 }
 
 /**
@@ -218,30 +219,8 @@ function renderJobDurationOptions(jobDuration) {
   const jobDurationSelect = document.getElementById("duration");
   jobDurationSelect.setAttribute('required', true);
   
-  renderSelectOptions(jobDurationSelect, STRINGS['duration'], jobDuration);
-}
-
-/**
- * Adds the keys and values from the options map to the select element.
- * Chooses the existing options.
- * 
- * @param {Element} selectElement The select element.
- * @param {Map} options The map of options to be added.
- * @param {String} existingOption Existing options.
- */
-function renderSelectOptions(selectElement, options, existingOption) {
-    selectElement.options.length = 0;
-    selectElement.options[0].setAttribute('disabled', true);
-  
-    for (const key in options) {
-        if (!options.hasOwnProperty(key)) {
-            continue;
-        }
-
-        var defaultSelected = (key === existingOption);
-        selectElement.options[selectElement.options.length] =
-            new Option(options[key], key, defaultSelected, defaultSelected);
-    }
+  renderSelectOptions(jobDurationSelect, STRINGS['duration']);
+  jobDurationSelect.value = jobDuration;
 }
 
 /**
