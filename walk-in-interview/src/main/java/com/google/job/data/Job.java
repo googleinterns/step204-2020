@@ -277,6 +277,9 @@ public final class Job {
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return String.format("Job{jobId=%s, jobStatus=%s, jobTitle=%s, jobLocation=%s, "
+                + "jobDescription=%s, jobPay=%s, requirements=%s, postExpiryTimestamp=%d, jobDuration=%s}",
+                jobId, jobStatus, jobTitle, jobLocation,
+                jobDescription, jobPay, requirements, postExpiryTimestamp, jobDuration);
     }
 }

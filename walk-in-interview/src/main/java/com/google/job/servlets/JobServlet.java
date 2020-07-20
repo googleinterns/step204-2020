@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.Time;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -41,7 +40,7 @@ public final class JobServlet extends HttpServlet {
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Explicitly routes PATCH requests to a doPatch method since by default HttpServlet doesn't do it for us
+        // Explicitly routes PATCH requests to a doPatch method since by default HttpServlet doesn't do it for us.
         if (request.getMethod().equalsIgnoreCase(PATCH_METHOD_TYPE)){
             doPatch(request, response);
         } else {
@@ -121,40 +120,19 @@ public final class JobServlet extends HttpServlet {
             // Blocks the operation.
             // Use timeout in case it blocks forever.
             this.jobsDatabase.addJob(job).get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }
 
     /** Updates the target job post in the database. */
-    private void updateJobPost(String jobId, Job job) throws ServletException, ExecutionException, TimeoutException {
+    private void updateJobPost(String jobId, Job job)
+            throws IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
         try {
-            // Verifies if the current user can update the job post with this job id.
-            // TODO(issue/25): incorporate the account stuff into job post.
-            verifyUserCanUpdateJob(jobId);
-
             // Blocks the operation.
             // Use timeout in case it blocks forever.
             this.jobsDatabase.setJob(jobId, job).get(TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new ServletException(e);
-        }
-    }
-
-    /** Verifies if it is a valid job id that this user can update. */
-    // TODO(issue/25): incorporate the account stuff into job post.
-    private void verifyUserCanUpdateJob(String jobId) throws ServletException, ExecutionException, TimeoutException {
-        if (jobId.isEmpty()) {
-            throw new IllegalArgumentException("Job Id should be an non-empty string");
-        }
-
-        try {
-            // Use timeout in case it blocks forever.
-            boolean hasJob = JobsDatabase.hasJob(jobId).get(TIMEOUT, TimeUnit.SECONDS);
-            if (!hasJob) {
-                throw new IllegalArgumentException("Invalid Job Id");
-            }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
     }

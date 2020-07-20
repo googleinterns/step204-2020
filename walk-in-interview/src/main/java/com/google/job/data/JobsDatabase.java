@@ -11,8 +11,8 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.apache.commons.lang3.Range;
 import java.lang.UnsupportedOperationException;
 
+import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.List;
 import java.util.LinkedList;
@@ -25,6 +25,10 @@ public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private static final String SALARY_FIELD = "jobPay.annualMax";
     private static final String REGION_FIELD = "jobLocation.region";
+    private static final String JOB_STATUS_FIELD = "jobStatus";
+    private static final long TIMEOUT = 5;
+
+    private static final Logger log = Logger.getLogger(JobsDatabase.class.getName());
 
     /**
      * Adds a newly created job post.
@@ -32,8 +36,8 @@ public final class JobsDatabase {
      * @param newJob Newly created job post. Assumes that it is non-nullable.
      * @return A future of the detailed information of the writing.
      */
-    public Future<WriteResult> addJob(Job newJob) {
-        // Add document data after generating an id.
+    public Future<WriteResult> addJob(Job newJob) throws IOException {
+        // Add document data after generating an id
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document();
 
@@ -53,19 +57,74 @@ public final class JobsDatabase {
      *
      * @param jobId Id for the target job post in the database.
      * @param updatedJob Updated job post.
-     * @return A future of the detailed information of the update.
+     * @return A future of document reference for the updated job post.
      * @throws IllegalArgumentException If the job id is invalid.
      */
-    public Future<WriteResult> setJob(String jobId, Job updatedJob) throws IllegalArgumentException {
+    public Future<DocumentReference> setJob(String jobId, Job updatedJob) throws IllegalArgumentException, IOException {
+        if (jobId.isEmpty()) {
+            throw new IllegalArgumentException("Job Id should be an non-empty string");
+        }
+        
         // Sets the Job with cloud firestore id and ACTIVE status
         Job job = updatedJob.toBuilder()
                 .setJobId(jobId)
                 .build();
 
-        // Overwrites the whole job post
-        return FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION).document(jobId)
-                .set(job);
+        // Runs an asynchronous transaction
+        ApiFuture<DocumentReference> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
+            final DocumentReference documentReference = FireStoreUtils.getFireStore()
+                    .collection(JOB_COLLECTION).document(jobId);
+
+            // Verifies if the current user can update the job post with this job id
+            // TODO(issue/25): incorporate the account stuff into job post.
+            DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
+
+            // Job does not exist
+            if (!documentSnapshot.exists()) {
+                throw new IllegalArgumentException("Invalid jobId");
+            }
+
+            // Overwrites the whole job post
+            transaction.set(documentReference, job);
+
+            return documentReference;
+        });
+        
+        return futureTransaction;
+    }
+
+    /**
+     * Marks a job post as DELETED.
+     *
+     * @param jobId Cloud Firestore Id of the job post.
+     * @return A future of document reference for the updated job post.
+     */
+    public Future<DocumentReference> markJobPostAsDeleted(String jobId) throws IOException {
+        if (jobId.isEmpty()) {
+            throw new IllegalArgumentException("Job Id should be an non-empty string");
+        }
+        
+        // Runs an asynchronous transaction
+        ApiFuture<DocumentReference> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
+            final DocumentReference documentReference = FireStoreUtils.getFireStore()
+                    .collection(JOB_COLLECTION).document(jobId);
+
+            // Verifies if the current user can update the job post with this job id
+            // TODO(issue/25): incorporate the account stuff into job post.
+            DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
+
+            // Job does not exist
+            if (!documentSnapshot.exists()) {
+                throw new IllegalArgumentException("Invalid jobId");
+            }
+
+            // Updates the jobStatus field to DELETED
+            transaction.update(documentReference, JOB_STATUS_FIELD, JobStatus.DELETED);
+
+            return documentReference;
+        });
+
+        return futureTransaction;
     }
 
     /**
@@ -75,7 +134,7 @@ public final class JobsDatabase {
      * @return Future of the target job post.
      * @throws IllegalArgumentException If the job id is invalid.
      */
-    public Future<Optional<Job>> fetchJob(String jobId) throws IllegalArgumentException {
+    public Future<Optional<Job>> fetchJob(String jobId) throws IllegalArgumentException, IOException {
         DocumentReference docRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document(jobId);
 
@@ -91,25 +150,6 @@ public final class JobsDatabase {
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
     }
-
-    /**
-     * Returns a future of boolean to check if the job matching the given id is valid.
-     * @throws IllegalArgumentException If the input jobId is empty.
-     */
-    public static Future<Boolean> hasJob(String jobId) throws IllegalArgumentException {
-        if (jobId.isEmpty()) {
-            throw new IllegalArgumentException("Empty Job Id");
-        }
-
-        ApiFuture<DocumentSnapshot> snapshotFuture = FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION).document(jobId).get();
-
-        return ApiFutures.transform(snapshotFuture,
-                documentSnapshot -> documentSnapshot.exists(),
-                MoreExecutors.directExecutor());
-    }
-
-    private static final Logger log = Logger.getLogger(JobsDatabase.class.getName());
 
     /**
      * Gets all the jobs given the params from the database.

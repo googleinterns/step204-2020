@@ -10,13 +10,19 @@
 export const AppStrings = {};
 
 /**
+ * Common strings used in all pages.
+ */
+AppStrings['common'] = {
+  'error-message': 'There is an error in the following field: ',
+};
+
+/**
  * All the strings to be used in the homepage folder.
  */
 AppStrings['homepage'] = {
   'page-title': 'Find Walk-in Interviews',
   'new-post': 'New Post',
   'account': 'Create an Account',
-  'error-message': 'There is an error in the following field: ',
   'sort-by-title': 'Sort By',
   'sort-by': {
     'SALARY-DESCENDING': 'Salary (high to low)',
@@ -37,4 +43,37 @@ AppStrings['homepage'] = {
   'filters-submit': 'Apply Filters',
   'job-listings-title': 'Job Listings:',
   'job-listings-showing': 'out of',
+};
+
+/**
+ * All the strings to be used in the new-job folder.
+ */
+AppStrings['new-job'] = {
+  'page-title': 'New Job Post',
+  'cancel': 'Cancel',
+  'submit': 'Create',
+  'title': 'Job Title',
+  'description': 'Job Description',
+  'address': 'Job Address',
+  'postal-code': 'Postal Code',
+  'requirements-title': 'Requirements',
+  'pay-title': 'Job Pay',
+  'pay-frequency': {
+    'HOURLY': 'Hourly',
+    'WEEKLY': 'Weekly',
+    'MONTHLY': 'Monthly',
+    'YEARLY': 'Yearly',
+  },
+  'pay-min': 'min (sgd)',
+  'pay-max': 'max (sgd)',
+  'duration-title': 'Job Duration',
+  'duration': {
+    'ONE_WEEK': '1 Week',
+    'TWO_WEEKS': '2 Weeks',
+    'ONE_MONTH': '1 Month',
+    'SIX_MONTHS': '6 Months',
+    'ONE_YEAR': '1 Year',
+    'OTHER': 'Other',
+  },
+  'expiry-title': 'Job Expiry',
 };

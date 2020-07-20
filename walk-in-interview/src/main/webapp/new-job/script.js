@@ -11,7 +11,9 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from './strings.en.js';
+import {AppStrings} from '../strings.en.js';
+
+import {getRequirementsList, setErrorMessage} from '../common-functions.js';
 
 const STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
@@ -98,25 +100,23 @@ function renderJobPageElements() {
 
   currErrorField = 'title';
   /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /** includes default msg */ false,
-  /** error element id */ '');
+  setErrorMessage(/* msg */ '', /** includes default msg */ false);
 }
 
 /**
- * Sets the error message according to the param.
+ * Sets the error message according to the param. This function
+ * will also highlight the field where the error is.
  * @param {String} msg The message that the error div should display.
  * @param {boolean} includesDefault Whether the deafult
  * message should be included.
  * @param {String} id The element in which the error is.
  */
-function setErrorMessage(msg, includesDefault, id) {
-  document.getElementById('error-message').innerText =
-    (includesDefault ? STRINGS['error-message'] + msg : msg);
+function setErrorMessageAndField(msg, includesDefault, id) {
+  setErrorMessage('error-message', msg, includesDefault);
+
   document.getElementById(currErrorField).style.backgroundColor = 'white';
-  if (id !== '') {
-    document.getElementById(id).style.backgroundColor = 'rgb(255,0,0, 0.1)';
-    currErrorField = id;
-  }
+  document.getElementById(id).style.backgroundColor = 'rgb(255,0,0, 0.1)';
+  currErrorField = id;
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -146,21 +146,6 @@ function renderRequirementsList() {
       requirementsListElement.appendChild(requirementElement);
     }
   }
-}
-
-/**
- * Gets the requirements list from the servlet
- * (which gets it from the database).
- * @return {Object} the requirements list in a key-value mapping format.
- */
-function getRequirementsList() {
-  // TODO(issue/17): GET request to servlet to get from database
-  // returning some hardcoded values for now
-  return {
-    'O_LEVEL': 'O Level',
-    'LANGUAGE_ENGLISH': 'English',
-    'DRIVING_LICENSE_C': 'Category C Driving License',
-  };
 }
 
 /** Dynamically add the options for job pay frequency. */
@@ -339,20 +324,20 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-    setErrorMessage(/* msg */ name.placeholder,
+    setErrorMessageAndField(/* msg */ name.placeholder,
         /** includes default msg */ true, /** error element id */ 'title');
     return false;
   }
 
   if (description.value === '') {
-    setErrorMessage(/* msg */ description.placeholder,
+    setErrorMessageAndField(/* msg */ description.placeholder,
         /** includes default msg */ true,
         /** error element id */ 'description');
     return false;
   }
 
   if (address.value === '') {
-    setErrorMessage(/* msg */ address.placeholder,
+    setErrorMessageAndField(/* msg */ address.placeholder,
         /** includes default msg */ true, /** error element id */ 'address');
     return false;
   }
@@ -362,21 +347,21 @@ function validateRequiredUserInput() {
     (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE) ||
     parseInt(postalCode.value.substring(0, 2)) <= 0 ||
     parseInt(postalCode.value.substring(0, 2)) > 82) {
-    setErrorMessage(/* msg */ postalCode.placeholder,
+    setErrorMessageAndField(/* msg */ postalCode.placeholder,
         /** includes default msg */ true,
         /** error element id */ 'postal-code');
     return false;
   }
 
   if (payFrequency === '') {
-    setErrorMessage(/* msg */ document.getElementById('pay-title')
+    setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
         .textContent, /** includes default msg */ true,
     /** error element id */'pay-frequency');
     return false;
   }
 
   if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
-    setErrorMessage(/* msg */ document.getElementById('pay-title')
+    setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
         .textContent, /** includes default msg */ true,
     /** error element id */ 'pay-min');
     return false;
@@ -384,21 +369,21 @@ function validateRequiredUserInput() {
 
   if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
     payMin > payMax || payMax < 0) {
-    setErrorMessage(/* msg */ document.getElementById('pay-title')
+    setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
         .textContent, /** includes default msg */ true,
     /** error element id */ 'pay-max');
     return false;
   }
 
   if (duration === '') {
-    setErrorMessage(/* msg */ document.getElementById('duration-title')
+    setErrorMessageAndField(/* msg */ document.getElementById('duration-title')
         .textContent, /** includes default msg */ true,
     /** error element id */ 'duration');
     return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessage(/* msg */ document.getElementById('expiry-title')
+    setErrorMessageAndField(/* msg */ document.getElementById('expiry-title')
         .textContent, /** includes default msg */ true,
     /** error element id */ 'expiry');
     return false;
@@ -423,13 +408,12 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false,
-            /** error element id */ '');
+        setErrorMessage(/* msg */ '', /** include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
         setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false, /** error element id */ '');
+            /** include default msg */ false);
         console.log('error', error);
       });
 });
