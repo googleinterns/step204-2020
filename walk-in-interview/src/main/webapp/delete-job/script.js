@@ -8,13 +8,13 @@
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from "../strings.en.js";
+import {AppStrings} from '../strings.en.js';
 
-import {setErrorMessage} from "../common-functions.js";
+import {setErrorMessage} from '../common-functions.js';
 
-const STRINGS = AppStrings["delete-job"];
-const HOMEPAGE_PATH = "../index.html";
-const RESPONSE_ERROR = "There was an error while deleting the job post. Please try again";
+const STRINGS = AppStrings['delete-job'];
+const HOMEPAGE_PATH = '../index.html';
+const RESPONSE_ERROR = 'There was an error while deleting the job post. Please try again';
 
 window.onload = () => {
     renderDeleteButton();
@@ -24,8 +24,8 @@ window.onload = () => {
  * Clicks the button to mark this job post as DELETED.
  */
 function renderDeleteButton() {
-    const deleteButtonElement = document.getElementById("delete");
-    deleteButtonElement.innerText = STRINGS["delete"];
+    const deleteButtonElement = document.getElementById('delete');
+    deleteButtonElement.innerText = STRINGS['delete'];
 }
 
 /**
@@ -33,7 +33,7 @@ function renderDeleteButton() {
  */
 function getJobId() {
     // TODO(issue/53): gets the job Id
-    return "";
+    return '';
 }
 
 /**
@@ -42,26 +42,26 @@ function getJobId() {
  * @param {String} jobId Job id for this job post.
  */
 function deleteJobPost(jobId) {
-    fetch("/jobs/delete", {method: "PATCH", body: jobId})
+    fetch('/jobs/delete', {method: 'PATCH', body: jobId})
     .then((response) => response.text())
     .then((data) => {
-        console.log("data", data);
+        console.log('data', data);
         /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "", /* includesDefault= */false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
         window.location.href= HOMEPAGE_PATH;
     })
     .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ RESPONSE_ERROR,
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
             /* includesDefault= */false);
-        console.log("error", error);
+        console.log('error', error);
     });
 }
 
-const deleteButtonElement = document.getElementById("delete");
-deleteButtonElement.addEventListener("click", () => {
+const deleteButtonElement = document.getElementById('delete');
+deleteButtonElement.addEventListener('click', () => {
     const jobId = getJobId();
-    if (jobId === "") {
-        setErrorMessage(/* errorMessageElementId= */"error-message", /* msg= */ "Empty Job Id found. " + RESPONSE_ERROR,
+    if (jobId === '') {
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.' + RESPONSE_ERROR,
             /* includesDefault= */false);
         return false;
     }
