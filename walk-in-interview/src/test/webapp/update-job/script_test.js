@@ -69,6 +69,180 @@ describe('Update Job Tests', function() {
     return driver.quit();
   });
 
+  // Does Page Functionality Tests in case some disabled options cannot be tested.
+
+  describe('Page Functionality Tests', () => {
+    beforeEach(() => {
+      /**
+       * For the functionality tests, since we are testing the
+       * cancel/submit buttons, the page url may have changed
+       * in the test. This will check if that is the case, and
+       * reset it to the job page for the rest of the tests.
+       */
+      return driver.getCurrentUrl()
+          .then((currUrl) => {
+            if (currUrl !== JOBPAGE_URL) {
+              return driver.get(JOBPAGE_URL);
+            }
+          });
+    });
+
+    describe('Cancel Button', () => {
+      /**
+       * Clicking the cancel button should return the user to the homepage
+       * and not make any POST request.
+       */
+      it('should return to homepage', () => {
+        return clickCancel(driver)
+            .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
+            .then(() => driver.getCurrentUrl())
+            .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
+      });
+    });
+
+    /**
+     * If a field is not valid, then clicking submit will display an error
+     * message with the invalid field, and no POST request will be made.
+     */
+    describe('Submit Button', () => {
+      const date = new Date();
+      const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
+        `-${date.getFullYear()}`;
+
+      beforeEach('add all valid inputs', () => {
+        /**
+         * This will add all valid values to the job creation fields.
+         * The fields that need to be tested can be cleared in the
+         * individual test accordingly.
+         */
+        return driver.findElement(By.id('title')).sendKeys('Waiter')
+            .then(() => driver.findElement(By.id('description'))
+                .sendKeys('wait on tables'))
+            .then(() => driver.findElement(By.id('address'))
+                .sendKeys('290 Orchard Rd'))
+            .then(() => driver.findElement(By.id('postal-code'))
+                .sendKeys('238859'))
+            .then(() => driver.findElement(By.id('pay-frequency'))
+                .sendKeys('HOURLY'))
+            .then(() => driver.findElement(By.id('pay-min'))
+                .sendKeys('5'))
+            .then(() => driver.findElement(By.id('pay-max'))
+                .sendKeys('6'))
+            .then(() => driver.findElement(By.id('duration'))
+                .sendKeys('OTHER'))
+            .then(() => driver.findElement(By.id('expiry'))
+                .sendKeys(today));
+      });
+
+      it('no job title', () => {
+        /**
+         * The job title must be cleared here to test it.
+         */
+        return driver.findElement(By.id('title')).clear()
+            .then(() => clickUpdate(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Title'));
+      });
+
+      it('should not be false postive', () => {
+        /**
+         * The job title must be cleared here to test it.
+         * This test is making sure that the test is actually working
+         * properly and not just passing for any string.
+         * Note the use of assert.notEqual().
+         */
+        return driver.findElement(By.id('title')).clear()
+            .then(() => clickUpdate(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.notEqual(text,
+                'There is an error in the following field: '));
+      });
+
+      it('incorrect job address format', () => {
+        // TODO(issue/13&33): add tests for address once places api implemented
+      });
+
+      it('incorrect postal code', () => {
+        // TODO(issue/13&33): add tests for address once places api implemented
+      });
+
+      it('min greater than max', () => {
+        /**
+         * The pay-min and pay-max fields must be cleared before sending
+         * another key.
+         */
+        return driver.findElement(By.id('pay-min')).clear()
+            .then(() => driver.findElement(By.id('pay-max')).clear())
+            .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
+            .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
+            .then(() => clickUpdate(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Pay'));
+      });
+
+      it('job duration not chosen', () => {
+        /**
+         * Note that the .clear() function does not work on
+         * non-input/textarea elements. Also .sendKeys() cannot
+         * be used twice on the same element.
+         */
+        driver.get(JOBPAGE_URL);
+
+        /**
+         *Sets Job Duration to '' to test empty job duration.
+         */
+        return driver.findElement(By.id('title')).sendKeys('Waiter')
+            .then(() => driver.findElement(By.id('description'))
+                .sendKeys('wait on tables'))
+            .then(() => driver.findElement(By.id('address'))
+                .sendKeys('290 Orchard Rd'))
+            .then(() => driver.findElement(By.id('postal-code'))
+                .sendKeys('238859'))
+            .then(() => driver.findElement(By.id('pay-frequency'))
+                .sendKeys('HOURLY'))
+            .then(() => driver.findElement(By.id('pay-min'))
+                .sendKeys('5'))
+            .then(() => driver.findElement(By.id('pay-max'))
+                .sendKeys('6'))
+            .then(() => driver.findElement(By.id('expiry'))
+                .sendKeys(today))
+            .then(() => clickSubmit(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Duration'));
+      });
+
+      it('expiry date not chosen', () => {
+        /**
+         * The job expiry must be cleared here to test it.
+         */
+        return driver.findElement(By.id('expiry')).clear()
+            .then(() => clickUpdate(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Expiry'));
+      });
+
+      /**
+       * If all the fields are valid, then a POST request should be made and the
+       * user should be returned to the homepage.
+       */
+      it('should return to homepage', () => {
+        return clickUpdate(driver)
+            .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
+            .then(() => driver.getCurrentUrl())
+            .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
+      });
+
+      /**
+       * TODO(issue/40): check that POST request has been made
+       * & also check that the response is what was expected
+       */
+    });
+  });
+
   describe('Page Rendering Tests', () => {
     describe('Page Title', () => {
       it('checks the title text', () => {
@@ -401,180 +575,6 @@ describe('Update Job Tests', function() {
               assert.equal(value, '2020-07-21');
             });
       });
-    });
-  });
-
-  describe('Page Functionality Tests', () => {
-    beforeEach(() => {
-      /**
-       * For the functionality tests, since we are testing the
-       * cancel/submit buttons, the page url may have changed
-       * in the test. This will check if that is the case, and
-       * reset it to the job page for the rest of the tests.
-       */
-      return driver.getCurrentUrl()
-          .then((currUrl) => {
-            if (currUrl !== JOBPAGE_URL) {
-              return driver.get(JOBPAGE_URL);
-            }
-          });
-    });
-
-    describe('Cancel Button', () => {
-      /**
-       * Clicking the cancel button should return the user to the homepage
-       * and not make any POST request.
-       */
-      it('should return to homepage', () => {
-        return clickCancel(driver)
-            .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
-            .then(() => driver.getCurrentUrl())
-            .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
-      });
-    });
-
-    /**
-     * If a field is not valid, then clicking submit will display an error
-     * message with the invalid field, and no POST request will be made.
-     */
-    describe('Submit Button', () => {
-      const date = new Date();
-      const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
-        `-${date.getFullYear()}`;
-
-      beforeEach('add all valid inputs', () => {
-        /**
-         * This will add all valid values to the job creation fields.
-         * The fields that need to be tested can be cleared in the
-         * individual test accordingly.
-         */
-        return driver.findElement(By.id('title')).sendKeys('Waiter')
-            .then(() => driver.findElement(By.id('description'))
-                .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('address'))
-                .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('postal-code'))
-                .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('pay-frequency'))
-                .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('pay-min'))
-                .sendKeys('5'))
-            .then(() => driver.findElement(By.id('pay-max'))
-                .sendKeys('6'))
-            .then(() => driver.findElement(By.id('duration'))
-                .sendKeys('OTHER'))
-            .then(() => driver.findElement(By.id('expiry'))
-                .sendKeys(today));
-      });
-
-      it('no job title', () => {
-        /**
-         * The job title must be cleared here to test it.
-         */
-        return driver.findElement(By.id('title')).clear()
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Title'));
-      });
-
-      it('should not be false postive', () => {
-        /**
-         * The job title must be cleared here to test it.
-         * This test is making sure that the test is actually working
-         * properly and not just passing for any string.
-         * Note the use of assert.notEqual().
-         */
-        return driver.findElement(By.id('title')).clear()
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.notEqual(text,
-                'There is an error in the following field: '));
-      });
-
-      it('incorrect job address format', () => {
-        // TODO(issue/13&33): add tests for address once places api implemented
-      });
-
-      it('incorrect postal code', () => {
-        // TODO(issue/13&33): add tests for address once places api implemented
-      });
-
-      it('min greater than max', () => {
-        /**
-         * The pay-min and pay-max fields must be cleared before sending
-         * another key.
-         */
-        return driver.findElement(By.id('pay-min')).clear()
-            .then(() => driver.findElement(By.id('pay-max')).clear())
-            .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
-            .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Pay'));
-      });
-
-      it('job duration not chosen', () => {
-        /**
-         * Note that the .clear() function does not work on
-         * non-input/textarea elements. Also .sendKeys() cannot
-         * be used twice on the same element.
-         */
-        driver.get(JOBPAGE_URL);
-
-        /**
-         * Job duration not set below since we are testing it.
-         */
-        return driver.findElement(By.id('duration')).clear()
-            .then(() => driver.findElement(By.id('title'))
-                .sendKeys('Waiter'))
-            .then(() => driver.findElement(By.id('description'))
-                .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('address'))
-                .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('postal-code'))
-                .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('pay-frequency'))
-                .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('pay-min'))
-                .sendKeys('5'))
-            .then(() => driver.findElement(By.id('pay-max'))
-                .sendKeys('6'))
-            .then(() => driver.findElement(By.id('expiry'))
-                .sendKeys(today))
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Duration'));
-      });
-
-      it('expiry date not chosen', () => {
-        /**
-         * The job expiry must be cleared here to test it.
-         */
-        return driver.findElement(By.id('expiry')).clear()
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Expiry'));
-      });
-
-      /**
-       * If all the fields are valid, then a POST request should be made and the
-       * user should be returned to the homepage.
-       */
-      it('should return to homepage', () => {
-        return clickUpdate(driver)
-            .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
-            .then(() => driver.getCurrentUrl())
-            .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
-      });
-
-      /**
-       * TODO(issue/40): check that POST request has been made
-       * & also check that the response is what was expected
-       */
     });
   });
 });
