@@ -2,9 +2,7 @@ package com.google.job.servlets;
 
 import com.google.job.data.*;
 import com.google.utils.ServletUtils;
-import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Range;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,12 +16,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import java.util.*;
-import static com.google.job.data.Requirement.*;
-
 /**
  * Servlet that handles posting new job posts, updating existing job posts,
- * and getting the job listings.
+ * and getting an individual job listing.
  */
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {

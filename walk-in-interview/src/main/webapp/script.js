@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
+import {getRequirementsList} from './common-functions.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
@@ -23,7 +24,7 @@ const SALARY_PARAM = 'SALARY';
  * Note that this is needed because in JS we can hold bigger Integer
  * values than in Java.
  */
-const JAVA_INTEGER_MAX_VALUE = 2147483647;
+const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
@@ -134,6 +135,8 @@ function validateFilters() {
     (minLimitParam > JAVA_INTEGER_MAX_VALUE || minLimitParam < 0)) {
     setErrorMessage(/* msg */ STRINGS['filter-min-limit'],
         /** includes default msg */ true);
+    document.getElementById('filter-min-limit')
+        .style.backgroundColor = 'rgb(255,0,0, 0.1)';
     return false;
   }
 
@@ -142,6 +145,8 @@ function validateFilters() {
   (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
     setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
         /** includes default msg */ true);
+    document.getElementById('filter-max-limit')
+        .style.backgroundColor = 'rgb(255,0,0, 0.1)';
     return false;
   }
 
@@ -150,9 +155,13 @@ function validateFilters() {
     maxLimitParam < minLimitParam) {
     setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
         /** includes default msg */ true);
+    document.getElementById('filter-max-limit')
+        .style.backgroundColor = 'rgb(255,0,0, 0.1)';
     return false;
   }
 
+  document.getElementById('filter-min-limit').style.backgroundColor = 'white';
+  document.getElementById('filter-max-limit').style.backgroundColor = 'white';
   return true;
 }
 
@@ -212,8 +221,15 @@ function displayJobListings(jobPageData) {
       `(${pay['paymentFrequency'].toLowerCase()})`;
 
     const requirementsList = jobListing.children[3];
-    // TODO(issue/xx): temporary
-    requirementsList.innerText = 'Requirements List: ' + job['requirements'];
+    const fullRequirementsList = getRequirementsList();
+    const requirementsArr = [];
+
+    job['requirements'].forEach((req) => {
+      requirementsArr.push(fullRequirementsList[req]);
+    });
+
+    requirementsList.innerText =
+      `Requirements List: ${requirementsArr.toString()}`;
 
     jobListingsElement.appendChild(jobListing);
   });

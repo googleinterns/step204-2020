@@ -1,7 +1,6 @@
 package com.google.job.data;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
 import java.util.List;

@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.io.IOException;
 
-import java.util.logging.Logger;
-
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
@@ -27,8 +25,6 @@ public final class JobsDatabase {
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final long TIMEOUT = 5;
-
-    private static final Logger log = Logger.getLogger(JobsDatabase.class.getName());
 
     /**
      * Adds a newly created job post.
@@ -171,47 +167,38 @@ public final class JobsDatabase {
         if (!sortBy.equals(Filter.SALARY)) {
             throw new UnsupportedOperationException("currently this app only supports sorting/filtering by salary");
         }
-        
-        Query query;
 
-        if (region.equals(SingaporeRegion.ENTIRE)) {
-            query = jobsCollection.whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
-                .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
-                .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
-        } else {
-            query = jobsCollection.whereEqualTo(REGION_FIELD, region.name())
-                .whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
-                .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
-                .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
+        Query query = jobsCollection.whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
+            .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
+            .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
+
+        if (!region.equals(SingaporeRegion.ENTIRE)) {
+            query = query.whereEqualTo(REGION_FIELD, region.name());
         }
 
         // TODO(issue/34): add to the query to include pagination
 
-        ApiFuture<QuerySnapshot> future = query.get();
+        ApiFuture<QuerySnapshot> snapshotFuture = query.get();
 
         ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
             @NullableDecl
-            public JobPage apply(@NullableDecl QuerySnapshot future) {
-                List<QueryDocumentSnapshot> documents = future.getDocuments();
+            public JobPage apply(@NullableDecl QuerySnapshot snapshotFuture) {
+                List<QueryDocumentSnapshot> documents = snapshotFuture.getDocuments();
                 List<Job> jobList = new LinkedList<>();
 
                 for (QueryDocumentSnapshot document : documents) {
                     Job job = document.toObject(Job.class);
                     jobList.add(job);
                 }
-
                 
                 // TODO(issue/34): adjust range/total count based on pagination
                 long totalCount = documents.size();
                 Range<Integer> range = Range.between(1, documents.size());
 
-                JobPage jobPage = new JobPage(jobList, totalCount, range);
-                log.info(jobPage.toString());
-
-                return jobPage;
+                return new JobPage(jobList, totalCount, range);
             }
         };
 
-        return ApiFutures.transform(future, jobFunction, MoreExecutors.directExecutor());
+        return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
     }
 }

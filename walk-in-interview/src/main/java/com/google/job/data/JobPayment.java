@@ -2,7 +2,6 @@ package com.google.job.data;
 
 /** Class that represents the payment details of a job. */
 public final class JobPayment {
-
     private final int min;
     private final int max;
     private final PaymentFrequency paymentFrequency;
@@ -70,7 +69,7 @@ public final class JobPayment {
         c = paymentFrequency.hashCode();
         result = 31 * result + c;
 
-        c = ((Long)annualMax).hashCode();
+        c = ((Long) annualMax).hashCode();
         result = 31 * result + c;
 
         this.hashCode = result;

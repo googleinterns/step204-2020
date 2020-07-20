@@ -28,7 +28,7 @@ const MONTHS_PER_YEAR = 12;
  * Note that this is needed because in JS we can hold bigger Integer
  * values than in Java.
  */
-const JAVA_INTEGER_MAX_VALUE = 2147483647;
+const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 
 let currErrorField;
 
