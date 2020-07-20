@@ -49,7 +49,6 @@ AppStrings['homepage'] = {
  */
 AppStrings['job'] = {
   'cancel': 'Cancel',
-  'error-message': 'There is an error in the following field: ',
   'title': 'Job Title',
   'description': 'Job Description',
   'address': 'Job Address',
