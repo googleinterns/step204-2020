@@ -48,9 +48,9 @@ const options = new chrome.Options();
 options.addArguments('headless');
 
 /**
- * Set timeout to 50s so tests all have a chance to run.
+ * Set timeout to 80s so tests all have a chance to run.
  */
-const TIMEOUT = 50000;
+const TIMEOUT = 80000;
 
 let driver;
 
@@ -518,9 +518,6 @@ describe('Update Job Tests', function() {
       // Since the empty choice `Select` is already disabled, there is no need to check.
 
       it('expiry date not chosen', () => {
-        /**
-         * The job expiry must be cleared here to test it.
-         */
         return driver.findElement(By.id('expiry')).clear()
             .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
