@@ -30,15 +30,9 @@ submitButton.addEventListener('click', (_) => {
     headers: {'Content-Type': 'application/json'},
     body: document.cookie,
   })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log('data', data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-        window.location.href= HOMEPAGE_PATH;
-      })
       .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR, /* includesDefault= */false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ "There is error when transferring jobId", 
+          /* includesDefault= */false);
         console.log('error', error);
       });
 });
