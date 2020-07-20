@@ -122,6 +122,9 @@ function addPageElements(jobId) {
  * @returns Job json.
  */
 function getJobFromId(jobId) {
+  // Only run it for selenium test.
+  return getJobForSeleniumTest();
+
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
   const url = `/jobs?jobId=${jobId}`;
   fetch(url, {
@@ -386,3 +389,30 @@ const cancelButton = document.getElementById('cancel');
 cancelButton.addEventListener('click', (_) => {
     window.location.href= HOMEPAGE_PATH;
 });
+
+/**
+ * Returns a specific job object only for selenium ui test.
+ */
+function getJobForSeleniumTest() {
+  const jobDetails = {
+    jobStatus: "ACTIVE",
+    jobTitle: "Software Engineer",
+    jobLocation: {
+    address: "Maple Tree",
+    postalCode: "123",
+    lat: 1.3039, // TODO(issue/13): get these from places api
+    lon: 103.8358,
+    },
+    jobDescription: "Fight to defeat hair line receding",
+    jobPay: {
+    paymentFrequency: "MONTHLY",
+    min: 1,
+    max: 4,
+    },
+    requirements: ["O Level", "English"],
+    postExpiryTimestamp: 1595289600000,
+    jobDuration: "ONE_WEEK",
+  };
+
+  return jobDetails;
+}
