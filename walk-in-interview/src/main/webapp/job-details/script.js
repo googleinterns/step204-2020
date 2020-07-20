@@ -2,7 +2,7 @@
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {setCookie} from '../common-functions.js';
+import {setCookie, setErrorMessage} from '../common-functions.js';
 
 /**
  * Gets job Id of the current job post.
