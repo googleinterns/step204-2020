@@ -17,23 +17,23 @@ const HOMEPAGE_PATH = '../index.html';
 const RESPONSE_ERROR = 'There was an error while deleting the job post. Please try again';
 
 window.onload = () => {
-    renderDeleteButton();
+  renderDeleteButton();
 };
 
 /**
  * Clicks the button to mark this job post as DELETED.
  */
 function renderDeleteButton() {
-    const deleteButtonElement = document.getElementById('delete');
-    deleteButtonElement.innerText = STRINGS['delete'];
+  const deleteButtonElement = document.getElementById('delete');
+  deleteButtonElement.innerText = STRINGS['delete'];
 }
 
 /**
  * Gets the job id from the url.
  */
 function getJobId() {
-    // TODO(issue/53): gets the job Id
-    return '';
+// TODO(issue/53): gets the job Id
+  return '';
 }
 
 /**
@@ -42,29 +42,29 @@ function getJobId() {
  * @param {String} jobId Job id for this job post.
  */
 function deleteJobPost(jobId) {
-    fetch('/jobs/delete', {method: 'PATCH', body: jobId})
-    .then((response) => response.text())
-    .then((data) => {
-        console.log('data', data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-        window.location.href= HOMEPAGE_PATH;
-    })
-    .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
-            /* includesDefault= */false);
-        console.log('error', error);
-    });
+  fetch('/jobs/delete', {method: 'PATCH', body: jobId})
+  .then((response) => response.text())
+  .then((data) => {
+    console.log('data', data);
+    /** reset the error (there might have been an error msg from earlier) */
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+    window.location.href= HOMEPAGE_PATH;
+  })
+  .catch((error) => {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
+      /* includesDefault= */false);
+    console.log('error', error);
+  });
 }
 
 const deleteButtonElement = document.getElementById('delete');
 deleteButtonElement.addEventListener('click', () => {
-    const jobId = getJobId();
-    if (jobId === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.' + RESPONSE_ERROR,
-            /* includesDefault= */false);
-        return false;
-    }
+const jobId = getJobId();
+  if (jobId === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.' + RESPONSE_ERROR,
+      /* includesDefault= */false);
+    return false;
+  }
 
-    deleteJobPost(getJobId());
+  deleteJobPost(getJobId());
 });
