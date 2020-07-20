@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
+const JOB_ID_PARAM = 'jobId';
 
 /**
  * Gets the requirements list from the servlet
@@ -56,4 +57,39 @@ function renderSelectOptions(select, options) {
   }
 }
 
-export {getRequirementsList, setErrorMessage, renderSelectOptions};
+/**
+ * Creates a new cookie.
+ * 
+ * @param {String} cname Name of the cookie.
+ * @param {String} cvalue Value of the cookie.
+ * @param {number} exdays Number of days until the cookie should expire. Default to be half a day.
+ */
+function setCookie(cname, cvalue, exdays=0.5) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = 'expires=' + d.toUTCString();
+  document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+}
+
+/**
+ * Retrieves a cookie value.
+ * 
+ * @param {String} cname Name of the cookie.
+ */
+function getCookie(cname) {
+  var name = cname + '=';
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+export {JOB_ID_PARAM, getRequirementsList, setErrorMessage, renderSelectOptions, setCookie, getCookie};

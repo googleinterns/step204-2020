@@ -13,7 +13,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
-import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
+import {JOB_ID_PARAM, getCookie, getRequirementsList, 
+  setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
@@ -26,21 +27,10 @@ window.onload = () => {
 };
 
 /**
- * Gets the jobId from url.
+ * Gets the jobId from cookie.
  */
 function getJobId() {
-  var idx = document.URL.indexOf('?');
-  var jobId = '';
-  if (idx == -1) {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'No Job Id found.',
-      /* includesDefault= */false);
-    return jobId;
-  }
-    
-  var jobIdPair = document.URL.substring(idx + 1, document.URL.length).split('&');
-  var nameVal = jobIdPair[0].split('=');
-  jobId = nameVal[1];
-
+  const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
 }
 
