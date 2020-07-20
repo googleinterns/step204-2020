@@ -229,7 +229,7 @@ function displayJobListings(jobPageData) {
     });
 
     requirementsList.innerText =
-      `Requirements List: ${requirementsArr.toString()}`;
+      `Requirements List: ${requirementsArr.join(', ')}`;
 
     jobListingsElement.appendChild(jobListing);
   });
