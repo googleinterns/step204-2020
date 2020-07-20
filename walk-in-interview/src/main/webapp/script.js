@@ -237,9 +237,11 @@ function renderJobFilterSubmit() {
  */
 function displayJobListings(jobPageData) {
   const jobListingsElement = document.getElementById('job-listings');
+  const jobShowing = document.getElementById('job-listings-showing');
 
   /** reset the list so we don't render the same jobs twice */
   jobListingsElement.innerHTML = '';
+  jobShowing.innerHTML = '';
 
   if (jobPageData === undefined ||
     !jobPageData.hasOwnProperty('jobList') ||
@@ -267,17 +269,16 @@ function displayJobListings(jobPageData) {
 
     const jobPay = jobListing.children[2];
     const pay = job['jobPay'];
-    jobPay.innerText = `${pay['min']} - ${pay['max']} ` +
-      `(per ${pay['paymentFrequency'].toLowerCase()})`;
+    jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
+      `(${pay['paymentFrequency'].toLowerCase()})`;
 
     const requirementsList = jobListing.children[3];
     // TODO(issue/xx): temporary
-    requirementsList.innerText = job['requirements'];
+    requirementsList.innerText = 'Requirements List: ' + job['requirements'];
 
     jobListingsElement.appendChild(jobListing);
   });
 
-  const jobShowing = document.getElementById('job-listings-showing');
   jobShowing.innerText = `${jobPageData['range'].minimum} -` +
     ` ${jobPageData['range'].maximum} ${STRINGS['job-listings-showing']} ` +
     `${jobPageData['totalCount']}`;

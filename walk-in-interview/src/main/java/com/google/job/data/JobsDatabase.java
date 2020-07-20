@@ -34,7 +34,7 @@ public final class JobsDatabase {
     public Future<WriteResult> addJob(Job newJob) {
         // Add document data after generating an id.
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
-                .collection(JOB_COLLECTION).document();
+                .collection(JOB_COLLECTION).collectionGroup(newJob.getRegion().name()).document();
 
         String jobId = addedDocRef.getId();
 
