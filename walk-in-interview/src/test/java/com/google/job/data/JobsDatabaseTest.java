@@ -52,9 +52,9 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
-        Location expectedLocation =  new Location("Google", "123456", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "Programming using java";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY, 260000);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
                 Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
         long expectedPostExpiry = System.currentTimeMillis();
@@ -107,9 +107,9 @@ public final class JobsDatabaseTest {
     public void setJob_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
-        Location expectedLocation =  new Location("Google", "123456", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "New employee";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY, 260000);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
                 Arrays.asList(O_LEVEL, ENGLISH), "en");
         long expectedPostExpiry = System.currentTimeMillis();
@@ -206,9 +206,9 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
-        Location expectedLocation =  new Location("Maple Tree", "123456", 0, 0);
+        Location expectedLocation =  new Location("Maple Tree", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY, 260000);
         List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
         long expectedPostExpiry = System.currentTimeMillis();;
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
