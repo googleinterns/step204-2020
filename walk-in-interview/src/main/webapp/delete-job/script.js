@@ -14,7 +14,6 @@ import {setErrorMessage} from '../common-functions.js';
 
 const STRINGS = AppStrings['delete-job'];
 const HOMEPAGE_PATH = '../index.html';
-const RESPONSE_ERROR = 'There was an error while deleting the job post. Please try again';
 
 window.onload = () => {
   renderDeleteButton();
@@ -59,9 +58,9 @@ function deleteJobPost(jobId) {
 
 const deleteButtonElement = document.getElementById('delete');
 deleteButtonElement.addEventListener('click', () => {
-const jobId = getJobId();
+  const jobId = getJobId();
   if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.' + RESPONSE_ERROR,
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.',
       /* includesDefault= */false);
     return false;
   }

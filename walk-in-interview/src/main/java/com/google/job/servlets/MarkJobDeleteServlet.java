@@ -57,7 +57,7 @@ public final class MarkJobDeleteServlet extends HttpServlet {
 
     /** Gets jobId received from client. */
     private String getJobId(HttpServletRequest request) throws IOException, IllegalArgumentException {
-        // Parses job object from the POST request
+        // Parses job Id from the POST request
         try (BufferedReader bufferedReader = request.getReader()) {
             String jobId = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
 

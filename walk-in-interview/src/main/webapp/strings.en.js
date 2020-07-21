@@ -83,4 +83,5 @@ AppStrings['new-job'] = {
  */
 AppStrings['delete-job'] = {
   'delete': 'Delete',
+  'error-message': 'There was an error while deleting the job post. Please try again'
 };
