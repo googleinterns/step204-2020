@@ -411,15 +411,11 @@ describe('Update Job Tests', function() {
       /**
        * For the functionality tests, since we are testing the
        * cancel/submit buttons, the page url may have changed
-       * in the test. This will check if that is the case, and
-       * reset it to the job page for the rest of the tests.
+       * in the test.
+       * Always resets the current page to the job page 
+       * for the rest of the tests.
        */
-      return driver.getCurrentUrl()
-          .then((currUrl) => {
-            if (currUrl !== JOBPAGE_URL) {
-              return driver.get(JOBPAGE_URL);
-            }
-          });
+        return driver.get(JOBPAGE_URL);
     });
 
     describe('Cancel Button', () => {
@@ -480,7 +476,7 @@ describe('Update Job Tests', function() {
                 'There is an error in the following field: Job Title'));
       });
 
-      it('should not be false postive', () => {
+      it('should not be false positive', () => {
         /**
          * The job title must be cleared here to test it.
          * This test is making sure that the test is actually working
@@ -502,6 +498,21 @@ describe('Update Job Tests', function() {
         // TODO(issue/13&33): add tests for address once places api implemented
       });
 
+      it('min greater than max', () => {
+        /**
+         * The pay-min and pay-max fields must be cleared before sending
+         * another key.
+         */
+        return driver.findElement(By.id('pay-min')).clear()
+            .then(() => driver.findElement(By.id('pay-max')).clear())
+            .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
+            .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
+            .then(() => clickUpdate(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Pay'));
+        });
+
       it('expiry date not chosen', () => {
         return driver.findElement(By.id('expiry')).clear()
             .then(() => clickUpdate(driver))
@@ -521,21 +532,6 @@ describe('Update Job Tests', function() {
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There was an error while storing the job post. Please try again'));
-      });
-
-      it('min greater than max', () => {
-        /**
-         * The pay-min and pay-max fields must be cleared before sending
-         * another key.
-         */
-        return driver.findElement(By.id('pay-min')).clear()
-            .then(() => driver.findElement(By.id('pay-max')).clear())
-            .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
-            .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Pay'));
       });
 
       /**
