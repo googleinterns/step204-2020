@@ -420,7 +420,7 @@ function getJobForSeleniumTest() {
       max: 4,
     },
     requirements: ["O Level", "English"],
-    postExpiryTimestamp: 1595289600000,
+    postExpiryTimestamp: 1601856000000,
     jobDuration: "ONE_WEEK",
   };
 
