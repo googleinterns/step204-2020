@@ -141,7 +141,7 @@ public final class JobsListingsServlet extends HttpServlet {
      * @return SingaporeRegion enum given the id in the request params.
      * @throws IllegalArgumentException if the id is invalid.
      */
-    private SingaporeRegion parseRegion(HttpServletRequest request) throws IllegalArgumentException {
+    private static SingaporeRegion parseRegion(HttpServletRequest request) throws IllegalArgumentException {
         String region = (String) request.getParameter(REGION_PARAM);
 
         if (region == null || region.isEmpty()) {
