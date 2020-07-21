@@ -188,9 +188,9 @@ function renderRequirementsList(requirements) {
  * @param {HTMLElement} requirementElement HTML checkbox for that requirement
  */
 function tickExistingRequirements(requirement, requirements, requirementCheckbox) {
-    if (requirements.includes(requirement)) {
-        requirementCheckbox.setAttribute('checked', true);
-    }
+  if (requirements.includes(requirement)) {
+    requirementCheckbox.setAttribute('checked', true);
+  }
 }
 
 /**
@@ -225,18 +225,18 @@ function renderJobDurationOptions(jobDuration) {
  * @param {long} jobExpiryTimestamp Timestamp of the expiry date for this job post.
  */
 function renderJobExpiryLimits(jobExpiryTimestamp) {
-    const expiryDate = new Date(jobExpiryTimestamp).toISOString().substr(0, 10);
-    
-    const date = new Date();
-    const min = date.toISOString().substr(0, 10);
-    date.setFullYear(date.getFullYear() + 1);
-    const max = date.toISOString().substr(0, 10);
+  const expiryDate = new Date(jobExpiryTimestamp).toISOString().substr(0, 10);
   
-    const datePicker = document.getElementById('expiry');
-    datePicker.setAttribute('min', min);
-    datePicker.setAttribute('max', max);
-    datePicker.setAttribute('type', 'date');
-    datePicker.setAttribute('value', expiryDate);
+  const date = new Date();
+  const min = date.toISOString().substr(0, 10);
+  date.setFullYear(date.getFullYear() + 1);
+  const max = date.toISOString().substr(0, 10);
+
+  const datePicker = document.getElementById('expiry');
+  datePicker.setAttribute('min', min);
+  datePicker.setAttribute('max', max);
+  datePicker.setAttribute('type', 'date');
+  datePicker.setAttribute('value', expiryDate);
 }
 
 /**
@@ -319,85 +319,85 @@ function validateRequiredUserInput() {
     return false;
   }
   
-    if (name.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['title']);
-        return false;
-    }
-  
-    if (description.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['description']);
-        return false;
-    }
-  
-    if (address.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['address']);
-        return false;
-    }
-  
-    if (postalCode.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['postal-code']);
-        return false;
-    }
-  
-    if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
-        payMin > payMax || payMin < 0 || payMax < 0) {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
-            .textContent);
-        return false;
-    }
-  
-    if (duration === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', 
-            /* msg= */ document.getElementById('duration-title').textContent);
-        return false;
-    }
-  
-    if (Number.isNaN(expiry)) {
-        setErrorMessage(/* errorMessageElementId= */'error-message', 
-            /* msg= */ document.getElementById('expiry-title').textContent);
-        return false;
-    }
-  
-    return true;
+  if (name.value === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['title']);
+    return false;
+  }
+
+  if (description.value === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['description']);
+    return false;
+  }
+
+  if (address.value === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['address']);
+    return false;
+  }
+
+  if (postalCode.value === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['postal-code']);
+    return false;
+  }
+
+  if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
+    payMin > payMax || payMin < 0 || payMax < 0) {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
+        .textContent);
+    return false;
+  }
+
+  if (duration === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message', 
+        /* msg= */ document.getElementById('duration-title').textContent);
+    return false;
+  }
+
+  if (Number.isNaN(expiry)) {
+    setErrorMessage(/* errorMessageElementId= */'error-message', 
+        /* msg= */ document.getElementById('expiry-title').textContent);
+    return false;
+  }
+
+  return true;
 }
 
 const submitButton = document.getElementById('update');
 submitButton.addEventListener('click', (_) => {
-    if (!validateRequiredUserInput()) {
-        return;
-    }
+  if (!validateRequiredUserInput()) {
+    return;
+  }
 
-    const jobDetails = getJobDetailsFromUserInput();
+  const jobDetails = getJobDetailsFromUserInput();
 
-    fetch('/jobs', {
-        method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(jobDetails),
+  fetch('/jobs', {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(jobDetails),
+  })
+    .then((response) => {
+      if (response.status == BAD_REQUEST_STATUS_CODE) {
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'], /* includesDefault= */false);
+        throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
+      }
+
+      /** reset the error (there might have been an error msg from earlier) */
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+      window.location.href= HOMEPAGE_PATH;
     })
-        .then((response) => {
-          if (response.status == BAD_REQUEST_STATUS_CODE) {
-            setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'], /* includesDefault= */false);
-            throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
-          }
-
-          /** reset the error (there might have been an error msg from earlier) */
-          setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-          window.location.href= HOMEPAGE_PATH;
-        })
-        .catch((error) => {
-          // Not the server response error already caught and thrown
-          if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
-            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-              /* includesDefault= */false);
-            console.log('error', error);
-          }
-        });
+    .catch((error) => {
+      // Not the server response error already caught and thrown
+      if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+          /* includesDefault= */false);
+        console.log('error', error);
+      }
+    });
 });
 
 const cancelButton = document.getElementById('cancel');
 cancelButton.addEventListener('click', (_) => {
-    window.location.href= HOMEPAGE_PATH;
+  window.location.href= HOMEPAGE_PATH;
 });
 
 /**

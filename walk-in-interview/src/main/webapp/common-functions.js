@@ -36,7 +36,8 @@ function getRequirementsList() {
  * @param {boolean} includesDefault whether the includes default message. Default to be true.
  */
 function setErrorMessage(errorMessageElementId, msg, includesDefault=true) {
-  document.getElementById(errorMessageElementId).innerText = (includesDefault ? STRINGS['error-message'] + msg : msg);
+  document.getElementById(errorMessageElementId).innerText = 
+    (includesDefault ? STRINGS['error-message'] + msg : msg);
 }
 
 /**
@@ -92,4 +93,5 @@ function getCookie(cname) {
   return '';
 }
 
-export {JOB_ID_PARAM, getRequirementsList, setErrorMessage, renderSelectOptions, setCookie, getCookie};
+export {JOB_ID_PARAM, getRequirementsList, setErrorMessage, 
+  renderSelectOptions, setCookie, getCookie};
