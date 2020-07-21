@@ -10,14 +10,10 @@
 export const AppStrings = {};
 
 /**
- * Error messages used in all pages.
+ * Common strings used in all pages.
  */
-AppStrings['error-message'] = {
-  'field': 'There is an error in the following field: ',
-  'creating-job': 'There was an error while creating ' +
-      'the job listing, please try submitting again',
-  'no-jobs': 'There are no jobs to display at the moment.',
-  'getting-jobs': 'An error occured while getting the job listings.',
+AppStrings['common'] = {
+  'error-message': 'There is an error in the following field: ',
 };
 
 /**
@@ -47,6 +43,8 @@ AppStrings['homepage'] = {
   'filters-submit': 'Apply Filters',
   'job-listings-title': 'Job Listings:',
   'job-listings-showing': 'out of',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occured while getting the job listings.',
 };
 
 /**
@@ -80,4 +78,6 @@ AppStrings['new-job'] = {
     'OTHER': 'Other',
   },
   'expiry-title': 'Job Expiry',
+  'creating-job-error-message': 'There was an error while creating ' +
+      'the job listing, please try submitting again',
 };

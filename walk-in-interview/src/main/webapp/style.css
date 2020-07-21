@@ -78,3 +78,7 @@ textarea {
 .error-message {
     color: red;
 }
+
+.error-field {
+    background-color: rgb(255,0,0, 0.1);
+}

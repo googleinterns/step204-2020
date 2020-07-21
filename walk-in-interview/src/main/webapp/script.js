@@ -15,7 +15,6 @@ import {AppStrings} from './strings.en.js';
 import {getRequirementsList} from './common-functions.js';
 
 const STRINGS = AppStrings['homepage'];
-const ERROR_STRINGS = AppStrings['error-message'];
 const JOBPAGE_PATH = '/new-job/index.html';
 const SALARY_PARAM = 'SALARY';
 
@@ -77,7 +76,7 @@ function renderHomepageElements() {
   renderJobListings();
 
   /* reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /* includes default msg */ false);
+  setErrorMessage(/* msg= */ '', /* includes default msg= */ false);
 }
 
 /**
@@ -132,35 +131,32 @@ function validateFilters() {
   /* If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(minLimitParam) &&
     (minLimitParam > JAVA_INTEGER_MAX_VALUE || minLimitParam < 0)) {
-    setErrorMessage(/* msg */ STRINGS['filter-min-limit'],
-        /* includes default msg */ true);
-    document.getElementById('filter-min-limit')
-        .style.backgroundColor = 'rgb(255,0,0, 0.1)';
+    setErrorMessage(/* msg= */ STRINGS['filter-min-limit'],
+        /* includes default msg= */ true);
+    document.getElementById('filter-min-limit').classList.add('error-field');
     return false;
   }
 
   /* If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(maxLimitParam) &&
   (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
-    setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
-        /* includes default msg */ true);
-    document.getElementById('filter-max-limit')
-        .style.backgroundColor = 'rgb(255,0,0, 0.1)';
+    setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
+        /* includes default msg= */ true);
+    document.getElementById('filter-max-limit').classList.add('error-field');
     return false;
   }
 
   /* If both fields have been filled out, we check that max >= min */
   if (!Number.isNaN(maxLimitParam) && !Number.isNaN(minLimitParam) &&
     maxLimitParam < minLimitParam) {
-    setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
-        /* includes default msg */ true);
-    document.getElementById('filter-max-limit')
-        .style.backgroundColor = 'rgb(255,0,0, 0.1)';
+    setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
+        /* includes default msg= */ true);
+    document.getElementById('filter-max-limit').classList.add('error-field');
     return false;
   }
 
-  document.getElementById('filter-min-limit').style.backgroundColor = 'white';
-  document.getElementById('filter-max-limit').style.backgroundColor = 'white';
+  document.getElementById('filter-min-limit').classList.remove('error-field');
+  document.getElementById('filter-max-limit').classList.remove('error-field');
   return true;
 }
 
@@ -193,8 +189,8 @@ function displayJobListings(jobPageData) {
   if (jobPageData === undefined ||
     !jobPageData.hasOwnProperty('jobList') ||
     jobPageData['jobList'].length === 0) {
-    setErrorMessage(/* msg */ ERROR_STRINGS['no-jobs'],
-        /* includes default msg */ false);
+    setErrorMessage(/* msg= */ STRINGS['no-jobs-error-message'],
+        /* includes default msg= */ false);
     return;
   }
 
@@ -204,7 +200,7 @@ function displayJobListings(jobPageData) {
 
   jobListings.forEach((job) => {
     const jobListing =
-      jobListingTemplate.cloneNode( /* and child elements */ true);
+      jobListingTemplate.cloneNode( /* and child elements= */ true);
     jobListing.setAttribute('id', job['jobId']);
 
     const jobTitle = jobListing.children[0];
@@ -280,8 +276,8 @@ async function renderJobListings() {
       DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
       .catch((error) => {
         console.log('error fetching job listings', error);
-        setErrorMessage(/* msg */ ERROR_STRINGS['getting-jobs'],
-            /* include default msg */ false);
+        setErrorMessage(/* msg= */ STRINGS['get-jobs-error-message'],
+            /* include default msg= */ false);
       });
 
   displayJobListings(jobPageData);
@@ -311,7 +307,7 @@ function getJobListings(region, sortBy, minLimit, maxLimit,
       .then((data) => {
         console.log('data', data);
         /* reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /* include default msg */ false);
+        setErrorMessage(/* msg= */ '', /* include default msg= */ false);
         return data;
       });
 }

@@ -16,7 +16,6 @@ import {AppStrings} from '../strings.en.js';
 import {getRequirementsList, setErrorMessage} from '../common-functions.js';
 
 const STRINGS = AppStrings['new-job'];
-const ERROR_STRINGS = AppStrings['error-message'];
 const HOMEPAGE_PATH = '../index.html';
 const HOURS_PER_YEAR = 8760;
 /* Note that is an approximate value */
@@ -99,8 +98,8 @@ function renderJobPageElements() {
 
   currErrorField = 'title';
   /* reset the error to make sure no error msg initially present */
-  setErrorMessage(/* error div id */ 'error-message', /* msg */ '',
-      /* includes default msg */ false);
+  setErrorMessage(/* error div id= */ 'error-message', /* msg= */ '',
+      /* includes default msg= */ false);
 }
 
 /**
@@ -114,8 +113,8 @@ function renderJobPageElements() {
 function setErrorMessageAndField(id, msg, includesDefault) {
   setErrorMessage('error-message', msg, includesDefault);
 
-  document.getElementById(currErrorField).style.backgroundColor = 'white';
-  document.getElementById(id).style.backgroundColor = 'rgb(255,0,0, 0.1)';
+  document.getElementById(currErrorField).classList.remove('error-field');
+  document.getElementById(id).classList.add('error-field');
   currErrorField = id;
 }
 
@@ -132,7 +131,7 @@ function renderRequirementsList() {
   for (const key in requirementsList) {
     if (requirementsList.hasOwnProperty(key)) {
       const requirementElement = requirementElementTemplate
-          .cloneNode( /* and child elements */ true);
+          .cloneNode( /* and child elements= */ true);
       requirementElement.setAttribute('id', key);
 
       const checkbox = requirementElement.children[0];
@@ -277,8 +276,9 @@ function findRegion(postalCode) {
       digits === 82) {
     return 'NORTH_EAST';
   }
-  setErrorMessageAndField(/* error element id */ 'postal-code',
-      /* msg */ postalCode.placeholder, /* includes default msg */ true);
+  setErrorMessageAndField(/* error element id= */ 'postal-code',
+      /* msg= */ document.getElementById('postal-code').placeholder,
+      /* includes default msg= */ true);
   throw new Error('invalid postal code');
 }
 
@@ -319,20 +319,20 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-    setErrorMessageAndField( /* error element id */ 'title',
-        /* msg */ name.placeholder, /* includes default msg */ true);
+    setErrorMessageAndField( /* error element id= */ 'title',
+        /* msg= */ name.placeholder, /* includes default msg= */ true);
     return false;
   }
 
   if (description.value === '') {
-    setErrorMessageAndField(/* error element id */ 'description',
-        /* msg */ description.placeholder, /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'description',
+        /* msg= */ description.placeholder, /* includes default msg= */ true);
     return false;
   }
 
   if (address.value === '') {
-    setErrorMessageAndField(/* error element id */ 'address',
-        /* msg */ address.placeholder, /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'address',
+        /* msg= */ address.placeholder, /* includes default msg= */ true);
     return false;
   }
 
@@ -344,44 +344,44 @@ function validateRequiredUserInput() {
   if (postalCode.value === '' ||
     (parseInt(postalCode.value[0]) > JAVA_INTEGER_MAX_VALUE) ||
     (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE)) {
-    setErrorMessageAndField(/* error element id */ 'postal-code',
-        /* msg */ postalCode.placeholder, /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'postal-code',
+        /* msg= */ postalCode.placeholder, /* includes default msg= */ true);
     return false;
   }
 
   if (payFrequency === '') {
-    setErrorMessageAndField(/* error element id */'pay-frequency',
-        /* msg */ document.getElementById('pay-title').textContent,
-        /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */'pay-frequency',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includes default msg= */ true);
     return false;
   }
 
   if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
-    setErrorMessageAndField(/* error element id */ 'pay-min',
-        /* msg */ document.getElementById('pay-title').textContent,
-        /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'pay-min',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includes default msg= */ true);
     return false;
   }
 
   if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
     payMin > payMax || payMax < 0) {
-    setErrorMessageAndField(/* error element id */ 'pay-max',
-        /* msg */ document.getElementById('pay-title').textContent,
-        /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'pay-max',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includes default msg= */ true);
     return false;
   }
 
   if (duration === '') {
-    setErrorMessageAndField(/* error element id */ 'duration',
-        /* msg */ document.getElementById('duration-title').textContent,
-        /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'duration',
+        /* msg= */ document.getElementById('duration-title').textContent,
+        /* includes default msg= */ true);
     return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessageAndField(/* error element id */ 'expiry',
-        /* msg */ document.getElementById('expiry-title').textContent,
-        /* includes default msg */ true);
+    setErrorMessageAndField(/* error element id= */ 'expiry',
+        /* msg= */ document.getElementById('expiry-title').textContent,
+        /* includes default msg= */ true);
     return false;
   }
 
@@ -404,14 +404,14 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /* reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* error div id */ 'error-message', /* msg */ '',
-            /* include default msg */ false);
+        setErrorMessage(/* error div id= */ 'error-message', /* msg= */ '',
+            /* include default msg= */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* error div id */ 'error-message',
-            /* msg */ ERROR_STRINGS['creating-job'],
-            /* include default msg */ false);
+        setErrorMessage(/* error div id= */ 'error-message',
+            /* msg= */ STRINGS['creating-job-error-message'],
+            /* include default msg= */ false);
         console.log('error creating job listing', error);
       });
 });
