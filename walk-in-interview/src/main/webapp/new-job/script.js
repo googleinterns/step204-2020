@@ -16,7 +16,7 @@ import {AppStrings} from '../strings.en.js';
 import {getRequirementsList, setErrorMessage} from '../common-functions.js';
 
 const STRINGS = AppStrings['new-job'];
-const COMMON_STRINGS = AppStrings['common'];
+const ERROR_STRINGS = AppStrings['error-message'];
 const HOMEPAGE_PATH = '../index.html';
 const HOURS_PER_YEAR = 8760;
 /* Note that is an approximate value */
@@ -410,7 +410,7 @@ submitButton.addEventListener('click', (_) => {
       })
       .catch((error) => {
         setErrorMessage(/* error div id */ 'error-message',
-            /* msg */ COMMON_STRINGS['creating-job-error-message'],
+            /* msg */ ERROR_STRINGS['creating-job'],
             /* include default msg */ false);
         console.log('error creating job listing', error);
       });

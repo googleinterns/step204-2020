@@ -11,7 +11,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from './strings.en.js';
 
-const STRINGS = AppStrings['common'];
+const ERROR_STRINGS = AppStrings['error-message'];
 
 /**
  * Gets the requirements list from the servlet
@@ -38,7 +38,7 @@ function getRequirementsList() {
  */
 function setErrorMessage(errorMessageElementId, msg, includesDefault=true) {
   document.getElementById(errorMessageElementId).innerText =
-    (includesDefault ? STRINGS['error-message'] + msg : msg);
+    (includesDefault ? ERROR_STRINGS['field'] + msg : msg);
 }
 
 export {getRequirementsList, setErrorMessage};

@@ -15,7 +15,7 @@ import {AppStrings} from './strings.en.js';
 import {getRequirementsList} from './common-functions.js';
 
 const STRINGS = AppStrings['homepage'];
-const COMMON_STRINGS = AppStrings['common'];
+const ERROR_STRINGS = AppStrings['error-message'];
 const JOBPAGE_PATH = '/new-job/index.html';
 const SALARY_PARAM = 'SALARY';
 
@@ -193,7 +193,7 @@ function displayJobListings(jobPageData) {
   if (jobPageData === undefined ||
     !jobPageData.hasOwnProperty('jobList') ||
     jobPageData['jobList'].length === 0) {
-    setErrorMessage(/* msg */ COMMON_STRINGS['no-jobs-error-message'],
+    setErrorMessage(/* msg */ ERROR_STRINGS['no-jobs'],
         /* includes default msg */ false);
     return;
   }
@@ -280,7 +280,7 @@ async function renderJobListings() {
       DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
       .catch((error) => {
         console.log('error fetching job listings', error);
-        setErrorMessage(/* msg */ COMMON_STRINGS['getting-jobs-error-message'],
+        setErrorMessage(/* msg */ ERROR_STRINGS['getting-jobs'],
             /* include default msg */ false);
       });
 
