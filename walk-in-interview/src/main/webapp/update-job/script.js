@@ -146,7 +146,7 @@ function renderRequirementsList(requirements) {
   const requirementsListElement = document.getElementById('requirements-list');
 
   // Resets the list in case renders the same requirements twice
-  requirementsListElement.innerHTML = "";
+  requirementsListElement.innerHTML = '';
   const requirementElementTemplate = document.getElementById('requirement-element-template');
 
   for (const key in requirementsMap) {
@@ -206,7 +206,7 @@ function renderJobPayFrequencyOptions(jobPayFrequency) {
  * @param {String} jobDuration Original duration of the current job.
  */
 function renderJobDurationOptions(jobDuration) {
-  const jobDurationSelect = document.getElementById("duration");
+  const jobDurationSelect = document.getElementById('duration');
   jobDurationSelect.setAttribute('required', true);
   
   renderSelectOptions(jobDurationSelect, STRINGS['duration']);
