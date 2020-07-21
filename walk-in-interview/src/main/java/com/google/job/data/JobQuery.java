@@ -2,9 +2,8 @@ package com.google.job.data;
 
 import javax.annotation.Nullable;
 
-/** Class for the job listings query. */
-public static final class JobQuery {
-    // Optional parameters - initialized to default values
+/** Class for the job listings query using builder pattern. */
+public final class JobQuery {
     private int minLimit = 0;
     private int maxLimit = Integer.MAX_VALUE;
     private SingaporeRegion region = SingaporeRegion.ENTIRE;
@@ -13,7 +12,7 @@ public static final class JobQuery {
     private int pageSize = 100;
     private int pageIndex = 0;
 
-    private JobQuery() {}	
+    public JobQuery() {}	
 
     public JobQuery setMinLimit(int minLimit) {
         assert minLimit >= 0;
@@ -22,7 +21,7 @@ public static final class JobQuery {
     }
 
     public JobQuery setMaxLimit(int maxLimit) {
-        assert val > 0 && val >= this.minLimit;
+        assert maxLimit > 0 && maxLimit >= this.minLimit;
         this.maxLimit = maxLimit;
         return this;
     }
@@ -52,10 +51,6 @@ public static final class JobQuery {
         assert pageIndex >= 0;
         this.pageIndex = pageIndex;
         return this;
-    }
-
-    public JobQuery build() {     
-        return new JobQuery(this);
     }
 
     /** Returns the lower limit for the filter. */
