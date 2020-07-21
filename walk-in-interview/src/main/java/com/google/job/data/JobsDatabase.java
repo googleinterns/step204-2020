@@ -3,7 +3,7 @@ package com.google.job.data;
 import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
-import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableSet;
 import com.google.cloud.firestore.*;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
@@ -145,7 +145,7 @@ public final class JobsDatabase {
     public Future<Collection<Job>> fetchAllEligibleJobs(List<String> skills) throws IOException {
         // Runs an asynchronous transaction
         ApiFuture<Collection<Job>> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
-            ImmutableList.Builder<Job> jobs = ImmutableList.builder();
+            ImmutableSet.Builder<Job> jobs = ImmutableSet.builder();
 
             final Query activeJobsQuery = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION)

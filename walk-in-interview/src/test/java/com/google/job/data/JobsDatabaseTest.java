@@ -269,7 +269,15 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection("JobsForEligibilityTest").add(job1);
+        Future<DocumentReference> addedJobFuture = firestore.collection("JobsForEligibilityTest").add(job1);
+
+        DocumentReference documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot document = future.get();
+        String jobId1 = document.getId();
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
 
@@ -284,7 +292,15 @@ public final class JobsDatabaseTest {
             .setJobDuration(jobDuration)
             .build();
 
-        firestore.collection("JobsForEligibilityTest").add(job2);
+        addedJobFuture = firestore.collection("JobsForEligibilityTest").add(job2);
+
+        documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        future = documentReference.get();
+
+        // future.get() blocks on response.
+        document = future.get();
+        String jobId2 = document.getId();
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH, DRIVING_LICENSE_C), "en");
 
@@ -329,16 +345,26 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection("JobsForEligibilityTest").add(job5);
+        addedJobFuture = firestore.collection("JobsForEligibilityTest").add(job5);
+
+        documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        future = documentReference.get();
+
+        // future.get() blocks on response.
+        document = future.get();
+        String jobId5 = document.getId();
 
         List<String> skills = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
 
         // Act.
-        Future<Collection<Job>> future = jobsDatabase.fetchAllEligibleJobs(skills);
+        Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
 
         // Assert.
-        Collection<Job> expectedJobs = Arrays.asList(job1, job2, job5);
-        Collection<Job> actualJobs = future.get();
+        Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1.toBuilder().setJobId(jobId1).build(),
+                job2.toBuilder().setJobId(jobId2).build(),
+                job5.toBuilder().setJobId(jobId5).build()));
+        Collection<Job> actualJobs = jobsFuture.get();
         assertEquals(expectedJobs, actualJobs);
     }
 
