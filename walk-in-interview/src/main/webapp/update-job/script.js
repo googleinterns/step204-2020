@@ -20,6 +20,8 @@ const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const HOMEPAGE_PATH = '../job-details/index.html';
 const RESPONSE_ERROR = 'There was an error while loading the job post. Please try again';
+const STORING_ERROR = 'There was an error while storing the job post. Please try again';
+const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
   var jobId = getJobId();
@@ -30,6 +32,9 @@ window.onload = () => {
  * Gets the jobId from cookie.
  */
 function getJobId() {
+  // Only run it for selenium test.
+  return getJobIdForSeleniumTest();
+
   const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
 }
@@ -122,6 +127,9 @@ function addPageElements(jobId) {
  * @returns Job json.
  */
 function getJobFromId(jobId) {
+  // Only run it for selenium test.
+  return getJobForSeleniumTest();
+
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
   const url = `/jobs?jobId=${jobId}`;
   fetch(url, {
@@ -314,22 +322,22 @@ function validateRequiredUserInput() {
   }
   
     if (name.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['title']);
         return false;
     }
   
     if (description.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['description']);
         return false;
     }
   
     if (address.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['address']);
         return false;
     }
   
     if (postalCode.value === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['postal-code']);
         return false;
     }
   
@@ -341,14 +349,14 @@ function validateRequiredUserInput() {
     }
   
     if (duration === '') {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
-            .textContent);
+        setErrorMessage(/* errorMessageElementId= */'error-message', 
+            /* msg= */ document.getElementById('duration-title').textContent);
         return false;
     }
   
     if (Number.isNaN(expiry)) {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
-            .textContent);
+        setErrorMessage(/* errorMessageElementId= */'error-message', 
+            /* msg= */ document.getElementById('expiry-title').textContent);
         return false;
     }
   
@@ -368,17 +376,24 @@ submitButton.addEventListener('click', (_) => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(jobDetails),
     })
-        .then((response) => response.text())
-        .then((data) => {
-            console.log('data', data);
-            /** reset the error (there might have been an error msg from earlier) */
-            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-            window.location.href= HOMEPAGE_PATH;
+        .then((response) => {
+          if (response.status == BAD_REQUEST_STATUS_CODE) {
+            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STORING_ERROR,
+                /* includesDefault= */false);
+            throw new Error(STORING_ERROR);
+          }
+
+          /** reset the error (there might have been an error msg from earlier) */
+          setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+          window.location.href= HOMEPAGE_PATH;
         })
         .catch((error) => {
+          // Not the server response error already caught and thrown
+          if (error.message != STORING_ERROR) {
             setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
-                /* includesDefault= */false);
+              /* includesDefault= */false);
             console.log('error', error);
+          }
         });
 });
 
@@ -386,3 +401,37 @@ const cancelButton = document.getElementById('cancel');
 cancelButton.addEventListener('click', (_) => {
     window.location.href= HOMEPAGE_PATH;
 });
+
+/**
+ * Returns a dummy jobId only for selenium ui test.
+ */
+function getJobIdForSeleniumTest() {
+  return "xxxxxxx";
+}
+
+/**
+ * Returns a specific job object only for selenium ui test.
+ */
+function getJobForSeleniumTest() {
+  const jobDetails = {
+    jobStatus: "ACTIVE",
+    jobTitle: "Software Engineer",
+    jobLocation: {
+      address: "Maple Tree",
+      postalCode: "123",
+      lat: 1.3039, // TODO(issue/13): get these from places api
+      lon: 103.8358,
+    },
+    jobDescription: "Fight to defeat hair line receding",
+    jobPay: {
+      paymentFrequency: "MONTHLY",
+      min: 1,
+      max: 4,
+    },
+    requirements: ["O Level", "English"],
+    postExpiryTimestamp: 1601856000000,
+    jobDuration: "ONE_WEEK",
+  };
+
+  return jobDetails;
+}
