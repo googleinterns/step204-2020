@@ -157,10 +157,10 @@ public final class JobsDatabaseTest {
         DocumentReference editedDocRef = editedDocRefFuture.get();
 
         // Asynchronously retrieve the document.
-        Future<DocumentSnapshot> documentSnapshoFuture = editedDocRef.get();
+        Future<DocumentSnapshot> documentSnapshotFuture = editedDocRef.get();
 
         // future.get() blocks on response.
-        DocumentSnapshot documentSnapshot = documentSnapshoFuture.get();
+        DocumentSnapshot documentSnapshot = documentSnapshotFuture.get();
 
         Job actualJob = documentSnapshot.toObject(Job.class);
 
@@ -269,15 +269,7 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        Future<DocumentReference> addedJobFuture = firestore.collection("JobsForEligibilityTest").add(job1);
-
-        DocumentReference documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-
-        // future.get() blocks on response.
-        DocumentSnapshot document = future.get();
-        String jobId1 = document.getId();
+        firestore.collection("JobsForEligibilityTest").add(job1);
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
 
@@ -292,15 +284,7 @@ public final class JobsDatabaseTest {
             .setJobDuration(jobDuration)
             .build();
 
-        addedJobFuture = firestore.collection("JobsForEligibilityTest").add(job2);
-
-        documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        future = documentReference.get();
-
-        // future.get() blocks on response.
-        document = future.get();
-        String jobId2 = document.getId();
+        firestore.collection("JobsForEligibilityTest").add(job2);
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH, DRIVING_LICENSE_C), "en");
 
@@ -345,15 +329,7 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        addedJobFuture = firestore.collection("JobsForEligibilityTest").add(job5);
-
-        documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        future = documentReference.get();
-
-        // future.get() blocks on response.
-        document = future.get();
-        String jobId5 = document.getId();
+        firestore.collection("JobsForEligibilityTest").add(job5);
 
         List<String> skills = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
 
@@ -361,9 +337,7 @@ public final class JobsDatabaseTest {
         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
 
         // Assert.
-        Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1.toBuilder().setJobId(jobId1).build(),
-                job2.toBuilder().setJobId(jobId2).build(),
-                job5.toBuilder().setJobId(jobId5).build()));
+        Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job2, job5));
         Collection<Job> actualJobs = jobsFuture.get();
         assertEquals(expectedJobs, actualJobs);
     }
