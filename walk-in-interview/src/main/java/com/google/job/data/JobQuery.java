@@ -1,7 +1,5 @@
 package com.google.job.data;
 
-import javax.annotation.Nullable;
-
 /** Class for the job listings query using builder pattern. */
 public final class JobQuery {
     private int minLimit = 0;
