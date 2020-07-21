@@ -70,6 +70,7 @@ describe('Update Job Tests', function() {
   });
 
   describe('Page Rendering Tests', () => {
+    // TODO(issue): add more invalid value tests.
     describe('Page Title', () => {
       it('checks the title text', () => {
         return driver.findElement(By.id('page-title'))
@@ -407,6 +408,7 @@ describe('Update Job Tests', function() {
   });
 
   describe('Page Functionality Tests', () => {
+    // TODO(issue/63): add more tests for invalid input.
     beforeEach(() => {
       /**
        * For the functionality tests, since we are testing the

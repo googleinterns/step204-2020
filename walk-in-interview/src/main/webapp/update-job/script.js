@@ -401,14 +401,17 @@ cancelButton.addEventListener('click', (_) => {
 });
 
 /**
- * Returns a dummy jobId only for selenium ui test.
+ * Returns a dummy jobId only for selenium ui test
+ * since getJobId is not implemented yet.
  */
 function getJobIdForSeleniumTest() {
   return "xxxxxxx";
 }
 
 /**
- * Returns a specific job object only for selenium ui test.
+ * Returns a hard-coded job object only for selenium ui test
+ * since the GET request to retreive the job from servlet
+ * is not implemented by partner yet.
  */
 function getJobForSeleniumTest() {
   const jobDetails = {
