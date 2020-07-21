@@ -70,7 +70,6 @@ describe('Update Job Tests', function() {
   });
 
   describe('Page Rendering Tests', () => {
-    // TODO(issue): add more invalid value tests.
     describe('Page Title', () => {
       it('checks the title text', () => {
         return driver.findElement(By.id('page-title'))
