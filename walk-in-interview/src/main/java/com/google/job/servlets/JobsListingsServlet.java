@@ -86,8 +86,8 @@ public final class JobsListingsServlet extends HttpServlet {
         Order order = parseOrder(request);
         // TODO(issue/34): parse page size and index once pagination is implemented
 
-        JobQuery jobQuery = new JobQuery().toBuilder().setMinLimit(minLimit).setMaxLimit(maxLimit).setRegion(region)
-            .setSortBy(sortBy).setOrder(order).build();
+        JobQuery jobQuery = new JobQuery().setMinLimit(minLimit).setMaxLimit(maxLimit).setRegion(region)
+            .setSortBy(sortBy).setOrder(order);
         
         return jobQuery;
     }
