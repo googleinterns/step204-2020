@@ -264,6 +264,7 @@ describe('Update Job Tests', function() {
                 'MONTHLY': 'Monthly',
                 'YEARLY': 'Yearly',
               };
+
               for (const key in options) {
                 if (options.hasOwnProperty(key)) {
                   if (!text.includes(options[key])) {
@@ -336,6 +337,7 @@ describe('Update Job Tests', function() {
                 'ONE_YEAR': '1 Year',
                 'OTHER': 'Other',
               };
+
               for (const key in options) {
                 if (options.hasOwnProperty(key)) {
                   if (!text.includes(options[key])) {
@@ -500,6 +502,27 @@ describe('Update Job Tests', function() {
         // TODO(issue/13&33): add tests for address once places api implemented
       });
 
+      it('expiry date not chosen', () => {
+        return driver.findElement(By.id('expiry')).clear()
+            .then(() => clickUpdate(driver))
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There is an error in the following field: Job Expiry'));
+      });
+
+      /**
+       * If all the fields(including jobId) are valid, then a POST request should be made and the
+       * user should be returned to the homepage. 
+       * However, since so far cloud firestore cannot be set up locally
+       * and only a dummy jobId is passed, it can only catch an error.
+       */
+      it('not update successfully', () => {
+        return clickUpdate(driver)
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There was an error while storing the job post. Please try again'));
+      });
+
       it('min greater than max', () => {
         /**
          * The pay-min and pay-max fields must be cleared before sending
@@ -514,29 +537,6 @@ describe('Update Job Tests', function() {
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Pay'));
       });
-
-      // Since the empty choice `Select` is already disabled, there is no need to check.
-
-      it('expiry date not chosen', () => {
-        return driver.findElement(By.id('expiry')).clear()
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Expiry'));
-      });
-
-      /**
-       * If all the fields(including jobId) are valid, then a POST request should be made and the
-       * user should be returned to the homepage. 
-       * However, since so far cloud firestore cannot be set up locally, it can only catch an error.
-       */
-      it('nto update successfully', () => {
-        return clickUpdate(driver)
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There was an error while loading the job post. Please try again'));
-      });
-    
 
       /**
        * TODO(issue/40): check that POST request has been made
@@ -565,4 +565,3 @@ function clickUpdate(driver) {
 function clickCancel(driver) {
   return driver.findElement(By.id('cancel')).click();
 };
-  

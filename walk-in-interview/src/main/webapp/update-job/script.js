@@ -20,6 +20,8 @@ const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const HOMEPAGE_PATH = '../job-details/index.html';
 const RESPONSE_ERROR = 'There was an error while loading the job post. Please try again';
+const STORING_ERROR = 'There was an error while storing the job post. Please try again';
+const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
   var jobId = getJobId();
@@ -374,17 +376,24 @@ submitButton.addEventListener('click', (_) => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(jobDetails),
     })
-        .then((response) => response.text())
-        .then((data) => {
-            console.log('data', data);
-            /** reset the error (there might have been an error msg from earlier) */
-            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-            window.location.href= HOMEPAGE_PATH;
+        .then((response) => {
+          if (response.status == BAD_REQUEST_STATUS_CODE) {
+            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STORING_ERROR,
+                /* includesDefault= */false);
+            throw new Error(STORING_ERROR);
+          }
+
+          /** reset the error (there might have been an error msg from earlier) */
+          setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+          window.location.href= HOMEPAGE_PATH;
         })
         .catch((error) => {
+          // Not the server response error already caught and thrown
+          if (error.message != STORING_ERROR) {
             setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
-                /* includesDefault= */false);
+              /* includesDefault= */false);
             console.log('error', error);
+          }
         });
 });
 
