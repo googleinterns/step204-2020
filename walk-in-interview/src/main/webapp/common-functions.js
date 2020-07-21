@@ -33,12 +33,12 @@ function getRequirementsList() {
  * @param {String} errorMessageElementId the element id
  *    for html error message div.
  * @param {String} msg the message that the error div should display.
- * @param {boolean} includesDefault whether the includes default message.
+ * @param {boolean} includesDefaultMsg whether the includes default message.
  *    Default to be true.
  */
-function setErrorMessage(errorMessageElementId, msg, includesDefault=true) {
+function setErrorMessage(errorMessageElementId, msg, includesDefaultMsg=true) {
   document.getElementById(errorMessageElementId).innerText =
-    (includesDefault ? STRINGS['error-message'] + msg : msg);
+    (includesDefaultMsg ? STRINGS['error-message'] + msg : msg);
 }
 
 export {getRequirementsList, setErrorMessage};

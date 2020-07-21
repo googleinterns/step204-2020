@@ -28,8 +28,6 @@ const MONTHS_PER_YEAR = 12;
  */
 const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 
-let currErrorField;
-
 window.onload = () => {
   renderJobPageElements();
 };
@@ -96,26 +94,23 @@ function renderJobPageElements() {
   expiryInput.setAttribute('required', true);
   renderJobExpiryLimits();
 
-  currErrorField = 'title';
   /* reset the error to make sure no error msg initially present */
-  setErrorMessage(/* error div id= */ 'error-message', /* msg= */ '',
-      /* includes default msg= */ false);
+  setErrorMessage(/* errorMessageElementId= */ 'error-message', /* msg= */ '',
+      /* includesDefaultMsg= */ false);
 }
 
 /**
  * Sets the error message according to the param. This function
  * will also highlight the field where the error is.
- * @param {String} id The element in which the error is.
+ * @param {String} errorFieldId The element in which the error is.
  * @param {String} msg The message that the error div should display.
- * @param {boolean} includesDefault Whether the deafult
+ * @param {boolean} includesDefaultMsg Whether the deafult
  *    message should be included.
  */
-function setErrorMessageAndField(id, msg, includesDefault) {
-  setErrorMessage('error-message', msg, includesDefault);
+function setErrorMessageAndField(errorFieldId, msg, includesDefaultMsg) {
+  setErrorMessage('error-message', msg, includesDefaultMsg);
 
-  document.getElementById(currErrorField).classList.remove('error-field');
-  document.getElementById(id).classList.add('error-field');
-  currErrorField = id;
+  document.getElementById(errorFieldId).classList.add('error-field');
 }
 
 /** Add the list of requirements that are stored in the database. */
@@ -131,7 +126,7 @@ function renderRequirementsList() {
   for (const key in requirementsList) {
     if (requirementsList.hasOwnProperty(key)) {
       const requirementElement = requirementElementTemplate
-          .cloneNode( /* and child elements= */ true);
+          .cloneNode( /* and child elements */ true);
       requirementElement.setAttribute('id', key);
 
       const checkbox = requirementElement.children[0];
@@ -276,9 +271,8 @@ function findRegion(postalCode) {
       digits === 82) {
     return 'NORTH_EAST';
   }
-  setErrorMessageAndField(/* error element id= */ 'postal-code',
-      /* msg= */ document.getElementById('postal-code').placeholder,
-      /* includes default msg= */ true);
+  setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+      /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
   throw new Error('invalid postal code');
 }
 
@@ -318,21 +312,27 @@ function validateRequiredUserInput() {
   const duration = document.getElementById('duration').value;
   const expiry = document.getElementById('expiry').valueAsNumber;
 
+  /* Reset the fields that may have had errors before. */
+  const elements = document.getElementsByClassName('error-field');
+  for (const element of elements) {
+    element.classList.remove('error-field');
+  }
+
   if (name.value === '') {
-    setErrorMessageAndField( /* error element id= */ 'title',
-        /* msg= */ name.placeholder, /* includes default msg= */ true);
+    setErrorMessageAndField( /* errorFieldId= */ 'title',
+        /* msg= */ name.placeholder, /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (description.value === '') {
-    setErrorMessageAndField(/* error element id= */ 'description',
-        /* msg= */ description.placeholder, /* includes default msg= */ true);
+    setErrorMessageAndField(/* errorFieldId= */ 'description',
+        /* msg= */ description.placeholder, /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (address.value === '') {
-    setErrorMessageAndField(/* error element id= */ 'address',
-        /* msg= */ address.placeholder, /* includes default msg= */ true);
+    setErrorMessageAndField(/* errorFieldId= */ 'address',
+        /* msg= */ address.placeholder, /* includesDefaultMsg= */ true);
     return false;
   }
 
@@ -344,44 +344,44 @@ function validateRequiredUserInput() {
   if (postalCode.value === '' ||
     (parseInt(postalCode.value[0]) > JAVA_INTEGER_MAX_VALUE) ||
     (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE)) {
-    setErrorMessageAndField(/* error element id= */ 'postal-code',
-        /* msg= */ postalCode.placeholder, /* includes default msg= */ true);
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ postalCode.placeholder, /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (payFrequency === '') {
-    setErrorMessageAndField(/* error element id= */'pay-frequency',
+    setErrorMessageAndField(/* errorFieldId= */'pay-frequency',
         /* msg= */ document.getElementById('pay-title').textContent,
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
-    setErrorMessageAndField(/* error element id= */ 'pay-min',
+    setErrorMessageAndField(/* errorFieldId= */ 'pay-min',
         /* msg= */ document.getElementById('pay-title').textContent,
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
     payMin > payMax || payMax < 0) {
-    setErrorMessageAndField(/* error element id= */ 'pay-max',
+    setErrorMessageAndField(/* errorFieldId= */ 'pay-max',
         /* msg= */ document.getElementById('pay-title').textContent,
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (duration === '') {
-    setErrorMessageAndField(/* error element id= */ 'duration',
+    setErrorMessageAndField(/* errorFieldId= */ 'duration',
         /* msg= */ document.getElementById('duration-title').textContent,
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessageAndField(/* error element id= */ 'expiry',
+    setErrorMessageAndField(/* errorFieldId= */ 'expiry',
         /* msg= */ document.getElementById('expiry-title').textContent,
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
@@ -404,15 +404,15 @@ submitButton.addEventListener('click', (_) => {
       .then((data) => {
         console.log('data', data);
         /* reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* error div id= */ 'error-message', /* msg= */ '',
-            /* include default msg= */ false);
+        setErrorMessage(/* errorMessageElementId= */ 'error-message',
+            /* msg= */ '', /* include default msg= */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* error div id= */ 'error-message',
+        setErrorMessage(/* errorMessageElementId= */ 'error-message',
             /* msg= */ STRINGS['creating-job-error-message'],
             /* include default msg= */ false);
-        console.log('error creating job listing', error);
+        console.error('error creating job listing', error);
       });
 });
 

@@ -76,18 +76,18 @@ function renderHomepageElements() {
   renderJobListings();
 
   /* reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg= */ '', /* includes default msg= */ false);
+  setErrorMessage(/* msg= */ '', /* includesDefaultMsg= */ false);
 }
 
 /**
  * Sets the error message according to the param.
  * @param {String} msg the message that the error div should display.
- * @param {boolean} includesDefault whether the default
- * message should be included.
+ * @param {boolean} includesDefaultMsg whether the default
+ *    message should be included.
  */
-function setErrorMessage(msg, includesDefault) {
+function setErrorMessage(msg, includesDefaultMsg) {
   document.getElementById('error-message').innerText =
-    (includesDefault ? STRINGS['error-message'] + msg : msg);
+    (includesDefaultMsg ? STRINGS['error-message'] + msg : msg);
 }
 
 /**
@@ -124,7 +124,7 @@ function validateFilters() {
 
   if (showByParam == '' || sortByParam == '') {
     /* no need to show error message as this would not be the user's fault */
-    console.log('error', 'region or sorting was empty');
+    console.error('region or sorting was empty');
     return false;
   }
 
@@ -132,7 +132,7 @@ function validateFilters() {
   if (!Number.isNaN(minLimitParam) &&
     (minLimitParam > JAVA_INTEGER_MAX_VALUE || minLimitParam < 0)) {
     setErrorMessage(/* msg= */ STRINGS['filter-min-limit'],
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     document.getElementById('filter-min-limit').classList.add('error-field');
     return false;
   }
@@ -141,7 +141,7 @@ function validateFilters() {
   if (!Number.isNaN(maxLimitParam) &&
   (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
     setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     document.getElementById('filter-max-limit').classList.add('error-field');
     return false;
   }
@@ -150,7 +150,7 @@ function validateFilters() {
   if (!Number.isNaN(maxLimitParam) && !Number.isNaN(minLimitParam) &&
     maxLimitParam < minLimitParam) {
     setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
-        /* includes default msg= */ true);
+        /* includesDefaultMsg= */ true);
     document.getElementById('filter-max-limit').classList.add('error-field');
     return false;
   }
@@ -190,7 +190,7 @@ function displayJobListings(jobPageData) {
     !jobPageData.hasOwnProperty('jobList') ||
     jobPageData['jobList'].length === 0) {
     setErrorMessage(/* msg= */ STRINGS['no-jobs-error-message'],
-        /* includes default msg= */ false);
+        /* includesDefaultMsg= */ false);
     return;
   }
 
@@ -200,7 +200,7 @@ function displayJobListings(jobPageData) {
 
   jobListings.forEach((job) => {
     const jobListing =
-      jobListingTemplate.cloneNode( /* and child elements= */ true);
+      jobListingTemplate.cloneNode( /* and child elements */ true);
     jobListing.setAttribute('id', job['jobId']);
 
     const jobTitle = jobListing.children[0];
@@ -250,7 +250,7 @@ async function renderJobListings() {
    * TODO(issue/62): support more filters
    */
   if (!sortingParam.includes(SALARY_PARAM)) {
-    console.log('error', 'this app currently only sorts by salary');
+    console.error('this app currently only sorts by salary');
     return;
   }
 
@@ -275,7 +275,7 @@ async function renderJobListings() {
       minLimitParam, maxLimitParam, orderByParam,
       DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
       .catch((error) => {
-        console.log('error fetching job listings', error);
+        console.error('error fetching job listings', error);
         setErrorMessage(/* msg= */ STRINGS['get-jobs-error-message'],
             /* include default msg= */ false);
       });
@@ -307,7 +307,7 @@ function getJobListings(region, sortBy, minLimit, maxLimit,
       .then((data) => {
         console.log('data', data);
         /* reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg= */ '', /* include default msg= */ false);
+        setErrorMessage(/* msg= */ '', /* includesDefaultMsg= */ false);
         return data;
       });
 }
