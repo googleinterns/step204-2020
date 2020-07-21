@@ -1,6 +1,6 @@
 /**
  * This file is where we will write tests for the
- * funcions in new-job/script.js using mocha and selenium.
+ * functions in update-job/script.js using mocha and selenium.
  * Running `npm test` in the command line will run all
  * the mocha tests in the walk-in-interview directory.
  * Also note that the Dev App Server should be running

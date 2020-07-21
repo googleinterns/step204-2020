@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
-    private static final String PARAM_UPDATED_JOB = "updatedJob";
-    private static final String JOB_ID_FIELD = "jobId";
     private static final long TIMEOUT = 5;
 
     private JobsDatabase jobsDatabase;

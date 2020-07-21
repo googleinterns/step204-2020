@@ -1,5 +1,5 @@
 /**
- * This file is specific to update-job.html. It renders the fields on the
+ * This file is specific to update-job/index.html. It renders the fields on the
  * page dynamically, and it also makes the POST request when the form
  * is submitted.
  */
@@ -19,8 +19,6 @@ import {JOB_ID_PARAM, getCookie, getRequirementsList,
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const HOMEPAGE_PATH = '../job-details/index.html';
-const RESPONSE_ERROR = 'There was an error while loading the job post. Please try again';
-const STORING_ERROR = 'There was an error while storing the job post. Please try again';
 const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
@@ -33,7 +31,7 @@ window.onload = () => {
  */
 function getJobId() {
   // Only run it for selenium test.
-  return getJobIdForSeleniumTest();
+  // return getJobIdForSeleniumTest();
 
   const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
@@ -128,7 +126,7 @@ function addPageElements(jobId) {
  */
 function getJobFromId(jobId) {
   // Only run it for selenium test.
-  return getJobForSeleniumTest();
+  // return getJobForSeleniumTest();
 
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
   const url = `/jobs?jobId=${jobId}`;
@@ -138,7 +136,7 @@ function getJobFromId(jobId) {
   })
   .then(response => response.json())
   .catch(error => {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
       /* includesDefault= */false);
     console.log('error', error);
   })
@@ -378,9 +376,9 @@ submitButton.addEventListener('click', (_) => {
     })
         .then((response) => {
           if (response.status == BAD_REQUEST_STATUS_CODE) {
-            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STORING_ERROR,
-                /* includesDefault= */false);
-            throw new Error(STORING_ERROR);
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+              /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'], /* includesDefault= */false);
+            throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
           }
 
           /** reset the error (there might have been an error msg from earlier) */
@@ -389,8 +387,8 @@ submitButton.addEventListener('click', (_) => {
         })
         .catch((error) => {
           // Not the server response error already caught and thrown
-          if (error.message != STORING_ERROR) {
-            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR,
+          if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
+            setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
               /* includesDefault= */false);
             console.log('error', error);
           }

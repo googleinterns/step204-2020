@@ -18,8 +18,6 @@ import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../comm
 const STRINGS = AppStrings['job'];
 const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
-const RESPONSE_ERROR = 'There was an error while creating' +
-  'the job listing, please try submitting again';
 
 window.onload = () => {
   renderJobPageElements();
@@ -273,7 +271,8 @@ submitButton.addEventListener('click', (_) => {
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR, /* includesDefault= */false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ NEW_JOB_STRINGS['error-message'],
+          /* includesDefault= */false);
         console.log('error', error);
       });
 });
