@@ -43,16 +43,8 @@ public final class JobsListingsServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int minLimit = parseMinLimit(request);
-            int maxLimit = parseMaxLimit(request);
-            SingaporeRegion region = parseRegion(request);
-            Filter sortBy = parseSortBy(request);
-            Order order = parseOrder(request);
-            int pageSize = parsePageSize(request);
-            int pageIndex = parsePageIndex(request);
-
-            JobQuery jobQuery = new JobQuery().toBuilder().setMinLimit(minLimit).setMaxLimit(maxLimit).setRegion(region)
-                .setSortBy(sortBy).setOrder(order).setPageSize(pageSize).setPageIndex(pageIndex).build();
+            
+            JobQuery jobQuery = parseJobQuery(request);
 
             JobPage jobPage = fetchJobPageDetails(jobQuery);
 
@@ -77,6 +69,27 @@ public final class JobsListingsServlet extends HttpServlet {
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
+    }
+
+    /**
+     * Returns the job query object.
+     *
+     * @param request From the GET request.
+     * @return the job query object.
+     * @throws IllegalArgumentException if one of the params is invalid.
+     */
+    public static JobQuery parseJobQuery(HttpServletRequest request) throws IllegalArgumentException {
+        int minLimit = parseMinLimit(request);
+        int maxLimit = parseMaxLimit(request);
+        SingaporeRegion region = parseRegion(request);
+        Filter sortBy = parseSortBy(request);
+        Order order = parseOrder(request);
+        // TODO(issue/34): parse page size and index once pagination is implemented
+
+        JobQuery jobQuery = new JobQuery().toBuilder().setMinLimit(minLimit).setMaxLimit(maxLimit).setRegion(region)
+            .setSortBy(sortBy).setOrder(order).build();
+        
+        return jobQuery;
     }
 
     /**

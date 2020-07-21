@@ -65,27 +65,6 @@ public final class JobQuery {
         private int pageSize = 20;
         private int pageIndex = 0;
 
-        @Nullable
-        private int minLimit;
-
-        @Nullable
-        private int maxLimit;
-
-        @Nullable
-        private SingaporeRegion region;
-
-        @Nullable
-        private Filter sortBy;
-
-        @Nullable
-        private Order order;
-
-        @Nullable
-        private int pageSize;
-
-        @Nullable
-        private int pageIndex;
-
         private JobQueryBuilder() {}
 
         public JobQueryBuilder setMinLimit(int minLimit) {
