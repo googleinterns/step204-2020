@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /** Servlet that handles changing status of the existing job posts to DELETED. */
 @WebServlet("/jobs/delete")
 public final class MarkJobDeleteServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
-    private static final String JOB_ID_FIELD = "jobId";
+    private static final long TIMEOUT = 5;
 
     private JobsDatabase jobsDatabase;
 
@@ -43,7 +44,7 @@ public final class MarkJobDeleteServlet extends HttpServlet {
             String jobId = getJobId(request);
 
             // Changes the status to DELETED
-            this.jobsDatabase.markJobPostAsDeleted(jobId);
+            this.jobsDatabase.markJobPostAsDeleted(jobId).get(TIMEOUT, TimeUnit.SECONDS);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
