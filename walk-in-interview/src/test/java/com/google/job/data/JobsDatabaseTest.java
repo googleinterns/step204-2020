@@ -168,7 +168,8 @@ public final class JobsDatabaseTest {
     }
 
     @Test
-    public void markJobPostAsDeleted_normalInput_success() throws ExecutionException, InterruptedException, IOException {
+    public void markJobPostAsDeleted_normalInput_success()
+            throws ExecutionException, InterruptedException, IOException {
         // Arrange.
         Job job = new Job();
         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -243,6 +244,102 @@ public final class JobsDatabaseTest {
         Job actualJob = jobOptional.get();
 
         assertEquals(job, actualJob);
+    }
+
+    @Test
+    public void fetchAllEligibleJobs_normalInput_success() throws IOException, ExecutionException, InterruptedException {
+        // Arrange.
+        JobStatus jobStatus = JobStatus.ACTIVE;
+        String jobName = "Programmer";
+        Location location =  new Location("Maple Tree", "123456", 0, 0);
+        String jobDescription = "Fighting to defeat hair line recede";
+        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+        long postExpiry = System.currentTimeMillis();;
+        JobDuration jobDuration = JobDuration.ONE_MONTH;
+
+        Job job1 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection("JobsForEligibilityTest").add(job1);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
+
+        Job job2 = Job.newBuilder()
+            .setJobStatus(jobStatus)
+            .setJobTitle(jobName)
+            .setLocation(location)
+            .setJobDescription(jobDescription)
+            .setJobPay(jobPayment)
+            .setRequirements(requirements)
+            .setPostExpiry(postExpiry)
+            .setJobDuration(jobDuration)
+            .build();
+
+        firestore.collection("JobsForEligibilityTest").add(job2);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH, DRIVING_LICENSE_C), "en");
+
+        Job job3 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection("JobsForEligibilityTest").add(job3);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C), "en");
+
+        Job job4 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection("JobsForEligibilityTest").add(job4);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH), "en");
+
+        Job job5 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection("JobsForEligibilityTest").add(job5);
+
+        List<String> skills = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
+
+        // Act.
+        Future<Collection<Job>> future = jobsDatabase.fetchAllEligibleJobs(skills);
+
+        // Assert.
+        Collection<Job> expectedJobs = Arrays.asList(job1, job2, job5);
+        Collection<Job> actualJobs = future.get();
+        assertEquals(expectedJobs, actualJobs);
     }
 
     /**

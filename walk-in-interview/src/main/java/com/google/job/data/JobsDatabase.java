@@ -3,12 +3,15 @@ package com.google.job.data;
 import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import com.google.cloud.firestore.*;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
@@ -16,7 +19,6 @@ import java.util.concurrent.Future;
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private static final String JOB_STATUS_FIELD = "jobStatus";
-    private static final long TIMEOUT = 5;
 
     /**
      * Adds a newly created job post.
@@ -137,5 +139,33 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+    }
+
+    /** Returns future of all ACTIVE and eligible job posts in database. */
+    public Future<Collection<Job>> fetchAllEligibleJobs(List<String> skills) throws IOException {
+        // Runs an asynchronous transaction
+        ApiFuture<Collection<Job>> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
+            ImmutableList.Builder<Job> jobs = ImmutableList.builder();
+
+            final Query activeJobsQuery = FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION)
+                .whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE);
+
+            List<QueryDocumentSnapshot> documents = transaction.get(activeJobsQuery).get().getDocuments();
+
+            for (DocumentSnapshot document : documents) {
+                Job job = document.toObject(Job.class);
+                List<String> requirements = job.getRequirements();
+
+                // Eligible job: all job requirements are contained in the applicant skills.
+                if (skills.containsAll(requirements)) {
+                    jobs.add(job);
+                }
+            }
+
+            return jobs.build();
+        });
+
+        return futureTransaction;
     }
 }
