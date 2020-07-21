@@ -51,8 +51,10 @@ public final class JobsListingsServlet extends HttpServlet {
             int pageSize = parsePageSize(request);
             int pageIndex = parsePageIndex(request);
 
-            JobPage jobPage = fetchJobPageDetails(minLimit, maxLimit, region, sortBy, order,
-                pageSize, pageIndex);
+            JobQuery jobQuery = new JobQuery().toBuilder().setMinLimit(minLimit).setMaxLimit(maxLimit).setRegion(region)
+                .setSortBy(sortBy).setOrder(order).setPageSize(pageSize).setPageIndex(pageIndex).build();
+
+            JobPage jobPage = fetchJobPageDetails(jobQuery);
 
             String json = new Gson().toJson(jobPage);
             response.setContentType("application/json;");
@@ -65,19 +67,12 @@ public final class JobsListingsServlet extends HttpServlet {
     /**
      * Returns the JobPage object.
      *
-     * @param minLimit The lower limit to be shown (inclusive).
-     * @param maxLimit The upper limit to be shown (inclusive).
-     * @param region The region in Singapore.
-     * @param sortBy The sorting of the list of jobs.
-     * @param order The ordering of the sorting.
-     * @param pageSize The number of job listings to be returned.
-     * @param pageIndex The page which we are on (pagination).
+     * @param jobQuery The job query object with all the filtering/sorting params.
      * @return JobPage object with all the details for the GET response.
      */
-    private JobPage fetchJobPageDetails(int minSalary, int maxSalary, SingaporeRegion region,
-        Filter sortBy, Order order, int pageSize, int pageIndex) throws ServletException, ExecutionException, TimeoutException {
+    private JobPage fetchJobPageDetails(JobQuery jobQuery) throws ServletException, ExecutionException, TimeoutException {
         try {
-            return this.jobsDatabase.fetchJobPage(minSalary, maxSalary, region, sortBy, order, pageSize, pageIndex)
+            return this.jobsDatabase.fetchJobPage(jobQuery)
                     .get(TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);

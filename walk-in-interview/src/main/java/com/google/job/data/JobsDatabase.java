@@ -151,33 +151,27 @@ public final class JobsDatabase {
      * Gets all the jobs given the params from the database.
      * Currently, they can only be sorted/filtered by salary.
      *
-     * @param minLimit The lower limit to be shown (inclusive).
-     * @param maxLimit The upper limit to be shown (inclusive).
-     * @param region The region in Singapore.
-     * @param sortBy The sorting of the list of jobs.
-     * @param order The ordering of the sorting.
-     * @param pageSize The number of job listings to be returned.
-     * @param pageIndex The page which we are on (pagination).
+     * @param jobQuery The job query object with all the filtering/sorting params.
      * @return Future of the JobPage object.
      */
-    public static Future<JobPage> fetchJobPage(int minLimit, int maxLimit, SingaporeRegion region, Filter sortBy, Order order,
-        int pageSize, int pageIndex) throws IOException {
+    public static Future<JobPage> fetchJobPage(JobQuery jobQuery) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
         // TODO(issue/62): support other filters
-        if (!sortBy.equals(Filter.SALARY)) {
+        if (!jobQuery.getSortBy().equals(Filter.SALARY)) {
             throw new UnsupportedOperationException("currently this app only supports sorting/filtering by salary");
         }
 
-        Query query = jobsCollection.whereGreaterThanOrEqualTo(SALARY_FIELD, minLimit)
-            .whereLessThanOrEqualTo(SALARY_FIELD, maxLimit)
-            .orderBy(SALARY_FIELD, Order.getQueryDirection(order));
+        Query query = jobsCollection.whereGreaterThanOrEqualTo(SALARY_FIELD, jobQuery.getMinLimit())
+            .whereLessThanOrEqualTo(SALARY_FIELD, jobQuery.getMaxLimit())
+            .orderBy(SALARY_FIELD, Order.getQueryDirection(jobQuery.getOrder()));
 
+        SingaporeRegion region = jobQuery.getRegion();
         if (!region.equals(SingaporeRegion.ENTIRE)) {
             query = query.whereEqualTo(REGION_FIELD, region.name());
         }
 
-        // TODO(issue/34): add to the query to include pagination
+        // TODO(issue/34): add to the query to include pagination (using pageSize and pageIndex)
 
         return ApiFutures.transform(
             query.get(),
