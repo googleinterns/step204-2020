@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.apache.commons.lang3.Range;
 
 import static com.google.job.data.Requirement.*;
 import static org.junit.Assert.*;
@@ -243,6 +244,95 @@ public final class JobsDatabaseTest {
         Job actualJob = jobOptional.get();
 
         assertEquals(job, actualJob);
+    }
+
+    @Test
+    public void fetchJobPage_normalInput_success() throws ExecutionException, InterruptedException, IOException {
+        /* fields that don't affect the job page details */
+        JobStatus expectedJobStatus = JobStatus.ACTIVE;
+        String expectedJobName = "Programmer";
+        String expectedJobDescription = "Fighting to defeat hair line recede";
+        List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+        long expectedPostExpiry = System.currentTimeMillis();
+        JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
+
+        /* fields that affect the sorting/filtering of the job page details */
+        // this should be returned first (order will be descending by salary, and region will be central)
+        Location expectedLocation1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment expectedJobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
+
+        // this should be returned second
+        Location expectedLocation2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment expectedJobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY, 208000);
+
+        // this should be returned third
+        Location expectedLocation3 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment expectedJobPayment3 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY, 156000);
+
+        // this should not be returned (minLimit will be set to 104001)
+        Location expectedLocation4 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+        JobPayment expectedJobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, 104000);
+
+        Job job1 = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setJobDescription(expectedJobDescription)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .setLocation(expectedLocation1)
+                .setJobPay(expectedJobPayment1)
+                .build();
+
+        Job job2 = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setJobDescription(expectedJobDescription)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .setLocation(expectedLocation2)
+                .setJobPay(expectedJobPayment2)
+                .build();
+
+        Job job3 = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setJobDescription(expectedJobDescription)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .setLocation(expectedLocation3)
+                .setJobPay(expectedJobPayment3)
+                .build();
+
+        Job job4 = Job.newBuilder()
+                .setJobStatus(expectedJobStatus)
+                .setJobTitle(expectedJobName)
+                .setJobDescription(expectedJobDescription)
+                .setRequirements(expectedRequirements)
+                .setPostExpiry(expectedPostExpiry)
+                .setJobDuration(expectedJobDuration)
+                .setLocation(expectedLocation4)
+                .setJobPay(expectedJobPayment4)
+                .build();
+    
+        // this method has already been tested so we will use it here
+        // the jobs will be added in a random order
+        jobsDatabase.addJob(job1);
+        jobsDatabase.addJob(job3);
+        jobsDatabase.addJob(job4);
+        jobsDatabase.addJob(job2);
+
+        JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(job1, job2, job3),
+            /* totalCount= */ 3, Range.between(1, 3));
+
+        // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+        JobQuery jobQuery = new JobQuery().setMinLimit(104001).setRegion(SingaporeRegion.CENTRAL);
+        
+        JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
+
+        assertEquals(expectedJobPage, actualJobPage);
     }
 
     /**
