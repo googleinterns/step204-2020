@@ -10,10 +10,14 @@
 export const AppStrings = {};
 
 /**
- * Common strings used in all pages.
+ * Error messages used in all pages.
  */
-AppStrings['common'] = {
+AppStrings['error-message'] = {
   'error-message': 'There is an error in the following field: ',
+  'creating-job-error-message': 'There was an error while creating ' +
+      'the job listing, please try submitting again',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'getting-jobs-error-message': 'An error occured while getting the job listings.',
 };
 
 /**

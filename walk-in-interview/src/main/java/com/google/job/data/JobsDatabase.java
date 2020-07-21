@@ -5,6 +5,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.*;
 import com.google.cloud.firestore.Query.Direction;
+import com.google.common.collect.ImmutableList; 
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.List;
-import java.util.LinkedList;
 import java.io.IOException;
 
 /** Helps persist and retrieve job posts. */
@@ -164,6 +164,7 @@ public final class JobsDatabase {
         int pageSize, int pageIndex) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
+        // TODO(issue/62): support other filters
         if (!sortBy.equals(Filter.SALARY)) {
             throw new UnsupportedOperationException("currently this app only supports sorting/filtering by salary");
         }
@@ -178,27 +179,27 @@ public final class JobsDatabase {
 
         // TODO(issue/34): add to the query to include pagination
 
-        ApiFuture<QuerySnapshot> snapshotFuture = query.get();
+        return ApiFutures.transform(
+            query.get(),
+            new ApiFunction<QuerySnapshot, JobPage>() {
+                @NullableDecl
+                public JobPage apply(@NullableDecl QuerySnapshot querySnapshot) {
+                    List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+                    ImmutableList.Builder<Job> jobList = ImmutableList.builder();
 
-        ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
-            @NullableDecl
-            public JobPage apply(@NullableDecl QuerySnapshot querySnapshot) {
-                List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-                List<Job> jobList = new LinkedList<>();
+                    for (QueryDocumentSnapshot document : documents) {
+                        Job job = document.toObject(Job.class);
+                        jobList.add(job);
+                    }
+            
+                    // TODO(issue/34): adjust range/total count based on pagination
+                    long totalCount = documents.size();
+                    Range<Integer> range = Range.between(1, documents.size());
 
-                for (QueryDocumentSnapshot document : documents) {
-                    Job job = document.toObject(Job.class);
-                    jobList.add(job);
-                }
-                
-                // TODO(issue/34): adjust range/total count based on pagination
-                long totalCount = documents.size();
-                Range<Integer> range = Range.between(1, documents.size());
-
-                return new JobPage(jobList, totalCount, range);
-            }
-        };
-
-        return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+                    return new JobPage(jobList.build(), totalCount, range);
+                }   
+            },
+            MoreExecutors.directExecutor()
+        );
     }
 }

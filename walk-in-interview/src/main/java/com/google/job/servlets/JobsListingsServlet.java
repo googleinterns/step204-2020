@@ -140,7 +140,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("region param should not be null or empty");
         }
 
-        return SingaporeRegion.getFromId(region); // IAE may be thrown
+        return SingaporeRegion.getFromId(region); // Illegal Argument Exception may be thrown
     }
 
     /**
@@ -157,7 +157,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("sort by param should not be null or empty");
         }
 
-        return Filter.getFromId(sortById); // IAE may be thrown
+        return Filter.getFromId(sortById); // Illegal Argument Exception may be thrown
     }
 
     /**
@@ -174,7 +174,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("order param should not be null or empty");
         }
 
-        return Order.getFromId(orderId); // IAE may be thrown
+        return Order.getFromId(orderId); // Illegal Argument Exception may be thrown
     }
 
     /**

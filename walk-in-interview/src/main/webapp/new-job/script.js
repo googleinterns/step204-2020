@@ -16,9 +16,8 @@ import {AppStrings} from '../strings.en.js';
 import {getRequirementsList, setErrorMessage} from '../common-functions.js';
 
 const STRINGS = AppStrings['new-job'];
+const COMMON_STRINGS = AppStrings['common'];
 const HOMEPAGE_PATH = '../index.html';
-const RESPONSE_ERROR = 'There was an error while creating ' +
-  'the job listing, please try submitting again';
 const HOURS_PER_YEAR = 8760;
 /* Note that is an approximate value */
 const WEEKS_PER_YEAR = 52;
@@ -107,12 +106,12 @@ function renderJobPageElements() {
 /**
  * Sets the error message according to the param. This function
  * will also highlight the field where the error is.
+ * @param {String} id The element in which the error is.
  * @param {String} msg The message that the error div should display.
  * @param {boolean} includesDefault Whether the deafult
- * message should be included.
- * @param {String} id The element in which the error is.
+ *    message should be included.
  */
-function setErrorMessageAndField(msg, includesDefault, id) {
+function setErrorMessageAndField(id, msg, includesDefault) {
   setErrorMessage('error-message', msg, includesDefault);
 
   document.getElementById(currErrorField).style.backgroundColor = 'white';
@@ -278,6 +277,9 @@ function findRegion(postalCode) {
       digits === 82) {
     return 'NORTH_EAST';
   }
+  setErrorMessageAndField(/* error element id */ 'postal-code',
+      /* msg */ postalCode.placeholder, /* includes default msg */ true);
+  throw new Error('invalid postal code');
 }
 
 /**
@@ -288,24 +290,16 @@ function findRegion(postalCode) {
  * @return {int} the annual pay.
  */
 function calculateAnnualMax(max, frequency) {
-  let annualMax = max; // default
-
   switch (frequency) {
     case 'HOURLY':
-      annualMax = max * HOURS_PER_YEAR;
-      break;
+      return max * HOURS_PER_YEAR;
     case 'WEEKLY':
-      annualMax = max * WEEKS_PER_YEAR;
-      break;
+      return max * WEEKS_PER_YEAR;
     case 'MONTHLY':
-      annualMax = max * MONTHS_PER_YEAR;
-      break;
+      return max * MONTHS_PER_YEAR;
     case 'YEARLY':
-      annualMax = max;
-      break;
+      return max;
   };
-
-  return annualMax;
 }
 
 /**
@@ -325,68 +319,69 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-    setErrorMessageAndField(/* msg */ name.placeholder,
-        /* includes default msg */ true, /* error element id */ 'title');
+    setErrorMessageAndField( /* error element id */ 'title',
+        /* msg */ name.placeholder, /* includes default msg */ true);
     return false;
   }
 
   if (description.value === '') {
-    setErrorMessageAndField(/* msg */ description.placeholder,
-        /* includes default msg */ true,
-        /* error element id */ 'description');
+    setErrorMessageAndField(/* error element id */ 'description',
+        /* msg */ description.placeholder, /* includes default msg */ true);
     return false;
   }
 
   if (address.value === '') {
-    setErrorMessageAndField(/* msg */ address.placeholder,
-        /* includes default msg */ true, /* error element id */ 'address');
+    setErrorMessageAndField(/* error element id */ 'address',
+        /* msg */ address.placeholder, /* includes default msg */ true);
     return false;
   }
 
+  /*
+   * The first two digits of the postal code must be numbers within
+   * the below range because those two digits correspond to the location's
+   * district, which indicates its region in Singapore.
+   */
   if (postalCode.value === '' ||
     (parseInt(postalCode.value[0]) > JAVA_INTEGER_MAX_VALUE) ||
-    (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE) ||
-    parseInt(postalCode.value.substring(0, 2)) <= 0 ||
-    parseInt(postalCode.value.substring(0, 2)) > 82) {
-    setErrorMessageAndField(/* msg */ postalCode.placeholder,
-        /* includes default msg */ true,
-        /* error element id */ 'postal-code');
+    (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE)) {
+    setErrorMessageAndField(/* error element id */ 'postal-code',
+        /* msg */ postalCode.placeholder, /* includes default msg */ true);
     return false;
   }
 
   if (payFrequency === '') {
-    setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
-        .textContent, /* includes default msg */ true,
-    /* error element id */'pay-frequency');
+    setErrorMessageAndField(/* error element id */'pay-frequency',
+        /* msg */ document.getElementById('pay-title').textContent,
+        /* includes default msg */ true);
     return false;
   }
 
   if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
-    setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
-        .textContent, /* includes default msg */ true,
-    /* error element id */ 'pay-min');
+    setErrorMessageAndField(/* error element id */ 'pay-min',
+        /* msg */ document.getElementById('pay-title').textContent,
+        /* includes default msg */ true);
     return false;
   }
 
   if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
     payMin > payMax || payMax < 0) {
-    setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
-        .textContent, /* includes default msg */ true,
-    /* error element id */ 'pay-max');
+    setErrorMessageAndField(/* error element id */ 'pay-max',
+        /* msg */ document.getElementById('pay-title').textContent,
+        /* includes default msg */ true);
     return false;
   }
 
   if (duration === '') {
-    setErrorMessageAndField(/* msg */ document.getElementById('duration-title')
-        .textContent, /* includes default msg */ true,
-    /* error element id */ 'duration');
+    setErrorMessageAndField(/* error element id */ 'duration',
+        /* msg */ document.getElementById('duration-title').textContent,
+        /* includes default msg */ true);
     return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessageAndField(/* msg */ document.getElementById('expiry-title')
-        .textContent, /* includes default msg */ true,
-    /* error element id */ 'expiry');
+    setErrorMessageAndField(/* error element id */ 'expiry',
+        /* msg */ document.getElementById('expiry-title').textContent,
+        /* includes default msg */ true);
     return false;
   }
 
@@ -415,8 +410,9 @@ submitButton.addEventListener('click', (_) => {
       })
       .catch((error) => {
         setErrorMessage(/* error div id */ 'error-message',
-            /* msg */ RESPONSE_ERROR, /* include default msg */ false);
-        console.log('error', error);
+            /* msg */ COMMON_STRINGS['creating-job-error-message'],
+            /* include default msg */ false);
+        console.log('error creating job listing', error);
       });
 });
 

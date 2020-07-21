@@ -13,11 +13,7 @@ public enum Order {
         this.orderId = orderId;
     }
 
-    /**
-     * Returns the stable id representing the order. Can be stored in database.
-     *
-     * @return the stable id.
-     */
+    /** Returns the stable id representing the order. Can be stored in database. */
     public String getOrderId() {
         return orderId;
     }

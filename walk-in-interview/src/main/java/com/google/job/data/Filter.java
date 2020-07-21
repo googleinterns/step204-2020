@@ -10,11 +10,7 @@ public enum Filter {
         this.filterId = filterId;
     }
 
-    /**
-     * Returns the stable id representing the filter. Can be stored in database.
-     *
-     * @return the stable id.
-     */
+    /** Returns the stable id representing the filter. Can be stored in database. */
     public String getFilterId() {
         return filterId;
     }

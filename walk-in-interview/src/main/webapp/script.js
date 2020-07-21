@@ -15,9 +15,8 @@ import {AppStrings} from './strings.en.js';
 import {getRequirementsList} from './common-functions.js';
 
 const STRINGS = AppStrings['homepage'];
+const COMMON_STRINGS = AppStrings['common'];
 const JOBPAGE_PATH = '/new-job/index.html';
-const RESPONSE_ERROR = 'An error occured while getting the job listings.';
-const NO_JOBS_ERROR = 'There are no jobs to display at the moment.';
 const SALARY_PARAM = 'SALARY';
 
 /**
@@ -194,7 +193,7 @@ function displayJobListings(jobPageData) {
   if (jobPageData === undefined ||
     !jobPageData.hasOwnProperty('jobList') ||
     jobPageData['jobList'].length === 0) {
-    setErrorMessage(/* msg */ NO_JOBS_ERROR,
+    setErrorMessage(/* msg */ COMMON_STRINGS['no-jobs-error-message'],
         /* includes default msg */ false);
     return;
   }
@@ -250,7 +249,10 @@ async function renderJobListings() {
 
   const sortingParam = document.getElementById('sort-by').value;
 
-  /* Note that this platform currently only sorts by Salary.*/
+  /*
+   * Note that this platform currently only sorts by Salary.
+   * TODO(issue/62): support more filters
+   */
   if (!sortingParam.includes(SALARY_PARAM)) {
     console.log('error', 'this app currently only sorts by salary');
     return;
@@ -277,8 +279,8 @@ async function renderJobListings() {
       minLimitParam, maxLimitParam, orderByParam,
       DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
       .catch((error) => {
-        console.log('error', error);
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
+        console.log('error fetching job listings', error);
+        setErrorMessage(/* msg */ COMMON_STRINGS['getting-jobs-error-message'],
             /* include default msg */ false);
       });
 
