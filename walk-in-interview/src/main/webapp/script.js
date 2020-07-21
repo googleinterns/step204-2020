@@ -51,12 +51,12 @@ function renderHomepageElements() {
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
-  renderSelectOptions(/** for */ 'sort-by');
+  renderSelectOptions('sort-by');
 
   const showByTitle = document.getElementById('show-by-region-title');
   showByTitle.innerText = STRINGS['show-by-region-title'];
 
-  renderSelectOptions(/** for */ 'show-by-region');
+  renderSelectOptions('show-by-region');
 
   const LimitsTitle = document.getElementById('filter-limits-title');
   LimitsTitle.innerText = STRINGS['filter-limits-title'];
@@ -77,8 +77,8 @@ function renderHomepageElements() {
 
   renderJobListings();
 
-  /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /** includes default msg */ false);
+  /* reset the error to make sure no error msg initially present */
+  setErrorMessage(/* msg */ '', /* includes default msg */ false);
 }
 
 /**
@@ -125,36 +125,36 @@ function validateFilters() {
       .valueAsNumber;
 
   if (showByParam == '' || sortByParam == '') {
-    /** no need to show error message as this would not be the user's fault */
+    /* no need to show error message as this would not be the user's fault */
     console.log('error', 'region or sorting was empty');
     return false;
   }
 
-  /** If the field has been filled out, we check that it's a positive int */
+  /* If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(minLimitParam) &&
     (minLimitParam > JAVA_INTEGER_MAX_VALUE || minLimitParam < 0)) {
     setErrorMessage(/* msg */ STRINGS['filter-min-limit'],
-        /** includes default msg */ true);
+        /* includes default msg */ true);
     document.getElementById('filter-min-limit')
         .style.backgroundColor = 'rgb(255,0,0, 0.1)';
     return false;
   }
 
-  /** If the field has been filled out, we check that it's a positive int */
+  /* If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(maxLimitParam) &&
   (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
     setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
-        /** includes default msg */ true);
+        /* includes default msg */ true);
     document.getElementById('filter-max-limit')
         .style.backgroundColor = 'rgb(255,0,0, 0.1)';
     return false;
   }
 
-  /** If both fields have been filled out, we check that max >= min */
+  /* If both fields have been filled out, we check that max >= min */
   if (!Number.isNaN(maxLimitParam) && !Number.isNaN(minLimitParam) &&
     maxLimitParam < minLimitParam) {
     setErrorMessage(/* msg */ STRINGS['filter-max-limit'],
-        /** includes default msg */ true);
+        /* includes default msg */ true);
     document.getElementById('filter-max-limit')
         .style.backgroundColor = 'rgb(255,0,0, 0.1)';
     return false;
@@ -187,7 +187,7 @@ function displayJobListings(jobPageData) {
   const jobListingsElement = document.getElementById('job-listings');
   const jobShowing = document.getElementById('job-listings-showing');
 
-  /** reset the list so we don't render the same jobs twice */
+  /* reset the list so we don't render the same jobs twice */
   jobListingsElement.innerHTML = '';
   jobShowing.innerHTML = '';
 
@@ -195,7 +195,7 @@ function displayJobListings(jobPageData) {
     !jobPageData.hasOwnProperty('jobList') ||
     jobPageData['jobList'].length === 0) {
     setErrorMessage(/* msg */ NO_JOBS_ERROR,
-        /** includes default msg */ false);
+        /* includes default msg */ false);
     return;
   }
 
@@ -205,7 +205,7 @@ function displayJobListings(jobPageData) {
 
   jobListings.forEach((job) => {
     const jobListing =
-      jobListingTemplate.cloneNode( /** and child elements */ true);
+      jobListingTemplate.cloneNode( /* and child elements */ true);
     jobListing.setAttribute('id', job['jobId']);
 
     const jobTitle = jobListing.children[0];
@@ -250,7 +250,7 @@ async function renderJobListings() {
 
   const sortingParam = document.getElementById('sort-by').value;
 
-  /** Note that this platform currently only sorts by Salary.*/
+  /* Note that this platform currently only sorts by Salary.*/
   if (!sortingParam.includes(SALARY_PARAM)) {
     console.log('error', 'this app currently only sorts by salary');
     return;
@@ -279,7 +279,7 @@ async function renderJobListings() {
       .catch((error) => {
         console.log('error', error);
         setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
+            /* include default msg */ false);
       });
 
   displayJobListings(jobPageData);
@@ -308,8 +308,8 @@ function getJobListings(region, sortBy, minLimit, maxLimit,
       .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false);
+        /* reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* msg */ '', /* include default msg */ false);
         return data;
       });
 }

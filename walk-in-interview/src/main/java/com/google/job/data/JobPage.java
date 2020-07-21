@@ -2,6 +2,7 @@ package com.google.job.data;
 
 import java.util.*;
 import org.apache.commons.lang3.Range;
+import com.google.common.collect.ImmutableList;
 
 /** Class that represents the details of a page to show jobs. */
 public final class JobPage {
@@ -13,8 +14,8 @@ public final class JobPage {
 
     // For serialization
     public JobPage() {
-        this(/* jobList */ new LinkedList(), /* totalCount */0,
-                Range.between(/* inclusive */ 0, /* inclusive */ 0));
+        this(/* jobList= */ ImmutableList.of(), /* totalCount= */0,
+                Range.between(/* inclusive= */ 0, /* inclusive= */ 0));
     }
 
     public JobPage(List<Job> jobList, long totalCount, Range<Integer> range) {
@@ -58,6 +59,7 @@ public final class JobPage {
 
     /**
      * Must override hashCode() if equals() is being overriden.
+     *
      * @return The hashcode.
      */
     @Override
@@ -90,17 +92,17 @@ public final class JobPage {
 
     private static void validateParameters(List<Job> jobList, long totalCount, Range<Integer> range)
             throws IllegalArgumentException {
-        if (jobList == null || jobList.size() < 0) {
-            throw new IllegalArgumentException("jobList should not be null or have negative size");
+        if (jobList.size() < 0) {
+            throw new IllegalArgumentException("jobList should not have negative size");
         }
 
         if (totalCount < 0 || totalCount < jobList.size()) {
             throw new IllegalArgumentException("totalCount should not be negative or less than jobList size");
         }
 
-        if (range == null || range.getMinimum() < 0 || range.getMaximum() > totalCount ||
+        if (range.getMinimum() < 0 || range.getMaximum() > totalCount ||
                 range.getMaximum() < range.getMinimum()) {
-            throw new IllegalArgumentException("range should not be null or have invalid max/min values");
+            throw new IllegalArgumentException("range should not have invalid max/min values");
         }
     }
 }

@@ -20,7 +20,7 @@ const HOMEPAGE_PATH = '../index.html';
 const RESPONSE_ERROR = 'There was an error while creating ' +
   'the job listing, please try submitting again';
 const HOURS_PER_YEAR = 8760;
-/** Note that is an approximate value */
+/* Note that is an approximate value */
 const WEEKS_PER_YEAR = 52;
 const MONTHS_PER_YEAR = 12;
 
@@ -99,9 +99,9 @@ function renderJobPageElements() {
   renderJobExpiryLimits();
 
   currErrorField = 'title';
-  /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/** error div id */ 'error-message', /* msg */ '',
-      /** includes default msg */ false);
+  /* reset the error to make sure no error msg initially present */
+  setErrorMessage(/* error div id */ 'error-message', /* msg */ '',
+      /* includes default msg */ false);
 }
 
 /**
@@ -126,14 +126,14 @@ function renderRequirementsList() {
   const requirementsListElement =
     document.getElementById('requirements-list');
 
-  /** reset the list so we don't render the same requirements twice */
+  /* reset the list so we don't render the same requirements twice */
   requirementsListElement.innerHTML = '';
   const requirementElementTemplate =
     document.getElementById('requirement-element-template');
   for (const key in requirementsList) {
     if (requirementsList.hasOwnProperty(key)) {
       const requirementElement = requirementElementTemplate
-          .cloneNode( /** and child elements */ true);
+          .cloneNode( /* and child elements */ true);
       requirementElement.setAttribute('id', key);
 
       const checkbox = requirementElement.children[0];
@@ -257,7 +257,7 @@ function getJobDetailsFromUserInput() {
  * @return {String} The Singapore region.
  */
 function findRegion(postalCode) {
-  /**
+  /*
    * We have made the assumption that if the user's
    * postal code region is 01, they would have written
    * 01xxx rather than 1xxx.
@@ -326,20 +326,20 @@ function validateRequiredUserInput() {
 
   if (name.value === '') {
     setErrorMessageAndField(/* msg */ name.placeholder,
-        /** includes default msg */ true, /** error element id */ 'title');
+        /* includes default msg */ true, /* error element id */ 'title');
     return false;
   }
 
   if (description.value === '') {
     setErrorMessageAndField(/* msg */ description.placeholder,
-        /** includes default msg */ true,
-        /** error element id */ 'description');
+        /* includes default msg */ true,
+        /* error element id */ 'description');
     return false;
   }
 
   if (address.value === '') {
     setErrorMessageAndField(/* msg */ address.placeholder,
-        /** includes default msg */ true, /** error element id */ 'address');
+        /* includes default msg */ true, /* error element id */ 'address');
     return false;
   }
 
@@ -349,44 +349,44 @@ function validateRequiredUserInput() {
     parseInt(postalCode.value.substring(0, 2)) <= 0 ||
     parseInt(postalCode.value.substring(0, 2)) > 82) {
     setErrorMessageAndField(/* msg */ postalCode.placeholder,
-        /** includes default msg */ true,
-        /** error element id */ 'postal-code');
+        /* includes default msg */ true,
+        /* error element id */ 'postal-code');
     return false;
   }
 
   if (payFrequency === '') {
     setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
-        .textContent, /** includes default msg */ true,
-    /** error element id */'pay-frequency');
+        .textContent, /* includes default msg */ true,
+    /* error element id */'pay-frequency');
     return false;
   }
 
   if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
     setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
-        .textContent, /** includes default msg */ true,
-    /** error element id */ 'pay-min');
+        .textContent, /* includes default msg */ true,
+    /* error element id */ 'pay-min');
     return false;
   }
 
   if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
     payMin > payMax || payMax < 0) {
     setErrorMessageAndField(/* msg */ document.getElementById('pay-title')
-        .textContent, /** includes default msg */ true,
-    /** error element id */ 'pay-max');
+        .textContent, /* includes default msg */ true,
+    /* error element id */ 'pay-max');
     return false;
   }
 
   if (duration === '') {
     setErrorMessageAndField(/* msg */ document.getElementById('duration-title')
-        .textContent, /** includes default msg */ true,
-    /** error element id */ 'duration');
+        .textContent, /* includes default msg */ true,
+    /* error element id */ 'duration');
     return false;
   }
 
   if (Number.isNaN(expiry)) {
     setErrorMessageAndField(/* msg */ document.getElementById('expiry-title')
-        .textContent, /** includes default msg */ true,
-    /** error element id */ 'expiry');
+        .textContent, /* includes default msg */ true,
+    /* error element id */ 'expiry');
     return false;
   }
 
@@ -408,14 +408,14 @@ submitButton.addEventListener('click', (_) => {
       .then((response) => response.text())
       .then((data) => {
         console.log('data', data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/** error div id */ 'error-message', /* msg */ '',
-            /** include default msg */ false);
+        /* reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* error div id */ 'error-message', /* msg */ '',
+            /* include default msg */ false);
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/** error div id */ 'error-message',
-            /* msg */ RESPONSE_ERROR, /** include default msg */ false);
+        setErrorMessage(/* error div id */ 'error-message',
+            /* msg */ RESPONSE_ERROR, /* include default msg */ false);
         console.log('error', error);
       });
 });

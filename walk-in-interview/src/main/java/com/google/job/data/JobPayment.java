@@ -11,7 +11,7 @@ public final class JobPayment {
 
     // For serialization
     public JobPayment() {
-        this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax */ 0);
+        this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax= */ 0);
     }
 
     public JobPayment(int min, int max, PaymentFrequency paymentFrequency, long annualMax) {

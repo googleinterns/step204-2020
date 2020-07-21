@@ -182,8 +182,8 @@ public final class JobsDatabase {
 
         ApiFunction<QuerySnapshot, JobPage> jobFunction = new ApiFunction<QuerySnapshot, JobPage>() {
             @NullableDecl
-            public JobPage apply(@NullableDecl QuerySnapshot snapshotFuture) {
-                List<QueryDocumentSnapshot> documents = snapshotFuture.getDocuments();
+            public JobPage apply(@NullableDecl QuerySnapshot querySnapshot) {
+                List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
                 List<Job> jobList = new LinkedList<>();
 
                 for (QueryDocumentSnapshot document : documents) {
