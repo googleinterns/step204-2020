@@ -7,6 +7,11 @@ public final class JobPayment {
     private final PaymentFrequency paymentFrequency;
     private final long annualMax;
 
+    private static final int HOURS_PER_YEAR = 8760;
+    /* Note that is an approximate value */
+    private static final int WEEKS_PER_YEAR = 52;
+    private static final int MONTHS_PER_YEAR = 12;
+
     private volatile int hashCode;
 
     // For serialization
@@ -15,7 +20,7 @@ public final class JobPayment {
     }
 
     public JobPayment(int min, int max, PaymentFrequency paymentFrequency, long annualMax) {
-        validateParameter(min, max);
+        validateParameter(min, max, paymentFrequency, annualMax);
 
         this.min = min;
         this.max = max;
@@ -83,7 +88,8 @@ public final class JobPayment {
                 min, max, paymentFrequency.name(), annualMax);
     }
 
-    private static void validateParameter(float min, float max) throws IllegalArgumentException {
+    private static void validateParameter(float min, float max, PaymentFrequency paymentFrequency, long annualMax)
+        throws IllegalArgumentException {
         if (min < 0) {
             throw new IllegalArgumentException("\"min\" should not be negative");
         }
@@ -91,5 +97,27 @@ public final class JobPayment {
         if (max < min) {
             throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
         }
+
+        long expectedAnnualMax = max;
+
+        switch(paymentFrequency) {
+            case HOURLY:
+                expectedAnnualMax = max * HOURS_PER_YEAR;
+                break;
+            case WEEKLY:
+                expectedAnnualMax = max * WEEKS_PER_YEAR;
+                break;
+            case MONTHLY:
+                expectedAnnualMax = max * MONTHS_PER_YEAR;
+                break;
+            case YEARLY:
+                expectedAnnualMax = max;
+                break;
+        }
+
+        if (annualMax != expectedAnnualMax) {
+            throw new IllegalArgumentException("annualMax was : " + annualMax + ", but should be: " + expectedAnnualMax);
+        }
+
     }
 }

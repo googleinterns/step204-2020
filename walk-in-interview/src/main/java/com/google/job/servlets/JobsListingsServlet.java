@@ -23,7 +23,7 @@ import java.util.*;
  */
 @WebServlet("/jobs/listings")
 public final class JobsListingsServlet extends HttpServlet {
-    private static final long TIMEOUT = 5;
+    private static final long TIMEOUT_SECONDS = 5;
 
     private static final String MIN_LIMIT_PARAM = "minLimit";
     private static final String MAX_LIMIT_PARAM = "maxLimit";
@@ -65,7 +65,7 @@ public final class JobsListingsServlet extends HttpServlet {
     private JobPage fetchJobPageDetails(JobQuery jobQuery) throws ServletException, ExecutionException, TimeoutException {
         try {
             return this.jobsDatabase.fetchJobPage(jobQuery)
-                    .get(TIMEOUT, TimeUnit.SECONDS);
+                    .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
