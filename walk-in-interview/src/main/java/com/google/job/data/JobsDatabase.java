@@ -16,7 +16,6 @@ import java.util.concurrent.Future;
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private static final String JOB_STATUS_FIELD = "jobStatus";
-    private static final long TIMEOUT = 5;
 
     /**
      * Adds a newly created job post.
