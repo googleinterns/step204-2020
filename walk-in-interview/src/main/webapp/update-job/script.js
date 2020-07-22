@@ -53,9 +53,12 @@ function loadAndShowJob(jobId) {
     return;
   }
 
+  // Reenders the html elements.
+  renderPageElements();
+
   // Only run it for selenium test.
   // var job = getJobForSeleniumTest();
-  // addPageElementsWithPrefilledInfo(job);
+  // addPrefilledInfo(job);
   // status = job.jobStatus;
   // return;
 
@@ -67,7 +70,7 @@ function loadAndShowJob(jobId) {
   })
   .then(response => response.json())
   .then(job => {
-    addPageElementsWithPrefilledInfo(job);
+    addPrefilledInfo(job);
     // Sets the status of this job post
     status = job.jobStatus;
   })
@@ -79,11 +82,9 @@ function loadAndShowJob(jobId) {
 }
 
 /**
- * Adds all the titles and pre-filled info to the fields on this page.
- * 
- * @param {Job} job Job json.
+ * Adds all the titles on this page.
  */
-function addPageElementsWithPrefilledInfo(job) {
+function renderPageElements() {
   const cancelButton = document.getElementById('cancel');
   cancelButton.setAttribute('value', STRINGS['cancel']);
   cancelButton.setAttribute('type', 'reset');
@@ -96,55 +97,82 @@ function addPageElementsWithPrefilledInfo(job) {
   submitButton.setAttribute('type', 'submit');
 
   const jobTitle = document.getElementById('title');
-  const jobTitleContent = job.jobTitle;
   jobTitle.setAttribute('type', 'text');
+
+  const jobDescription = document.getElementById('description');
+  jobDescription.setAttribute('type', 'text');
+
+  const jobAddress = document.getElementById('address');
+  jobAddress.setAttribute('type', 'text');
+
+  const postalCode = document.getElementById('postal-code');
+  postalCode.setAttribute('type', 'text');
+    
+  const requirementsTitle = document.getElementById('requirements-title');
+  requirementsTitle.innerText = STRINGS['requirements-title'];
+
+  const payTitle = document.getElementById('pay-title');
+  payTitle.innerText = STRINGS['pay-title'];
+    
+  const jobPayMin = document.getElementById('pay-min');
+  jobPayMin.setAttribute('type', 'number');
+
+  const jobPayMax = document.getElementById('pay-max');
+  jobPayMax.setAttribute('type', 'number');
+
+  const durationTitle = document.getElementById('duration-title');
+  durationTitle.innerText = STRINGS['duration-title'];
+
+  const expiryTitle = document.getElementById('expiry-title');
+  expiryTitle.innerText = STRINGS['expiry-title'];
+  const jobExpiry = document.getElementById('expiry');
+  jobExpiry.setAttribute('type', 'date');
+
+  // Resets the error to make sure no error msg initially present.
+  setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */'', /* includesDefault= */false);
+}
+
+/**
+ * Adds pre-filled info to the fields on this page.
+ * 
+ * @param {Job} job Job json.
+ */
+function addPrefilledInfo(job) {
+  const jobTitle = document.getElementById('title');
+  const jobTitleContent = job.jobTitle;
   jobTitle.setAttribute('value', jobTitleContent);
 
   const jobDescription = document.getElementById('description');
   const jobDescriptionContent = job.jobDescription;
-  jobDescription.setAttribute('type', 'text');
   jobDescription.innerText = jobDescriptionContent;
 
   const jobAddress = document.getElementById('address');
   const jobAddressContent = job.jobLocation.address;
-  jobAddress.setAttribute('type', 'text');
   jobAddress.setAttribute('value', jobAddressContent);
 
   const postalCode = document.getElementById('postal-code');
   const postalCodeContent = job.jobLocation.postalCode;
-  postalCode.setAttribute('type', 'text');
   postalCode.setAttribute('value', postalCodeContent);
     
-  const requirementsTitle = document.getElementById('requirements-title');
-  requirementsTitle.innerText = STRINGS['requirements-title'];
   const requirements = job.requirements;
   renderRequirementsList(requirements);
 
-  const payTitle = document.getElementById('pay-title');
-  payTitle.innerText = STRINGS['pay-title'];
   const jobPayFrequency = job.jobPay.paymentFrequency;
   renderJobPayFrequencyOptions(jobPayFrequency);
     
   const jobPayMin = document.getElementById('pay-min');
   const jobPayMinContent = job.jobPay.min;
-  jobPayMin.setAttribute('type', 'number');
   jobPayMin.setAttribute('value', jobPayMinContent);
 
   const jobPayMax = document.getElementById('pay-max');
   const jobPayMaxContent = job.jobPay.max;
-  jobPayMax.setAttribute('type', 'number');
   jobPayMax.setAttribute('value', jobPayMaxContent);
 
-  const durationTitle = document.getElementById('duration-title');
-  durationTitle.innerText = STRINGS['duration-title'];
   const jobDuration = job.jobDuration;
   renderJobDurationOptions(jobDuration);
 
-  const expiryTitle = document.getElementById('expiry-title');
-  expiryTitle.innerText = STRINGS['expiry-title'];
   const jobExpiry = document.getElementById('expiry');
   const jobExpiryTimestamp = job.postExpiryTimestamp;
-  jobExpiry.setAttribute('type', 'date');
   renderJobExpiryLimits(jobExpiryTimestamp);
 
   // Resets the error to make sure no error msg initially present.
