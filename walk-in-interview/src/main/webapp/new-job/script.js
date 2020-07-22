@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
 import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
@@ -258,7 +259,7 @@ submitButton.addEventListener('click', (_) => {
   }
 
   const jobDetails = getJobDetailsFromUserInput();
-  fetch('/jobs', {
+  fetch(API['new-job'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),

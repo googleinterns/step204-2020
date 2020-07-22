@@ -1,8 +1,13 @@
+// TODO(issue/21): get the language from the browser
+const CurrentLocale = 'en';
+
 /**
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {setCookie, setErrorMessage} from '../common-functions.js';
+import {AppStrings} from '../strings.en.js';
+
+import {JOB_ID_PARAM, setCookie, setErrorMessage} from '../common-functions.js';
 
 const UPDATE_JOB_PATH = '../update-job/index.html';
 
@@ -11,7 +16,7 @@ const UPDATE_JOB_PATH = '../update-job/index.html';
  */
 // TODO(issue/53): implement this function
 function getJobId() {
-  return 'xxxxx';
+  return 'Not Implemented';
 }
 
 const submitButton = document.getElementById('update');
@@ -20,12 +25,12 @@ submitButton.addEventListener('click', (_) => {
   const jobId = getJobId();
 
   if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.',
-      /* includesDefault= */false);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */ AppStrings['common']['empty-job-id-error-message'], /* includesDefault= */false);
     return;
   }
 
-  setCookie('jobId', jobId);
+  setCookie(JOB_ID_PARAM, jobId);
 
   fetch('../update-job/index.html', {
     method: 'POST',
@@ -38,8 +43,8 @@ submitButton.addEventListener('click', (_) => {
       window.location.href= UPDATE_JOB_PATH;
   })
   .catch((error) => {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Error occur when sending jobId',
-          /* includesDefault= */false);
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ AppStrings['job-details']['update-error-message'], /* includesDefault= */false);
       console.log('error', error);
   });
 });

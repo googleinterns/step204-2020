@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
 import {JOB_ID_PARAM, getCookie, getRequirementsList, 
   setErrorMessage, renderSelectOptions} from '../common-functions.js';
@@ -297,7 +298,9 @@ function getJobDetailsFromUserInput() {
 }
   
 /**
-* Validates the user input
+* Validates the user input.
+* Shows error message on the webpage if there is field with invalid input.
+*
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
@@ -369,7 +372,7 @@ submitButton.addEventListener('click', (_) => {
 
   const jobDetails = getJobDetailsFromUserInput();
 
-  fetch('/jobs', {
+  fetch(API['update-job'], {
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
@@ -405,7 +408,7 @@ cancelButton.addEventListener('click', (_) => {
  * since getJobId is not implemented yet.
  */
 function getJobIdForSeleniumTest() {
-  return 'xxxxxxx';
+  return 'seleniumTestJobId';
 }
 
 /**

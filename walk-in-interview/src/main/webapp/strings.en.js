@@ -1,6 +1,5 @@
 /**
- * This contains all the constants (language: English) for
- * the homepage.js file.
+ * This contains all the constants (language: English).
  */
 
 /**
@@ -103,3 +102,11 @@ AppStrings['delete-job'] = {
   'delete': 'Delete',
   'error-message': 'There was an error while deleting the job post. Please try again',
 };
+
+/*
+ * Strings used in job-details.
+ */
+AppStrings['job-details'] = {
+  'update-error-message': 'Error occur when directing to update page',
+};
+

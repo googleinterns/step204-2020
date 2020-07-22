@@ -13,6 +13,7 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
+const MILLISECONDS_IN_DAY = 24*60*60*1000;
 
 /**
  * Gets the requirements list from the servlet
@@ -67,7 +68,7 @@ function renderSelectOptions(select, options) {
  */
 function setCookie(cname, cvalue, exdays=0.5) {
   var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  d.setTime(d.getTime() + (exdays * MILLISECONDS_IN_DAY));
   var expires = `expires=${d.toUTCString()}`;
   document.cookie = `${cname}=${cvalue};${expires};path=/`;
 }
