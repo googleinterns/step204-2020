@@ -152,7 +152,7 @@ public final class JobServlet extends HttpServlet {
     private Job fetchJobDetails(String jobId) throws ServletException, ExecutionException, TimeoutException {
         try {
             Optional<Job> job = this.jobsDatabase.fetchJob(jobId)
-                    .get(TIMEOUT, TimeUnit.SECONDS);
+                    .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
             if (!job.isPresent()) {
                 throw new IllegalArgumentException("could not find job for this jobId: " + jobId);
