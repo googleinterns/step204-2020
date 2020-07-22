@@ -342,6 +342,102 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJobs, actualJobs);
     }
 
+    @Test
+    public void fetchAllEligibleJobs_noJobMatch_success() throws IOException, ExecutionException, InterruptedException {
+        // Arrange.
+        JobStatus jobStatus = JobStatus.ACTIVE;
+        String jobName = "Programmer";
+        Location location =  new Location("Maple Tree", "123456", 0, 0);
+        String jobDescription = "Fighting to defeat hair line recede";
+        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+        long postExpiry = System.currentTimeMillis();;
+        JobDuration jobDuration = JobDuration.ONE_MONTH;
+
+        Job job1 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection(TEST_JOB_COLLECTION).add(job1);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
+
+        Job job2 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection(TEST_JOB_COLLECTION).add(job2);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH, DRIVING_LICENSE_C), "en");
+
+        Job job3 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection(TEST_JOB_COLLECTION).add(job3);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C), "en");
+
+        Job job4 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection(TEST_JOB_COLLECTION).add(job4);
+
+        requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH), "en");
+
+        Job job5 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        firestore.collection(TEST_JOB_COLLECTION).add(job5);
+
+        List<String> skills = Requirement.getLocalizedNames(Arrays.asList(DRIVING_LICENSE_C), "en");
+
+        // Act.
+        Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+        // Assert.
+        Collection<Job> expectedJobs = new HashSet<>();
+        Collection<Job> actualJobs = jobsFuture.get();
+        assertEquals(expectedJobs, actualJobs);
+    }
+
     /**
      * Delete a collection in batches to avoid out-of-memory errors.
      *
