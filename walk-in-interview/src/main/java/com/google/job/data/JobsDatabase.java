@@ -167,30 +167,5 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(querySnapshotFuture, function, MoreExecutors.directExecutor());
-
-//        // Runs an asynchronous transaction
-//        ApiFuture<Collection<Job>> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
-//            ImmutableSet.Builder<Job> jobs = ImmutableSet.builder();
-//
-//            final Query activeJobsQuery = FireStoreUtils.getFireStore()
-//                .collection(JOB_COLLECTION)
-//                .whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE);
-//
-//            List<QueryDocumentSnapshot> documents = transaction.get(activeJobsQuery).get().getDocuments();
-//
-//            for (DocumentSnapshot document : documents) {
-//                Job job = document.toObject(Job.class);
-//                List<String> requirements = job.getRequirements();
-//
-//                // Eligible job: all job requirements are contained in the applicant skills.
-//                if (skills.containsAll(requirements)) {
-//                    jobs.add(job);
-//                }
-//            }
-//
-//            return jobs.build();
-//        });
-//
-//        return futureTransaction;
     }
 }
