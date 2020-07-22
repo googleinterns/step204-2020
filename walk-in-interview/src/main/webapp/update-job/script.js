@@ -24,7 +24,7 @@ const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
   var jobId = getJobId();
-  addPageElements(jobId);
+  loadAndShowJob(jobId);
 };
 
 /**
@@ -32,24 +32,49 @@ window.onload = () => {
  */
 function getJobId() {
   // Only run it for selenium test.
-  // return getJobIdForSeleniumTest();
+  return getJobIdForSeleniumTest();
 
   const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
 }
 
 /**
- * Adds all the titles to the fields on this page.
+ * Gets the Job post given its id.
  * 
- * @param {String} jobId Database id of the current job post.
+ * @param {String} jobId Cloud Firestore Job Id.
  */
-function addPageElements(jobId) {
+function loadAndShowJob(jobId) {
   if (jobId === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
       /* msg= */ AppStrings['common']['empty-job-id-error-message'], /* includesDefault= */false);
     return;
   }
 
+  // Only run it for selenium test.
+  addPageElementsWithPrefilledInfo(getJobForSeleniumTest());
+  return;
+
+  // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
+  const url = `${API['update-job']}?jobId=${jobId}`;
+  fetch(url, {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  })
+  .then(response => response.json())
+  .then(job => addPageElementsWithPrefilledInfo(job))
+  .catch(error => {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+      /* includesDefault= */false);
+    console.log('error', error);
+  })
+}
+
+/**
+ * Adds all the titles and pre-filled info to the fields on this page.
+ * 
+ * @param {Job} job Job json.
+ */
+function addPageElementsWithPrefilledInfo(job) {
   const cancelButton = document.getElementById('cancel');
   cancelButton.setAttribute('value', STRINGS['cancel']);
   cancelButton.setAttribute('type', 'reset');
@@ -61,7 +86,7 @@ function addPageElements(jobId) {
   submitButton.setAttribute('value', UPDATE_JOB_STRINGS['update']);
   submitButton.setAttribute('type', 'submit');
 
-  const job = getJobFromId(jobId);
+  // const job = getJobFromId(jobId);
 
   const jobTitle = document.getElementById('title');
   const jobTitleContent = job.jobTitle;
@@ -117,30 +142,6 @@ function addPageElements(jobId) {
 
   // Resets the error to make sure no error msg initially present.
   setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */'', /* includesDefault= */false);
-}
-
-/**
- * Gets the Job post given its id.
- * 
- * @param {String} jobId Cloud Firestore Job Id.
- * @returns Job json.
- */
-function getJobFromId(jobId) {
-  // Only run it for selenium test.
-  // return getJobForSeleniumTest();
-
-  // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
-  const url = `/jobs?jobId=${jobId}`;
-  fetch(url, {
-    method: 'GET',
-    headers: {'Content-Type': 'application/json'},
-  })
-  .then(response => response.json())
-  .catch(error => {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-      /* includesDefault= */false);
-    console.log('error', error);
-  })
 }
 
 /**
