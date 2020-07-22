@@ -50,13 +50,13 @@ options.addArguments('headless');
 /**
  * Set timeout to 50s so tests all have a chance to run.
  */
-const TIMEOUT = 50000;
+const TIMEOUT_MILLISECONDS = 50000;
 
 let driver;
 
 /** Note that this.timeout() will not work with arrow functions. */
 describe('Update Job Tests', function() {
-  this.timeout(TIMEOUT);
+  this.timeout(TIMEOUT_MILLISECONDS);
 
   before(() => {
     driver = new webdriver.Builder().setChromeOptions(options)
