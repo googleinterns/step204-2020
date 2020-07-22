@@ -14,6 +14,7 @@ export const AppStrings = {};
  */
 AppStrings['common'] = {
   'error-message': 'There is an error in the following field: ',
+  'empty-job-id-error-message': 'Empty Job Id found.',
 };
 
 /**
@@ -93,4 +94,12 @@ AppStrings['update-job'] = {
   'update': 'Update',
   'error-message': 'There was an error while loading the job post. Please try again',
   'storing-error-message': 'There was an error while storing the job post. Please try again',
+}
+
+/*
+ * Strings used in delete-job.
+ */
+AppStrings['delete-job'] = {
+  'delete': 'Delete',
+  'error-message': 'There was an error while deleting the job post. Please try again',
 };

@@ -44,8 +44,8 @@ function getJobId() {
  */
 function addPageElements(jobId) {
   if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.',
-      /* includesDefault= */false);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */ AppStrings['common']['empty-job-id-error-message'], /* includesDefault= */false);
     return;
   }
 

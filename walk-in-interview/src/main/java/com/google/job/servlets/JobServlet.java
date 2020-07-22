@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
-    private static final long TIMEOUT = 5;
+    private static final long TIMEOUT_SECONDS = 5;
 
     private JobsDatabase jobsDatabase;
 
@@ -103,7 +103,7 @@ public final class JobServlet extends HttpServlet {
         try {
             // Blocks the operation.
             // Use timeout in case it blocks forever.
-            this.jobsDatabase.addJob(job).get(TIMEOUT, TimeUnit.SECONDS);
+            this.jobsDatabase.addJob(job).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
@@ -115,7 +115,7 @@ public final class JobServlet extends HttpServlet {
         try {
             // Blocks the operation.
             // Use timeout in case it blocks forever.
-            this.jobsDatabase.setJob(jobId, job).get(TIMEOUT, TimeUnit.SECONDS);
+            this.jobsDatabase.setJob(jobId, job).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
