@@ -1,5 +1,5 @@
 /**
- * This contains API endpoints in the design doc.
+ * This file contains API endpoints in the design doc.
  */
 export const API = {
     'new-job': '/jobs',
