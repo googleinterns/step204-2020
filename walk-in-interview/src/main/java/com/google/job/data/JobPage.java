@@ -104,5 +104,13 @@ public final class JobPage {
                 range.getMaximum() < range.getMinimum()) {
             throw new IllegalArgumentException("range should not have invalid max/min values");
         }
+
+        if (jobList.size() != 0 && (range.getMaximum() - range.getMinimum() + 1) != jobList.size()) {
+            throw new IllegalArgumentException("range should reflect jobList size");
+        }
+
+        if (jobList.size() == 0 && (range.getMaximum() != 0 || range.getMinimum() != 0)) {
+            throw new IllegalArgumentException("range should be zero when jobList size is 0");
+        }
     }
 }

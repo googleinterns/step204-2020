@@ -135,17 +135,16 @@ public final class JobsListingsServlet extends HttpServlet {
     }
 
     /**
-     * Returns the region as a SingaporeRegion enum.
+     * Returns the region as a SingaporeRegion enum. We assume ENTIRE is region param is empty.
      *
      * @param request From the GET request.
      * @return SingaporeRegion enum given the id in the request params.
-     * @throws IllegalArgumentException if the id is invalid.
      */
-    private static SingaporeRegion parseRegion(HttpServletRequest request) throws IllegalArgumentException {
+    private static SingaporeRegion parseRegion(HttpServletRequest request) {
         String region = ServletUtils.getStringParameter(request, REGION_PARAM, /* defaultValue= */ "");
 
         if (region.isEmpty()) {
-            throw new IllegalArgumentException("region param should not be empty");
+            return SingaporeRegion.ENTIRE;
         }
 
         return SingaporeRegion.getFromId(region); // IllegalArgumentException may be thrown
