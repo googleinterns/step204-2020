@@ -441,30 +441,8 @@ describe('Update Job Tests', function() {
       const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
         `-${date.getFullYear()}`;
 
-      beforeEach('add all valid inputs', () => {
-        /**
-         * This will add all valid values to the job creation fields.
-         * The fields that need to be tested can be cleared in the
-         * individual test accordingly.
-         */
-        return driver.findElement(By.id('title')).sendKeys('Waiter')
-            .then(() => driver.findElement(By.id('description'))
-                .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('address'))
-                .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('postal-code'))
-                .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('pay-frequency'))
-                .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('pay-min'))
-                .sendKeys('5'))
-            .then(() => driver.findElement(By.id('pay-max'))
-                .sendKeys('6'))
-            .then(() => driver.findElement(By.id('duration'))
-                .sendKeys('OTHER'))
-            .then(() => driver.findElement(By.id('expiry'))
-                .sendKeys(today));
-      });
+      // Since all fields should be pre-filled with existing job post,
+      // there is no need to add valid inputs to all fields again.
 
       it('no job title', () => {
         /**
