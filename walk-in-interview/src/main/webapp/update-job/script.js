@@ -22,6 +22,8 @@ const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const HOMEPAGE_PATH = '../job-details/index.html';
 const BAD_REQUEST_STATUS_CODE = 400;
 
+var status = 'ACTIVE';
+
 window.onload = () => {
   var jobId = getJobId();
   loadAndShowJob(jobId);
@@ -51,7 +53,9 @@ function loadAndShowJob(jobId) {
   }
 
   // Only run it for selenium test.
-  // addPageElementsWithPrefilledInfo(getJobForSeleniumTest());
+  // var job = getJobForSeleniumTest();
+  // addPageElementsWithPrefilledInfo(job);
+  // status = job.jobStatus;
   // return;
 
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
@@ -61,7 +65,10 @@ function loadAndShowJob(jobId) {
     headers: {'Content-Type': 'application/json'},
   })
   .then(response => response.json())
-  .then(job => addPageElementsWithPrefilledInfo(job))
+  .then(job => {
+    addPageElementsWithPrefilledInfo(job);
+    status = job.jobStatus;
+  })
   .catch(error => {
     setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
       /* includesDefault= */false);
@@ -268,7 +275,6 @@ function getJobDetailsFromUserInput() {
   const duration = document.getElementById('duration').value;
 
   const jobPostId = getJobId();
-  const status = getJobFromId().jobStatus;
 
   if (status === '') {
     status = 'ACTIVE';
@@ -378,25 +384,25 @@ submitButton.addEventListener('click', (_) => {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
   })
-    .then((response) => {
-      if (response.status == BAD_REQUEST_STATUS_CODE) {
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'], /* includesDefault= */false);
-        throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
-      }
+  .then((response) => {
+    if (response.status == BAD_REQUEST_STATUS_CODE) {
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'], /* includesDefault= */false);
+      throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
+    }
 
-      /** reset the error (there might have been an error msg from earlier) */
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-      window.location.href= HOMEPAGE_PATH;
-    })
-    .catch((error) => {
-      // Not the server response error already caught and thrown
-      if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-          /* includesDefault= */false);
-        console.log('error', error);
-      }
-    });
+    /** reset the error (there might have been an error msg from earlier) */
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+    window.location.href= HOMEPAGE_PATH;
+  })
+  .catch((error) => {
+    // Not the server response error already caught and thrown
+    if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+        /* includesDefault= */false);
+      console.log('error', error);
+    }
+  });
 });
 
 const cancelButton = document.getElementById('cancel');
