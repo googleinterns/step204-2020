@@ -284,7 +284,7 @@ public final class JobsDatabaseTest {
             .setJobDuration(jobDuration)
             .build();
 
-        firestore.collection("JobsForEligibilityTest").add(job2);
+        firestore.collection(TEST_JOB_COLLECTION).add(job2);
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH, DRIVING_LICENSE_C), "en");
 
@@ -329,7 +329,7 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection(TEST_JOB_COLLECTION        ).add(job5);
+        firestore.collection(TEST_JOB_COLLECTION).add(job5);
 
         List<String> skills = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
 
