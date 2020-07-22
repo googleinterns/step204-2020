@@ -45,7 +45,17 @@ public final class JobServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // TODO(issue/60): get individual job post from jobId
+        try {
+            String jobId = parseJobId(request);
+
+            Job job = fetchJobDetails(jobId);
+
+            String json = ServletUtils.convertToJsonUsingGson(job);
+            response.setContentType("application/json;");
+            response.getWriter().println(json);
+        } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     @Override
@@ -130,5 +140,37 @@ public final class JobServlet extends HttpServlet {
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
+    }
+
+    /**
+     * Returns the Job object.
+     *
+     * @param jobId The job id that corresponds to the job we want to get.
+     * @return Job object with all the details of the job.
+     */
+    private Job fetchJobDetails(String jobId) throws ServletException, ExecutionException, TimeoutException {
+        try {
+            return this.jobsDatabase.fetchJob(jobId)
+                    .get(TIMEOUT, TimeUnit.SECONDS);
+        } catch (InterruptedException | IOException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    /**
+     * Returns the job id.
+     *
+     * @param request From the GET request.
+     * @return the job id.
+     * @throws IllegalArgumentException if the job id is invalid.
+     */
+    public static int parseJobId(HttpServletRequest request) throws IllegalArgumentException {
+        String jobIdStr = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
+
+        if (jobIdStr.isEmpty()) {
+            throw new IllegalArgumentException("job id param should not be empty");
+        }
+
+        return jobIdStr;
     }
 }
