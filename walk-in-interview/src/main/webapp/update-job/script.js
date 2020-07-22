@@ -32,7 +32,7 @@ window.onload = () => {
  */
 function getJobId() {
   // Only run it for selenium test.
-  return getJobIdForSeleniumTest();
+  // return getJobIdForSeleniumTest();
 
   const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
@@ -51,8 +51,8 @@ function loadAndShowJob(jobId) {
   }
 
   // Only run it for selenium test.
-  addPageElementsWithPrefilledInfo(getJobForSeleniumTest());
-  return;
+  // addPageElementsWithPrefilledInfo(getJobForSeleniumTest());
+  // return;
 
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
   const url = `${API['update-job']}?jobId=${jobId}`;
