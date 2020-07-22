@@ -22,6 +22,7 @@ const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const HOMEPAGE_PATH = '../job-details/index.html';
 const BAD_REQUEST_STATUS_CODE = 400;
 
+// Status of this job post, default to be ACTIVE
 var status = 'ACTIVE';
 
 window.onload = () => {
@@ -67,6 +68,7 @@ function loadAndShowJob(jobId) {
   .then(response => response.json())
   .then(job => {
     addPageElementsWithPrefilledInfo(job);
+    // Sets the status of this job post
     status = job.jobStatus;
   })
   .catch(error => {
@@ -92,8 +94,6 @@ function addPageElementsWithPrefilledInfo(job) {
   const submitButton = document.getElementById('update');
   submitButton.setAttribute('value', UPDATE_JOB_STRINGS['update']);
   submitButton.setAttribute('type', 'submit');
-
-  // const job = getJobFromId(jobId);
 
   const jobTitle = document.getElementById('title');
   const jobTitleContent = job.jobTitle;
