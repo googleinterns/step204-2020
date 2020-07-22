@@ -176,31 +176,28 @@ public final class JobsDatabase {
 
         return ApiFutures.transform(
             query.get(),
-            new ApiFunction<QuerySnapshot, JobPage>() {
-                @NullableDecl
-                public JobPage apply(@NullableDecl QuerySnapshot querySnapshot) {
-                    if (querySnapshot == null) {
-                        return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
-                    }
+            querySnapshot -> {
+                if (querySnapshot == null) {
+                    return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
+                }
 
-                    List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-                    if (documents.size() == 0) {
-                        return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
-                    }
+                List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+                if (documents.size() == 0) {
+                    return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
+                }
 
-                    ImmutableList.Builder<Job> jobList = ImmutableList.builder();
+                ImmutableList.Builder<Job> jobList = ImmutableList.builder();
 
-                    for (QueryDocumentSnapshot document : documents) {
-                        Job job = document.toObject(Job.class);
-                        jobList.add(job);
-                    }
+                for (QueryDocumentSnapshot document : documents) {
+                    Job job = document.toObject(Job.class);
+                    jobList.add(job);
+                }
             
-                    // TODO(issue/34): adjust range/total count based on pagination
-                    long totalCount = documents.size();
-                    Range<Integer> range = Range.between(1, documents.size());
+                // TODO(issue/34): adjust range/total count based on pagination
+                long totalCount = documents.size();
+                Range<Integer> range = Range.between(1, documents.size());
 
-                    return new JobPage(jobList.build(), totalCount, range);
-                }   
+                return new JobPage(jobList.build(), totalCount, range);  
             },
             MoreExecutors.directExecutor()
         );
