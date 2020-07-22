@@ -271,8 +271,7 @@ function findRegion(postalCode) {
       digits === 82) {
     return 'NORTH_EAST';
   }
-  setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
-      /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
+
   throw new Error('invalid postal code');
 }
 
@@ -341,11 +340,19 @@ function validateRequiredUserInput() {
    * the below range because those two digits correspond to the location's
    * district, which indicates its region in Singapore.
    */
-  if (postalCode.value === '' ||
+  if (postalCode.value === '' || postalCode.length < 2 ||
     (parseInt(postalCode.value[0]) > JAVA_INTEGER_MAX_VALUE) ||
     (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE)) {
     setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
         /* msg= */ postalCode.placeholder, /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
+  if (postalCodeDigits < 0 || postalCodeDigits === 74 ||
+      postalCodeDigits > 82) {
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
     return false;
   }
 

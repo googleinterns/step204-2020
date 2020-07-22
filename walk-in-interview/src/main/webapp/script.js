@@ -139,7 +139,7 @@ function validateFilters() {
 
   /* If the field has been filled out, we check that it's a positive int */
   if (!Number.isNaN(maxLimitParam) &&
-  (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
+    (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
     setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
         /* includesDefaultMsg= */ true);
     document.getElementById('filter-max-limit').classList.add('error-field');

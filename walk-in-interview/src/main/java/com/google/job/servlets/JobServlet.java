@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * Servlet that handles posting new job posts, updating existing job posts,
- * and getting an individual job listing.
+ * and getting an individual job post.
  */
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {

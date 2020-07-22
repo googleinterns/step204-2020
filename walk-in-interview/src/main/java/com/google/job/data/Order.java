@@ -33,6 +33,7 @@ public enum Order {
         throw new IllegalArgumentException("Invalid order id: " + id);
     }
 
+    /** Returns the Order as a query direction to be used to query that database. */
     public static Direction getQueryDirection(Order order) {
         switch(order) {
             case ASCENDING:

@@ -13,13 +13,19 @@ public final class JobQuery {
     public JobQuery() {}	
 
     public JobQuery setMinLimit(int minLimit) {
-        assert minLimit >= 0;
+        if (minLimit < 0) {
+            throw new IllegalArgumentException("minLimit should not be negative")
+        }
+
         this.minLimit = minLimit;
         return this;
     }
 
     public JobQuery setMaxLimit(int maxLimit) {
-        assert maxLimit > 0 && maxLimit >= this.minLimit;
+        if (maxLimit <= 0 || maxLimit < this.minLimit) {
+            throw new IllegalArgumentException("maxLimit should not be negative or zero or less than minLimit")
+        }
+
         this.maxLimit = maxLimit;
         return this;
     }
@@ -40,13 +46,19 @@ public final class JobQuery {
     }
 
     public JobQuery setPageSize(int pageSize) {
-        assert pageSize >= 1;
+        if (pageSize < 1) {
+            throw new IllegalArgumentException("pageSize should not be less than 1");
+        }
+
         this.pageSize = pageSize;
         return this;
     }
 
     public JobQuery setPageIndex(int pageIndex) {
-        assert pageIndex >= 0;
+        if (pageIndex < 0) {
+            throw new IllegalArgumentException("pageIndex should not be less than 0");
+        }
+        
         this.pageIndex = pageIndex;
         return this;
     }
