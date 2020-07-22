@@ -249,6 +249,7 @@ public final class JobsDatabaseTest {
     @Test
     public void fetchJobPage_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         /* fields that don't affect the job page details */
+        // Arrange
         JobStatus jobStatus = JobStatus.ACTIVE;
         String jobName = "Programmer";
         String jobDescription = "Fighting to defeat hair line recede";
@@ -361,16 +362,19 @@ public final class JobsDatabaseTest {
 
         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
         // maxLimit is defaulted to Integer.MAX_VALUE
-        JobQuery jobQuery = new JobQuery().setMinLimit(104001).setRegion(SingaporeRegion.CENTRAL);
+        // Act
+        JobQuery jobQuery = new JobQuery().setMinLimit(jobPayment5.getMinLimit() + 1).setRegion(SingaporeRegion.CENTRAL);
         
         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
 
+        // Assert
         assertEquals(expectedJobPage, actualJobPage);
     }
 
      @Test
     public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
         /* fields that don't affect the job page details */
+        // Arrange
         JobStatus jobStatus = JobStatus.ACTIVE;
         String jobName = "Programmer";
         String jobDescription = "Fighting to defeat hair line recede";
@@ -415,10 +419,12 @@ public final class JobsDatabaseTest {
 
         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
         // minLimit is defaulted to 0 and maxLimit is defaulted to Integer.MAX_VALUE
+        // Act
         JobQuery jobQuery = new JobQuery().setRegion(SingaporeRegion.NORTH);
         
         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
 
+        // Assert
         assertEquals(expectedJobPage, actualJobPage);
     }
 

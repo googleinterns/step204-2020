@@ -148,7 +148,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("region param should not be empty");
         }
 
-        return SingaporeRegion.getFromId(region); // Illegal Argument Exception may be thrown
+        return SingaporeRegion.getFromId(region); // IllegalArgumentException may be thrown
     }
 
     /**
@@ -165,7 +165,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("sort by param should not be empty");
         }
 
-        return Filter.getFromId(sortById); // Illegal Argument Exception may be thrown
+        return Filter.getFromId(sortById); // IllegalArgumentException may be thrown
     }
 
     /**
@@ -182,7 +182,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("order param should not be empty");
         }
 
-        return Order.getFromId(orderId); // Illegal Argument Exception may be thrown
+        return Order.getFromId(orderId); // IllegalArgumentException may be thrown
     }
 
     /**

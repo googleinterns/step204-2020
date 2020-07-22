@@ -272,7 +272,7 @@ function findRegion(postalCode) {
     return 'NORTH_EAST';
   }
 
-  throw new Error('invalid postal code');
+  throw new Error(`invalid postal code: ${postalCode}`);
 }
 
 /**
