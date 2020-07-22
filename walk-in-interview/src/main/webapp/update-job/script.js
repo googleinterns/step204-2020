@@ -53,7 +53,7 @@ function loadAndShowJob(jobId) {
     return;
   }
 
-  // Reenders the html elements.
+  // Renders the html elements.
   renderPageElements();
 
   // Only run it for selenium test.
