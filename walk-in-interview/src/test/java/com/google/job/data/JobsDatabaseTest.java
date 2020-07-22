@@ -270,8 +270,17 @@ public final class JobsDatabaseTest {
         JobPayment jobPayment3 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY, 156000);
 
         // this should not be returned (minLimit will be set to 104001)
-        Location location4 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+        Location location4 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
         JobPayment jobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, 104000);
+
+        // this should not be returned (region will be set to CENTRAL)
+        Location location5 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+        JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, 104000);
+
+        // this should not be returned (only active jobs should be shown)
+        JobStatus jobStatusExpired = JobStatus.EXPIRED;
+        Location location6 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+        JobPayment jobPayment6 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY, 156000);
 
         Job job1 = Job.newBuilder()
                 .setJobStatus(jobStatus)
@@ -316,12 +325,36 @@ public final class JobsDatabaseTest {
                 .setLocation(location4)
                 .setJobPay(jobPayment4)
                 .build();
+
+        Job job5 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setJobDescription(jobDescription)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .setLocation(location5)
+                .setJobPay(jobPayment5)
+                .build();
+
+        Job job6 = Job.newBuilder()
+                .setJobStatus(jobStatusExpired)
+                .setJobTitle(jobName)
+                .setJobDescription(jobDescription)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .setLocation(location6)
+                .setJobPay(jobPayment6)
+                .build();
     
         // the jobs will be added in a random order
+        firestore.collection(TEST_JOB_COLLECTION).add(job5).get();
         firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
         firestore.collection(TEST_JOB_COLLECTION).add(job3).get();
         firestore.collection(TEST_JOB_COLLECTION).add(job4).get();
         firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job6).get();
 
         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(job1, job2, job3),
             /* totalCount= */ 3, Range.between(1, 3));

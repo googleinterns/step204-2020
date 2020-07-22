@@ -162,7 +162,8 @@ public final class JobsDatabase {
             throw new UnsupportedOperationException("currently this app only supports sorting/filtering by salary");
         }
 
-        Query query = jobsCollection.whereGreaterThanOrEqualTo(SALARY_FIELD, jobQuery.getMinLimit())
+        Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
+            .whereGreaterThanOrEqualTo(SALARY_FIELD, jobQuery.getMinLimit())
             .whereLessThanOrEqualTo(SALARY_FIELD, jobQuery.getMaxLimit())
             .orderBy(SALARY_FIELD, Order.getQueryDirection(jobQuery.getOrder()));
 
