@@ -370,7 +370,8 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection(TEST_JOB_COLLECTION).add(job1);
+        // future.get() blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH), "en");
 
@@ -385,7 +386,8 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection(TEST_JOB_COLLECTION).add(job2);
+        // future.get() blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH, DRIVING_LICENSE_C), "en");
 
@@ -400,7 +402,8 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection(TEST_JOB_COLLECTION).add(job3);
+        // future.get() blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job3).get();
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C), "en");
 
@@ -415,7 +418,8 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection(TEST_JOB_COLLECTION).add(job4);
+        // future.get() blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job4).get();
 
         requirements = Requirement.getLocalizedNames(Arrays.asList(ENGLISH), "en");
 
@@ -430,7 +434,8 @@ public final class JobsDatabaseTest {
                 .setJobDuration(jobDuration)
                 .build();
 
-        firestore.collection(TEST_JOB_COLLECTION).add(job5);
+        // future.get() blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job5).get();
 
         List<String> skills = Requirement.getLocalizedNames(Arrays.asList(DRIVING_LICENSE_C), "en");
 
