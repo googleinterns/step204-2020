@@ -46,6 +46,8 @@ AppStrings['homepage'] = {
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occured while getting the job listings.',
+  'job-details-error-message': 'An error occured while getting ' +
+    'the details of this job.',
 };
 
 /**

@@ -18,6 +18,8 @@ const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
 const SALARY_PARAM = 'SALARY';
 
+const JOB_DETAILS_PATH = './job-details/index.html';
+
 /**
  * Note that this is needed because in JS we can hold bigger Integer
  * values than in Java.
@@ -226,12 +228,46 @@ function displayJobListings(jobPageData) {
     requirementsList.innerText =
       `Requirements List: ${requirementsArr.join(', ')}`;
 
+    jobListing.addEventListener('click', (_) => {
+      onClickJobListing(job['jobId']);
+    });
+
     jobListingsElement.appendChild(jobListing);
   });
 
   jobShowing.innerText = `${jobPageData['range'].minimum} -` +
     ` ${jobPageData['range'].maximum} ${STRINGS['job-listings-showing']} ` +
     `${jobPageData['totalCount']}`;
+}
+
+/**
+ * Called when the user clicks on a particular job.
+ * @param {String} jobId The jobId of the job the user clicked on.
+ */
+function onClickJobListing(jobId) {
+  if (jobId === '') {
+    throw new Error('jobId should not be empty');
+  }
+
+  setCookie('jobId', jobId);
+
+  fetch(JOB_DETAILS_PATH, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'include',
+  })
+      .then(() => {
+      /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ '', /* includesDefault= */false);
+        window.location.href= JOB_DETAILS_PATH;
+      })
+      .catch((error) => {
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ STRINGS['job-details-error-message'],
+            /* includesDefault= */false);
+        console.log('error', error);
+      });
 }
 
 /**
