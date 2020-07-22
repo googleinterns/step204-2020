@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Servlet that handles posting new job posts, updating existing job posts,
@@ -150,8 +151,14 @@ public final class JobServlet extends HttpServlet {
      */
     private Job fetchJobDetails(String jobId) throws ServletException, ExecutionException, TimeoutException {
         try {
-            return this.jobsDatabase.fetchJob(jobId)
+            Optional<Job> job = this.jobsDatabase.fetchJob(jobId)
                     .get(TIMEOUT, TimeUnit.SECONDS);
+
+            if (!job.isPresent()) {
+                throw new IllegalArgumentException("could not find job for this jobId: " + jobId);
+            }
+
+            return job.get();
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
@@ -164,7 +171,7 @@ public final class JobServlet extends HttpServlet {
      * @return the job id.
      * @throws IllegalArgumentException if the job id is invalid.
      */
-    public static int parseJobId(HttpServletRequest request) throws IllegalArgumentException {
+    public static String parseJobId(HttpServletRequest request) throws IllegalArgumentException {
         String jobIdStr = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
 
         if (jobIdStr.isEmpty()) {
