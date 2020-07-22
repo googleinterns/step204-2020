@@ -327,7 +327,62 @@ public final class JobsDatabaseTest {
             /* totalCount= */ 3, Range.between(1, 3));
 
         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+        // maxLimit is defaulted to Integer.MAX_VALUE
         JobQuery jobQuery = new JobQuery().setMinLimit(104001).setRegion(SingaporeRegion.CENTRAL);
+        
+        JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
+
+        assertEquals(expectedJobPage, actualJobPage);
+    }
+
+     @Test
+    public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
+        /* fields that don't affect the job page details */
+        JobStatus jobStatus = JobStatus.ACTIVE;
+        String jobName = "Programmer";
+        String jobDescription = "Fighting to defeat hair line recede";
+        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+        long postExpiry = System.currentTimeMillis();
+        JobDuration jobDuration = JobDuration.ONE_MONTH;
+
+        /* fields that affect the sorting/filtering of the job page details */
+        Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
+
+        Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY, 208000);
+
+        Job job1 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setJobDescription(jobDescription)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .setLocation(location1)
+                .setJobPay(jobPayment1)
+                .build();
+
+        Job job2 = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setJobDescription(jobDescription)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .setLocation(location2)
+                .setJobPay(jobPayment2)
+                .build();
+    
+        firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
+
+        JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(),
+            /* totalCount= */ 0, Range.between(0, 0));
+
+        // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+        // minLimit is defaulted to 0 and maxLimit is defaulted to Integer.MAX_VALUE
+        JobQuery jobQuery = new JobQuery().setRegion(SingaporeRegion.NORTH);
         
         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
 
