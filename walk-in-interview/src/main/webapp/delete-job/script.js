@@ -60,7 +60,7 @@ const deleteButtonElement = document.getElementById('delete');
 deleteButtonElement.addEventListener('click', () => {
   const jobId = getJobId();
   if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.',
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['empty-job-id-error-message'],
       /* includesDefault= */false);
     return false;
   }

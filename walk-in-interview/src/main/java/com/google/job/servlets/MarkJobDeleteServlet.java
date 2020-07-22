@@ -1,7 +1,6 @@
 package com.google.job.servlets;
 
 import com.google.job.data.JobsDatabase;
-import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 @WebServlet("/jobs/delete")
 public final class MarkJobDeleteServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
-    private static final long TIMEOUT = 5;
+    private static final long TIMEOUT_SECONDS = 5;
 
     private JobsDatabase jobsDatabase;
 
@@ -46,7 +45,7 @@ public final class MarkJobDeleteServlet extends HttpServlet {
             String jobId = getJobId(request);
 
             // Changes the status to DELETED
-            this.jobsDatabase.markJobPostAsDeleted(jobId).get(TIMEOUT, TimeUnit.SECONDS);
+            this.jobsDatabase.markJobPostAsDeleted(jobId).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
@@ -61,7 +60,7 @@ public final class MarkJobDeleteServlet extends HttpServlet {
 
     /** Gets jobId received from client. */
     private String getJobId(HttpServletRequest request) throws IOException, IllegalArgumentException {
-        // Parses job Id from the POST request
+        // Parses job Id from the PATCH request body
         try (BufferedReader bufferedReader = request.getReader()) {
             String jobId = bufferedReader.lines().collect(Collectors.joining(System.lineSeparator())).trim();
 
