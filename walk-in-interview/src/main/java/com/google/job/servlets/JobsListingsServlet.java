@@ -1,7 +1,7 @@
 package com.google.job.servlets;
 
 import com.google.job.data.*;
-import com.google.gson.Gson;
+import com.google.utils.ServletUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,13 +25,13 @@ import java.util.*;
 public final class JobsListingsServlet extends HttpServlet {
     private static final long TIMEOUT = 5;
 
-    public static final String MIN_LIMIT_PARAM = "minLimit";
-    public static final String MAX_LIMIT_PARAM = "maxLimit";
-    public static final String REGION_PARAM = "region";
-    public static final String SORT_BY_PARAM = "sortBy";
-    public static final String ORDER_PARAM = "order";
-    public static final String PAGE_SIZE_PARAM = "pageSize";
-    public static final String PAGE_INDEX_PARAM = "pageIndex";
+    private static final String MIN_LIMIT_PARAM = "minLimit";
+    private static final String MAX_LIMIT_PARAM = "maxLimit";
+    private static final String REGION_PARAM = "region";
+    private static final String SORT_BY_PARAM = "sortBy";
+    private static final String ORDER_PARAM = "order";
+    private static final String PAGE_SIZE_PARAM = "pageSize";
+    private static final String PAGE_INDEX_PARAM = "pageIndex";
 
     private JobsDatabase jobsDatabase;
 
@@ -48,7 +48,7 @@ public final class JobsListingsServlet extends HttpServlet {
 
             JobPage jobPage = fetchJobPageDetails(jobQuery);
 
-            String json = new Gson().toJson(jobPage);
+            String json = ServletUtils.convertToJsonUsingGson(jobPage);
             response.setContentType("application/json;");
             response.getWriter().println(json);
         } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
@@ -100,10 +100,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the page size is invalid.
      */
     public static int parseMinLimit(HttpServletRequest request) throws IllegalArgumentException {
-        String minLimitStr = (String) request.getParameter(MIN_LIMIT_PARAM);
+        String minLimitStr = ServletUtils.getStringParameter(request, MIN_LIMIT_PARAM, /* defaultValue= */ "");
 
-        if (minLimitStr == null || minLimitStr.isEmpty()) {
-            throw new IllegalArgumentException("min limit param should not be null or empty");
+        if (minLimitStr.isEmpty()) {
+            throw new IllegalArgumentException("min limit param should not be empty");
         }
 
         try {
@@ -121,10 +121,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the page size is invalid.
      */
     public static int parseMaxLimit(HttpServletRequest request) throws IllegalArgumentException {
-        String maxLimitStr = (String) request.getParameter(MAX_LIMIT_PARAM);
+        String maxLimitStr = ServletUtils.getStringParameter(request, MAX_LIMIT_PARAM, /* defaultValue= */ "");
 
-        if (maxLimitStr == null || maxLimitStr.isEmpty()) {
-            throw new IllegalArgumentException("max limit param should not be null or empty");
+        if (maxLimitStr.isEmpty()) {
+            throw new IllegalArgumentException("max limit param should not be empty");
         }
 
         try {
@@ -142,10 +142,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the id is invalid.
      */
     private static SingaporeRegion parseRegion(HttpServletRequest request) throws IllegalArgumentException {
-        String region = (String) request.getParameter(REGION_PARAM);
+        String region = ServletUtils.getStringParameter(request, REGION_PARAM, /* defaultValue= */ "");
 
-        if (region == null || region.isEmpty()) {
-            throw new IllegalArgumentException("region param should not be null or empty");
+        if (region.isEmpty()) {
+            throw new IllegalArgumentException("region param should not be empty");
         }
 
         return SingaporeRegion.getFromId(region); // Illegal Argument Exception may be thrown
@@ -159,10 +159,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the id is invalid.
      */
     public static Filter parseSortBy(HttpServletRequest request) throws IllegalArgumentException {
-        String sortById = (String) request.getParameter(SORT_BY_PARAM);
+        String sortById = ServletUtils.getStringParameter(request, SORT_BY_PARAM, /* defaultValue= */ "");
 
-        if (sortById == null || sortById.isEmpty()) {
-            throw new IllegalArgumentException("sort by param should not be null or empty");
+        if (sortById.isEmpty()) {
+            throw new IllegalArgumentException("sort by param should not be empty");
         }
 
         return Filter.getFromId(sortById); // Illegal Argument Exception may be thrown
@@ -176,10 +176,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the id is invalid.
      */
     public static Order parseOrder(HttpServletRequest request) throws IllegalArgumentException {
-        String orderId = (String) request.getParameter(ORDER_PARAM);
+        String orderId = ServletUtils.getStringParameter(request, ORDER_PARAM, /* defaultValue= */ "");
 
-        if (orderId == null || orderId.isEmpty()) {
-            throw new IllegalArgumentException("order param should not be null or empty");
+        if (orderId.isEmpty()) {
+            throw new IllegalArgumentException("order param should not be empty");
         }
 
         return Order.getFromId(orderId); // Illegal Argument Exception may be thrown
@@ -193,10 +193,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the page size is invalid.
      */
     public static int parsePageSize(HttpServletRequest request) throws IllegalArgumentException {
-        String pageSizeStr = (String) request.getParameter(PAGE_SIZE_PARAM);
+        String pageSizeStr = ServletUtils.getStringParameter(request, PAGE_SIZE_PARAM, /* defaultValue= */ "");
 
-        if (pageSizeStr == null || pageSizeStr.isEmpty()) {
-            throw new IllegalArgumentException("page size param should not be null or empty");
+        if (pageSizeStr.isEmpty()) {
+            throw new IllegalArgumentException("page size param should not be empty");
         }
 
         try {
@@ -214,10 +214,10 @@ public final class JobsListingsServlet extends HttpServlet {
      * @throws IllegalArgumentException if the page index is invalid.
      */
     public static int parsePageIndex(HttpServletRequest request) throws IllegalArgumentException {
-        String pageIndexStr = (String) request.getParameter(PAGE_INDEX_PARAM);
+        String pageIndexStr = ServletUtils.getStringParameter(request, PAGE_INDEX_PARAM, /* defaultValue= */ "");
 
-        if (pageIndexStr == null || pageIndexStr.isEmpty()) {
-            throw new IllegalArgumentException("page index param should not be null or empty");
+        if (pageIndexStr.isEmpty()) {
+            throw new IllegalArgumentException("page index param should not be empty");
         }
 
         try {

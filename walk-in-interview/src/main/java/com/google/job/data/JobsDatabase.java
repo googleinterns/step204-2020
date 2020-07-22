@@ -178,7 +178,15 @@ public final class JobsDatabase {
             new ApiFunction<QuerySnapshot, JobPage>() {
                 @NullableDecl
                 public JobPage apply(@NullableDecl QuerySnapshot querySnapshot) {
+                    if (querySnapshot == null) {
+                        return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
+                    }
+
                     List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+                    if (documents.size() == 0) {
+                        return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
+                    }
+
                     ImmutableList.Builder<Job> jobList = ImmutableList.builder();
 
                     for (QueryDocumentSnapshot document : documents) {
