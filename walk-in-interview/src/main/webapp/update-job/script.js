@@ -405,7 +405,7 @@ cancelButton.addEventListener('click', (_) => {
  * since getJobId is not implemented yet.
  */
 function getJobIdForSeleniumTest() {
-  return "xxxxxxx";
+  return 'xxxxxxx';
 }
 
 /**
@@ -415,23 +415,23 @@ function getJobIdForSeleniumTest() {
  */
 function getJobForSeleniumTest() {
   const jobDetails = {
-    jobStatus: "ACTIVE",
-    jobTitle: "Software Engineer",
+    jobStatus: 'ACTIVE',
+    jobTitle: 'Software Engineer',
     jobLocation: {
-      address: "Maple Tree",
-      postalCode: "123",
+      address: 'Maple Tree',
+      postalCode: '123',
       lat: 1.3039, // TODO(issue/13): get these from places api
       lon: 103.8358,
     },
-    jobDescription: "Fight to defeat hair line receding",
+    jobDescription: 'Fight to defeat hair line receding',
     jobPay: {
-      paymentFrequency: "MONTHLY",
+      paymentFrequency: 'MONTHLY',
       min: 1,
       max: 4,
     },
-    requirements: ["O Level", "English"],
+    requirements: ['O Level', 'English'],
     postExpiryTimestamp: 1601856000000,
-    jobDuration: "ONE_WEEK",
+    jobDuration: 'ONE_WEEK',
   };
 
   return jobDetails;
