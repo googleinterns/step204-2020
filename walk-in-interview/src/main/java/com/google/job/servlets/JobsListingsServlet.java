@@ -1,7 +1,7 @@
 package com.google.job.servlets;
 
 import com.google.job.data.*;
-import com.google.gson.Gson;
+import com.google.utils.ServletUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

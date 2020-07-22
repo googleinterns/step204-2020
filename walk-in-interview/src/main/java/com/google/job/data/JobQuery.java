@@ -14,7 +14,7 @@ public final class JobQuery {
 
     public JobQuery setMinLimit(int minLimit) {
         if (minLimit < 0) {
-            throw new IllegalArgumentException("minLimit should not be negative")
+            throw new IllegalArgumentException("minLimit should not be negative");
         }
 
         this.minLimit = minLimit;
@@ -23,7 +23,7 @@ public final class JobQuery {
 
     public JobQuery setMaxLimit(int maxLimit) {
         if (maxLimit <= 0 || maxLimit < this.minLimit) {
-            throw new IllegalArgumentException("maxLimit should not be negative or zero or less than minLimit")
+            throw new IllegalArgumentException("maxLimit should not be negative or zero or less than minLimit");
         }
 
         this.maxLimit = maxLimit;
@@ -58,7 +58,7 @@ public final class JobQuery {
         if (pageIndex < 0) {
             throw new IllegalArgumentException("pageIndex should not be less than 0");
         }
-        
+
         this.pageIndex = pageIndex;
         return this;
     }
