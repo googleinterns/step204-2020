@@ -248,8 +248,8 @@ public final class JobsDatabaseTest {
 
     @Test
     public void fetchJobPage_normalInput_success() throws ExecutionException, InterruptedException, IOException {
-        /* fields that don't affect the job page details */
         // Arrange
+        /* fields that don't affect the job page details */
         JobStatus jobStatus = JobStatus.ACTIVE;
         String jobName = "Programmer";
         String jobDescription = "Fighting to defeat hair line recede";
@@ -275,8 +275,9 @@ public final class JobsDatabaseTest {
         JobPayment jobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, 104000);
 
         // this should not be returned (region will be set to CENTRAL)
+        int annualMaxJob5 = 104000;
         Location location5 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
-        JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, 104000);
+        JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, annualMaxJob5);
 
         // this should not be returned (only active jobs should be shown)
         JobStatus jobStatusExpired = JobStatus.EXPIRED;
@@ -360,10 +361,10 @@ public final class JobsDatabaseTest {
         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(job1, job2, job3),
             /* totalCount= */ 3, Range.between(1, 3));
 
+        // Act
         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
         // maxLimit is defaulted to Integer.MAX_VALUE
-        // Act
-        JobQuery jobQuery = new JobQuery().setMinLimit(jobPayment5.getMinLimit() + 1).setRegion(SingaporeRegion.CENTRAL);
+        JobQuery jobQuery = new JobQuery().setMinLimit(annualMaxJob5 + 1).setRegion(SingaporeRegion.CENTRAL);
         
         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
 
@@ -373,8 +374,8 @@ public final class JobsDatabaseTest {
 
      @Test
     public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
-        /* fields that don't affect the job page details */
         // Arrange
+        /* fields that don't affect the job page details */
         JobStatus jobStatus = JobStatus.ACTIVE;
         String jobName = "Programmer";
         String jobDescription = "Fighting to defeat hair line recede";
@@ -417,9 +418,9 @@ public final class JobsDatabaseTest {
         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(),
             /* totalCount= */ 0, Range.between(0, 0));
 
+        // Act
         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
         // minLimit is defaulted to 0 and maxLimit is defaulted to Integer.MAX_VALUE
-        // Act
         JobQuery jobQuery = new JobQuery().setRegion(SingaporeRegion.NORTH);
         
         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
