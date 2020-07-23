@@ -12,7 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
-import {getRequirementsList} from './common-functions.js';
+import {getRequirementsList, JOB_ID_PARAM} from './common-functions.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
@@ -256,7 +256,7 @@ function onClickJobListing(jobId) {
     throw new Error('jobId should not be empty');
   }
 
-  setCookie('jobId', jobId);
+  setCookie(JOB_ID_PARAM, jobId);
 
   fetch(JOB_DETAILS_PATH, {
     method: 'POST',

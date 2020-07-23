@@ -14,7 +14,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../strings.en.js';
 
 import {JOB_ID_PARAM, setCookie, setErrorMessage,
-  getRequirementsList} from '../common-functions.js';
+  getRequirementsList, getCookie} from '../common-functions.js';
 
 
 const UPDATE_JOB_PATH = '../update-job/index.html';
@@ -147,8 +147,7 @@ function getJobDetails(jobId) {
  * @return {String} The jobId.
  */
 function getJobId() {
-  // TODO(issue/53): implement this function
-  return 'Not Implemented';
+  return getCookie(JOB_ID_PARAM);
 }
 
 const updateButton = document.getElementById('update');
