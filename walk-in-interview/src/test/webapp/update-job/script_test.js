@@ -222,7 +222,7 @@ describe('Update Job Tests', function() {
             });
       });
 
-      it('checks the default option properly ticked', () => {
+      it('checks only the default options properly ticked', () => {
         return driver.findElements(By.name('requirement'))
             .then((requirements) => {
               requirements.map((requirement) => {
