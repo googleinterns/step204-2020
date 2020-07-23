@@ -208,7 +208,7 @@ describe('Update Job Tests', function() {
       });
 
       it('checks correct requirement list rendered', () => {
-        return driver.findElement(By.id('requirements-list'))
+        return driver.findElement(By.id('requirement'))
             .getText()
             .then((text) => {
               const list = REQUIREMENTS_LIST;
@@ -223,7 +223,7 @@ describe('Update Job Tests', function() {
       });
 
       it('checks the default option properly ticked', () => {
-        return driver.findElements(By.className('requirement'))
+        return driver.findElements(By.id('requirement'))
             .then((requirements) => {
               requirements.map((requirement) => {
                 requirement.getText()
