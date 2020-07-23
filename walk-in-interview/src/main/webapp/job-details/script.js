@@ -13,8 +13,9 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
-import {setErrorMessage,
+import {JOB_ID_PARAM, setCookie, setErrorMessage,
   getRequirementsList} from '../common-functions.js';
+
 
 const UPDATE_JOB_PATH = '../update-job/index.html';
 const HOMEPAGE_PATH = '../index.html';
@@ -152,5 +153,32 @@ function getJobId() {
 
 const updateButton = document.getElementById('update');
 updateButton.addEventListener('click', (_) => {
-  // TOOD(issue/xx): get once PR merged
+  const jobId = getJobId();
+
+  if (jobId === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
+        /* includesDefault= */false);
+    return;
+  }
+
+  setCookie(JOB_ID_PARAM, jobId);
+
+  fetch('../update-job/index.html', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'include',
+  })
+      .then(() => {
+      /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ '', /* includesDefault= */false);
+        window.location.href= UPDATE_JOB_PATH;
+      })
+      .catch((error) => {
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ STRINGS['update-error-message'],
+            /* includesDefault= */false);
+        console.log('error', error);
+      });
 });

@@ -1,6 +1,5 @@
 /**
- * This contains all the constants (language: English) for
- * the homepage.js file.
+ * This contains all the constants (language: English).
  */
 
 /**
@@ -51,12 +50,10 @@ AppStrings['homepage'] = {
 };
 
 /**
- * All the strings to be used in the new-job folder.
+ * All the common strings to be used in the job information related page.
  */
-AppStrings['new-job'] = {
-  'page-title': 'New Job Post',
+AppStrings['job'] = {
   'cancel': 'Cancel',
-  'submit': 'Create',
   'title': 'Job Title',
   'description': 'Job Description',
   'address': 'Job Address',
@@ -86,6 +83,28 @@ AppStrings['new-job'] = {
 };
 
 /**
+ * Strings to be used in the new-job folder.
+ */
+AppStrings['new-job'] = {
+  'page-title': 'New Job Post',
+  'submit': 'Create',
+  'error-message': 'There was an error while creating ' +
+    'the job listing, please try submitting again',
+};
+
+/**
+ * Strings to be used in the update-job folder.
+ */
+AppStrings['update-job'] = {
+  'page-title': 'Update Job Post',
+  'update': 'Update',
+  'error-message':
+    'There was an error while loading the job post. Please try again',
+  'storing-error-message':
+    'There was an error while storing the job post. Please try again',
+};
+
+/*
  * Strings used in delete-job.
  */
 AppStrings['delete-job'] = {
@@ -102,4 +121,8 @@ AppStrings['job-details'] = {
   'update': 'Update',
   'error-message': 'There was an error while getting ' +
     'the job post. Please try again',
+  'error-message':
+    'There was an error while deleting the job post. Please try again',
+  'update-error-message': 'Error occur when directing to update page',
+
 };
