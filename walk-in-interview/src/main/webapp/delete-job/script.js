@@ -16,9 +16,7 @@ import {setErrorMessage} from '../common-functions.js';
 const STRINGS = AppStrings['delete-job'];
 const HOMEPAGE_PATH = '../index.html';
 
-window.onload = () => {
-  renderDeleteButton();
-};
+window.addEventListener('load', renderDeleteButton());
 
 /**
  * Clicks the button to mark this job post as DELETED.
