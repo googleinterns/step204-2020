@@ -12,10 +12,17 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
+import {getRequirementsList} from './common-functions.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
-const RESPONSE_ERROR = 'An error occured while getting the job listings';
+const SALARY_PARAM = 'SALARY';
+
+/**
+ * Note that this is needed because in JS we can hold bigger Integer
+ * values than in Java.
+ */
+const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
@@ -42,65 +49,45 @@ function renderHomepageElements() {
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
-  renderSelectOptions(/** for */ 'sort-by');
-  renderSelectOptions(/** for */ 'sort-by-order');
-  renderJobSortSubmit();
+  renderSelectOptions('sort-by');
 
-  const filterByTitle = document.getElementById('filter-by-title');
-  filterByTitle.innerText = STRINGS['filter-by-title'];
+  const showByTitle = document.getElementById('show-by-region-title');
+  showByTitle.innerText = STRINGS['show-by-region-title'];
 
-  const distanceFilterTitle =
-    document.getElementById('filter-distance-title');
-  distanceFilterTitle.innerText = STRINGS['filter-distance-title'];
+  renderSelectOptions('show-by-region');
 
-  const distanceMin = document.getElementById('filter-distance-min');
-  distanceMin.setAttribute('type', 'number');
-  distanceMin.setAttribute('placeholder',
-      STRINGS['filter-distance-min']);
+  const LimitsTitle = document.getElementById('filter-limits-title');
+  LimitsTitle.innerText = STRINGS['filter-limits-title'];
 
-  const distanceMax = document.getElementById('filter-distance-max');
-  distanceMax.setAttribute('type', 'number');
-  distanceMax.setAttribute('placeholder',
-      STRINGS['filter-distance-max']);
+  const minLimit = document.getElementById('filter-min-limit');
+  minLimit.setAttribute('type', 'number');
+  minLimit.setAttribute('placeholder', STRINGS['filter-min-limit']);
 
-  const salaryFilterTitle =
-    document.getElementById('filter-salary-title');
-  salaryFilterTitle.innerText = STRINGS['filter-salary-title'];
+  const maxLimit = document.getElementById('filter-max-limit');
+  maxLimit.setAttribute('type', 'number');
+  maxLimit.setAttribute('placeholder', STRINGS['filter-max-limit']);
 
-  const salaryMin = document.getElementById('filter-salary-min');
-  salaryMin.setAttribute('type', 'number');
-  salaryMin.setAttribute('placeholder',
-      STRINGS['filter-salary-min']);
-
-  const salaryMax = document.getElementById('filter-salary-max');
-  salaryMax.setAttribute('type', 'number');
-  salaryMax.setAttribute('placeholder',
-      STRINGS['filter-salary-max']);
-  renderJobFilterSubmit();
+  renderJobFiltersSubmit();
 
   const jobListingsTitle =
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  const defaultSortBy = document.getElementById('sort-by').value;
-  const defaultSortOrder =
-    document.getElementById('sort-by-order').value;
-  renderJobListings(defaultSortBy, defaultSortOrder, DEFAULT_PAGE_SIZE,
-      DEFAULT_PAGE_INDEX);
+  loadAndDisplayJobListings();
 
-  /** reset the error to make sure no error msg initially present */
-  setErrorMessage(/* msg */ '', /** includes default msg */ false);
+  /* reset the error to make sure no error msg initially present */
+  setErrorMessage(/* msg= */ '', /* includesDefaultMsg= */ false);
 }
 
 /**
  * Sets the error message according to the param.
  * @param {String} msg the message that the error div should display.
- * @param {boolean} includesDefault whether the default
- * message should be included.
+ * @param {boolean} includesDefaultMsg whether the default
+ *    message should be included.
  */
-function setErrorMessage(msg, includesDefault) {
+function setErrorMessage(msg, includesDefaultMsg) {
   document.getElementById('error-message').innerText =
-    (includesDefault ? STRINGS['error-message'] + msg : msg);
+    (includesDefaultMsg ? STRINGS['error-message'] + msg : msg);
 }
 
 /**
@@ -122,98 +109,212 @@ function renderSelectOptions(id) {
 }
 
 /**
- * Add the attributes and on click function to the sorting
- * submit button.
+ * Checks that the filter fields are valid.
+ * Note that the lower and upper limits can be left empty, by default
+ * the lower limit is 0 and the upper limit is Integer.MAX_VALUE
+ * @param {String} sortByParam The sorting filter.
+ * @param {String} showByParam The region filter.
+ * @param {Number} minLimitParam The lower limit given the sorting filter.
+ * @param {Number} maxLimitParam The upper limit given the sorting filter.
+ * @return {boolean} Indication of whether the fields are valid.
  */
-function renderJobSortSubmit() {
-  const sortBySubmit = document.getElementById('sort-by-submit');
-  sortBySubmit.setAttribute('type', 'submit');
-  sortBySubmit.setAttribute('value', STRINGS['sort-by-submit']);
+function validateFilters(sortByParam, showByParam,
+    minLimitParam, maxLimitParam) {
+  if (showByParam == '' || sortByParam == '') {
+    /* no need to show error message as this would not be the user's fault */
+    console.error('region or sorting was empty');
+    return false;
+  }
 
-  sortBySubmit.addEventListener('click', (_) => {
-    if (!validSortByInput()) {
-      return;
-    }
+  /* If the field has been filled out, we check that it's a positive int */
+  if (!Number.isNaN(minLimitParam) &&
+    (minLimitParam > JAVA_INTEGER_MAX_VALUE || minLimitParam < 0)) {
+    setErrorMessage(/* msg= */ STRINGS['filter-min-limit'],
+        /* includesDefaultMsg= */ true);
+    document.getElementById('filter-min-limit').classList.add('error-field');
+    return false;
+  }
 
-    const sortByParam = document.getElementById('sort-by').value;
-    const sortOrderParam = document.getElementById('sort-by-order')
-        .value;
-    renderJobListings(sortByParam, sortOrderParam, DEFAULT_PAGE_SIZE,
-        DEFAULT_PAGE_INDEX);
-  });
+  /* If the field has been filled out, we check that it's a positive int */
+  if (!Number.isNaN(maxLimitParam) &&
+    (maxLimitParam > JAVA_INTEGER_MAX_VALUE || maxLimitParam < 0)) {
+    setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
+        /* includesDefaultMsg= */ true);
+    document.getElementById('filter-max-limit').classList.add('error-field');
+    return false;
+  }
+
+  /* If both fields have been filled out, we check that max >= min */
+  if (!Number.isNaN(maxLimitParam) && !Number.isNaN(minLimitParam) &&
+    maxLimitParam < minLimitParam) {
+    setErrorMessage(/* msg= */ STRINGS['filter-max-limit'],
+        /* includesDefaultMsg= */ true);
+    document.getElementById('filter-max-limit').classList.add('error-field');
+    return false;
+  }
+
+  document.getElementById('filter-min-limit').classList.remove('error-field');
+  document.getElementById('filter-max-limit').classList.remove('error-field');
+  return true;
 }
 
 /**
  * Add the attributes and on click function to the filters
  * submit button.
  */
-function renderJobFilterSubmit() {
-  const filterBySubmit = document.getElementById('filter-by-submit');
-  filterBySubmit.setAttribute('type', 'submit');
-  filterBySubmit.setAttribute('value', STRINGS['filter-by-submit']);
+function renderJobFiltersSubmit() {
+  const filtersSubmit = document.getElementById('filters-submit');
+  filtersSubmit.setAttribute('type', 'submit');
+  filtersSubmit.setAttribute('value', STRINGS['filters-submit']);
 
-  /**
-   * TODO(issue/35): add filtering event listener
-   * + validation + GET request functions
-   */
+  filtersSubmit.addEventListener('click', (_) => {
+    loadAndDisplayJobListings();
+  });
 }
 
 /**
- * Add the list of jobs that are stored in the database.
- * @param {String} sortBy How the jobs should be sorted.
- * @param {String} order The order of the sorting.
- * @param {int} pageSize The number of jobs for one page.
- * @param {int} pageIndex The page index (starting from 0).
+ * This will add all the job listings onto the homepage.
+ * @param {Object} jobPageData The details to be shown on the homepage.
  */
-async function renderJobListings(sortBy, order, pageSize, pageIndex) {
-  const jobListings = await getJobListings(sortBy, order, pageSize, pageIndex)
-      .catch((error) => {
-        console.log('error', error);
-        setErrorMessage(/* msg */ RESPONSE_ERROR,
-            /** include default msg */ false);
-      });
+function displayJobListings(jobPageData) {
   const jobListingsElement = document.getElementById('job-listings');
+  const jobShowing = document.getElementById('job-listings-showing');
 
-  /** reset the list so we don't render the same jobs twice */
+  /* reset the list so we don't render the same jobs twice */
   jobListingsElement.innerHTML = '';
-  const jobListingTemplate = document.getElementById('job-listing-template');
+  jobShowing.innerHTML = '';
+
+  if (jobPageData === undefined ||
+    !jobPageData.hasOwnProperty('jobList') ||
+    jobPageData['jobList'].length === 0) {
+    setErrorMessage(/* msg= */ STRINGS['no-jobs-error-message'],
+        /* includesDefaultMsg= */ false);
+    return;
+  }
+
+  const jobListings = jobPageData['jobList'];
 
   jobListings.forEach((job) => {
-    const jobListing =
-      jobListingTemplate.cloneNode( /** and child elements */ true);
-    jobListing.setAttribute('id', job['jobId']);
-
-    const jobTitle = jobListing.children[0];
-    jobTitle.innerText = job['jobTitle'];
-
-    const jobAddress = jobListing.children[1];
-
-    const location = job['jobLocation'];
-    jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
-
-    jobListingsElement.appendChild(jobListing);
+    jobListingsElement.appendChild(buildJobElement(job));
   });
+
+  jobShowing.innerText = `${jobPageData['range'].minimum} -` +
+    ` ${jobPageData['range'].maximum} ${STRINGS['job-listings-showing']} ` +
+    `${jobPageData['totalCount']}`;
+}
+
+/**
+ * Builds the job element given the job details from the servlet response.
+ * @param {Object} job The job to be displayed.
+ * @return {Element} The job listing element.
+ */
+function buildJobElement(job) {
+  const jobListingTemplate = document.getElementById('job-listing-template');
+
+  const jobListing =
+  jobListingTemplate.cloneNode( /* and child elements */ true);
+  jobListing.setAttribute('id', job['jobId']);
+
+  const jobTitle = jobListing.children[0];
+  jobTitle.innerText = job['jobTitle'];
+
+  const jobAddress = jobListing.children[1];
+  const location = job['jobLocation'];
+  jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
+
+  const jobPay = jobListing.children[2];
+  const pay = job['jobPay'];
+  jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
+  `(${pay['paymentFrequency'].toLowerCase()})`;
+
+  const requirementsList = jobListing.children[3];
+  const fullRequirementsList = getRequirementsList();
+  const requirementsArr = [];
+
+  job['requirements'].forEach((req) => {
+    requirementsArr.push(fullRequirementsList[req]);
+  });
+
+  requirementsList.innerText =
+  `Requirements List: ${requirementsArr.join(', ')}`;
+
+  return jobListing;
+}
+
+/**
+ * Add the list of jobs that are stored in the database
+ * given the filter fields.
+ */
+async function loadAndDisplayJobListings() {
+  const sortingParam = document.getElementById('sort-by').value;
+  const regionParam = document.getElementById('show-by-region').value;
+  let minLimitParam = document.getElementById('filter-min-limit')
+      .valueAsNumber;
+  let maxLimitParam = document.getElementById('filter-max-limit')
+      .valueAsNumber;
+
+  if (!validateFilters(sortingParam, regionParam,
+      minLimitParam, maxLimitParam)) {
+    return;
+  }
+
+  /*
+   * Note that this platform currently only sorts by Salary.
+   * TODO(issue/62): support more filters
+   */
+  if (!sortingParam.includes(SALARY_PARAM)) {
+    console.error('this app currently only sorts by salary');
+    return;
+  }
+
+  const sortByParam = SALARY_PARAM;
+  const orderByParam = sortingParam.substring(7);
+
+  if (Number.isNaN(minLimitParam)) {
+    minLimitParam = 0;
+  }
+
+  if (Number.isNaN(maxLimitParam)) {
+    maxLimitParam = JAVA_INTEGER_MAX_VALUE;
+  }
+
+  const jobPageData = await getJobListings(regionParam, sortByParam,
+      minLimitParam, maxLimitParam, orderByParam,
+      DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+      .catch((error) => {
+        console.error('error fetching job listings', error);
+        setErrorMessage(/* msg= */ STRINGS['get-jobs-error-message'],
+            /* include default msg= */ false);
+      });
+
+  displayJobListings(jobPageData);
 }
 
 /**
  * Makes GET request to retrieve all the job listings from the database
  * given the sorting and order. This function is called when the
  * homepage is loaded and also when the sorting is changed.
+ * @param {String} region The Singapore region.
  * @param {String} sortBy How the jobs should be sorted.
+ * @param {int} minLimit The lower limit for filtering.
+ * @param {int} maxLimit The upper limit for filtering.
  * @param {String} order The order of the sorting.
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
+ * @return {Object} The data returned from the servlet.
  */
-function getJobListings(sortBy, order, pageSize, pageIndex) {
-  const params = `sortBy=${sortBy}&order=${order}` +
-    `&pageSize=${pageSize}&pageIndex=${pageIndex}`;
+function getJobListings(region, sortBy, minLimit, maxLimit,
+    order, pageSize, pageIndex) {
+  const params = `region=${region}&sortBy=${sortBy}&minLimit=${minLimit}&` +
+    `maxLimit=${maxLimit}&order=${order}&pageSize=${pageSize}` +
+    `&pageIndex=${pageIndex}`;
 
-  fetch(`/jobs?${params}`)
+  return fetch(`/jobs/listings?${params}`)
       .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* msg */ '', /** include default msg */ false);
-        return data['jobList'];
+        /* reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* msg= */ '', /* includesDefaultMsg= */ false);
+        return data;
       });
 }

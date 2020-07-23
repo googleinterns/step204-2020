@@ -4,17 +4,25 @@ import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.Query.Direction;
+import com.google.common.collect.ImmutableList; 
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+import org.apache.commons.lang3.Range;
+import java.lang.UnsupportedOperationException;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Future;
+import java.util.List;
+import java.io.IOException;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
+    private static final String SALARY_FIELD = "jobPay.annualMax";
+    private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
 
     /**
@@ -131,5 +139,61 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+    }
+
+    /**
+     * Gets all the jobs given the params from the database.
+     * Currently, they can only be sorted/filtered by salary.
+     *
+     * @param jobQuery The job query object with all the filtering/sorting params.
+     * @return Future of the JobPage object.
+     */
+    public static Future<JobPage> fetchJobPage(JobQuery jobQuery) throws IOException {
+        CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
+
+        // TODO(issue/62): support other filters
+        if (!jobQuery.getSortBy().equals(Filter.SALARY)) {
+            throw new UnsupportedOperationException("currently this app only supports sorting/filtering by salary");
+        }
+
+        Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
+            .whereGreaterThanOrEqualTo(SALARY_FIELD, jobQuery.getMinLimit())
+            .whereLessThanOrEqualTo(SALARY_FIELD, jobQuery.getMaxLimit())
+            .orderBy(SALARY_FIELD, Order.getQueryDirection(jobQuery.getOrder()));
+
+        SingaporeRegion region = jobQuery.getRegion();
+        if (!region.equals(SingaporeRegion.ENTIRE)) {
+            query = query.whereEqualTo(REGION_FIELD, region.name());
+        }
+
+        // TODO(issue/34): add to the query to include pagination (using pageSize and pageIndex)
+
+        return ApiFutures.transform(
+            query.get(),
+            querySnapshot -> {
+                if (querySnapshot == null) {
+                    return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
+                }
+
+                List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+                if (documents.size() == 0) {
+                    return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
+                }
+
+                ImmutableList.Builder<Job> jobList = ImmutableList.builder();
+
+                for (QueryDocumentSnapshot document : documents) {
+                    Job job = document.toObject(Job.class);
+                    jobList.add(job);
+                }
+            
+                // TODO(issue/34): adjust range/total count based on pagination
+                long totalCount = documents.size();
+                Range<Integer> range = Range.between(1, documents.size());
+
+                return new JobPage(jobList.build(), totalCount, range);  
+            },
+            MoreExecutors.directExecutor()
+        );
     }
 }

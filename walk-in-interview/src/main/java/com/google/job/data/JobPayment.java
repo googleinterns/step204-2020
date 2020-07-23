@@ -6,6 +6,11 @@ public final class JobPayment {
     private final int max;
     private final PaymentFrequency paymentFrequency;
 
+    private static final int HOURS_PER_YEAR = 8760;
+    /* Note that is an approximate value */
+    private static final int WEEKS_PER_YEAR = 52;
+    private static final int MONTHS_PER_YEAR = 12;
+
     private volatile int hashCode;
 
     // For serialization
@@ -13,8 +18,14 @@ public final class JobPayment {
         this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY);
     }
 
-    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) {
-        validateParameter(min, max);
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) throws IllegalArgumentException {
+        if (min < 0) {
+            throw new IllegalArgumentException("\"min\" should not be negative");
+        }
+
+        if (max < min) {
+            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
+        }
 
         this.min = min;
         this.max = max;
@@ -34,6 +45,11 @@ public final class JobPayment {
     /** Returns the payment frequency. */
     public PaymentFrequency getPaymentFrequency() {
         return paymentFrequency;
+    }
+
+    /** Returns the annual pay given the upper limit of the payment and its frequency */
+    public long getAnnualMax() {
+        return findExpectedAnnualMax(this.max, this.paymentFrequency);
     }
 
     @Override
@@ -72,13 +88,21 @@ public final class JobPayment {
                 min, max, paymentFrequency.name());
     }
 
-    private static void validateParameter(float min, float max) throws IllegalArgumentException {
-        if (min < 0) {
-            throw new IllegalArgumentException("\"min\" should not be negative");
+    /**
+     * Calculates the annual max based on max pay and pay freuquency.
+     */
+    private static long findExpectedAnnualMax(int max, PaymentFrequency paymentFrequency) {
+        switch(paymentFrequency) {
+            case HOURLY:
+                return max * HOURS_PER_YEAR;
+            case WEEKLY:
+                return max * WEEKS_PER_YEAR;
+            case MONTHLY:
+                return max * MONTHS_PER_YEAR;
+            case YEARLY:
+                return max;
         }
-
-        if (max < min) {
-            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
-        }
+        
+        throw new IllegalArgumentException("invalid paymentFrequency: " + paymentFrequency);
     }
 }

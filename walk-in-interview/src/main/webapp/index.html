@@ -21,35 +21,24 @@
     <!-- TODO(issue/42): need to implement maps api -->
     <div id="homepage-map">map here</div>
 
-    <div>
+    <div class="job-filters-container">
       <div id="sort-by-title"></div>
       <select id="sort-by"></select>
-      <select id="sort-by-order"></select>
-      <input id="sort-by-submit">
-    </div>
 
-    <div>
-      <div id="filter-by-title"></div>
+      <div id="show-by-region-title"></div>
+      <select id="show-by-region"></select>
 
-      <div>
-        <div id="filter-distance-title"></div>
-        <input id="filter-distance-min">
-        -
-        <input id="filter-distance-max">
-      </div>
+      <div id="filter-limits-title"></div>
+      <input id="filter-min-limit">
+      -
+      <input id="filter-max-limit">
 
-      <div>
-        <div id="filter-salary-title"></div>
-        <input id="filter-salary-min">
-        -
-        <input id="filter-salary-max">
-      </div>
-
-      <input id="filter-by-submit">
+      <input class="button" id="filters-submit">
     </div>
 
     <div class="job-listings-container">
       <div id="job-listings-title"></div>
+      <div id="job-listings-showing"></div>
 
       <ul id="job-listings"></ul>
     </div>
@@ -62,6 +51,8 @@
       <li class="job-listing" id="job-listing-template">
         <div class="job-name"></div>
         <div class="job-address"></div>
+        <div class="job-pay"></div>
+        <div class="requirements-list"></div>
       </li>
   </div>
 
