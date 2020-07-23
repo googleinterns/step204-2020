@@ -22,7 +22,7 @@ const HOMEPAGE_PATH = '../index.html';
 
 const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
-const NEW_JOB_STRINGS = AppStrings['new-job'];
+const JOB_STRINGS = AppStrings['job'];
 
 window.onload = () => {
   renderJobDetailsPageElements();
@@ -83,9 +83,10 @@ function displayJobDetails(job) {
   jobDescription.innerText = job['jobDescription'];
 
   const jobPayTitle = document.getElementById('pay-title');
-  jobPayTitle.innerText = `${NEW_JOB_STRINGS['pay-title']}:`;
+  jobPayTitle.innerText = `${JOB_STRINGS['pay-title']}:`;
 
   const pay = job['jobPay'];
+  console.log('pay', pay);
 
   const jobPayMin = document.getElementById('pay-min');
   jobPayMin.innerText = pay['min'];
@@ -93,19 +94,21 @@ function displayJobDetails(job) {
   const jobPayMax = document.getElementById('pay-max');
   jobPayMax.innerText = pay['max'];
 
-  const payFrequencyOptions = NEW_JOB_STRINGS['pay-frequency'];
+  const payFrequencyOptions = JOB_STRINGS['pay-frequency'];
+  console.log('payfrequencyoptions', payFrequencyOptions);
+  console.log('payfreuqncy', pay[])
   const jobFrequency = document.getElementById('pay-frequency');
   jobFrequency.innerText = `(${payFrequencyOptions[pay['paymentFrequency']]})`;
 
   const jobDurationTitle = document.getElementById('duration-title');
-  jobDurationTitle.innerText = `${NEW_JOB_STRINGS['duration-title']}:`;
+  jobDurationTitle.innerText = `${JOB_STRINGS['duration-title']}:`;
 
-  const durationOptions = NEW_JOB_STRINGS['duration'];
+  const durationOptions = JOB_STRINGS['duration'];
   const jobDuration = document.getElementById('duration');
   jobDuration.innerText = durationOptions[job['jobDuration']];
 
   const requirementsTitle = document.getElementById('requirements-title');
-  requirementsTitle.innerText = `${NEW_JOB_STRINGS['requirements-title']}:`;
+  requirementsTitle.innerText = `${JOB_STRINGS['requirements-title']}:`;
 
   const requirementsListElement = document.getElementById('requirements-list');
   // incase there is already something there
