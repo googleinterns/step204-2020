@@ -46,7 +46,7 @@ public final class JobsDatabase {
      * Edits the job post.
      *
      * @param jobId Id for the target job post in the database.
-     * @param updatedJob Updated job post.
+     * @param updatedJob Updated job post (with cloud firestore id).
      * @return A future of document reference for the updated job post.
      * @throws IllegalArgumentException If the job id is invalid.
      */
@@ -54,11 +54,6 @@ public final class JobsDatabase {
         if (jobId.isEmpty()) {
             throw new IllegalArgumentException("Job Id should be an non-empty string");
         }
-        
-        // Sets the Job with cloud firestore id and ACTIVE status
-        Job job = updatedJob.toBuilder()
-                .setJobId(jobId)
-                .build();
 
         // Runs an asynchronous transaction
         ApiFuture<DocumentReference> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
@@ -75,7 +70,7 @@ public final class JobsDatabase {
             }
 
             // Overwrites the whole job post
-            transaction.set(documentReference, job);
+            transaction.set(documentReference, updatedJob);
 
             return documentReference;
         });

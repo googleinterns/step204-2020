@@ -3,12 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
+    <!--TODO(issue/59): render this page dynamically-->
     <div class="header-container">
         <button onclick="location.href='../index.html'">Back to Homepage</button>
+
+        <!--Add a button for update-->
+        <input type="submit" id="update" value="Update">
+
+        <!--Add a button for delete-->
+        <!--TODO(issue/53): gets the job Id-->
+        <button id="delete"></button>
     </div>
     <div class="content-container">
         <div id="jobpage-map">map here</div>
@@ -35,7 +43,12 @@
             <div id="job-duration">Not Specified</div>
         </div>
 
+        <div class="error-message" id="error-message"></div>
+
     </div>
 </body>
+
+<script type="module" src="./script.js"></script>
+<script type="module" src="../delete-job/script.js"></script>
 
 </html>

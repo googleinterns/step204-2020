@@ -67,6 +67,8 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>2.2.0</version>
                 <configuration>
+                    <!--Only for selenium ui test-->
+                    <!--<port>3000</port>-->
                     <deploy.projectId>google.com:walk-in-interview</deploy.projectId>
                     <deploy.version>1</deploy.version>
                 </configuration>
