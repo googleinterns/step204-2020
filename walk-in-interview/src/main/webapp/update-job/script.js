@@ -176,7 +176,6 @@ function addPrefilledInfo(job) {
   const jobDuration = job.jobDuration;
   renderJobDurationOptions(jobDuration);
 
-  const jobExpiry = document.getElementById('expiry');
   const jobExpiryTimestamp = job.postExpiryTimestamp;
   renderJobExpiryLimits(jobExpiryTimestamp);
 
