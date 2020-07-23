@@ -335,27 +335,6 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  /*
-   * The first two digits of the postal code must be numbers within
-   * the below range because those two digits correspond to the location's
-   * district, which indicates its region in Singapore.
-   */
-  if (postalCode.value === '' || postalCode.length < 2 ||
-    Number.isNaN(parseInt(postalCode.value[0])) ||
-    Number.isNaN(parseInt(postalCode.value[1]))) {
-    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
-        /* msg= */ postalCode.placeholder, /* includesDefaultMsg= */ true);
-    return false;
-  }
-
-  const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
-  if (Number.isNaN(postalCodeDigits) || postalCodeDigits < 0 ||
-    postalCodeDigits === 74 || postalCodeDigits > 82) {
-    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
-        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
-    return false;
-  }
-
   if (payFrequency === '') {
     setErrorMessageAndField(/* errorFieldId= */'pay-frequency',
         /* msg= */ document.getElementById('pay-title').textContent,
@@ -389,6 +368,35 @@ function validateRequiredUserInput() {
     setErrorMessageAndField(/* errorFieldId= */ 'expiry',
         /* msg= */ document.getElementById('expiry-title').textContent,
         /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  return true && validatePostalCode();
+}
+
+/**
+ * Validation for the postalCode.
+ * @return {boolean} Whether its valid.
+ */
+function validatePostalCode() {
+  /*
+   * The first two digits of the postal code must be numbers within
+   * the below range because those two digits correspond to the location's
+   * district, which indicates its region in Singapore.
+   */
+  if (postalCode.value === '' || postalCode.length < 2 ||
+    Number.isNaN(parseInt(postalCode.value[0])) ||
+    Number.isNaN(parseInt(postalCode.value[1]))) {
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ postalCode.placeholder, /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
+  if (Number.isNaN(postalCodeDigits) || postalCodeDigits < 0 ||
+    postalCodeDigits === 74 || postalCodeDigits > 82) {
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
     return false;
   }
 
