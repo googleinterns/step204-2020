@@ -24,9 +24,7 @@ const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
 const JOB_STRINGS = AppStrings['job'];
 
-window.onload = () => {
-  renderJobDetailsPageElements();
-};
+window.addEventListener('load', renderJobDetailsPageElements());
 
 /**
  * Add the current job (given the jobId) details to the page,
