@@ -25,6 +25,7 @@ import java.util.Optional;
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
     private static final long TIMEOUT_SECONDS = 5;
+    private static final String JOB_ID_FIELD = "jobId";
 
     private JobsDatabase jobsDatabase;
 
