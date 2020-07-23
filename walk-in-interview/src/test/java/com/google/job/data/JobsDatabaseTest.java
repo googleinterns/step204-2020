@@ -3,6 +3,7 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
+import com.google.common.collect.ImmutableList; 
 import org.junit.*;
 
 import java.io.IOException;
@@ -249,14 +250,6 @@ public final class JobsDatabaseTest {
     @Test
     public void fetchJobPage_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         // Arrange
-        /* fields that don't affect the job page details */
-        JobStatus jobStatus = JobStatus.ACTIVE;
-        String jobName = "Programmer";
-        String jobDescription = "Fighting to defeat hair line recede";
-        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
-        long postExpiry = System.currentTimeMillis();
-        JobDuration jobDuration = JobDuration.ONE_MONTH;
-
         /* fields that affect the sorting/filtering of the job page details */
         // this should be returned first (order will be descending by salary, and region will be central)
         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
@@ -284,71 +277,38 @@ public final class JobsDatabaseTest {
         Location location6 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
         JobPayment jobPayment6 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY, 156000);
 
-        Job job1 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location1)
-                .setJobPay(jobPayment1)
-                .build();
+        List<Job> jobs = createTestJobs(6);
 
-        Job job2 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location2)
-                .setJobPay(jobPayment2)
-                .build();
+        Job job1 = jobs.get(0).toBuilder()
+                        .setLocation(location1)
+                        .setJobPay(jobPayment1)
+                        .build();
 
-        Job job3 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location3)
-                .setJobPay(jobPayment3)
-                .build();
+        Job job2 = jobs.get(1).toBuilder()
+                        .setLocation(location2)
+                        .setJobPay(jobPayment2)
+                        .build();
+        
+        Job job3 = jobs.get(2).toBuilder()
+                        .setLocation(location3)
+                        .setJobPay(jobPayment3)
+                        .build();
+        
+        Job job4 = jobs.get(3).toBuilder()
+                        .setLocation(location4)
+                        .setJobPay(jobPayment4)
+                        .build();
 
-        Job job4 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location4)
-                .setJobPay(jobPayment4)
-                .build();
+        Job job5 = jobs.get(4).toBuilder()
+                        .setLocation(location5)
+                        .setJobPay(jobPayment5)
+                        .build();
 
-        Job job5 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location5)
-                .setJobPay(jobPayment5)
-                .build();
-
-        Job job6 = Job.newBuilder()
-                .setJobStatus(jobStatusExpired)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location6)
-                .setJobPay(jobPayment6)
-                .build();
+        Job job6 = jobs.get(5).toBuilder()
+                        .setLocation(location6)
+                        .setJobPay(jobPayment6)
+                        .setJobStatus(jobStatusExpired)
+                        .build();
     
         // the jobs will be added in a random order
         firestore.collection(TEST_JOB_COLLECTION).add(job5).get();
@@ -375,14 +335,6 @@ public final class JobsDatabaseTest {
      @Test
     public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
         // Arrange
-        /* fields that don't affect the job page details */
-        JobStatus jobStatus = JobStatus.ACTIVE;
-        String jobName = "Programmer";
-        String jobDescription = "Fighting to defeat hair line recede";
-        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
-        long postExpiry = System.currentTimeMillis();
-        JobDuration jobDuration = JobDuration.ONE_MONTH;
-
         /* fields that affect the sorting/filtering of the job page details */
         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
         JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
@@ -390,27 +342,17 @@ public final class JobsDatabaseTest {
         Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
         JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY, 208000);
 
-        Job job1 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location1)
-                .setJobPay(jobPayment1)
-                .build();
+        List<Job> jobs = createTestJobs(6);
 
-        Job job2 = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setJobDescription(jobDescription)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .setLocation(location2)
-                .setJobPay(jobPayment2)
-                .build();
+        Job job1 = jobs.get(0).toBuilder()
+                        .setLocation(location1)
+                        .setJobPay(jobPayment1)
+                        .build();
+
+        Job job2 = jobs.get(1).toBuilder()
+                        .setLocation(location2)
+                        .setJobPay(jobPayment2)
+                        .build();
     
         firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
         firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
@@ -427,6 +369,46 @@ public final class JobsDatabaseTest {
 
         // Assert
         assertEquals(expectedJobPage, actualJobPage);
+    }
+
+    /**
+     * This will add all the default properties to the job. For particular tests, if the properties of 
+     * a job need to be changed, then we can just use the job.toBuilder() method and then reset the properties
+     * that way.
+     * @param count The number of jobs you want created.
+     * 
+     * @return The list of jobs created.
+     */
+    private static List<Job> createTestJobs(int count) {
+        // Arrange
+        /* fields that don't affect the job page details */
+        JobStatus jobStatus = JobStatus.ACTIVE;
+        String jobName = "Programmer";
+        String jobDescription = "Fighting to defeat hair line recede";
+        Location location =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+        long postExpiry = System.currentTimeMillis();
+        JobDuration jobDuration = JobDuration.ONE_MONTH;
+        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
+        
+        ImmutableList.Builder<Job> jobs = ImmutableList.builder();
+
+        /* add the required number of jobs to the list */
+        for (int i = 0; i < count; i++) {
+            Job job = Job.newBuilder()
+                    .setJobStatus(jobStatus)
+                    .setJobTitle(jobName)
+                    .setJobDescription(jobDescription)
+                    .setLocation(location)
+                    .setRequirements(requirements)
+                    .setPostExpiry(postExpiry)
+                    .setJobDuration(jobDuration)
+                    .setJobPay(jobPayment)
+                    .build();
+            jobs.add(job);
+        }
+
+        return jobs.build();
     }
 
     /**
