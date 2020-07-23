@@ -129,21 +129,8 @@ public final class Job {
             return this;
         }
 
-        public JobBuilder setRequirements(List<String> requirements) {
-            // Changes requirements into set to make "contains" operation O(1)
-            Set<String> requirementsSet = new HashSet<>(requirements);
-
-            // Gets all requirements stable id
-            List<String> requirementsList = Requirement.getAllRequirementIds();
-
-            ImmutableMap.Builder<String, Boolean> requirementsMap = ImmutableMap.builder();
-
-            for (String requirement: requirementsList) {
-                requirementsMap.put(requirement, requirementsSet.contains(requirement));
-            }
-
-            this.requirements = requirementsMap.build();
-
+        public JobBuilder setRequirements(Map<String, Boolean> requirements) {
+            this.requirements = ImmutableMap.copyOf(requirements);
             return this;
         }
 
