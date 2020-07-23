@@ -442,9 +442,6 @@ describe('Update Job Tests', function() {
      * message with the invalid field, and no POST request will be made.
      */
     describe('Submit Button', () => {
-      const date = new Date();
-      const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
-        `-${date.getFullYear()}`;
 
       // Since all fields should be pre-filled with existing job post,
       // there is no need to add valid inputs to all fields again.
