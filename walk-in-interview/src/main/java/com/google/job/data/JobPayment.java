@@ -49,7 +49,7 @@ public final class JobPayment {
 
     /** Returns the annual pay given the upper limit of the payment and its frequency */
     public long getAnnualMax() {
-        return findExpectedAnnualMax(max, paymentFrequency);
+        return findExpectedAnnualMax(this.max, this.paymentFrequency);
     }
 
     @Override
