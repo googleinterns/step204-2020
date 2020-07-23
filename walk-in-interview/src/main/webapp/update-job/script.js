@@ -210,7 +210,7 @@ function renderRequirementsList(requirements) {
     checkbox.setAttribute('value', key);
 
     // If this requirement is one of the criteria for this job box, tick it
-    tickExistingRequirements(requirementsMap[key], requirements, checkbox);
+    tickExistingRequirements(key, requirements, checkbox);
 
     // text label
     const label = requirementElement.children[1];
@@ -471,7 +471,7 @@ function getJobForSeleniumTest() {
       min: 1,
       max: 4,
     },
-    requirements: ['O Level', 'English'],
+    requirements: ['O_LEVEL', 'LANGUAGE_ENGLISH'],
     postExpiryTimestamp: 1601856000000,
     jobDuration: 'ONE_WEEK',
   };
