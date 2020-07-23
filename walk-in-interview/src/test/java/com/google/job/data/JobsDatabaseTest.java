@@ -323,7 +323,7 @@ public final class JobsDatabaseTest {
 
         requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
-        Job job2 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        Job job2 = testJobDataCreation(JobStatus.DELETED, requirements);
 
         requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH, DRIVING_LICENSE_C));
 
