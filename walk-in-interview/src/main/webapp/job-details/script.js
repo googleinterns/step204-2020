@@ -86,7 +86,6 @@ function displayJobDetails(job) {
   jobPayTitle.innerText = `${JOB_STRINGS['pay-title']}:`;
 
   const pay = job['jobPay'];
-  console.log('pay', pay);
 
   const jobPayMin = document.getElementById('pay-min');
   jobPayMin.innerText = pay['min'];
@@ -95,8 +94,7 @@ function displayJobDetails(job) {
   jobPayMax.innerText = pay['max'];
 
   const payFrequencyOptions = JOB_STRINGS['pay-frequency'];
-  console.log('payfrequencyoptions', payFrequencyOptions);
-  console.log('payfreuqncy', pay[])
+
   const jobFrequency = document.getElementById('pay-frequency');
   jobFrequency.innerText = `(${payFrequencyOptions[pay['paymentFrequency']]})`;
 
