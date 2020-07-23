@@ -147,7 +147,7 @@ public final class JobServlet extends HttpServlet {
     }
 
     /**
-     * Returns the Job object.
+     * Returns the optional Job object.
      *
      * @param jobId The job id that corresponds to the job we want to get.
      * @return optional Job object with all the details of the job.
