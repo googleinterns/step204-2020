@@ -19,6 +19,7 @@ import {JOB_ID_PARAM, getCookie, getRequirementsList,
 
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
+const COMMON_STRINGS = AppStrings['common'];
 const HOMEPAGE_PATH = '../job-details/index.html';
 const BAD_REQUEST_STATUS_CODE = 400;
 
@@ -49,7 +50,7 @@ function getJobId() {
 function loadAndShowJob(jobId) {
   if (jobId === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
-      /* msg= */ AppStrings['common']['empty-job-id-error-message'], /* includesDefault= */false);
+      /* msg= */ COMMON_STRINGS['empty-job-id-error-message'], /* includesDefault= */false);
     return;
   }
 
@@ -63,7 +64,7 @@ function loadAndShowJob(jobId) {
   // return;
 
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
-  const url = `${API['update-job']}?jobId=${jobId}`;
+  const url = `${API['get-individual-job']}?jobId=${jobId}`;
   fetch(url, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
@@ -138,6 +139,10 @@ function renderPageElements() {
  * @param {Job} job Job json.
  */
 function addPrefilledInfo(job) {
+  if (job == null) {
+    throw new Error(UPDATE_JOB_STRINGS['error-message']);
+  }
+
   const jobTitle = document.getElementById('title');
   const jobTitleContent = job.jobTitle;
   jobTitle.setAttribute('value', jobTitleContent);

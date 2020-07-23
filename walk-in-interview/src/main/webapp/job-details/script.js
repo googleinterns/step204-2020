@@ -9,6 +9,8 @@ import {AppStrings} from '../strings.en.js';
 
 import {JOB_ID_PARAM, setCookie, setErrorMessage} from '../common-functions.js';
 
+const STRINGS = AppStrings['job-details'];
+const COMMON_STRINGS = AppStrings['common'];
 const UPDATE_JOB_PATH = '../update-job/index.html';
 
 /**
@@ -19,14 +21,14 @@ function getJobId() {
   return 'Not Implemented';
 }
 
-const submitButton = document.getElementById('update');
-submitButton.addEventListener('click', (_) => {
+const updateButton = document.getElementById('update');
+updateButton.addEventListener('click', (_) => {
 
   const jobId = getJobId();
 
   if (jobId === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
-      /* msg= */ AppStrings['common']['empty-job-id-error-message'], /* includesDefault= */false);
+      /* msg= */ COMMON_STRINGS['empty-job-id-error-message'], /* includesDefault= */false);
     return;
   }
 
@@ -39,12 +41,13 @@ submitButton.addEventListener('click', (_) => {
   })
   .then(() => {
       /** reset the error (there might have been an error msg from earlier) */
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
+      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', 
+        /* includesDefault= */false);
       window.location.href= UPDATE_JOB_PATH;
   })
   .catch((error) => {
       setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ AppStrings['job-details']['update-error-message'], /* includesDefault= */false);
+        /* msg= */ STRINGS['update-error-message'], /* includesDefault= */false);
       console.log('error', error);
   });
 });

@@ -43,8 +43,7 @@ function renderJobPageElements() {
   jobTitle.setAttribute('required', true);
 
   const jobDescription = document.getElementById('description');
-  jobDescription.setAttribute('placeholder',
-      STRINGS['description']);
+  jobDescription.setAttribute('placeholder', STRINGS['description']);
   jobDescription.setAttribute('required', true);
 
   const jobAddress = document.getElementById('address');
@@ -161,34 +160,34 @@ function getJobDetailsFromUserInput() {
   const payMax = document.getElementById('pay-max').valueAsNumber;
 
   const requirementsCheckboxes =
-      document.getElementsByName('requirements-list');
+    document.getElementsByName('requirements-list');
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
-      if (checked) {
-      requirementsList.push(id);
-      }
+    if (checked) {
+    requirementsList.push(id);
+    }
   });
 
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
   const jobDetails = {
-      jobTitle: name,
-      jobLocation: {
-          address: address,
-          postalCode: postalCode,
-          lat: 1.3039, // TODO(issue/13): get these from places api
-          lon: 103.8358,
-      },
-      jobDescription: description,
-      jobPay: {
-          paymentFrequency: payFrequency,
-          min: payMin,
-          max: payMax,
-      },
-      requirements: requirementsList,
-      postExpiryTimestamp: expiry,
-      jobDuration: duration,
+    jobTitle: name,
+    jobLocation: {
+      address: address,
+      postalCode: postalCode,
+      lat: 1.3039, // TODO(issue/13): get these from places api
+      lon: 103.8358,
+    },
+    jobDescription: description,
+    jobPay: {
+      paymentFrequency: payFrequency,
+      min: payMin,
+      max: payMax,
+    },
+    requirements: requirementsList,
+    postExpiryTimestamp: expiry,
+    jobDuration: duration,
   };
 
   return jobDetails;
@@ -211,42 +210,42 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
+    return false;
   }
 
   if (description.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
+    return false;
   }
 
   if (address.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
+    return false;
   }
 
   if (postalCode.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
+    return false;
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
-      payMin > payMax || payMin < 0 || payMax < 0) {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
-          .textContent);
-      return false;
+    payMin > payMax || payMin < 0 || payMax < 0) {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
+      .textContent);
+    return false;
   }
 
   if (duration === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
-          .textContent);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
+      .textContent);
+    return false;
   }
 
   if (Number.isNaN(expiry)) {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
-          .textContent);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
+      .textContent);
+    return false;
   }
 
   return true;
