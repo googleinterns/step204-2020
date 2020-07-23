@@ -14,7 +14,7 @@ public final class Job {
     private final Location jobLocation;
     private final String jobDescription;
     private final JobPayment jobPay;
-    private final Map<Requirement, Boolean> requirements; // requirement enum value : true/false
+    private final Map<String, Boolean> requirements; // requirement stable id : true/false
     private final long postExpiryTimestamp;
     private final JobDuration jobDuration;
 
@@ -70,7 +70,7 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
-        private Map<Requirement, Boolean> requirements = ImmutableMap.of();
+        private Map<String, Boolean> requirements = ImmutableMap.of(); // Maps with non-string keys are not supported
         private JobDuration jobDuration = JobDuration.OTHER;
 
         // TODO(issue/25): merge the account stuff into job post.
@@ -129,16 +129,16 @@ public final class Job {
             return this;
         }
 
-        public JobBuilder setRequirements(List<Requirement> requirements) {
+        public JobBuilder setRequirements(List<String> requirements) {
             // Changes requirements into set to make "contains" operation O(1)
-            Set<Requirement> requirementsSet = new HashSet<>(requirements);
+            Set<String> requirementsSet = new HashSet<>(requirements);
 
-            // Gets all requirements
-            List<Requirement> requirementsList = Arrays.asList(Requirement.values());
+            // Gets all requirements stable id
+            List<String> requirementsList = Requirement.getAllRequirementIds();
 
-            ImmutableMap.Builder<Requirement, Boolean> requirementsMap = ImmutableMap.builder();
+            ImmutableMap.Builder<String, Boolean> requirementsMap = ImmutableMap.builder();
 
-            for (Requirement requirement: requirementsList) {
+            for (String requirement: requirementsList) {
                 requirementsMap.put(requirement, requirementsSet.contains(requirement));
             }
 
@@ -216,8 +216,8 @@ public final class Job {
         return jobPay;
     }
 
-    /** Returns a list of requirements of the job post. */
-    public Map<Requirement, Boolean> getRequirements() {
+    /** Returns a list of requirements (stable ids) of the job post. */
+    public Map<String, Boolean> getRequirements() {
         return requirements;
     }
 

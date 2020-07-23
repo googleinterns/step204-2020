@@ -55,7 +55,8 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<Requirement> expectedRequirements = Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH);
+        List<String> expectedRequirements = Requirement.getRequirementIds(
+                Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH));
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
 
@@ -109,7 +110,7 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<Requirement> expectedRequirements = Arrays.asList(O_LEVEL, ENGLISH);
+        List<String> expectedRequirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
@@ -208,7 +209,7 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Maple Tree", "123456", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        List<Requirement> expectedRequirements = Arrays.asList(O_LEVEL);
+        List<String> expectedRequirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL));
         long expectedPostExpiry = System.currentTimeMillis();;
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
@@ -247,27 +248,27 @@ public final class JobsDatabaseTest {
     @Test
     public void fetchAllEligibleJobs_normalInput_success() throws IOException, ExecutionException, InterruptedException {
         // Arrange.
-        List<Requirement> requirements = Arrays.asList(O_LEVEL);
+        List<String> requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL));
 
         Job job1 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(O_LEVEL, ENGLISH);
+        requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
         Job job2 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(ENGLISH, DRIVING_LICENSE_C);
+        requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH, DRIVING_LICENSE_C));
 
         Job job3 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C);
+        requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C));
 
         Job job4 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(ENGLISH);
+        requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH));
 
         Job job5 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        List<Requirement> skills = Arrays.asList(O_LEVEL, ENGLISH);
+        List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
         // Act.
         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
@@ -281,27 +282,27 @@ public final class JobsDatabaseTest {
     @Test
     public void fetchAllEligibleJobs_noJobMatch_noJobSelected() throws IOException, ExecutionException, InterruptedException {
         // Arrange.
-        List<Requirement> requirements = Arrays.asList(O_LEVEL);
+        List<String> requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL));
 
         Job job1 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(O_LEVEL, ENGLISH);
+        requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
         Job job2 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(ENGLISH, DRIVING_LICENSE_C);
+        requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH, DRIVING_LICENSE_C));
 
         Job job3 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C);
+        requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C));
 
         Job job4 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(ENGLISH);
+        requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH));
 
         Job job5 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        List<Requirement> skills = Arrays.asList(DRIVING_LICENSE_C);
+        List<String> skills = Requirement.getRequirementIds(Arrays.asList(DRIVING_LICENSE_C));
 
         // Act.
         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
@@ -316,27 +317,27 @@ public final class JobsDatabaseTest {
     public void fetchAllEligibleJobs_hasDeletedJob_deletedJobNotSelected()
             throws IOException, ExecutionException, InterruptedException {
         // Arrange.
-        List<Requirement> requirements = Arrays.asList(O_LEVEL);
+        List<String> requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL));
 
         Job job1 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(O_LEVEL, ENGLISH);
+        requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
-        Job job2 = testJobDataCreation(JobStatus.DELETED, requirements);
+        Job job2 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(ENGLISH, DRIVING_LICENSE_C);
+        requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH, DRIVING_LICENSE_C));
 
         Job job3 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C);
+        requirements = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH, DRIVING_LICENSE_C));
 
         Job job4 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = Arrays.asList(ENGLISH);
+        requirements = Requirement.getRequirementIds(Arrays.asList(ENGLISH));
 
         Job job5 = testJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        List<Requirement> skills = Arrays.asList(O_LEVEL, ENGLISH);
+        List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
         // Act.
         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
@@ -347,7 +348,7 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJobs, actualJobs);
     }
 
-    private Job testJobDataCreation(JobStatus jobStatus, List<Requirement> requirements)
+    private Job testJobDataCreation(JobStatus jobStatus, List<String> requirements)
             throws ExecutionException, InterruptedException {
         String jobName = "Programmer";
         Location location =  new Location("Maple Tree", "123456", 0, 0);

@@ -136,12 +136,12 @@ public final class JobsDatabase {
     }
 
     /** Returns future of all ACTIVE and eligible job posts in database. */
-    public Future<Collection<Job>> fetchAllEligibleJobs(List<Requirement> skills) throws IOException {
-        // Gets all requirements
-        List<Requirement> requirementsList = Arrays.asList(Requirement.values());
+    public Future<Collection<Job>> fetchAllEligibleJobs(List<String> skills) throws IOException {
+        // Gets all requirements stable id
+        List<String> requirementsList = Requirement.getAllRequirementIds();
 
         // Gets a list of requirements which the applicant does not have
-        List<Requirement> negateSkills = new ArrayList<>(requirementsList);
+        List<String> negateSkills = new ArrayList<>(requirementsList);
         negateSkills.removeAll(skills);
 
         final Query activeJobsQuery = FireStoreUtils.getFireStore()
@@ -151,7 +151,7 @@ public final class JobsDatabase {
         // Eligible post: post whose requirements do not contain (field is false)
         // the skills that applicant does not have
         Query eligiblePostQuery = activeJobsQuery;
-        for (Requirement negateSkill: negateSkills) {
+        for (String negateSkill: negateSkills) {
             String fieldPath = String.format("%s.%s", JOB_REQUIREMENTS_FIELD, negateSkill);
             eligiblePostQuery = eligiblePostQuery.whereEqualTo(fieldPath, false);
         }
