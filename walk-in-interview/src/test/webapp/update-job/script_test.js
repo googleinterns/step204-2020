@@ -226,22 +226,28 @@ describe('Update Job Tests', function() {
         return driver.findElements(By.name('requirement'))
             .then((requirements) => {
               requirements.map((requirement) => {
-                if (requirement.getText() === 'O Level') {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isTrue(checked);
-                  });
-                } else if (requirement.getText() === 'English') {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isTrue(checked);
-                  });
-                } else {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isNotTrue(checked);
-                  });
-                }
+                requirement.getText()
+                .then((text) => {
+                  if (text === 'O Level' || text === 'English') {
+                    const id = getKeyByValue(REQUIREMENTS_LIST, text);
+                    driver.findElement(By.id(id))
+                    .then((requirement) => {
+                      requirement.getAttribute('checked')
+                      .then((checked) => {
+                        assert.isTrue(checked);
+                      });
+                    });
+                  } else {
+                    const id = getKeyByValue(REQUIREMENTS_LIST, text);
+                    driver.findElement(By.id(id))
+                    .then((requirement) => {
+                      requirement.getAttribute('checked')
+                      .then((checked) => {
+                        assert.isNotTrue(checked);
+                      });
+                    });
+                  }
+                });
               });
             });
       });
@@ -525,3 +531,13 @@ function clickUpdate(driver) {
 function clickCancel(driver) {
   return driver.findElement(By.id('cancel')).click();
 };
+
+/**
+ * Gets the corresponding key according to its value.
+ * 
+ * @param {*} map Target map.
+ * @param {*} value Value.
+ */
+function getKeyByValue(map, value) {
+  return Object.keys(map).find(key => map[key] === value);
+}
