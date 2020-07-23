@@ -24,7 +24,6 @@ import java.util.Optional;
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
-    private static final String JOB_ID_FIELD = "jobId";
     private static final long TIMEOUT_SECONDS = 5;
 
     private JobsDatabase jobsDatabase;
@@ -84,18 +83,16 @@ public final class JobServlet extends HttpServlet {
     /** Handles the PATCH request from client. */
     public void doPatch(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // Gets the target job post id from the form
-            String jobId = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
-
-            // Gets job post from the form
+            // Gets job post (with cloud firestore id) from the form
             Job updatedJob = parseRawJobPost(request);
+            String jobId = updatedJob.getJobId();
 
             // Stores job post into the database
             updateJobPost(jobId, updatedJob);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (ExecutionException | IllegalArgumentException | ServletException | IOException | TimeoutException e) {
+        } catch (ExecutionException | IllegalArgumentException | ServletException | TimeoutException | IOException e) {
             // TODO(issue/47): use custom exceptions
             System.err.println("Error occur: " + e.getCause());
             // Sends the fail status code in the response
@@ -103,7 +100,7 @@ public final class JobServlet extends HttpServlet {
         }
     }
 
-    /** Parses into valid Job object from json received from client. */
+    /** Parses into valid Job object from json received from client request. */
     private Job parseRawJobPost(HttpServletRequest request) throws IOException, IllegalArgumentException {
         // Parses job object from the POST request
         try (BufferedReader bufferedReader = request.getReader()) {

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style.css">
+    </head>
+
+    <!-- TODO: render the text dynamically according to current locale -->
+    <body>
+        <div class="header-container">
+            <input id="cancel">
+            <div id="page-title"></div>
+            <input id="update">
+        </div>
+
+        <div class="content-container">
+            <input class="job-field" id="title"/>
+            <textarea class="job-field" id="description"></textarea>
+            
+            <div class="job-field">
+                <input id="address"/>
+                <input id="postal-code"/>
+            </div>
+
+            <div class="job-field">
+                <div id="requirements-title"></div>
+                <ul id="requirements-list"></ul>
+            </div>
+    
+            <div class="job-field">
+                <div id="pay-title"></div>
+                <select id="pay-frequency"></select>
+                <div id="pay-range">
+                    <input id="pay-min">
+                    -
+                    <input id="pay-max">
+                </div>
+            </div>
+    
+            <div class="job-field">
+                <div id="duration-title"></div>
+                <select id="duration"></select>
+            </div>
+    
+            <div class="job-field">
+                <div id="expiry-title"></div>
+                <input id="expiry">
+            </div>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <!-- hidden div to be used as a template to render requirements list elements -->
+        <div hidden>
+            <li id="requirement-element-template">
+                <input type="checkbox" id="requirement-checkbox-template" name="requirements-list">
+                <label>value</label>
+            </li>
+        </div>
+    </body>
+
+    <script type="module" src="./script.js"></script>
+</html>

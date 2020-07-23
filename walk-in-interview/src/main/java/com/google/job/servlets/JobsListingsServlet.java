@@ -23,7 +23,7 @@ import java.util.*;
  */
 @WebServlet("/jobs/listings")
 public final class JobsListingsServlet extends HttpServlet {
-    private static final long TIMEOUT = 5;
+    private static final long TIMEOUT_SECONDS = 5;
 
     private static final String MIN_LIMIT_PARAM = "minLimit";
     private static final String MAX_LIMIT_PARAM = "maxLimit";
@@ -65,7 +65,7 @@ public final class JobsListingsServlet extends HttpServlet {
     private JobPage fetchJobPageDetails(JobQuery jobQuery) throws ServletException, ExecutionException, TimeoutException {
         try {
             return this.jobsDatabase.fetchJobPage(jobQuery)
-                    .get(TIMEOUT, TimeUnit.SECONDS);
+                    .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
@@ -85,11 +85,13 @@ public final class JobsListingsServlet extends HttpServlet {
         Filter sortBy = parseSortBy(request);
         Order order = parseOrder(request);
         // TODO(issue/34): parse page size and index once pagination is implemented
-
-        JobQuery jobQuery = new JobQuery().setMinLimit(minLimit).setMaxLimit(maxLimit).setRegion(region)
-            .setSortBy(sortBy).setOrder(order);
         
-        return jobQuery;
+        return new JobQuery()
+                        .setMinLimit(minLimit)
+                        .setMaxLimit(maxLimit)
+                        .setRegion(region)
+                        .setSortBy(sortBy)
+                        .setOrder(order);
     }
 
     /**
@@ -135,20 +137,19 @@ public final class JobsListingsServlet extends HttpServlet {
     }
 
     /**
-     * Returns the region as a SingaporeRegion enum.
+     * Returns the region as a SingaporeRegion enum. We assume ENTIRE is region param is empty.
      *
      * @param request From the GET request.
      * @return SingaporeRegion enum given the id in the request params.
-     * @throws IllegalArgumentException if the id is invalid.
      */
-    private static SingaporeRegion parseRegion(HttpServletRequest request) throws IllegalArgumentException {
+    private static SingaporeRegion parseRegion(HttpServletRequest request) {
         String region = ServletUtils.getStringParameter(request, REGION_PARAM, /* defaultValue= */ "");
 
         if (region.isEmpty()) {
-            throw new IllegalArgumentException("region param should not be empty");
+            return SingaporeRegion.ENTIRE;
         }
 
-        return SingaporeRegion.getFromId(region); // Illegal Argument Exception may be thrown
+        return SingaporeRegion.getFromId(region); // IllegalArgumentException may be thrown
     }
 
     /**
@@ -165,7 +166,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("sort by param should not be empty");
         }
 
-        return Filter.getFromId(sortById); // Illegal Argument Exception may be thrown
+        return Filter.getFromId(sortById); // IllegalArgumentException may be thrown
     }
 
     /**
@@ -182,7 +183,7 @@ public final class JobsListingsServlet extends HttpServlet {
             throw new IllegalArgumentException("order param should not be empty");
         }
 
-        return Order.getFromId(orderId); // Illegal Argument Exception may be thrown
+        return Order.getFromId(orderId); // IllegalArgumentException may be thrown
     }
 
     /**

@@ -73,7 +73,7 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  renderJobListings();
+  loadAndDisplayJobListings();
 
   /* reset the error to make sure no error msg initially present */
   setErrorMessage(/* msg= */ '', /* includesDefaultMsg= */ false);
@@ -112,16 +112,14 @@ function renderSelectOptions(id) {
  * Checks that the filter fields are valid.
  * Note that the lower and upper limits can be left empty, by default
  * the lower limit is 0 and the upper limit is Integer.MAX_VALUE
+ * @param {String} sortByParam The sorting filter.
+ * @param {String} showByParam The region filter.
+ * @param {Number} minLimitParam The lower limit given the sorting filter.
+ * @param {Number} maxLimitParam The upper limit given the sorting filter.
  * @return {boolean} Indication of whether the fields are valid.
  */
-function validateFilters() {
-  const sortByParam = document.getElementById('sort-by').value;
-  const showByParam = document.getElementById('show-by-region').value;
-  const minLimitParam = document.getElementById('filter-min-limit')
-      .valueAsNumber;
-  const maxLimitParam = document.getElementById('filter-max-limit')
-      .valueAsNumber;
-
+function validateFilters(sortByParam, showByParam,
+    minLimitParam, maxLimitParam) {
   if (showByParam == '' || sortByParam == '') {
     /* no need to show error message as this would not be the user's fault */
     console.error('region or sorting was empty');
@@ -170,7 +168,7 @@ function renderJobFiltersSubmit() {
   filtersSubmit.setAttribute('value', STRINGS['filters-submit']);
 
   filtersSubmit.addEventListener('click', (_) => {
-    renderJobListings();
+    loadAndDisplayJobListings();
   });
 }
 
@@ -196,37 +194,8 @@ function displayJobListings(jobPageData) {
 
   const jobListings = jobPageData['jobList'];
 
-  const jobListingTemplate = document.getElementById('job-listing-template');
-
   jobListings.forEach((job) => {
-    const jobListing =
-      jobListingTemplate.cloneNode( /* and child elements */ true);
-    jobListing.setAttribute('id', job['jobId']);
-
-    const jobTitle = jobListing.children[0];
-    jobTitle.innerText = job['jobTitle'];
-
-    const jobAddress = jobListing.children[1];
-    const location = job['jobLocation'];
-    jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
-
-    const jobPay = jobListing.children[2];
-    const pay = job['jobPay'];
-    jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
-      `(${pay['paymentFrequency'].toLowerCase()})`;
-
-    const requirementsList = jobListing.children[3];
-    const fullRequirementsList = getRequirementsList();
-    const requirementsArr = [];
-
-    job['requirements'].forEach((req) => {
-      requirementsArr.push(fullRequirementsList[req]);
-    });
-
-    requirementsList.innerText =
-      `Requirements List: ${requirementsArr.join(', ')}`;
-
-    jobListingsElement.appendChild(jobListing);
+    jobListingsElement.appendChild(buildJobElement(job));
   });
 
   jobShowing.innerText = `${jobPageData['range'].minimum} -` +
@@ -235,15 +204,59 @@ function displayJobListings(jobPageData) {
 }
 
 /**
+ * Builds the job element given the job details from the servlet response.
+ * @param {Object} job The job to be displayed.
+ * @return {Element} The job listing element.
+ */
+function buildJobElement(job) {
+  const jobListingTemplate = document.getElementById('job-listing-template');
+
+  const jobListing =
+  jobListingTemplate.cloneNode( /* and child elements */ true);
+  jobListing.setAttribute('id', job['jobId']);
+
+  const jobTitle = jobListing.children[0];
+  jobTitle.innerText = job['jobTitle'];
+
+  const jobAddress = jobListing.children[1];
+  const location = job['jobLocation'];
+  jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
+
+  const jobPay = jobListing.children[2];
+  const pay = job['jobPay'];
+  jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
+  `(${pay['paymentFrequency'].toLowerCase()})`;
+
+  const requirementsList = jobListing.children[3];
+  const fullRequirementsList = getRequirementsList();
+  const requirementsArr = [];
+
+  job['requirements'].forEach((req) => {
+    requirementsArr.push(fullRequirementsList[req]);
+  });
+
+  requirementsList.innerText =
+  `Requirements List: ${requirementsArr.join(', ')}`;
+
+  return jobListing;
+}
+
+/**
  * Add the list of jobs that are stored in the database
  * given the filter fields.
  */
-async function renderJobListings() {
-  if (!validateFilters()) {
+async function loadAndDisplayJobListings() {
+  const sortingParam = document.getElementById('sort-by').value;
+  const regionParam = document.getElementById('show-by-region').value;
+  let minLimitParam = document.getElementById('filter-min-limit')
+      .valueAsNumber;
+  let maxLimitParam = document.getElementById('filter-max-limit')
+      .valueAsNumber;
+
+  if (!validateFilters(sortingParam, regionParam,
+      minLimitParam, maxLimitParam)) {
     return;
   }
-
-  const sortingParam = document.getElementById('sort-by').value;
 
   /*
    * Note that this platform currently only sorts by Salary.
@@ -256,12 +269,6 @@ async function renderJobListings() {
 
   const sortByParam = SALARY_PARAM;
   const orderByParam = sortingParam.substring(7);
-
-  const regionParam = document.getElementById('show-by-region').value;
-  let minLimitParam = document.getElementById('filter-min-limit')
-      .valueAsNumber;
-  let maxLimitParam = document.getElementById('filter-max-limit')
-      .valueAsNumber;
 
   if (Number.isNaN(minLimitParam)) {
     minLimitParam = 0;

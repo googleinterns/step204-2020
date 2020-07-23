@@ -12,10 +12,12 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
-import {getRequirementsList, setErrorMessage} from '../common-functions.js';
+import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
-const STRINGS = AppStrings['new-job'];
+const STRINGS = AppStrings['job'];
+const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
 const HOURS_PER_YEAR = 8760;
 /* Note that is an approximate value */
@@ -39,10 +41,10 @@ function renderJobPageElements() {
   cancelButton.setAttribute('type', 'reset');
 
   const jobPageTitle = document.getElementById('page-title');
-  jobPageTitle.innerText = STRINGS['page-title'];
+  jobPageTitle.innerText = NEW_JOB_STRINGS['page-title'];
 
   const submitButton = document.getElementById('submit');
-  submitButton.setAttribute('value', STRINGS['submit']);
+  submitButton.setAttribute('value', NEW_JOB_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
 
   const jobTitle = document.getElementById('title');
@@ -51,8 +53,7 @@ function renderJobPageElements() {
   jobTitle.setAttribute('required', true);
 
   const jobDescription = document.getElementById('description');
-  jobDescription.setAttribute('placeholder',
-      STRINGS['description']);
+  jobDescription.setAttribute('placeholder', STRINGS['description']);
   jobDescription.setAttribute('required', true);
 
   const jobAddress = document.getElementById('address');
@@ -158,24 +159,6 @@ function renderJobDurationOptions() {
   renderSelectOptions(jobDurationSelect, STRINGS['duration']);
 }
 
-/**
- * Add the keys and values from the options map to the select element.
- * @param {Element} select The select element.
- * @param {Map} options The map of options to be added.
- */
-function renderSelectOptions(select, options) {
-  select.options.length = 0;
-  select.options[0] = new Option('Select', '');
-  select.options[0].setAttribute('disabled', true);
-
-  for (const key in options) {
-    if (options.hasOwnProperty(key)) {
-      select.options[select.options.length] =
-        new Option(options[key], key);
-    }
-  }
-}
-
 /** Dynamically add the limits for choosing the new job post expiry. */
 function renderJobExpiryLimits() {
   const date = new Date();
@@ -227,7 +210,6 @@ function getJobDetailsFromUserInput() {
       paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
-      annualMax: calculateAnnualMax(payMax, payFrequency),
     },
     requirements: requirementsList,
     postExpiryTimestamp: expiry,
@@ -255,6 +237,9 @@ function findRegion(postalCode) {
    * postal code region is 01, they would have written
    * 01xxx rather than 1xxx.
    */
+  if (postalCode.length < 2) {
+    throw new Error('postalCode length should not be less than 2');
+  }
   const digits = parseInt(postalCode.substring(0, 2));
 
   if (digits >= 1 && digits <= 45) {
@@ -272,27 +257,7 @@ function findRegion(postalCode) {
     return 'NORTH_EAST';
   }
 
-  throw new Error('invalid postal code');
-}
-
-/**
- * This function calculates and returns the annual pay depending
- * on the maximum pay and the frequency.
- * @param {int} max the upper limit on the pay.
- * @param {String} frequency how often the employee will be paid.
- * @return {int} the annual pay.
- */
-function calculateAnnualMax(max, frequency) {
-  switch (frequency) {
-    case 'HOURLY':
-      return max * HOURS_PER_YEAR;
-    case 'WEEKLY':
-      return max * WEEKS_PER_YEAR;
-    case 'MONTHLY':
-      return max * MONTHS_PER_YEAR;
-    case 'YEARLY':
-      return max;
-  };
+  throw new Error(`invalid postal code: ${postalCode}`);
 }
 
 /**
@@ -304,7 +269,6 @@ function validateRequiredUserInput() {
   const name = document.getElementById('title');
   const description = document.getElementById('description');
   const address = document.getElementById('address');
-  const postalCode = document.getElementById('postal-code');
   const payFrequency = document.getElementById('pay-frequency').value;
   const payMin = document.getElementById('pay-min').valueAsNumber;
   const payMax = document.getElementById('pay-max').valueAsNumber;
@@ -332,27 +296,6 @@ function validateRequiredUserInput() {
   if (address.value === '') {
     setErrorMessageAndField(/* errorFieldId= */ 'address',
         /* msg= */ address.placeholder, /* includesDefaultMsg= */ true);
-    return false;
-  }
-
-  /*
-   * The first two digits of the postal code must be numbers within
-   * the below range because those two digits correspond to the location's
-   * district, which indicates its region in Singapore.
-   */
-  if (postalCode.value === '' || postalCode.length < 2 ||
-    (parseInt(postalCode.value[0]) > JAVA_INTEGER_MAX_VALUE) ||
-    (parseInt(postalCode.value[1]) > JAVA_INTEGER_MAX_VALUE)) {
-    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
-        /* msg= */ postalCode.placeholder, /* includesDefaultMsg= */ true);
-    return false;
-  }
-
-  const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
-  if (postalCodeDigits < 0 || postalCodeDigits === 74 ||
-      postalCodeDigits > 82) {
-    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
-        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
     return false;
   }
 
@@ -392,6 +335,37 @@ function validateRequiredUserInput() {
     return false;
   }
 
+  return true && validatePostalCode();
+}
+
+/**
+ * Validation for the postalCode.
+ * @return {boolean} Whether its valid.
+ */
+function validatePostalCode() {
+  const postalCode = document.getElementById('postal-code');
+
+  /*
+   * The first two digits of the postal code must be numbers within
+   * the below range because those two digits correspond to the location's
+   * district, which indicates its region in Singapore.
+   */
+  if (postalCode.value === '' || postalCode.length < 2 ||
+    Number.isNaN(parseInt(postalCode.value[0])) ||
+    Number.isNaN(parseInt(postalCode.value[1]))) {
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ postalCode.placeholder, /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
+  if (Number.isNaN(postalCodeDigits) || postalCodeDigits < 0 ||
+    postalCodeDigits === 74 || postalCodeDigits > 82) {
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
+    return false;
+  }
+
   return true;
 }
 
@@ -402,7 +376,7 @@ submitButton.addEventListener('click', (_) => {
   }
 
   const jobDetails = getJobDetailsFromUserInput();
-  fetch('/jobs', {
+  fetch(API['new-job'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
