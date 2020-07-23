@@ -161,7 +161,7 @@ function getJobDetailsFromUserInput() {
 
   const requirementsCheckboxes =
     document.getElementsByName('requirements-list');
-  const requirementsMap = [];
+  const requirementsMap = new Map();
   requirementsCheckboxes.forEach(({checked, id}) => {
     requirementsMap.set(id, checked);
   });
