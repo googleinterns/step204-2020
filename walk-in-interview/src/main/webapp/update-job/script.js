@@ -286,10 +286,10 @@ function getJobDetailsFromUserInput() {
   const payMax = document.getElementById('pay-max').valueAsNumber;
   
   const requirementsCheckboxes =
-    document.getElementsByName('requirements-list');
+    document.getElementsByName('requirement');
   const requirementsMap = new Map();
   requirementsCheckboxes.forEach(({checked, id}) => {
-    requirementsMap.set(id, checked);
+    requirementsMap[id] = checked;
   });
   
   const expiry = document.getElementById('expiry').valueAsNumber;
