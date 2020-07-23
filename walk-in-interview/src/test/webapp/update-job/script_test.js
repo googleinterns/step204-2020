@@ -223,24 +223,29 @@ describe('Update Job Tests', function() {
       });
 
       it('checks the default option properly ticked', () => {
-        return driver.findElement(By.id('requirements-list'))
-            .getText()
-            .then((text) => {
-              for (const requirement in text) {
-                if (requirement === 'O Level') {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isTrue(checked);
-                  })
-                }
-
-                if (requirement === 'English') {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isTrue(checked);
-                  })
-                }
-              }
+        return driver.findElements(By.className('requirement'))
+            .then((requirements) => {
+              requirements.map((requirement) => {
+                requirement.getText()
+                .then((requirement, text) => {
+                  if (text === 'O Level') {
+                    requirement.getAttribute('checked')
+                    .then((checked) => {
+                      assert.isTrue(checked);
+                    });
+                  } else if (text === 'English') {
+                    requirement.getAttribute('checked')
+                    .then((checked) => {
+                      assert.isTrue(checked);
+                    });
+                  } else {
+                    requirement.getAttribute('checked')
+                    .then((checked) => {
+                      assert.isNotTrue(checked);
+                    });
+                  }
+                });
+              });
             });
       });
     });

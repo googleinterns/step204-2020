@@ -208,9 +208,10 @@ function renderRequirementsList(requirements) {
     const checkbox = requirementElement.children[0];
     checkbox.setAttribute('id', key);
     checkbox.setAttribute('value', key);
+    checkbox.setAttribute('name', 'requirement');
 
     // If this requirement is one of the criteria for this job box, tick it
-    tickExistingRequirements(key, requirements, checkbox);
+    checkbox.setAttribute('checked', requirements.get(key));
 
     // text label
     const label = requirementElement.children[1];
@@ -218,19 +219,6 @@ function renderRequirementsList(requirements) {
     label.innerHTML = requirementsMap[key];
 
     requirementsListElement.appendChild(requirementElement);
-  }
-}
-
-/**
- * Ticks the existing requirement.
- * 
- * @param {String} requirement Requirement localized name.
- * @param {String} requirements Requirements list of current job post.
- * @param {HTMLElement} requirementElement HTML checkbox for that requirement
- */
-function tickExistingRequirements(requirement, requirements, requirementCheckbox) {
-  if (requirements.includes(requirement)) {
-    requirementCheckbox.setAttribute('checked', true);
   }
 }
 
@@ -296,11 +284,9 @@ function getJobDetailsFromUserInput() {
   
   const requirementsCheckboxes =
     document.getElementsByName('requirements-list');
-  const requirementsList = [];
+  const requirementsMap = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
-    if (checked) {
-      requirementsList.push(id);
-    }
+    requirementsMap.set(id, checked);
   });
   
   const expiry = document.getElementById('expiry').valueAsNumber;
@@ -328,7 +314,7 @@ function getJobDetailsFromUserInput() {
       min: payMin,
       max: payMax,
     },
-    requirements: requirementsList,
+    requirements: requirementsMap,
     postExpiryTimestamp: expiry,
     jobDuration: duration,
   };
@@ -471,7 +457,11 @@ function getJobForSeleniumTest() {
       min: 1,
       max: 4,
     },
-    requirements: ['O_LEVEL', 'LANGUAGE_ENGLISH'],
+    requirements: {
+      'O_LEVEL': true,
+      'LANGUAGE_ENGLISH': true,
+      'DRIVING_LICENSE_C': false,
+    },
     postExpiryTimestamp: 1601856000000,
     jobDuration: 'ONE_WEEK',
   };

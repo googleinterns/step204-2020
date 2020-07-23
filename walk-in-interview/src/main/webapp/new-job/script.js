@@ -161,11 +161,9 @@ function getJobDetailsFromUserInput() {
 
   const requirementsCheckboxes =
     document.getElementsByName('requirements-list');
-  const requirementsList = [];
+  const requirementsMap = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
-    if (checked) {
-      requirementsList.push(id);
-    }
+    requirementsMap.set(id, checked);
   });
 
   const expiry = document.getElementById('expiry').valueAsNumber;
@@ -185,7 +183,7 @@ function getJobDetailsFromUserInput() {
       min: payMin,
       max: payMax,
     },
-    requirements: requirementsList,
+    requirements: requirementsMap,
     postExpiryTimestamp: expiry,
     jobDuration: duration,
   };
