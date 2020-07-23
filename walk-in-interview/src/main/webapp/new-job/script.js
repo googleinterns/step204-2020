@@ -12,13 +12,13 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
-import {getRequirementsList, setErrorMessage} from "../common-functions.js";
+import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
-const STRINGS = AppStrings['new-job'];
+const STRINGS = AppStrings['job'];
+const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
-const RESPONSE_ERROR = 'There was an error while creating' +
-  'the job listing, please try submitting again';
 
 window.onload = () => {
   renderJobPageElements();
@@ -31,10 +31,10 @@ function renderJobPageElements() {
   cancelButton.setAttribute('type', 'reset');
 
   const jobPageTitle = document.getElementById('page-title');
-  jobPageTitle.innerText = STRINGS['page-title'];
+  jobPageTitle.innerText = NEW_JOB_STRINGS['page-title'];
 
   const submitButton = document.getElementById('submit');
-  submitButton.setAttribute('value', STRINGS['submit']);
+  submitButton.setAttribute('value', NEW_JOB_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
 
   const jobTitle = document.getElementById('title');
@@ -43,8 +43,7 @@ function renderJobPageElements() {
   jobTitle.setAttribute('required', true);
 
   const jobDescription = document.getElementById('description');
-  jobDescription.setAttribute('placeholder',
-      STRINGS['description']);
+  jobDescription.setAttribute('placeholder', STRINGS['description']);
   jobDescription.setAttribute('required', true);
 
   const jobAddress = document.getElementById('address');
@@ -135,24 +134,6 @@ function renderJobDurationOptions() {
   renderSelectOptions(jobDurationSelect, STRINGS['duration']);
 }
 
-/**
- * Add the keys and values from the options map to the select element.
- * @param {Element} select The select element.
- * @param {Map} options The map of options to be added.
- */
-function renderSelectOptions(select, options) {
-  select.options.length = 0;
-  select.options[0] = new Option('Select', '');
-  select.options[0].setAttribute('disabled', true);
-
-  for (const key in options) {
-    if (options.hasOwnProperty(key)) {
-      select.options[select.options.length] =
-        new Option(options[key], key);
-    }
-  }
-}
-
 /** Dynamically add the limits for choosing the new job post expiry. */
 function renderJobExpiryLimits() {
   const date = new Date();
@@ -179,34 +160,34 @@ function getJobDetailsFromUserInput() {
   const payMax = document.getElementById('pay-max').valueAsNumber;
 
   const requirementsCheckboxes =
-      document.getElementsByName('requirements-list');
+    document.getElementsByName('requirements-list');
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
-      if (checked) {
-      requirementsList.push(id);
-      }
+    if (checked) {
+    requirementsList.push(id);
+    }
   });
 
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
   const jobDetails = {
-      jobTitle: name,
-      jobLocation: {
+    jobTitle: name,
+    jobLocation: {
       address: address,
       postalCode: postalCode,
       lat: 1.3039, // TODO(issue/13): get these from places api
       lon: 103.8358,
-      },
-      jobDescription: description,
-      jobPay: {
+    },
+    jobDescription: description,
+    jobPay: {
       paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
-      },
-      requirements: requirementsList,
-      postExpiryTimestamp: expiry,
-      jobDuration: duration,
+    },
+    requirements: requirementsList,
+    postExpiryTimestamp: expiry,
+    jobDuration: duration,
   };
 
   return jobDetails;
@@ -229,42 +210,42 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (name.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ name.placeholder);
+    return false;
   }
 
   if (description.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ description.placeholder);
+    return false;
   }
 
   if (address.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ address.placeholder);
+    return false;
   }
 
   if (postalCode.value === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ postalCode.placeholder);
+    return false;
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
-      payMin > payMax || payMin < 0 || payMax < 0) {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
-          .textContent);
-      return false;
+    payMin > payMax || payMin < 0 || payMax < 0) {
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
+      .textContent);
+    return false;
   }
 
   if (duration === '') {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
-          .textContent);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('duration-title')
+      .textContent);
+    return false;
   }
 
   if (Number.isNaN(expiry)) {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
-          .textContent);
-      return false;
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('expiry-title')
+      .textContent);
+    return false;
   }
 
   return true;
@@ -277,7 +258,7 @@ submitButton.addEventListener('click', (_) => {
   }
 
   const jobDetails = getJobDetailsFromUserInput();
-  fetch('/jobs', {
+  fetch(API['new-job'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
@@ -290,7 +271,8 @@ submitButton.addEventListener('click', (_) => {
         window.location.href= HOMEPAGE_PATH;
       })
       .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ RESPONSE_ERROR, /* includesDefault= */false);
+        setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ NEW_JOB_STRINGS['error-message'],
+          /* includesDefault= */false);
         console.log('error', error);
       });
 });

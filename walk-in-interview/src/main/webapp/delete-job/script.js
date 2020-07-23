@@ -9,6 +9,7 @@
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
 import {setErrorMessage} from '../common-functions.js';
 
@@ -41,7 +42,7 @@ function getJobId() {
  * @param {String} jobId Job id for this job post.
  */
 function deleteJobPost(jobId) {
-  fetch('/jobs/delete', {method: 'PATCH', body: jobId})
+  fetch(API['delete-job'], {method: 'PATCH', body: jobId})
   .then((response) => response.text())
   .then((data) => {
     console.log('data', data);
