@@ -444,12 +444,6 @@ describe('Update Job Tests', function() {
       // Since all fields should be pre-filled with existing job post,
       // there is no need to add valid inputs to all fields again.
 
-      it('no error message for all valid inputs', () => {
-        return clickUpdate(driver)
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text, ''));
-      });
-
       it('no job title', () => {
         /**
          * The job title must be cleared here to test it.
