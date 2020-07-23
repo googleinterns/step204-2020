@@ -45,16 +45,21 @@ public final class JobServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             String jobId = parseJobId(request);
 
-            Job job = fetchJobDetails(jobId);
+            Optional<Job> job = fetchJobDetails(jobId);
 
-            String json = ServletUtils.convertToJsonUsingGson(job);
+            if (!job.isPresent()) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            String json = ServletUtils.convertToJsonUsingGson(job.get());
             response.setContentType("application/json;");
             response.getWriter().println(json);
-        } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
+        } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException | IOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
@@ -145,18 +150,12 @@ public final class JobServlet extends HttpServlet {
      * Returns the Job object.
      *
      * @param jobId The job id that corresponds to the job we want to get.
-     * @return Job object with all the details of the job.
+     * @return optional Job object with all the details of the job.
      */
-    private Job fetchJobDetails(String jobId) throws ServletException, ExecutionException, TimeoutException {
+    private Optional<Job> fetchJobDetails(String jobId) throws ServletException, ExecutionException, TimeoutException {
         try {
-            Optional<Job> job = this.jobsDatabase.fetchJob(jobId)
+            return this.jobsDatabase.fetchJob(jobId)
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-
-            if (!job.isPresent()) {
-                throw new IllegalArgumentException("could not find job for this jobId: " + jobId);
-            }
-
-            return job.get();
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
