@@ -5,7 +5,6 @@ public final class JobPayment {
     private final int min;
     private final int max;
     private final PaymentFrequency paymentFrequency;
-    private final long annualMax;
 
     private static final int HOURS_PER_YEAR = 8760;
     /* Note that is an approximate value */
@@ -31,7 +30,6 @@ public final class JobPayment {
         this.min = min;
         this.max = max;
         this.paymentFrequency = paymentFrequency;
-        this.annualMax = findExpectedAnnualMax(max, paymentFrequency);
     }
 
     /** Returns the lower limit of the payment, never negative. */
@@ -51,7 +49,7 @@ public final class JobPayment {
 
     /** Returns the annual pay given the upper limit of the payment and its frequency */
     public long getAnnualMax() {
-        return annualMax;
+        return findExpectedAnnualMax(max, paymentFrequency);
     }
 
     @Override
@@ -59,8 +57,7 @@ public final class JobPayment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobPayment that = (JobPayment) o;
-        return this.min == that.min && this.max == that.max && paymentFrequency.equals(that.paymentFrequency) &&
-                this.annualMax == that.annualMax;
+        return this.min == that.min && this.max == that.max && paymentFrequency.equals(that.paymentFrequency);
     }
 
     @Override
@@ -80,9 +77,6 @@ public final class JobPayment {
         c = paymentFrequency.hashCode();
         result = 31 * result + c;
 
-        c = ((Long) annualMax).hashCode();
-        result = 31 * result + c;
-
         this.hashCode = result;
 
         return hashCode;
@@ -90,8 +84,8 @@ public final class JobPayment {
 
     @Override
     public String toString() {
-        return String.format("JobPayment{min=%d, max=%d, paymentFrequency=%s, annualMax=%d}",
-                min, max, paymentFrequency.name(), annualMax);
+        return String.format("JobPayment{min=%d, max=%d, paymentFrequency=%s}",
+                min, max, paymentFrequency.name());
     }
 
     /**

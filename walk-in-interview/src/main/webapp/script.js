@@ -168,7 +168,7 @@ function renderJobFiltersSubmit() {
   filtersSubmit.setAttribute('value', STRINGS['filters-submit']);
 
   filtersSubmit.addEventListener('click', (_) => {
-    renderJobListings();
+    loadAndDisplayJobListings();
   });
 }
 
