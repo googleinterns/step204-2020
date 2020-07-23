@@ -211,7 +211,10 @@ function renderRequirementsList(requirements) {
     checkbox.setAttribute('name', 'requirement');
 
     // If this requirement is one of the criteria for this job box, tick it
-    checkbox.setAttribute('checked', requirements.get(key));
+    const selected = requirements[key];
+    if (selected) {
+      checkbox.setAttribute('checked', requirements[key]);
+    }
 
     // text label
     const label = requirementElement.children[1];
