@@ -19,8 +19,20 @@ public final class JobPayment {
         this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax= */ 0);
     }
 
-    public JobPayment(int min, int max, PaymentFrequency paymentFrequency, long annualMax) {
-        validateParameter(min, max, paymentFrequency, annualMax);
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency, long annualMax) throws IllegalArgumentException {
+        if (min < 0) {
+            throw new IllegalArgumentException("\"min\" should not be negative");
+        }
+
+        if (max < min) {
+            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
+        }
+
+        long expectedAnnualMax = findExpectedAnnualMax(max, paymentFrequency);
+
+        if (annualMax != expectedAnnualMax) {
+            throw new IllegalArgumentException("annualMax was : " + annualMax + ", but should be: " + expectedAnnualMax);
+        }
 
         this.min = min;
         this.max = max;
@@ -88,36 +100,19 @@ public final class JobPayment {
                 min, max, paymentFrequency.name(), annualMax);
     }
 
-    private static void validateParameter(float min, float max, PaymentFrequency paymentFrequency, long annualMax)
-        throws IllegalArgumentException {
-        if (min < 0) {
-            throw new IllegalArgumentException("\"min\" should not be negative");
-        }
-
-        if (max < min) {
-            throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
-        }
-
-        long expectedAnnualMax = max;
-
+    /**
+     * Calculates the annual max based on max pay and pay freuquency.
+     */
+    private static long findExpectedAnnualMax(int max, PaymentFrequency paymentFrequency) {
         switch(paymentFrequency) {
             case HOURLY:
-                expectedAnnualMax = max * HOURS_PER_YEAR;
-                break;
+                return max * HOURS_PER_YEAR;
             case WEEKLY:
-                expectedAnnualMax = max * WEEKS_PER_YEAR;
-                break;
+                return max * WEEKS_PER_YEAR;
             case MONTHLY:
-                expectedAnnualMax = max * MONTHS_PER_YEAR;
-                break;
+                return max * MONTHS_PER_YEAR;
             case YEARLY:
-                expectedAnnualMax = max;
-                break;
+                return max;
         }
-
-        if (annualMax != expectedAnnualMax) {
-            throw new IllegalArgumentException("annualMax was : " + annualMax + ", but should be: " + expectedAnnualMax);
-        }
-
     }
 }

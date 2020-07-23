@@ -178,7 +178,7 @@ public final class JobsDatabase {
             query.get(),
             querySnapshot -> {
                 if (querySnapshot == null) {
-                    return new JobPage(ImmutableList.of(), 0, Range.between(0, 0));
+                    return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
                 }
 
                 List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();

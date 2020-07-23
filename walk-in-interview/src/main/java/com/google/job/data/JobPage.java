@@ -18,8 +18,23 @@ public final class JobPage {
                 Range.between(/* inclusive= */ 0, /* inclusive= */ 0));
     }
 
-    public JobPage(List<Job> jobList, long totalCount, Range<Integer> range) {
-        validateParameters(jobList, totalCount, range);
+    public JobPage(List<Job> jobList, long totalCount, Range<Integer> range) throws IllegalArgumentException {
+        if (totalCount < 0 || totalCount < jobList.size()) {
+            throw new IllegalArgumentException("totalCount should not be negative or less than jobList size");
+        }
+
+        if (range.getMinimum() < 0 || range.getMaximum() > totalCount ||
+                range.getMaximum() < range.getMinimum()) {
+            throw new IllegalArgumentException("range should not have invalid max/min values");
+        }
+
+        if (jobList.size() != 0 && (range.getMaximum() - range.getMinimum() + 1) != jobList.size()) {
+            throw new IllegalArgumentException("range should reflect jobList size");
+        }
+
+        if (jobList.size() == 0 && (range.getMaximum() != 0 || range.getMinimum() != 0)) {
+            throw new IllegalArgumentException("range should be zero when jobList size is 0");
+        }
 
         this.jobList = jobList;
         this.totalCount = totalCount;
@@ -88,29 +103,5 @@ public final class JobPage {
     public String toString() {
         return String.format("JobPage{jobList=%s, totalCount=%d, range=%s}",
                 jobList, totalCount, range);
-    }
-
-    private static void validateParameters(List<Job> jobList, long totalCount, Range<Integer> range)
-            throws IllegalArgumentException {
-        if (jobList.size() < 0) {
-            throw new IllegalArgumentException("jobList should not have negative size");
-        }
-
-        if (totalCount < 0 || totalCount < jobList.size()) {
-            throw new IllegalArgumentException("totalCount should not be negative or less than jobList size");
-        }
-
-        if (range.getMinimum() < 0 || range.getMaximum() > totalCount ||
-                range.getMaximum() < range.getMinimum()) {
-            throw new IllegalArgumentException("range should not have invalid max/min values");
-        }
-
-        if (jobList.size() != 0 && (range.getMaximum() - range.getMinimum() + 1) != jobList.size()) {
-            throw new IllegalArgumentException("range should reflect jobList size");
-        }
-
-        if (jobList.size() == 0 && (range.getMaximum() != 0 || range.getMinimum() != 0)) {
-            throw new IllegalArgumentException("range should be zero when jobList size is 0");
-        }
     }
 }
