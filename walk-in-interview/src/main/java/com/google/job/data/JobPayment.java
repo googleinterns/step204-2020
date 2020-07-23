@@ -114,5 +114,7 @@ public final class JobPayment {
             case YEARLY:
                 return max;
         }
+        
+        throw new IllegalArgumentException("invalid paymentFrequency: " + paymentFrequency);
     }
 }

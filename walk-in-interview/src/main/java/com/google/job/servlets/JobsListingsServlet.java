@@ -91,7 +91,7 @@ public final class JobsListingsServlet extends HttpServlet {
                         .setMaxLimit(maxLimit)
                         .setRegion(region)
                         .setSortBy(sortBy)
-                        .setOrder(order);;
+                        .setOrder(order);
     }
 
     /**
