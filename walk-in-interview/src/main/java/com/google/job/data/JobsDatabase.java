@@ -10,6 +10,7 @@ import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.concurrent.Future;
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
     private static final String JOB_STATUS_FIELD = "jobStatus";
+    private static final String JOB_REQUIREMENTS_FIELD = "requirements";
 
     /**
      * Adds a newly created job post.
@@ -138,10 +140,24 @@ public final class JobsDatabase {
 
     /** Returns future of all ACTIVE and eligible job posts in database. */
     public Future<Collection<Job>> fetchAllEligibleJobs(List<String> skills) throws IOException {
+        // Gets all requirements with localized name
+        List<String> requirementsList = Requirement.getAllLocalizedNames("en");
+
+        // Gets a list of requirements which the applicant does not have
+        List<String> negateSkills = new ArrayList<>(requirementsList);
+        negateSkills.removeAll(skills);
 
         final Query activeJobsQuery = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION)
                 .whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE);
+
+        // Eligible post: post whose requirements do not contain (field is false)
+        // the skills that applicant does not have
+        Query eligiblePostQuery = activeJobsQuery;
+        for (String negateSkill: negateSkills) {
+            String fieldPath = String.format("%s.%s", JOB_REQUIREMENTS_FIELD, negateSkill);
+            eligiblePostQuery.whereEqualTo(fieldPath, false);
+        }
 
         ApiFuture<QuerySnapshot> querySnapshotFuture = activeJobsQuery.get();
 
@@ -150,12 +166,7 @@ public final class JobsDatabase {
 
             for (DocumentSnapshot document : documents) {
                 Job job = document.toObject(Job.class);
-                List<String> requirements = job.getRequirements();
-
-                // Eligible job: all job requirements are contained in the applicant skills.
-                if (skills.containsAll(requirements)) {
-                    jobs.add(job);
-                }
+                jobs.add(job);
             }
 
             return jobs.build();

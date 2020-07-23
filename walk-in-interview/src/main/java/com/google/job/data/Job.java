@@ -1,9 +1,12 @@
 package com.google.job.data;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** Class for a job post. */
 public final class Job {
@@ -14,7 +17,7 @@ public final class Job {
     private final Location jobLocation;
     private final String jobDescription;
     private final JobPayment jobPay;
-    private final List<String> requirements;
+    private final Map<String, Boolean> requirements;
     private final long postExpiryTimestamp;
     private final JobDuration jobDuration;
 
@@ -40,7 +43,7 @@ public final class Job {
         this.jobLocation = new Location();
         this.jobDescription = "";
         this.jobPay = new JobPayment();
-        this.requirements = ImmutableList.of();
+        this.requirements = ImmutableMap.of();
         this.postExpiryTimestamp = 0;
         this.jobDuration = JobDuration.OTHER;
     }
@@ -70,7 +73,7 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
-        private List<String> requirements = ImmutableList.of();
+        private Map<String, Boolean> requirements = ImmutableMap.of();
         private JobDuration jobDuration = JobDuration.OTHER;
 
         // TODO(issue/25): merge the account stuff into job post.
@@ -130,7 +133,16 @@ public final class Job {
         }
 
         public JobBuilder setRequirements(List<String> requirements) {
-            this.requirements = ImmutableList.copyOf(requirements);
+            // Changes requirements into set to make "contains" operation O(1)
+            Set<String> requirementsSet = new HashSet<>(requirements);
+
+            // Gets all requirements with localized name
+            List<String> requirementsList = Requirement.getAllLocalizedNames("en");
+
+            for (String requirement: requirementsList) {
+                this.requirements.put(requirement, requirementsSet.contains(requirement));
+            }
+
             return this;
         }
 
@@ -204,7 +216,7 @@ public final class Job {
     }
 
     /** Returns a list of requirements of the job post. */
-    public List<String> getRequirements() {
+    public Map<String, Boolean> getRequirements() {
         return requirements;
     }
 

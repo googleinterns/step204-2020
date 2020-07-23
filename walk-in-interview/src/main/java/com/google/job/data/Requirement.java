@@ -3,6 +3,7 @@ package com.google.job.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,5 +56,14 @@ public enum Requirement {
         }
 
         return localizedNames.build();
+    }
+
+    /**
+     * Returns the localized names of the all requirements.
+     *
+     * @throw IllegalArgumentException If the language is not supported.
+     */
+    public static List<String> getAllLocalizedNames(String language) throws IllegalArgumentException {
+        return getLocalizedNames(Arrays.asList(Requirement.values()), language);
     }
 }
