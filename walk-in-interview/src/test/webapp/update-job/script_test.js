@@ -1,6 +1,6 @@
 /**
  * This file is where we will write tests for the
- * funcions in new-job/script.js using mocha and selenium.
+ * functions in update-job/script.js using mocha and selenium.
  * Running `npm test` in the command line will run all
  * the mocha tests in the walk-in-interview directory.
  * Also note that the Dev App Server should be running
@@ -26,8 +26,8 @@ const REQUIREMENTS_LIST = {
  * Note that if `https` is used instead in the url below then
  * we get the following error: ERR_SSL_PROTOCOL_ERROR
  */
-const JOBPAGE_URL = 'http://localhost:3000/new-job/index.html';
-const HOMEPAGE_URL = 'http://localhost:3000/index.html';
+const JOBPAGE_URL = 'http://localhost:3000/update-job/index.html';
+const HOMEPAGE_URL = 'http://localhost:3000/job-details/index.html';
 
 const assert = require('chai').assert;
 const webdriver = require('selenium-webdriver');
@@ -40,6 +40,7 @@ chrome.setDefaultService(service);
 const By = webdriver.By;
 const until = webdriver.until;
 const options = new chrome.Options();
+
 /**
  * Note that these tests are headless.
  * To see the test browser pop up, remove this line.
@@ -54,7 +55,7 @@ const TIMEOUT_MILLISECONDS = 50000;
 let driver;
 
 /** Note that this.timeout() will not work with arrow functions. */
-describe('New Job Tests', function() {
+describe('Update Job Tests', function() {
   this.timeout(TIMEOUT_MILLISECONDS);
 
   before(() => {
@@ -74,7 +75,7 @@ describe('New Job Tests', function() {
         return driver.findElement(By.id('page-title'))
             .getText()
             .then((title) => {
-              assert.equal(title, 'New Job Post');
+              assert.equal(title, 'Update Job Post');
             });
       });
     });
@@ -99,15 +100,15 @@ describe('New Job Tests', function() {
 
     describe('Submit Button', () => {
       it('checks the value attribute', () => {
-        return driver.findElement(By.id('submit'))
+        return driver.findElement(By.id('update'))
             .getAttribute('value')
             .then((value) => {
-              assert.equal(value, 'Create');
+              assert.equal(value, 'Update');
             });
       });
 
       it('checks the type attribute', () => {
-        return driver.findElement(By.id('submit'))
+        return driver.findElement(By.id('update'))
             .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'submit');
@@ -126,42 +127,42 @@ describe('New Job Tests', function() {
     });
 
     describe('Job Title', () => {
-      it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id('title'))
-            .getAttribute('placeholder')
-            .then((value) => {
-              assert.equal(value, 'Job Title');
-            });
-      });
-
       it('checks the type attribute', () => {
         return driver.findElement(By.id('title'))
             .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'text');
+            });
+      });
+
+      it('checks the default value text', () => {
+        return driver.findElement(By.id('title'))
+            .getAttribute('value')
+            .then((value) => {
+              assert.equal(value, 'Software Engineer');
             });
       });
     });
 
     describe('Job Description', () => {
-      it('checks the placeholder attribute', () => {
+      it('checks the type attribute', () => {
         return driver.findElement(By.id('description'))
-            .getAttribute('placeholder')
+            .getAttribute('type')
             .then((value) => {
-              assert.equal(value, 'Job Description');
+              assert.equal(value, 'textarea');
+            });
+      });
+
+      it('checks the default value text', () => {
+        return driver.findElement(By.id('description'))
+            .getAttribute('value')
+            .then((value) => {
+              assert.equal(value, 'Fight to defeat hair line receding');
             });
       });
     });
 
     describe('Job Address', () => {
-      it('checks the placeholder attribute', () => {
-        return driver.findElement(By.id('address'))
-            .getAttribute('placeholder')
-            .then((value) => {
-              assert.equal(value, 'Job Address');
-            });
-      });
-
       it('checks the type attribute', () => {
         return driver.findElement(By.id('address'))
             .getAttribute('type')
@@ -170,20 +171,28 @@ describe('New Job Tests', function() {
             });
       });
 
-      describe('Postal Code', () => {
-        it('checks the placeholder attribute', () => {
-          return driver.findElement(By.id('postal-code'))
-              .getAttribute('placeholder')
-              .then((value) => {
-                assert.equal(value, 'Postal Code');
-              });
-        });
+      it('checks the default value text', () => {
+        return driver.findElement(By.id('address'))
+            .getAttribute('value')
+            .then((value) => {
+              assert.equal(value, 'Maple Tree');
+            });
+      });
 
+      describe('Postal Code', () => {
         it('checks the type attribute', () => {
           return driver.findElement(By.id('postal-code'))
               .getAttribute('type')
               .then((value) => {
                 assert.equal(value, 'text');
+              });
+        });
+
+        it('checks the default value text', () => {
+          return driver.findElement(By.id('postal-code'))
+              .getAttribute('value')
+              .then((value) => {
+                assert.equal(value, '123');
               });
         });
       });
@@ -212,6 +221,28 @@ describe('New Job Tests', function() {
               }
             });
       });
+
+      it('checks the default option properly ticked', () => {
+        return driver.findElement(By.id('requirements-list'))
+            .getText()
+            .then((text) => {
+              for (const requirement in text) {
+                if (requirement === 'O Level') {
+                  requirement.getAttribute('checked')
+                  .then((checked) => {
+                    assert.isTrue(checked);
+                  })
+                }
+
+                if (requirement === 'English') {
+                  requirement.getAttribute('checked')
+                  .then((checked) => {
+                    assert.isTrue(checked);
+                  })
+                }
+              }
+            });
+      });
     });
 
     describe('Job Pay', () => {
@@ -233,6 +264,7 @@ describe('New Job Tests', function() {
                 'MONTHLY': 'Monthly',
                 'YEARLY': 'Yearly',
               };
+
               for (const key in options) {
                 if (options.hasOwnProperty(key)) {
                   if (!text.includes(options[key])) {
@@ -243,11 +275,11 @@ describe('New Job Tests', function() {
             });
       });
 
-      it('min: checks the placeholder attribute', () => {
-        return driver.findElement(By.id('pay-min'))
-            .getAttribute('placeholder')
+      it('checks if default option properly selected', () => {
+        return driver.findElement(By.id('pay-frequency'))
+            .getAttribute('value')
             .then((value) => {
-              assert.equal(value, 'min (sgd)');
+              assert.equal(value, 'MONTHLY');
             });
       });
 
@@ -259,11 +291,11 @@ describe('New Job Tests', function() {
             });
       });
 
-      it('max: checks the placeholder attribute', () => {
-        return driver.findElement(By.id('pay-max'))
-            .getAttribute('placeholder')
+      it('min: checks the default value text', () => {
+        return driver.findElement(By.id('pay-min'))
+            .getAttribute('value')
             .then((value) => {
-              assert.equal(value, 'max (sgd)');
+              assert.equal(value, '1');
             });
       });
 
@@ -272,6 +304,14 @@ describe('New Job Tests', function() {
             .getAttribute('type')
             .then((value) => {
               assert.equal(value, 'number');
+            });
+      });
+
+      it('max: checks the default value text', () => {
+        return driver.findElement(By.id('pay-max'))
+            .getAttribute('value')
+            .then((value) => {
+              assert.equal(value, '4');
             });
       });
     });
@@ -297,6 +337,7 @@ describe('New Job Tests', function() {
                 'ONE_YEAR': '1 Year',
                 'OTHER': 'Other',
               };
+
               for (const key in options) {
                 if (options.hasOwnProperty(key)) {
                   if (!text.includes(options[key])) {
@@ -304,6 +345,14 @@ describe('New Job Tests', function() {
                   }
                 }
               }
+            });
+      });
+
+      it('checks if default option properly selected', () => {
+        return driver.findElement(By.id('duration'))
+            .getAttribute('value')
+            .then((value) => {
+              assert.equal(value, 'ONE_WEEK');
             });
       });
     });
@@ -346,23 +395,28 @@ describe('New Job Tests', function() {
               assert.equal(value, expected);
             });
       });
+
+      it('checks if default option properly selected', () => {
+        return driver.findElement(By.id('expiry'))
+            .getAttribute('value')
+            .then((value) => {
+              assert.equal(value, '2020-10-05');
+            });
+      });
     });
   });
 
   describe('Page Functionality Tests', () => {
+    // TODO(issue/63): add more tests for invalid input.
     beforeEach(() => {
       /**
        * For the functionality tests, since we are testing the
        * cancel/submit buttons, the page url may have changed
-       * in the test. This will check if that is the case, and
-       * reset it to the job page for the rest of the tests.
+       * in the test.
+       * Always resets the current page to the job page 
+       * for the rest of the tests.
        */
-      return driver.getCurrentUrl()
-          .then((currUrl) => {
-            if (currUrl !== JOBPAGE_URL) {
-              return driver.get(JOBPAGE_URL);
-            }
-          });
+        return driver.get(JOBPAGE_URL);
     });
 
     describe('Cancel Button', () => {
@@ -387,43 +441,21 @@ describe('New Job Tests', function() {
       const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
         `-${date.getFullYear()}`;
 
-      beforeEach('add all valid inputs', () => {
-        /**
-         * This will add all valid values to the job creation fields.
-         * The fields that need to be tested can be cleared in the
-         * individual test accordingly.
-         */
-        return driver.findElement(By.id('title')).sendKeys('Waiter')
-            .then(() => driver.findElement(By.id('description'))
-                .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('address'))
-                .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('postal-code'))
-                .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('pay-frequency'))
-                .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('pay-min'))
-                .sendKeys('5'))
-            .then(() => driver.findElement(By.id('pay-max'))
-                .sendKeys('6'))
-            .then(() => driver.findElement(By.id('duration'))
-                .sendKeys('OTHER'))
-            .then(() => driver.findElement(By.id('expiry'))
-                .sendKeys(today));
-      });
+      // Since all fields should be pre-filled with existing job post,
+      // there is no need to add valid inputs to all fields again.
 
       it('no job title', () => {
         /**
          * The job title must be cleared here to test it.
          */
         return driver.findElement(By.id('title')).clear()
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Title'));
       });
 
-      it('should not be false postive', () => {
+      it('should not be false positive', () => {
         /**
          * The job title must be cleared here to test it.
          * This test is making sure that the test is actually working
@@ -431,7 +463,7 @@ describe('New Job Tests', function() {
          * Note the use of assert.notEqual().
          */
         return driver.findElement(By.id('title')).clear()
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.notEqual(text,
                 'There is an error in the following field: '));
@@ -454,64 +486,31 @@ describe('New Job Tests', function() {
             .then(() => driver.findElement(By.id('pay-max')).clear())
             .then(() => driver.findElement(By.id('pay-min')).sendKeys('7'))
             .then(() => driver.findElement(By.id('pay-max')).sendKeys('6'))
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Pay'));
-      });
-
-      it('job duration not chosen', () => {
-        /**
-         * Note that the .clear() function does not work on
-         * non-input/textarea elements. Also .sendKeys() cannot
-         * be used twice on the same element.
-         */
-        driver.get(JOBPAGE_URL);
-
-        /**
-         * Job duration not set below since we are testing it.
-         */
-        return driver.findElement(By.id('title')).sendKeys('Waiter')
-            .then(() => driver.findElement(By.id('description'))
-                .sendKeys('wait on tables'))
-            .then(() => driver.findElement(By.id('address'))
-                .sendKeys('290 Orchard Rd'))
-            .then(() => driver.findElement(By.id('postal-code'))
-                .sendKeys('238859'))
-            .then(() => driver.findElement(By.id('pay-frequency'))
-                .sendKeys('HOURLY'))
-            .then(() => driver.findElement(By.id('pay-min'))
-                .sendKeys('5'))
-            .then(() => driver.findElement(By.id('pay-max'))
-                .sendKeys('6'))
-            .then(() => driver.findElement(By.id('expiry'))
-                .sendKeys(today))
-            .then(() => clickSubmit(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.equal(text,
-                'There is an error in the following field: Job Duration'));
-      });
+        });
 
       it('expiry date not chosen', () => {
-        /**
-         * The job expiry must be cleared here to test it.
-         */
         return driver.findElement(By.id('expiry')).clear()
-            .then(() => clickSubmit(driver))
+            .then(() => clickUpdate(driver))
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Expiry'));
       });
 
       /**
-       * If all the fields are valid, then a POST request should be made and the
-       * user should be returned to the homepage.
+       * If all the fields(including jobId) are valid, then a POST request should be made and the
+       * user should be returned to the homepage. 
+       * However, since so far cloud firestore cannot be set up locally
+       * and only a dummy jobId is passed, it can only catch an error.
        */
-      it('should return to homepage', () => {
-        return clickSubmit(driver)
-            .then(() => driver.wait(until.urlIs(HOMEPAGE_URL)))
-            .then(() => driver.getCurrentUrl())
-            .then((currUrl) => assert.equal(currUrl, HOMEPAGE_URL));
+      it('not update successfully', () => {
+        return clickUpdate(driver)
+            .then(() => driver.findElement(By.id('error-message')).getText())
+            .then((text) => assert.equal(text,
+                'There was an error while storing the job post. Please try again'));
       });
 
       /**
@@ -523,13 +522,13 @@ describe('New Job Tests', function() {
 });
 
 /**
- * This function just to submit the new job with the
+ * This function just to submit the updated job with the
  * filled out fields.
  * @param {webdriver} driver the current driver being tested.
  * @return {webdriver} the altered driver.
  */
-function clickSubmit(driver) {
-  return driver.findElement(By.id('submit')).click();
+function clickUpdate(driver) {
+  return driver.findElement(By.id('update')).click();
 };
 
 /**

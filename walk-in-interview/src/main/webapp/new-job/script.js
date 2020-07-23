@@ -12,10 +12,12 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
-import {getRequirementsList, setErrorMessage} from '../common-functions.js';
+import {getRequirementsList, setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
-const STRINGS = AppStrings['new-job'];
+const STRINGS = AppStrings['job'];
+const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
 const HOURS_PER_YEAR = 8760;
 /* Note that is an approximate value */
@@ -39,10 +41,10 @@ function renderJobPageElements() {
   cancelButton.setAttribute('type', 'reset');
 
   const jobPageTitle = document.getElementById('page-title');
-  jobPageTitle.innerText = STRINGS['page-title'];
+  jobPageTitle.innerText = NEW_JOB_STRINGS['page-title'];
 
   const submitButton = document.getElementById('submit');
-  submitButton.setAttribute('value', STRINGS['submit']);
+  submitButton.setAttribute('value', NEW_JOB_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
 
   const jobTitle = document.getElementById('title');
@@ -51,8 +53,7 @@ function renderJobPageElements() {
   jobTitle.setAttribute('required', true);
 
   const jobDescription = document.getElementById('description');
-  jobDescription.setAttribute('placeholder',
-      STRINGS['description']);
+  jobDescription.setAttribute('placeholder', STRINGS['description']);
   jobDescription.setAttribute('required', true);
 
   const jobAddress = document.getElementById('address');
@@ -156,24 +157,6 @@ function renderJobDurationOptions() {
   jobDurationSelect.setAttribute('required', true);
 
   renderSelectOptions(jobDurationSelect, STRINGS['duration']);
-}
-
-/**
- * Add the keys and values from the options map to the select element.
- * @param {Element} select The select element.
- * @param {Map} options The map of options to be added.
- */
-function renderSelectOptions(select, options) {
-  select.options.length = 0;
-  select.options[0] = new Option('Select', '');
-  select.options[0].setAttribute('disabled', true);
-
-  for (const key in options) {
-    if (options.hasOwnProperty(key)) {
-      select.options[select.options.length] =
-        new Option(options[key], key);
-    }
-  }
 }
 
 /** Dynamically add the limits for choosing the new job post expiry. */
@@ -410,7 +393,7 @@ submitButton.addEventListener('click', (_) => {
   }
 
   const jobDetails = getJobDetailsFromUserInput();
-  fetch('/jobs', {
+  fetch(API['new-job'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
