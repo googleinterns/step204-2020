@@ -226,10 +226,9 @@ describe('Update Job Tests', function() {
         return driver.findElements(By.name('requirement'))
             .then((requirements) => {
               requirements.map((requirement) => {
-                requirement.getText()
-                .then((text) => {
-                  if (text === 'O Level' || text === 'English') {
-                    const id = getKeyByValue(REQUIREMENTS_LIST, text);
+                requirement.getAttribute('id')
+                .then((id) => {
+                  if (id === 'O Level' || id === 'English') {
                     driver.findElement(By.id(id))
                     .then((requirement) => {
                       requirement.getAttribute('checked')
@@ -238,7 +237,6 @@ describe('Update Job Tests', function() {
                       });
                     });
                   } else {
-                    const id = getKeyByValue(REQUIREMENTS_LIST, text);
                     driver.findElement(By.id(id))
                     .then((requirement) => {
                       requirement.getAttribute('checked')
@@ -531,13 +529,3 @@ function clickUpdate(driver) {
 function clickCancel(driver) {
   return driver.findElement(By.id('cancel')).click();
 };
-
-/**
- * Gets the corresponding key according to its value.
- * 
- * @param {*} map Target map.
- * @param {*} value Value.
- */
-function getKeyByValue(map, value) {
-  return Object.keys(map).find(key => map[key] === value);
-}

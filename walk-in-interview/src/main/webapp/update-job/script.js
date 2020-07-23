@@ -202,7 +202,6 @@ function renderRequirementsList(requirements) {
     }
 
     const requirementElement = requirementElementTemplate.cloneNode(/* includes child elements */ true);
-    requirementElement.setAttribute('id', key);
 
     // tick box
     const checkbox = requirementElement.children[0];
