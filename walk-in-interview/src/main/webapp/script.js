@@ -118,7 +118,8 @@ function renderSelectOptions(id) {
  * @param {Number} maxLimitParam The upper limit given the sorting filter.
  * @return {boolean} Indication of whether the fields are valid.
  */
-function validateFilters(sortByParam, showByParam, minLimitParam, maxLimitParam) {
+function validateFilters(sortByParam, showByParam,
+    minLimitParam, maxLimitParam) {
   if (showByParam == '' || sortByParam == '') {
     /* no need to show error message as this would not be the user's fault */
     console.error('region or sorting was empty');
@@ -247,9 +248,9 @@ function buildJobElement(job) {
 async function loadAndDisplayJobListings() {
   const sortingParam = document.getElementById('sort-by').value;
   const regionParam = document.getElementById('show-by-region').value;
-  const minLimitParam = document.getElementById('filter-min-limit')
+  let minLimitParam = document.getElementById('filter-min-limit')
       .valueAsNumber;
-  const maxLimitParam = document.getElementById('filter-max-limit')
+  let maxLimitParam = document.getElementById('filter-max-limit')
       .valueAsNumber;
 
   if (!validateFilters(sortingParam, regionParam,

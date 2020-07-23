@@ -16,10 +16,10 @@ public final class JobPayment {
 
     // For serialization
     public JobPayment() {
-        this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY, /* annualMax= */ 0);
+        this(/* min= */0, /* max= */0, PaymentFrequency.HOURLY);
     }
 
-    public JobPayment(int min, int max, PaymentFrequency paymentFrequency, long annualMax) throws IllegalArgumentException {
+    public JobPayment(int min, int max, PaymentFrequency paymentFrequency) throws IllegalArgumentException {
         if (min < 0) {
             throw new IllegalArgumentException("\"min\" should not be negative");
         }
@@ -28,16 +28,10 @@ public final class JobPayment {
             throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
         }
 
-        long expectedAnnualMax = findExpectedAnnualMax(max, paymentFrequency);
-
-        if (annualMax != expectedAnnualMax) {
-            throw new IllegalArgumentException("annualMax was : " + annualMax + ", but should be: " + expectedAnnualMax);
-        }
-
         this.min = min;
         this.max = max;
         this.paymentFrequency = paymentFrequency;
-        this.annualMax = annualMax;
+        this.annualMax = findExpectedAnnualMax(max, paymentFrequency);
     }
 
     /** Returns the lower limit of the payment, never negative. */

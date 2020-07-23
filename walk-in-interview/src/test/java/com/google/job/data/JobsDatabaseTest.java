@@ -56,7 +56,7 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Software Engineer";
         Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "Programming using java";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY, 260000);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
                 Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
         long expectedPostExpiry = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Noogler";
         Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "New employee";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY, 260000);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
                 Arrays.asList(O_LEVEL, ENGLISH), "en");
         long expectedPostExpiry = System.currentTimeMillis();
@@ -210,7 +210,7 @@ public final class JobsDatabaseTest {
         String expectedJobName = "Programmer";
         Location expectedLocation =  new Location("Maple Tree", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
-        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY, 260000);
+        JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
         long expectedPostExpiry = System.currentTimeMillis();;
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
@@ -253,29 +253,29 @@ public final class JobsDatabaseTest {
         /* fields that affect the sorting/filtering of the job page details */
         // this should be returned first (order will be descending by salary, and region will be central)
         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
+        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
 
         // this should be returned second
         Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY, 208000);
+        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
 
         // this should be returned third
         Location location3 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-        JobPayment jobPayment3 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY, 156000);
+        JobPayment jobPayment3 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY);
 
         // this should not be returned (minLimit will be set to 104001)
         Location location4 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-        JobPayment jobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, 104000);
+        JobPayment jobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY);
 
         // this should not be returned (region will be set to CENTRAL)
-        int annualMaxJob5 = 104000;
         Location location5 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
-        JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY, annualMaxJob5);
+        JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY);
+        int annualMaxJob5 = (int) jobPayment5.getAnnualMax();
 
         // this should not be returned (only active jobs should be shown)
         JobStatus jobStatusExpired = JobStatus.EXPIRED;
         Location location6 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
-        JobPayment jobPayment6 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY, 156000);
+        JobPayment jobPayment6 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY);
 
         List<Job> jobs = createTestJobs(6);
 
@@ -337,10 +337,10 @@ public final class JobsDatabaseTest {
         // Arrange
         /* fields that affect the sorting/filtering of the job page details */
         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
+        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
 
         Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY, 208000);
+        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
 
         List<Job> jobs = createTestJobs(6);
 
@@ -389,7 +389,7 @@ public final class JobsDatabaseTest {
         List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
         long postExpiry = System.currentTimeMillis();
         JobDuration jobDuration = JobDuration.ONE_MONTH;
-        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.WEEKLY, 260000);
+        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
         
         ImmutableList.Builder<Job> jobs = ImmutableList.builder();
 

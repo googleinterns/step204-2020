@@ -210,7 +210,6 @@ function getJobDetailsFromUserInput() {
       paymentFrequency: payFrequency,
       min: payMin,
       max: payMax,
-      annualMax: calculateAnnualMax(payMax, payFrequency),
     },
     requirements: requirementsList,
     postExpiryTimestamp: expiry,
@@ -238,6 +237,9 @@ function findRegion(postalCode) {
    * postal code region is 01, they would have written
    * 01xxx rather than 1xxx.
    */
+  if (postalCode.length < 2) {
+    throw new Error('postalCode length should not be less than 2');
+  }
   const digits = parseInt(postalCode.substring(0, 2));
 
   if (digits >= 1 && digits <= 45) {
@@ -259,26 +261,6 @@ function findRegion(postalCode) {
 }
 
 /**
- * This function calculates and returns the annual pay depending
- * on the maximum pay and the frequency.
- * @param {int} max the upper limit on the pay.
- * @param {String} frequency how often the employee will be paid.
- * @return {int} the annual pay.
- */
-function calculateAnnualMax(max, frequency) {
-  switch (frequency) {
-    case 'HOURLY':
-      return max * HOURS_PER_YEAR;
-    case 'WEEKLY':
-      return max * WEEKS_PER_YEAR;
-    case 'MONTHLY':
-      return max * MONTHS_PER_YEAR;
-    case 'YEARLY':
-      return max;
-  };
-}
-
-/**
  * Validates the user input
  * @return {boolean} depending on whether the input is valid or not.
  */
@@ -287,7 +269,6 @@ function validateRequiredUserInput() {
   const name = document.getElementById('title');
   const description = document.getElementById('description');
   const address = document.getElementById('address');
-  const postalCode = document.getElementById('postal-code');
   const payFrequency = document.getElementById('pay-frequency').value;
   const payMin = document.getElementById('pay-min').valueAsNumber;
   const payMax = document.getElementById('pay-max').valueAsNumber;
@@ -362,6 +343,8 @@ function validateRequiredUserInput() {
  * @return {boolean} Whether its valid.
  */
 function validatePostalCode() {
+  const postalCode = document.getElementById('postal-code');
+
   /*
    * The first two digits of the postal code must be numbers within
    * the below range because those two digits correspond to the location's
