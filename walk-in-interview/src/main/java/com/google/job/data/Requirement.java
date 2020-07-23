@@ -27,6 +27,22 @@ public enum Requirement {
         return requirementId;
     }
 
+    /** Gets the requirement stable ids given enum value. */
+    public static List<String> getRequirementIds(List<Requirement> requirements) {
+        ImmutableList.Builder<String> requirementIds = ImmutableList.builder();
+        for (Requirement requirement: requirements) {
+            String id = requirement.getRequirementId();
+            requirementIds.add(id);
+        }
+
+        return requirementIds.build();
+    }
+
+    /** Returns the requirement stable ids of the all requirements. */
+    public static List<String> getAllRequirementIds() {
+        return getRequirementIds(Arrays.asList(Requirement.values()));
+    }
+
     /**
      * Gets the localized requirement name with the specified version of language.
      *

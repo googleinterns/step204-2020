@@ -10,10 +10,7 @@ import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Future;
 
 /** Helps persist and retrieve job posts. */
@@ -139,12 +136,12 @@ public final class JobsDatabase {
     }
 
     /** Returns future of all ACTIVE and eligible job posts in database. */
-    public Future<Collection<Job>> fetchAllEligibleJobs(List<String> skills) throws IOException {
-        // Gets all requirements with localized name
-        List<String> requirementsList = Requirement.getAllLocalizedNames("en");
+    public Future<Collection<Job>> fetchAllEligibleJobs(List<Requirement> skills) throws IOException {
+        // Gets all requirements
+        List<Requirement> requirementsList = Arrays.asList(Requirement.values());
 
         // Gets a list of requirements which the applicant does not have
-        List<String> negateSkills = new ArrayList<>(requirementsList);
+        List<Requirement> negateSkills = new ArrayList<>(requirementsList);
         negateSkills.removeAll(skills);
 
         final Query activeJobsQuery = FireStoreUtils.getFireStore()
@@ -154,12 +151,12 @@ public final class JobsDatabase {
         // Eligible post: post whose requirements do not contain (field is false)
         // the skills that applicant does not have
         Query eligiblePostQuery = activeJobsQuery;
-        for (String negateSkill: negateSkills) {
+        for (Requirement negateSkill: negateSkills) {
             String fieldPath = String.format("%s.%s", JOB_REQUIREMENTS_FIELD, negateSkill);
-            eligiblePostQuery.whereEqualTo(fieldPath, false);
+            eligiblePostQuery = eligiblePostQuery.whereEqualTo(fieldPath, false);
         }
 
-        ApiFuture<QuerySnapshot> querySnapshotFuture = activeJobsQuery.get();
+        ApiFuture<QuerySnapshot> querySnapshotFuture = eligiblePostQuery.get();
 
         ApiFunction<QuerySnapshot, Collection<Job>> function = documents -> {
             ImmutableSet.Builder<Job> jobs = ImmutableSet.builder();

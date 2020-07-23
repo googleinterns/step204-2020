@@ -164,7 +164,7 @@ function getJobDetailsFromUserInput() {
   const requirementsList = [];
   requirementsCheckboxes.forEach(({checked, id}) => {
     if (checked) {
-    requirementsList.push(id);
+      requirementsList.push(id);
     }
   });
 

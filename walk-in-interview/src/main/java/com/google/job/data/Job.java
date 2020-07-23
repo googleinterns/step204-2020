@@ -3,10 +3,7 @@ package com.google.job.data;
 import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /** Class for a job post. */
 public final class Job {
@@ -17,7 +14,7 @@ public final class Job {
     private final Location jobLocation;
     private final String jobDescription;
     private final JobPayment jobPay;
-    private final Map<String, Boolean> requirements;
+    private final Map<Requirement, Boolean> requirements; // requirement enum value : true/false
     private final long postExpiryTimestamp;
     private final JobDuration jobDuration;
 
@@ -73,7 +70,7 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
-        private Map<String, Boolean> requirements = ImmutableMap.of();
+        private Map<Requirement, Boolean> requirements = ImmutableMap.of();
         private JobDuration jobDuration = JobDuration.OTHER;
 
         // TODO(issue/25): merge the account stuff into job post.
@@ -132,16 +129,20 @@ public final class Job {
             return this;
         }
 
-        public JobBuilder setRequirements(List<String> requirements) {
+        public JobBuilder setRequirements(List<Requirement> requirements) {
             // Changes requirements into set to make "contains" operation O(1)
-            Set<String> requirementsSet = new HashSet<>(requirements);
+            Set<Requirement> requirementsSet = new HashSet<>(requirements);
 
-            // Gets all requirements with localized name
-            List<String> requirementsList = Requirement.getAllLocalizedNames("en");
+            // Gets all requirements
+            List<Requirement> requirementsList = Arrays.asList(Requirement.values());
 
-            for (String requirement: requirementsList) {
-                this.requirements.put(requirement, requirementsSet.contains(requirement));
+            ImmutableMap.Builder<Requirement, Boolean> requirementsMap = ImmutableMap.builder();
+
+            for (Requirement requirement: requirementsList) {
+                requirementsMap.put(requirement, requirementsSet.contains(requirement));
             }
+
+            this.requirements = requirementsMap.build();
 
             return this;
         }
@@ -216,7 +217,7 @@ public final class Job {
     }
 
     /** Returns a list of requirements of the job post. */
-    public Map<String, Boolean> getRequirements() {
+    public Map<Requirement, Boolean> getRequirements() {
         return requirements;
     }
 
