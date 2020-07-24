@@ -104,25 +104,18 @@ AppStrings['update-job'] = {
     'There was an error while storing the job post. Please try again',
 };
 
-/*
- * Strings used in delete-job.
- */
-AppStrings['delete-job'] = {
-  'delete': 'Delete',
-  'error-message': 'There was an error while deleting ' +
-    'the job post. Please try again',
-};
-
 /**
  * Strings used in job-details.
  */
 AppStrings['job-details'] = {
   'back-to-homepage': 'Back To Homepage',
   'update': 'Update',
+  'delete': 'Delete',
   'error-message': 'There was an error while getting ' +
     'the job post. Please try again',
   'error-message':
     'There was an error while deleting the job post. Please try again',
   'update-error-message': 'Error occur when directing to update page',
-
+  'delete-error-message': 'There was an error while deleting ' +
+    'the job post. Please try again',
 };

@@ -24,7 +24,9 @@ const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
 const JOB_STRINGS = AppStrings['job'];
 
-window.addEventListener('load', renderJobDetailsPageElements());
+window.onload = () => {
+  renderJobDetailsPageElements();
+};
 
 /**
  * Add the current job (given the jobId) details to the page,
@@ -40,6 +42,9 @@ async function renderJobDetailsPageElements() {
   const updateButton = document.getElementById('update');
   updateButton.setAttribute('value', STRINGS['update']);
   updateButton.setAttribute('type', 'submit');
+
+  const deleteButtonElement = document.getElementById('delete');
+  deleteButtonElement.innerText = STRINGS['delete'];
 
   const jobId = getJobId();
 
@@ -179,4 +184,40 @@ updateButton.addEventListener('click', (_) => {
             /* includesDefault= */false);
         console.log('error', error);
       });
+});
+
+/**
+ * Tells the server to delete the this job post.
+ *
+ * @param {String} jobId Job id for this job post.
+ */
+function deleteJobPost(jobId) {
+  fetch(API['delete-job'], {method: 'PATCH', body: jobId})
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('data', data);
+        /* reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ '', /* includesDefault= */false);
+        window.location.href= HOMEPAGE_PATH;
+      })
+      .catch((error) => {
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ STRINGS['delete-error-message'],
+            /* includesDefault= */false);
+        console.log('error', error);
+      });
+}
+
+const deleteButtonElement = document.getElementById('delete');
+deleteButtonElement.addEventListener('click', () => {
+  const jobId = getJobId();
+  if (jobId === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
+        /* includesDefault= */false);
+    return false;
+  }
+
+  deleteJobPost(jobId);
 });
