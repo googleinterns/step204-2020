@@ -70,7 +70,7 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
-        private Map<String, Boolean> requirements = ImmutableMap.of(); // Maps with non-string keys are not supported
+        private Map<String, Boolean> requirements = ImmutableMap.of();
         private JobDuration jobDuration = JobDuration.OTHER;
 
         // TODO(issue/25): merge the account stuff into job post.
@@ -203,7 +203,7 @@ public final class Job {
         return jobPay;
     }
 
-    /** Returns a list of requirements (stable ids) of the job post. */
+    /** Returns a map of requirements (stable ids) of the job post. */
     public Map<String, Boolean> getRequirements() {
         return requirements;
     }

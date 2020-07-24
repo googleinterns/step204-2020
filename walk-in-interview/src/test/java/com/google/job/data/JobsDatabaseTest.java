@@ -1,7 +1,7 @@
 package com.google.job.data;
 
 import com.google.api.core.ApiFuture;
-import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
 import org.junit.*;
@@ -56,8 +56,10 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        Map<String, Boolean> expectedRequirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);
+        Map<String, Boolean> expectedRequirements = ImmutableMap.of(
+                                                        DRIVING_LICENSE_C.getRequirementId(), true,
+                                                        O_LEVEL.getRequirementId(), true,
+                                                        ENGLISH.getRequirementId(), true);
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
 
@@ -111,8 +113,10 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Google", "123456", 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        Map<String, Boolean> expectedRequirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);
+        Map<String, Boolean> expectedRequirements = ImmutableMap.of(
+                                                        DRIVING_LICENSE_C.getRequirementId(), false,
+                                                        O_LEVEL.getRequirementId(), true,
+                                                        ENGLISH.getRequirementId(), true);
         long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
@@ -211,9 +215,11 @@ public final class JobsDatabaseTest {
         Location expectedLocation =  new Location("Maple Tree", "123456", 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        Map<String, Boolean> expectedRequirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), false);
-        long expectedPostExpiry = System.currentTimeMillis();;
+        Map<String, Boolean> expectedRequirements = ImmutableMap.of(
+                                                        DRIVING_LICENSE_C.getRequirementId(), false,
+                                                        O_LEVEL.getRequirementId(), true,
+                                                        ENGLISH.getRequirementId(), false);
+        long expectedPostExpiry = System.currentTimeMillis();
         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
         Job job = Job.newBuilder()
@@ -251,25 +257,35 @@ public final class JobsDatabaseTest {
     @Test
     public void fetchAllEligibleJobs_normalInput_success() throws IOException, ExecutionException, InterruptedException {
         // Arrange.
-        Map<String, Boolean> requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), false);
-        Job job1 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        Map<String, Boolean> requirements = ImmutableMap.of(
+                                                DRIVING_LICENSE_C.getRequirementId(), false,
+                                                O_LEVEL.getRequirementId(), true,
+                                                ENGLISH.getRequirementId(), false);
+        Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);
-        Job job2 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), false, ENGLISH.getRequirementId(), true);
-        Job job3 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);;
-        Job job4 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), false, ENGLISH.getRequirementId(), true);;
-        Job job5 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
         List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
@@ -285,25 +301,35 @@ public final class JobsDatabaseTest {
     @Test
     public void fetchAllEligibleJobs_noJobMatch_noJobSelected() throws IOException, ExecutionException, InterruptedException {
         // Arrange.
-        Map<String, Boolean> requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), false);
-        Job job1 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        Map<String, Boolean> requirements = ImmutableMap.of(
+                                                DRIVING_LICENSE_C.getRequirementId(), false,
+                                                O_LEVEL.getRequirementId(), true,
+                                                ENGLISH.getRequirementId(), false);
+        Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);
-        Job job2 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), false, ENGLISH.getRequirementId(), true);
-        Job job3 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);;
-        Job job4 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), false, ENGLISH.getRequirementId(), true);;
-        Job job5 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
         List<String> skills = Requirement.getRequirementIds(Arrays.asList(DRIVING_LICENSE_C));
 
@@ -320,25 +346,35 @@ public final class JobsDatabaseTest {
     public void fetchAllEligibleJobs_hasDeletedJob_deletedJobNotSelected()
             throws IOException, ExecutionException, InterruptedException {
         // Arrange.
-        Map<String, Boolean> requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), false);
-        Job job1 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        Map<String, Boolean> requirements = ImmutableMap.of(
+                                                DRIVING_LICENSE_C.getRequirementId(), false,
+                                                O_LEVEL.getRequirementId(), true,
+                                                ENGLISH.getRequirementId(), false);
+        Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);
-        Job job2 = testJobDataCreation(JobStatus.DELETED, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job2 = requirementFileterTestJobDataCreation(JobStatus.DELETED, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), false, ENGLISH.getRequirementId(), true);
-        Job job3 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), true,
-                O_LEVEL.getRequirementId(), true, ENGLISH.getRequirementId(), true);;
-        Job job4 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        requirements = ImmutableMap.of(DRIVING_LICENSE_C.getRequirementId(), false,
-                O_LEVEL.getRequirementId(), false, ENGLISH.getRequirementId(), true);;
-        Job job5 = testJobDataCreation(JobStatus.ACTIVE, requirements);
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
         List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
 
@@ -351,13 +387,13 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJobs, actualJobs);
     }
 
-    private Job testJobDataCreation(JobStatus jobStatus, Map<String, Boolean> requirements)
+    private Job requirementFileterTestJobDataCreation(JobStatus jobStatus, Map<String, Boolean> requirements)
             throws ExecutionException, InterruptedException {
         String jobName = "Programmer";
         Location location =  new Location("Maple Tree", "123456", 0, 0);
         String jobDescription = "Fighting to defeat hair line recede";
         JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        long postExpiry = System.currentTimeMillis();;
+        long postExpiry = System.currentTimeMillis();
         JobDuration jobDuration = JobDuration.ONE_MONTH;
 
         Job job = Job.newBuilder()

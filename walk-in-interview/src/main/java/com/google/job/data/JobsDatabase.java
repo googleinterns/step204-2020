@@ -141,8 +141,8 @@ public final class JobsDatabase {
         List<String> requirementsList = Requirement.getAllRequirementIds();
 
         // Gets a list of requirements which the applicant does not have
-        List<String> negateSkills = new ArrayList<>(requirementsList);
-        negateSkills.removeAll(skills);
+        List<String> excludedSkills = new ArrayList<>(requirementsList);
+        excludedSkills.removeAll(skills);
 
         final Query activeJobsQuery = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION)
@@ -151,7 +151,7 @@ public final class JobsDatabase {
         // Eligible post: post whose requirements do not contain (field is false)
         // the skills that applicant does not have
         Query eligiblePostQuery = activeJobsQuery;
-        for (String negateSkill: negateSkills) {
+        for (String negateSkill: excludedSkills) {
             String fieldPath = String.format("%s.%s", JOB_REQUIREMENTS_FIELD, negateSkill);
             eligiblePostQuery = eligiblePostQuery.whereEqualTo(fieldPath, false);
         }
