@@ -13,8 +13,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
-import {JOB_ID_PARAM, setCookie, setErrorMessage,
-  getRequirementsList, getCookie} from '../common-functions.js';
+import {JOB_ID_PARAM, setErrorMessage,
+  getRequirementsList} from '../common-functions.js';
 
 
 const UPDATE_JOB_PATH = '../update-job/index.html';
@@ -39,13 +39,6 @@ async function renderJobDetailsPageElements() {
     window.location.href= HOMEPAGE_PATH;
   });
 
-  const updateButton = document.getElementById('update');
-  updateButton.setAttribute('value', STRINGS['update']);
-  updateButton.setAttribute('type', 'submit');
-
-  const deleteButtonElement = document.getElementById('delete');
-  deleteButtonElement.innerText = STRINGS['delete'];
-
   const jobId = getJobId();
 
   if (jobId === '') {
@@ -53,6 +46,22 @@ async function renderJobDetailsPageElements() {
         /* includesDefaultMsg= */ false);
     throw new Error('jobId should not be empty');
   }
+
+  const updateForm = document.getElementById('update-form');
+  updateForm.method = 'GET';
+  updateForm.action = UPDATE_JOB_PATH;
+
+  const jobIdElement = document.getElementById('job-id');
+  jobIdElement.setAttribute('type', 'hidden');
+  jobIdElement.setAttribute('name', JOB_ID_PARAM);
+  jobIdElement.setAttribute('value', jobId);
+
+  const updateButton = document.getElementById('update');
+  updateButton.setAttribute('value', STRINGS['update']);
+  updateButton.setAttribute('type', 'submit');
+
+  const deleteButtonElement = document.getElementById('delete');
+  deleteButtonElement.innerText = STRINGS['delete'];
 
   const job = await getJobDetails(jobId)
       .catch((error) => {
@@ -160,37 +169,37 @@ function getJobId() {
   return jobId;
 }
 
-const updateButton = document.getElementById('update');
-updateButton.addEventListener('click', (_) => {
-  const jobId = getJobId();
+// const updateButton = document.getElementById('update');
+// updateButton.addEventListener('click', (_) => {
+//   const jobId = getJobId();
 
-  if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
-        /* includesDefault= */false);
-    return;
-  }
+//   if (jobId === '') {
+//     setErrorMessage(/* errorMessageElementId= */'error-message',
+//         /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
+//         /* includesDefault= */false);
+//     return;
+//   }
 
-  // setCookie(JOB_ID_PARAM, jobId);
+//   // setCookie(JOB_ID_PARAM, jobId);
 
-  fetch(`${UPDATE_JOB_PATH}?jobId=${jobId}`, {
-    method: 'GET',
-    headers: {'Content-Type': 'application/json'},
-    credentials: 'include',
-  })
-      .then(() => {
-      /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ '', /* includesDefault= */false);
-        window.location.href= UPDATE_JOB_PATH;
-      })
-      .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ STRINGS['update-error-message'],
-            /* includesDefault= */false);
-        console.log('error', error);
-      });
-});
+//   fetch(`${UPDATE_JOB_PATH}?jobId=${jobId}`, {
+//     method: 'GET',
+//     headers: {'Content-Type': 'application/json'},
+//     credentials: 'include',
+//   })
+//       .then(() => {
+//       /** reset the error (there might have been an error msg from earlier) */
+//         setErrorMessage(/* errorMessageElementId= */'error-message',
+//             /* msg= */ '', /* includesDefault= */false);
+//         window.location.href= UPDATE_JOB_PATH;
+//       })
+//       .catch((error) => {
+//         setErrorMessage(/* errorMessageElementId= */'error-message',
+//             /* msg= */ STRINGS['update-error-message'],
+//             /* includesDefault= */false);
+//         console.log('error', error);
+//       });
+// });
 
 /**
  * Tells the server to delete the this job post.

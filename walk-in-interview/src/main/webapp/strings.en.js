@@ -42,6 +42,7 @@ AppStrings['homepage'] = {
   'filter-max-limit': 'max (annual pay for salary)',
   'filters-submit': 'Apply Filters',
   'job-listings-title': 'Job Listings:',
+  'details': 'Show Details',
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occured while getting the job listings.',
