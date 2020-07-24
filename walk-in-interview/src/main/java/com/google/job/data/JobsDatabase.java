@@ -5,7 +5,6 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableSet;
 import com.google.cloud.firestore.*;
-import com.google.cloud.firestore.Query.Direction;
 import com.google.common.collect.ImmutableList; 
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.List;
-import java.io.IOException;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
