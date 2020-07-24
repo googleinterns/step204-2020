@@ -130,53 +130,23 @@ public final class Job {
         }
 
         public JobBuilder setRequirements(Map<String, Boolean> requirements) {
-            List<String> requirementsList = Requirement.getAllRequirementIds();
+            Map<String, Boolean> inputRequirementsMap = new HashMap<>(requirements);
+            Set<String> requirementsSet = new HashSet<>(Requirement.getAllRequirementIds());
 
-            if (requirements.size() == requirementsList.size()) {
-                this.requirements = ImmutableMap.copyOf(requirements);
-                return this;
-            } else if (requirements.size() < requirements.size()) {
-                // some requirements are not contained when sent from client
+            // Removes redundant requirement
+            inputRequirementsMap.entrySet().removeIf(entry -> !requirementsSet.contains(entry.getKey()));
 
-                Map<String, Boolean> requirementsMap = new HashMap<>(requirements);
-
-                for (String requirement: requirementsList) {
-                    if (requirementsMap.containsKey(requirement)) {
-                        continue;
-                    }
-
-                    requirementsMap.put(requirement, false);
+            // Checks if requirement missing and adds accordingly
+            for (String requirement: requirementsSet) {
+                if (inputRequirementsMap.containsKey(requirement)) {
+                    continue;
                 }
 
-                this.requirements = ImmutableMap.copyOf(requirementsMap);
-                return this;
-            } else {
-                // excessive requirements are sent from the client
-
-                Map<String, Boolean> requirementsMap = new HashMap<>(requirements);
-                Set<String> requirementsSet = new HashSet<>(requirementsList);
-
-                // Removes redundant requirement
-                for (String requirement: requirementsMap.keySet()) {
-                    if (requirementsSet.contains(requirement)) {
-                        continue;
-                    }
-
-                    requirementsMap.remove(requirement);
-                }
-
-                // Checks if requirement missing and adds accordingly
-                for (String requirement: requirementsSet) {
-                    if (requirementsMap.containsKey(requirement)) {
-                        continue;
-                    }
-
-                    requirementsMap.put(requirement, false);
-                }
-
-                this.requirements = ImmutableMap.copyOf(requirementsMap);
-                return this;
+                inputRequirementsMap.put(requirement, false);
             }
+
+            this.requirements = ImmutableMap.copyOf(inputRequirementsMap);
+            return this;
         }
 
         public JobBuilder setPostExpiry(long postExpiryTimestamp) {
