@@ -60,13 +60,6 @@ function loadAndShowJob(jobId) {
 
   // Renders the html elements.
   renderPageElements();
-
-  // Only run it for selenium test.
-  // var job = getJobForSeleniumTest();
-  // addPrefilledInfo(job);
-  // status = job.jobStatus;
-  // return;
-
   // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
   const url = `${API['get-individual-job']}?jobId=${jobId}`;
   fetch(url, {
