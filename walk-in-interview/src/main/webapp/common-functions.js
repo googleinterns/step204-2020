@@ -13,6 +13,10 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
+// coordinates for centering the map around Singapore
+const SG_LATITUDE = 1.3521;
+const SG_LONGITUDE = 103.8198;
+const SG_MAP_ZOOM = 11;
 
 /**
  * Gets the requirements list from the servlet
@@ -60,5 +64,5 @@ function renderSelectOptions(select, options) {
   }
 }
 
-export {JOB_ID_PARAM, getRequirementsList, setErrorMessage,
-  renderSelectOptions};
+export {JOB_ID_PARAM, SG_LATITUDE, SG_LONGITUDE, SG_MAP_ZOOM,
+  getRequirementsList, setErrorMessage, renderSelectOptions};

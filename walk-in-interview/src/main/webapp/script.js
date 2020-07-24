@@ -14,6 +14,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from './strings.en.js';
 import {getRequirementsList, JOB_ID_PARAM,
   setErrorMessage} from './common-functions.js';
+import {createMap, addMarker} from './maps.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
@@ -29,6 +30,8 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
+
+const map;
 
 window.onload = () => {
   renderHomepageElements();
@@ -75,25 +78,13 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  createMap();
+  map = createMap();
 
   loadAndDisplayJobListings();
 
   /* reset the error to make sure no error msg initially present */
   setErrorMessage(/* errorMessageElementId= */ 'error-message',
       /* msg= */ '', /* includesDefaultMsg= */ false);
-}
-
-/**
- * Creates a map for the homepage - later to be filled with markers
- * of the displayed job listings.
- */
-function createMap() {
-  const map = new google.maps.Map(document.getElementById('homepage-map'), {
-    center: {lat: 1.3521, lng: 103.8198},
-    zoom: 11,
-    styles: style,
-  });
 }
 
 /**
@@ -232,6 +223,8 @@ function buildJobElement(job) {
   const location = job['jobLocation'];
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
 
+  addMarker(map, job);
+  
   const jobPay = jobListing.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
