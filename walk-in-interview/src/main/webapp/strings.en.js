@@ -23,6 +23,7 @@ AppStrings['homepage'] = {
   'page-title': 'Find Walk-in Interviews',
   'new-post': 'New Post',
   'account': 'Create an Account',
+  'log-in': 'Log In',
   'sort-by-title': 'Sort By',
   'sort-by': {
     'SALARY-DESCENDING': 'Salary (high to low)',
@@ -45,6 +46,31 @@ AppStrings['homepage'] = {
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occured while getting the job listings.',
+};
+
+/**
+ * All the strings to be used in the log-in/log-in.html.
+ */
+AppStrings['log-in'] = {
+  'applicant-log-in': 'Log in as an Applicant',
+  'business-log-in': 'Log in as a Business',
+};
+
+/**
+ * All the strings to be used in the log-in/business-log-in.html.
+ */
+AppStrings['business-log-in'] = {
+  'account': 'Account (Email)',
+  'password': 'Password',
+};
+
+/**
+ * All the strings to be used in the log-in/applicant-log-in.html.
+ */
+AppStrings['applicant-log-in'] = {
+  'account': 'Account (Phone Number)',
+  'password': 'Password',
+  'otp': 'Get OTP instead',
 };
 
 /**

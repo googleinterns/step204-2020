@@ -46,6 +46,9 @@ function renderHomepageElements() {
   const accountButton = document.getElementById('account');
   accountButton.innerText = STRINGS['account'];
 
+  const loginButton = document.getElementById('log-in');
+  loginButton.innerText = STRINGS['log-in'];
+
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
