@@ -32,6 +32,6 @@ public enum JobDuration {
             }
         }
 
-        throw new IllegalArgumentException("Invalid job status id: " + id);
+        throw new IllegalArgumentException("Invalid job duration id: " + id);
     }
 }

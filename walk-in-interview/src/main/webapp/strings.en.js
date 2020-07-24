@@ -25,23 +25,26 @@ AppStrings['homepage'] = {
   'account': 'Create an Account',
   'sort-by-title': 'Sort By',
   'sort-by': {
-    'DISTANCE': 'Distance',
-    'SALARY': 'Salary',
+    'SALARY-DESCENDING': 'Salary (high to low)',
+    'SALARY-ASCENDING': 'Salary (low to high)',
   },
-  'sort-by-order': {
-    'ASCENDING': 'Ascending',
-    'DESCENDING': 'Descending',
+  'show-by-region-title': 'Show By Region',
+  'show-by-region': {
+    'ENTIRE': 'Entire Singapore',
+    'CENTRAL': 'Central Singapore',
+    'WEST': 'West Singapore',
+    'EAST': 'East Singapore',
+    'NORTH': 'North Singapore',
+    'NORTH_EAST': 'North-East Singapore',
   },
-  'sort-by-submit': 'Apply',
-  'filter-by-title': 'Filter By',
-  'filter-distance-title': 'Distance',
-  'filter-distance-min': 'min (km)',
-  'filter-distance-max': 'max (km)',
-  'filter-salary-title': 'Salary',
-  'filter-salary-min': 'min (sgd)',
-  'filter-salary-max': 'max (sgd)',
-  'filter-by-submit': 'Apply Filters',
+  'filter-limits-title': 'Add Limits (optional)',
+  'filter-min-limit': 'min (annual pay for salary)',
+  'filter-max-limit': 'max (annual pay for salary)',
+  'filters-submit': 'Apply Filters',
   'job-listings-title': 'Job Listings:',
+  'job-listings-showing': 'out of',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occured while getting the job listings.',
 };
 
 /**
@@ -54,7 +57,6 @@ AppStrings['job'] = {
   'address': 'Job Address',
   'postal-code': 'Postal Code',
   'requirements-title': 'Requirements',
-  'requirements-list': 'requirements-list',
   'pay-title': 'Job Pay',
   'pay-frequency': {
     'HOURLY': 'Hourly',
@@ -74,6 +76,8 @@ AppStrings['job'] = {
     'OTHER': 'Other',
   },
   'expiry-title': 'Job Expiry',
+  'creating-job-error-message': 'There was an error while creating ' +
+      'the job listing, please try submitting again',
 };
 
 /**
