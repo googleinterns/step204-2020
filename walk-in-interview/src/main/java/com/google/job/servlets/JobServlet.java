@@ -16,7 +16,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-/** Servlet that handles posting new job posts and updating existing job posts. */
+/**
+ * Servlet that handles posting new job posts, updating existing job posts,
+ * and getting an individual job post.
+ */
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
@@ -37,6 +40,11 @@ public final class JobServlet extends HttpServlet {
         } else {
             super.service(request, response);
         }
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // TODO(issue/60): get individual job post from jobId
     }
 
     @Override

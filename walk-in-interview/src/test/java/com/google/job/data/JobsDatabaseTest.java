@@ -3,12 +3,14 @@ package com.google.job.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.utils.FireStoreUtils;
+import com.google.common.collect.ImmutableList; 
 import org.junit.*;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.apache.commons.lang3.Range;
 
 import static com.google.job.data.Requirement.*;
 import static org.junit.Assert.*;
@@ -52,7 +54,7 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Software Engineer";
-        Location expectedLocation =  new Location("Google", "123456", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "Programming using java";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
@@ -107,7 +109,7 @@ public final class JobsDatabaseTest {
     public void setJob_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Noogler";
-        Location expectedLocation =  new Location("Google", "123456", 0, 0);
+        Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "New employee";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(
@@ -206,7 +208,7 @@ public final class JobsDatabaseTest {
         // Arrange.
         JobStatus expectedJobStatus = JobStatus.ACTIVE;
         String expectedJobName = "Programmer";
-        Location expectedLocation =  new Location("Maple Tree", "123456", 0, 0);
+        Location expectedLocation =  new Location("Maple Tree", "123456", SingaporeRegion.ENTIRE, 0, 0);
         String expectedJobDescription = "Fighting to defeat hair line recede";
         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
         List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
@@ -243,6 +245,170 @@ public final class JobsDatabaseTest {
         Job actualJob = jobOptional.get();
 
         assertEquals(job, actualJob);
+    }
+
+    @Test
+    public void fetchJobPage_normalInput_success() throws ExecutionException, InterruptedException, IOException {
+        // Arrange
+        /* fields that affect the sorting/filtering of the job page details */
+        // this should be returned first (order will be descending by salary, and region will be central)
+        Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+
+        // this should be returned second
+        Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
+
+        // this should be returned third
+        Location location3 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment3 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY);
+
+        // this should not be returned (minLimit will be set to 104001)
+        Location location4 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY);
+
+        // this should not be returned (region will be set to CENTRAL)
+        Location location5 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+        JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY);
+        int annualMaxJob5 = (int) jobPayment5.getAnnualMax();
+
+        // this should not be returned (only active jobs should be shown)
+        JobStatus jobStatusExpired = JobStatus.EXPIRED;
+        Location location6 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+        JobPayment jobPayment6 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY);
+
+        List<Job> jobs = createTestJobs(6);
+
+        Job job1 = jobs.get(0).toBuilder()
+                        .setLocation(location1)
+                        .setJobPay(jobPayment1)
+                        .build();
+
+        Job job2 = jobs.get(1).toBuilder()
+                        .setLocation(location2)
+                        .setJobPay(jobPayment2)
+                        .build();
+        
+        Job job3 = jobs.get(2).toBuilder()
+                        .setLocation(location3)
+                        .setJobPay(jobPayment3)
+                        .build();
+        
+        Job job4 = jobs.get(3).toBuilder()
+                        .setLocation(location4)
+                        .setJobPay(jobPayment4)
+                        .build();
+
+        Job job5 = jobs.get(4).toBuilder()
+                        .setLocation(location5)
+                        .setJobPay(jobPayment5)
+                        .build();
+
+        Job job6 = jobs.get(5).toBuilder()
+                        .setLocation(location6)
+                        .setJobPay(jobPayment6)
+                        .setJobStatus(jobStatusExpired)
+                        .build();
+    
+        // the jobs will be added in a random order
+        firestore.collection(TEST_JOB_COLLECTION).add(job5).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job3).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job4).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job6).get();
+
+        JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(job1, job2, job3),
+            /* totalCount= */ 3, Range.between(1, 3));
+
+        // Act
+        // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+        // maxLimit is defaulted to Integer.MAX_VALUE
+        JobQuery jobQuery = new JobQuery().setMinLimit(annualMaxJob5 + 1).setRegion(SingaporeRegion.CENTRAL);
+        
+        JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
+
+        // Assert
+        assertEquals(expectedJobPage, actualJobPage);
+    }
+
+     @Test
+    public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
+        // Arrange
+        /* fields that affect the sorting/filtering of the job page details */
+        Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+
+        Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
+
+        List<Job> jobs = createTestJobs(6);
+
+        Job job1 = jobs.get(0).toBuilder()
+                        .setLocation(location1)
+                        .setJobPay(jobPayment1)
+                        .build();
+
+        Job job2 = jobs.get(1).toBuilder()
+                        .setLocation(location2)
+                        .setJobPay(jobPayment2)
+                        .build();
+    
+        firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
+        firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
+
+        JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(),
+            /* totalCount= */ 0, Range.between(0, 0));
+
+        // Act
+        // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+        // minLimit is defaulted to 0 and maxLimit is defaulted to Integer.MAX_VALUE
+        JobQuery jobQuery = new JobQuery().setRegion(SingaporeRegion.NORTH);
+        
+        JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
+
+        // Assert
+        assertEquals(expectedJobPage, actualJobPage);
+    }
+
+    /**
+     * This will add all the default properties to the job. For particular tests, if the properties of 
+     * a job need to be changed, then we can just use the job.toBuilder() method and then reset the properties
+     * that way.
+     * @param count The number of jobs you want created.
+     * 
+     * @return The list of jobs created.
+     */
+    private static List<Job> createTestJobs(int count) {
+        // Arrange
+        /* fields that don't affect the job page details */
+        JobStatus jobStatus = JobStatus.ACTIVE;
+        String jobName = "Programmer";
+        String jobDescription = "Fighting to defeat hair line recede";
+        Location location =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+        List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+        long postExpiry = System.currentTimeMillis();
+        JobDuration jobDuration = JobDuration.ONE_MONTH;
+        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+        
+        ImmutableList.Builder<Job> jobs = ImmutableList.builder();
+
+        /* add the required number of jobs to the list */
+        for (int i = 0; i < count; i++) {
+            Job job = Job.newBuilder()
+                    .setJobStatus(jobStatus)
+                    .setJobTitle(jobName)
+                    .setJobDescription(jobDescription)
+                    .setLocation(location)
+                    .setRequirements(requirements)
+                    .setPostExpiry(postExpiry)
+                    .setJobDuration(jobDuration)
+                    .setJobPay(jobPayment)
+                    .build();
+            jobs.add(job);
+        }
+
+        return jobs.build();
     }
 
     /**
