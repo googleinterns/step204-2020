@@ -31,7 +31,7 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
 
-const map;
+let map;
 
 window.onload = () => {
   renderHomepageElements();
@@ -78,7 +78,7 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  map = createMap();
+  map = createMap('homepage-map');
 
   loadAndDisplayJobListings();
 
@@ -224,7 +224,7 @@ function buildJobElement(job) {
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
 
   addMarker(map, job);
-  
+
   const jobPay = jobListing.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +

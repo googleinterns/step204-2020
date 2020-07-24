@@ -15,6 +15,7 @@ import {AppStrings} from '../strings.en.js';
 
 import {JOB_ID_PARAM, setErrorMessage,
   getRequirementsList} from '../common-functions.js';
+import {createMap, addMarker} from '../maps.js';
 
 import {API} from '../apis.js';
 
@@ -24,6 +25,8 @@ const HOMEPAGE_PATH = '../index.html';
 const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
 const JOB_STRINGS = AppStrings['job'];
+
+let map;
 
 window.onload = () => {
   renderJobDetailsPageElements();
@@ -63,6 +66,8 @@ async function renderJobDetailsPageElements() {
   const deleteButtonElement = document.getElementById('delete');
   deleteButtonElement.innerText = STRINGS['delete'];
 
+  map = createMap('jobpage-map');
+
   const job = await getJobDetails(jobId)
       .catch((error) => {
         console.error('error fetching job post', error);
@@ -90,6 +95,8 @@ function displayJobDetails(job) {
   const jobAddress = document.getElementById('address');
   const location = job['jobLocation'];
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
+
+  addMarker(map, job);
 
   const jobDescription = document.getElementById('description');
   jobDescription.innerText = job['jobDescription'];
