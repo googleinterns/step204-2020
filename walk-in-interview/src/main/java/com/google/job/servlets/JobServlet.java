@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Servlet that handles posting new job posts, updating existing job posts,
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public final class JobServlet extends HttpServlet {
     private static final String PATCH_METHOD_TYPE = "PATCH";
     private static final long TIMEOUT_SECONDS = 5;
+    private static final String JOB_ID_FIELD = "jobId";
 
     private JobsDatabase jobsDatabase;
 
@@ -43,8 +45,23 @@ public final class JobServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // TODO(issue/60): get individual job post from jobId
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String jobId = parseJobId(request);
+
+            Optional<Job> job = fetchJobDetails(jobId);
+
+            if (!job.isPresent()) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            String json = ServletUtils.convertToJsonUsingGson(job.get());
+            response.setContentType("application/json;");
+            response.getWriter().println(json);
+        } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException | IOException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     @Override
@@ -127,5 +144,37 @@ public final class JobServlet extends HttpServlet {
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
+    }
+
+    /**
+     * Returns the optional Job object.
+     *
+     * @param jobId The job id that corresponds to the job we want to get.
+     * @return optional Job object with all the details of the job.
+     */
+    private Optional<Job> fetchJobDetails(String jobId) throws ServletException, ExecutionException, TimeoutException {
+        try {
+            return this.jobsDatabase.fetchJob(jobId)
+                    .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException | IOException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    /**
+     * Returns the job id.
+     *
+     * @param request From the GET request.
+     * @return the job id.
+     * @throws IllegalArgumentException if the job id is invalid.
+     */
+    public static String parseJobId(HttpServletRequest request) throws IllegalArgumentException {
+        String jobIdStr = ServletUtils.getStringParameter(request, JOB_ID_FIELD, /* defaultValue= */ "");
+
+        if (jobIdStr.isEmpty()) {
+            throw new IllegalArgumentException("job id param should not be empty");
+        }
+
+        return jobIdStr;
     }
 }
