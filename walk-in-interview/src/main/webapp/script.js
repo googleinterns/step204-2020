@@ -17,9 +17,8 @@ import {getRequirementsList, JOB_ID_PARAM,
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
+const JOB_DETAILS_PATH = '/job-details/index.html';
 const SALARY_PARAM = 'SALARY';
-
-const JOB_DETAILS_PATH = './job-details/index.html';
 
 /**
  * Note that this is needed because in JS we can hold bigger Integer
@@ -249,7 +248,6 @@ function buildJobElement(job) {
     if (jobId === '') {
       throw new Error('jobId should not be empty');
     }
-
     detailsForm.submit();
   });
 

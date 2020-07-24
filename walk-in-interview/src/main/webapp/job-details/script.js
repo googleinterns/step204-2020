@@ -41,7 +41,6 @@ async function renderJobDetailsPageElements() {
   });
 
   const jobId = getJobId();
-
   if (jobId === '') {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
@@ -99,7 +98,6 @@ function displayJobDetails(job) {
   jobPayTitle.innerText = `${JOB_STRINGS['pay-title']}:`;
 
   const pay = job['jobPay'];
-
   const jobPayMin = document.getElementById('pay-min');
   jobPayMin.innerText = pay['min'];
 
@@ -107,7 +105,6 @@ function displayJobDetails(job) {
   jobPayMax.innerText = pay['max'];
 
   const payFrequencyOptions = JOB_STRINGS['pay-frequency'];
-
   const jobFrequency = document.getElementById('pay-frequency');
   jobFrequency.innerText = `(${payFrequencyOptions[pay['paymentFrequency']]})`;
 
@@ -145,7 +142,7 @@ function displayJobDetails(job) {
  * @return {Object} The Job object returned from the servlet.
  */
 function getJobDetails(jobId) {
-  return fetch(`/jobs?jobId=${jobId}`)
+  return fetch(`${API['get-individual-job']}?jobId=${jobId}`)
       .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
@@ -173,7 +170,6 @@ function getJobId() {
 
 /**
  * Tells the server to delete the this job post.
- *
  * @param {String} jobId Job id for this job post.
  */
 function deleteJobPost(jobId) {
@@ -201,7 +197,7 @@ deleteButtonElement.addEventListener('click', () => {
     setErrorMessage(/* errorMessageElementId= */'error-message',
         /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
         /* includesDefault= */false);
-    return false;
+    return;
   }
 
   deleteJobPost(jobId);
