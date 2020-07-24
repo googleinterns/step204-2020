@@ -130,8 +130,53 @@ public final class Job {
         }
 
         public JobBuilder setRequirements(Map<String, Boolean> requirements) {
-            this.requirements = ImmutableMap.copyOf(requirements);
-            return this;
+            List<String> requirementsList = Requirement.getAllRequirementIds();
+
+            if (requirements.size() == requirementsList.size()) {
+                this.requirements = ImmutableMap.copyOf(requirements);
+                return this;
+            } else if (requirements.size() < requirements.size()) {
+                // some requirements are not contained when sent from client
+
+                Map<String, Boolean> requirementsMap = new HashMap<>(requirements);
+
+                for (String requirement: requirementsList) {
+                    if (requirementsMap.containsKey(requirement)) {
+                        continue;
+                    }
+
+                    requirementsMap.put(requirement, false);
+                }
+
+                this.requirements = ImmutableMap.copyOf(requirementsMap);
+                return this;
+            } else {
+                // excessive requirements are sent from the client
+
+                Map<String, Boolean> requirementsMap = new HashMap<>(requirements);
+                Set<String> requirementsSet = new HashSet<>(requirementsList);
+
+                // Removes redundant requirement
+                for (String requirement: requirementsMap.keySet()) {
+                    if (requirementsSet.contains(requirement)) {
+                        continue;
+                    }
+
+                    requirementsMap.remove(requirement);
+                }
+
+                // Checks if requirement missing and adds accordingly
+                for (String requirement: requirementsSet) {
+                    if (requirementsMap.containsKey(requirement)) {
+                        continue;
+                    }
+
+                    requirementsMap.put(requirement, false);
+                }
+
+                this.requirements = ImmutableMap.copyOf(requirementsMap);
+                return this;
+            }
         }
 
         public JobBuilder setPostExpiry(long postExpiryTimestamp) {

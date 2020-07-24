@@ -394,31 +394,96 @@ public final class JobsDatabaseTest {
         assertEquals(expectedJobs, actualJobs);
     }
 
-    private Job requirementFileterTestJobDataCreation(JobStatus jobStatus, Map<String, Boolean> requirements)
-            throws ExecutionException, InterruptedException {
-        String jobName = "Programmer";
-        Location location = new Location(
-                "Maple Tree", "123456", SingaporeRegion.CENTRAL,0, 0);
-        String jobDescription = "Fighting to defeat hair line recede";
-        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-        long postExpiry = System.currentTimeMillis();
-        JobDuration jobDuration = JobDuration.ONE_MONTH;
+    @Test
+    public void fetchAllEligibleJobs_missingRequirement_success()
+            throws IOException, ExecutionException, InterruptedException {
+        // Arrange.
+        // DRIVING_LICENSE_C is missing
+        Map<String, Boolean> requirements = ImmutableMap.of(
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), false);
+        Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        Job job = Job.newBuilder()
-                .setJobStatus(jobStatus)
-                .setJobTitle(jobName)
-                .setLocation(location)
-                .setJobDescription(jobDescription)
-                .setJobPay(jobPayment)
-                .setRequirements(requirements)
-                .setPostExpiry(postExpiry)
-                .setJobDuration(jobDuration)
-                .build();
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        // future.get() blocks on response.
-        firestore.collection(TEST_JOB_COLLECTION).add(job).get();
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
 
-        return job;
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
+
+        // Act.
+        Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+        // Assert.
+        Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job2, job5));
+        Collection<Job> actualJobs = jobsFuture.get();
+        assertEquals(expectedJobs, actualJobs);
+    }
+
+    @Test
+    public void fetchAllEligibleJobs_redundantAndMissingRequirement_success()
+            throws IOException, ExecutionException, InterruptedException {
+        // Arrange.
+        // DRIVING_LICENSE_C is missing
+        // "HEIGHT" is redundant
+        Map<String, Boolean> requirements = ImmutableMap.of(
+                "HEIGHT", true,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), false);
+        Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), true,
+                O_LEVEL.getRequirementId(), true,
+                ENGLISH.getRequirementId(), true);
+        Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        requirements = ImmutableMap.of(
+                DRIVING_LICENSE_C.getRequirementId(), false,
+                O_LEVEL.getRequirementId(), false,
+                ENGLISH.getRequirementId(), true);
+        Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+        List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
+
+        // Act.
+        Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+        // Assert.
+        Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job2, job5));
+        Collection<Job> actualJobs = jobsFuture.get();
+        assertEquals(expectedJobs, actualJobs);
     }
 
     @Test
@@ -551,6 +616,33 @@ public final class JobsDatabaseTest {
 
         // Assert
         assertEquals(expectedJobPage, actualJobPage);
+    }
+
+    private Job requirementFileterTestJobDataCreation(JobStatus jobStatus, Map<String, Boolean> requirements)
+            throws ExecutionException, InterruptedException {
+        String jobName = "Programmer";
+        Location location = new Location(
+                "Maple Tree", "123456", SingaporeRegion.CENTRAL,0, 0);
+        String jobDescription = "Fighting to defeat hair line recede";
+        JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+        long postExpiry = System.currentTimeMillis();
+        JobDuration jobDuration = JobDuration.ONE_MONTH;
+
+        Job job = Job.newBuilder()
+                .setJobStatus(jobStatus)
+                .setJobTitle(jobName)
+                .setLocation(location)
+                .setJobDescription(jobDescription)
+                .setJobPay(jobPayment)
+                .setRequirements(requirements)
+                .setPostExpiry(postExpiry)
+                .setJobDuration(jobDuration)
+                .build();
+
+        // future.get() blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job).get();
+
+        return job;
     }
 
     /**
