@@ -75,11 +75,25 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
+  createMap();
+
   loadAndDisplayJobListings();
 
   /* reset the error to make sure no error msg initially present */
   setErrorMessage(/* errorMessageElementId= */ 'error-message',
       /* msg= */ '', /* includesDefaultMsg= */ false);
+}
+
+/**
+ * Creates a map for the homepage - later to be filled with markers
+ * of the displayed job listings.
+ */
+function createMap() {
+  const map = new google.maps.Map(document.getElementById('homepage-map'), {
+    center: {lat: 1.3521, lng: 103.8198},
+    zoom: 11,
+    styles: style,
+  });
 }
 
 /**
