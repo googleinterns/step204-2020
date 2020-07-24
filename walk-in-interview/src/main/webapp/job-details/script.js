@@ -151,7 +151,13 @@ function getJobDetails(jobId) {
  * @return {String} The jobId.
  */
 function getJobId() {
-  return getCookie(JOB_ID_PARAM);
+  // return getCookie(JOB_ID_PARAM);
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  console.log('urlParams', urlParams);
+  const jobId = urlParams.get(JOB_ID_PARAM);
+  console.log('jobId', jobId);
+  return jobId;
 }
 
 const updateButton = document.getElementById('update');
@@ -165,10 +171,10 @@ updateButton.addEventListener('click', (_) => {
     return;
   }
 
-  setCookie(JOB_ID_PARAM, jobId);
+  // setCookie(JOB_ID_PARAM, jobId);
 
-  fetch('../update-job/index.html', {
-    method: 'POST',
+  fetch(`${UPDATE_JOB_PATH}?jobId=${jobId}`, {
+    method: 'GET',
     headers: {'Content-Type': 'application/json'},
     credentials: 'include',
   })

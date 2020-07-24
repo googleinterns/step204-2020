@@ -37,8 +37,13 @@ window.onload = () => {
 function getJobId() {
   // Only run it for selenium test.
   // return getJobIdForSeleniumTest();
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  console.log('urlParams', urlParams);
+  const jobId = urlParams.get(JOB_ID_PARAM);
+  console.log('jobId', jobId);
 
-  const jobId = getCookie(JOB_ID_PARAM);
+  // const jobId = getCookie(JOB_ID_PARAM);
   return jobId;
 }
 

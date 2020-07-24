@@ -257,10 +257,10 @@ function onClickJobListing(jobId) {
     throw new Error('jobId should not be empty');
   }
 
-  setCookie(JOB_ID_PARAM, jobId);
+  // setCookie(JOB_ID_PARAM, jobId);
 
-  fetch(JOB_DETAILS_PATH, {
-    method: 'POST',
+  fetch(`${JOB_DETAILS_PATH}?jobId=${jobId}`, {
+    method: 'GET',
     headers: {'Content-Type': 'application/json'},
     credentials: 'include',
   })
