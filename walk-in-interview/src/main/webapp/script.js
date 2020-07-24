@@ -76,14 +76,6 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  const detailsForm = document.getElementById('details-form');
-  detailsForm.method = 'GET';
-  detailsForm.action = JOB_DETAILS_PATH;
-
-  const detailsButton = document.getElementById('details');
-  detailsButton.setAttribute('type', 'submit');
-  detailsButton.setAttribute('value', STRINGS['details']);
-
   loadAndDisplayJobListings();
 
   /* reset the error to make sure no error msg initially present */
@@ -243,46 +235,25 @@ function buildJobElement(job) {
   requirementsList.innerText =
   `Requirements List: ${requirementsArr.join(', ')}`;
 
-  const jobIdElement = jobListing.children[4];
+  const detailsForm = jobListing.children[4];
+  detailsForm.method = 'GET';
+  detailsForm.action = JOB_DETAILS_PATH;
+
+  const jobIdElement = jobListing.children[4].children[0];
   jobIdElement.setAttribute('type', 'hidden');
   jobIdElement.setAttribute('name', JOB_ID_PARAM);
-  jobIdElement.setAttribute('value', job[JOB_ID_PARAM]);
+  const jobId = job[JOB_ID_PARAM];
+  jobIdElement.setAttribute('value', jobId);
 
-  // jobListing.addEventListener('click', (_) => {
-  //   onClickJobListing(job['jobId']);
-  // });
+  jobListing.addEventListener('click', (_) => {
+    if (jobId === '') {
+      throw new Error('jobId should not be empty');
+    }
+
+    detailsForm.submit();
+  });
 
   return jobListing;
-}
-
-/**
- * Called when the user clicks on a particular job.
- * @param {String} jobId The jobId of the job the user clicked on.
- */
-function onClickJobListing(jobId) {
-  if (jobId === '') {
-    throw new Error('jobId should not be empty');
-  }
-
-  // setCookie(JOB_ID_PARAM, jobId);
-
-  fetch(`${JOB_DETAILS_PATH}?jobId=${jobId}`, {
-    method: 'GET',
-    headers: {'Content-Type': 'application/json'},
-    credentials: 'include',
-  })
-      .then(() => {
-      /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ '', /* includesDefault= */false);
-        window.location.href= JOB_DETAILS_PATH;
-      })
-      .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ STRINGS['job-details-error-message'],
-            /* includesDefault= */false);
-        console.log('error', error);
-      });
 }
 
 /**

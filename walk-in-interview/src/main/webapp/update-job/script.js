@@ -20,31 +20,29 @@ import {JOB_ID_PARAM, getCookie, getRequirementsList,
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const COMMON_STRINGS = AppStrings['common'];
-const HOMEPAGE_PATH = '../job-details/index.html';
+const HOMEPAGE_PATH = '../index.html';
 const BAD_REQUEST_STATUS_CODE = 400;
 
 // Status of this job post, default to be ACTIVE
-var status = 'ACTIVE';
+let status = 'ACTIVE';
 
 window.onload = () => {
-  var jobId = getJobId();
-  loadAndShowJob(jobId);
+  loadAndShowJob(getJobId());
 };
 
 /**
- * Gets the jobId from cookie.
+ * Gets the jobId from the url.
+ * @return {String} The jobId.
  */
 function getJobId() {
-  // Only run it for selenium test.
-  // return getJobIdForSeleniumTest();
   const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  console.log('urlParams', urlParams);
-  const jobId = urlParams.get(JOB_ID_PARAM);
-  console.log('jobId', jobId);
 
-  // const jobId = getCookie(JOB_ID_PARAM);
-  return jobId;
+  const urlParams = new URLSearchParams(queryString);
+  if (urlParams === '') {
+    throw new Error('url params should not be empty');
+  }
+
+  return urlParams.get(JOB_ID_PARAM);
 }
 
 /**

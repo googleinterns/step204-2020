@@ -16,6 +16,7 @@ import {AppStrings} from '../strings.en.js';
 import {JOB_ID_PARAM, setErrorMessage,
   getRequirementsList} from '../common-functions.js';
 
+import {API} from '../apis.js';
 
 const UPDATE_JOB_PATH = '../update-job/index.html';
 const HOMEPAGE_PATH = '../index.html';
@@ -138,11 +139,11 @@ function displayJobDetails(job) {
 }
 
 /**
-   * Makes GET request to retrieve the individual job post from the database
-   * given the jobId.
-   * @param {String} jobId The jobId of the Job we want to get.
-   * @return {Object} The Job object returned from the servlet.
-   */
+ * Makes GET request to retrieve the individual job post from the database
+ * given the jobId.
+ * @param {String} jobId The jobId of the Job we want to get.
+ * @return {Object} The Job object returned from the servlet.
+ */
 function getJobDetails(jobId) {
   return fetch(`/jobs?jobId=${jobId}`)
       .then((response) => response.json())
@@ -160,46 +161,15 @@ function getJobDetails(jobId) {
  * @return {String} The jobId.
  */
 function getJobId() {
-  // return getCookie(JOB_ID_PARAM);
   const queryString = window.location.search;
+
   const urlParams = new URLSearchParams(queryString);
-  console.log('urlParams', urlParams);
-  const jobId = urlParams.get(JOB_ID_PARAM);
-  console.log('jobId', jobId);
-  return jobId;
+  if (urlParams === '') {
+    throw new Error('url params should not be empty');
+  }
+
+  return urlParams.get(JOB_ID_PARAM);
 }
-
-// const updateButton = document.getElementById('update');
-// updateButton.addEventListener('click', (_) => {
-//   const jobId = getJobId();
-
-//   if (jobId === '') {
-//     setErrorMessage(/* errorMessageElementId= */'error-message',
-//         /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
-//         /* includesDefault= */false);
-//     return;
-//   }
-
-//   // setCookie(JOB_ID_PARAM, jobId);
-
-//   fetch(`${UPDATE_JOB_PATH}?jobId=${jobId}`, {
-//     method: 'GET',
-//     headers: {'Content-Type': 'application/json'},
-//     credentials: 'include',
-//   })
-//       .then(() => {
-//       /** reset the error (there might have been an error msg from earlier) */
-//         setErrorMessage(/* errorMessageElementId= */'error-message',
-//             /* msg= */ '', /* includesDefault= */false);
-//         window.location.href= UPDATE_JOB_PATH;
-//       })
-//       .catch((error) => {
-//         setErrorMessage(/* errorMessageElementId= */'error-message',
-//             /* msg= */ STRINGS['update-error-message'],
-//             /* includesDefault= */false);
-//         console.log('error', error);
-//       });
-// });
 
 /**
  * Tells the server to delete the this job post.
