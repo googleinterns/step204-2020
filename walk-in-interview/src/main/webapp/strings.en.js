@@ -124,5 +124,5 @@ AppStrings['job-details'] = {
 AppStrings['applicant'] = {
   'back': 'Back to Homepage',
   'edit': 'Edit',
-  'requirements-title': 'Requirements',
+  'skills-title': 'Skills',
 };

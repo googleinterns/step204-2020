@@ -43,10 +43,10 @@ function renderPageElements(accountId) {
   const name = document.getElementById('name');
   name.innerText = accountDetails.name;
 
-  const requirementsTitle = document.getElementById('requirements-title');
-  requirementsTitle.innerText = STRINGS['requirements-title'];
+  const skillsTitle = document.getElementById('skills-title');
+  skillsTitle.innerText = STRINGS['skills-title'];
 
-  renderRequirements(accountDetails.requirements);
+  renderSkills(accountDetails.skills);
 }
 
 /**
@@ -58,7 +58,7 @@ function renderPageElements(accountId) {
 function getAccountDetails(accountId) {
   let accountDetails = {
     name: 'test',
-    requirements: [
+    skills: [
       'test1',
       'test2',
     ],
@@ -69,25 +69,25 @@ function getAccountDetails(accountId) {
   return accountDetails;
 }
 
-function renderRequirements(requirements) {
-  const requirementsListElement =
-    document.getElementById('requirements');
+function renderSkills(skills) {
+  const skillsListElement =
+    document.getElementById('skills');
 
-  // resets the list so we don't render the same requirements twice
-  requirementsListElement.innerHTML = '';
-  const requirementElementTemplate =
-    document.getElementById('requirement-element-template');
+  // resets the list so we don't render the same skills twice
+  skillsListElement.innerHTML = '';
+  const skillElementTemplate =
+    document.getElementById('skill-element-template');
   
-  for (var i = 0; i < requirements.length; i++) {
-    const requirement = requirements[i];
-    const requirementElement = requirementElementTemplate
+  for (var i = 0; i < skills.length; i++) {
+    const skill = skills[i];
+    const skillElement = skillElementTemplate
       .cloneNode( /* includes child elements */ true);
 
-    const div = requirementElement.children[0];
-    div.setAttribute('id', requirement);
-    div.innerText = requirement;
+    const div = skillElement.children[0];
+    div.setAttribute('id', skill);
+    div.innerText = skill;
 
-    requirementsListElement.appendChild(requirementElement);
+    skillsListElement.appendChild(skillElement);
   }
 }
 
