@@ -3,6 +3,7 @@ package com.google.job.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,22 @@ public enum Requirement {
     /** Returns the stable id representing the requirement. Can be stored in database. */
     public String getRequirementId() {
         return requirementId;
+    }
+
+    /** Gets the requirement stable ids given enum value. */
+    public static List<String> getRequirementIds(List<Requirement> requirements) {
+        ImmutableList.Builder<String> requirementIds = ImmutableList.builder();
+        for (Requirement requirement: requirements) {
+            String id = requirement.getRequirementId();
+            requirementIds.add(id);
+        }
+
+        return requirementIds.build();
+    }
+
+    /** Returns the requirement stable ids of the all requirements. */
+    public static List<String> getAllRequirementIds() {
+        return getRequirementIds(Arrays.asList(Requirement.values()));
     }
 
     /**
@@ -55,5 +72,14 @@ public enum Requirement {
         }
 
         return localizedNames.build();
+    }
+
+    /**
+     * Returns the localized names of the all requirements.
+     *
+     * @throw IllegalArgumentException If the language is not supported.
+     */
+    public static List<String> getAllLocalizedNames(String language) throws IllegalArgumentException {
+        return getLocalizedNames(Arrays.asList(Requirement.values()), language);
     }
 }
