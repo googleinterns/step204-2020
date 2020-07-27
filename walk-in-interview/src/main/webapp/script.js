@@ -223,8 +223,6 @@ function buildJobElement(job) {
   const location = job['jobLocation'];
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
 
-  addMarker(map, job);
-
   const jobPay = jobListing.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
@@ -262,6 +260,14 @@ function buildJobElement(job) {
     }
     detailsForm.submit();
   });
+
+  const marker = addMarker(map, job);
+  marker.addListener('click', function() {
+    new google.maps.InfoWindow({
+      content: jobListing.innerHTML,
+    }).open(map, marker);
+  });
+
 
   return jobListing;
 }
