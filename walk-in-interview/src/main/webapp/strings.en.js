@@ -117,3 +117,8 @@ AppStrings['delete-job'] = {
 AppStrings['job-details'] = {
   'update-error-message': 'Error occur when directing to update page',
 };
+
+AppStrings['applicant'] = {
+  'back': 'Back to Homepage',
+  'edit': 'Edit',
+};
