@@ -21,7 +21,7 @@ public final class JobsDatabaseTest {
     // TODO(issue/15): Add failure test case
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
-    // should delete all the documents that the tests create
+    // Should delete all the documents that the tests create.
     private static final int BATCH_SIZE = 20;
 
     static JobsDatabase jobsDatabase;
