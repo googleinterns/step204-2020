@@ -14,7 +14,6 @@ const SG_MAP_ZOOM = 11;
  * @return {google.maps.Map} The map object created.
  */
 function createMap(mapElementId) {
-  console.log('in here with this id: ', mapElementId);
   if (mapElementId === '') {
     throw new Error('map element id should not be empty');
   }
@@ -34,8 +33,6 @@ function createMap(mapElementId) {
  * @return {google.maps.Marker} The marker created.
  */
 function addMarker(map, job) {
-  console.log('in here with this job: ', job);
-  console.log('and this map', map);
   if (map === null) {
     throw new Error('map should not be null');
   }
