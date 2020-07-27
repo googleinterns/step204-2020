@@ -59,15 +59,22 @@ async function renderJobDetailsPageElements() {
   const updateButton = document.getElementById('update');
   updateButton.setAttribute('value', STRINGS['update']);
   updateButton.setAttribute('type', 'submit');
+  // in case it was disabled earlier
+  updateButton.disabled = false;
 
   const deleteButtonElement = document.getElementById('delete');
   deleteButtonElement.innerText = STRINGS['delete'];
+  // in case it was disabled earlier
+  deleteButtonElement.disabled = false;
 
   const job = await getJobDetails(jobId)
       .catch((error) => {
         console.error('error fetching job post', error);
         setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
             /* include default msg= */ false);
+        // disable the buttons if theres an error
+        updateButton.disabled = true;
+        deleteButtonElement.disabled = true;
       });
 
   displayJobDetails(job);
@@ -81,8 +88,15 @@ function displayJobDetails(job) {
   if (job === undefined || job.length === 0) {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
+    // disable the buttons if theres an error
+    document.getElementById('update').disabled = true;
+    document.getElementById('delete').disabled = true;
     return;
   }
+
+  // in case they were disabled earlier
+  document.getElementById('update').disabled = true;
+  document.getElementById('delete').disabled = true;
 
   const jobTitle = document.getElementById('job-title');
   jobTitle.innerText = job['jobTitle'];
