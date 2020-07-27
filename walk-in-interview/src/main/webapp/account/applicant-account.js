@@ -11,7 +11,6 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
-import { get } from 'selenium-webdriver/http';
 
 const HOMEPAGE_PATH = '../index.html';
 const STRINGS = AppStrings['applicant'];
@@ -24,7 +23,7 @@ window.onload = () => {
 /** Gets the ID of this account. */
 function getId() {
   // TODO
-
+  return 'xxxxx';
 }
 
 /**
@@ -44,11 +43,8 @@ function renderPageElements(accountId) {
   const name = document.getElementById('name');
   name.innerText = accountDetails.name;
 
-  const postalCode = document.getElementById('postal-code');
-  postalCode.innerText = accountDetails.postalCode;
-
-  const address = document.getElementById('address');
-  address.innerText = accountDetails.address;
+  const requirementsTitle = document.getElementById('requirements-title');
+  requirementsTitle.innerText = STRINGS['requirements-title'];
 
   renderRequirements(accountDetails.requirements);
 }
@@ -61,12 +57,11 @@ function renderPageElements(accountId) {
  */
 function getAccountDetails(accountId) {
   let accountDetails = {
-    name: "",
-    postalCode: "",
-    address: "",
-    requirements: {
-
-    },
+    name: 'test',
+    requirements: [
+      'test1',
+      'test2',
+    ],
   };
 
   // if there is no details related to such id, return empty details
@@ -75,8 +70,24 @@ function getAccountDetails(accountId) {
 }
 
 function renderRequirements(requirements) {
-  for (let requirement in requirements) {
-    
+  const requirementsListElement =
+    document.getElementById('requirements');
+
+  // resets the list so we don't render the same requirements twice
+  requirementsListElement.innerHTML = '';
+  const requirementElementTemplate =
+    document.getElementById('requirement-element-template');
+  
+  for (var i = 0; i < requirements.length; i++) {
+    const requirement = requirements[i];
+    const requirementElement = requirementElementTemplate
+      .cloneNode( /* includes child elements */ true);
+
+    const div = requirementElement.children[0];
+    div.setAttribute('id', requirement);
+    div.innerText = requirement;
+
+    requirementsListElement.appendChild(requirementElement);
   }
 }
 

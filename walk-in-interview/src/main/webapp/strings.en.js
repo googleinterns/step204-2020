@@ -102,7 +102,7 @@ AppStrings['update-job'] = {
     'There was an error while storing the job post. Please try again',
 }
 
-/*
+/**
  * Strings used in delete-job.
  */
 AppStrings['delete-job'] = {
@@ -111,14 +111,18 @@ AppStrings['delete-job'] = {
     'There was an error while deleting the job post. Please try again',
 };
 
-/*
+/**
  * Strings used in job-details.
  */
 AppStrings['job-details'] = {
   'update-error-message': 'Error occur when directing to update page',
 };
 
+/**
+ * Strings used in account/applicant-account.js
+ */
 AppStrings['applicant'] = {
   'back': 'Back to Homepage',
   'edit': 'Edit',
+  'requirements-title': 'Requirements',
 };
