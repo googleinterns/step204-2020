@@ -234,9 +234,14 @@ function buildJobElement(job) {
   const fullRequirementsList = getRequirementsList();
   const requirementsArr = [];
 
-  job['requirements'].forEach((req) => {
-    requirementsArr.push(fullRequirementsList[req]);
-  });
+  const jobRequirements = job['requirements'];
+  for (const key in jobRequirements) {
+    if (jobRequirements.hasOwnProperty(key)) {
+      if (jobRequirements[key] /* is true */) {
+        requirementsArr.push(fullRequirementsList[key]);
+      }
+    }
+  }
 
   requirementsList.innerText =
   `Requirements List: ${requirementsArr.join(', ')}`;

@@ -3,8 +3,8 @@ package com.google.job.data;
 import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableSet;
 import com.google.cloud.firestore.*;
-import com.google.cloud.firestore.Query.Direction;
 import com.google.common.collect.ImmutableList; 
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
@@ -13,10 +13,9 @@ import org.apache.commons.lang3.Range;
 import java.lang.UnsupportedOperationException;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.List;
-import java.io.IOException;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
@@ -24,6 +23,7 @@ public final class JobsDatabase {
     private static final String SALARY_FIELD = "jobPay.annualMax";
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
+    private static final String JOB_REQUIREMENTS_FIELD = "requirements";
 
     /**
      * Adds a newly created job post.
@@ -139,6 +139,43 @@ public final class JobsDatabase {
         };
 
         return ApiFutures.transform(snapshotFuture, jobFunction, MoreExecutors.directExecutor());
+    }
+
+    /** Returns future of all ACTIVE and eligible job posts in database. */
+    public Future<Collection<Job>> fetchAllEligibleJobs(List<String> skills) throws IOException {
+        // Gets all requirements stable id
+        List<String> requirementsList = Requirement.getAllRequirementIds();
+
+        // Gets a list of requirements which the applicant does not have
+        List<String> excludedSkills = new ArrayList<>(requirementsList);
+        excludedSkills.removeAll(skills);
+
+        final Query activeJobsQuery = FireStoreUtils.getFireStore()
+                .collection(JOB_COLLECTION)
+                .whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE);
+
+        // Eligible post: post whose requirements do not contain (field is false)
+        // the skills that applicant does not have
+        Query eligiblePostQuery = activeJobsQuery;
+        for (String negateSkill : excludedSkills) {
+            String fieldPath = String.format("%s.%s", JOB_REQUIREMENTS_FIELD, negateSkill);
+            eligiblePostQuery = eligiblePostQuery.whereEqualTo(fieldPath, false);
+        }
+
+        ApiFuture<QuerySnapshot> querySnapshotFuture = eligiblePostQuery.get();
+
+        ApiFunction<QuerySnapshot, Collection<Job>> function = documents -> {
+            ImmutableSet.Builder<Job> jobs = ImmutableSet.builder();
+
+            for (DocumentSnapshot document : documents) {
+                Job job = document.toObject(Job.class);
+                jobs.add(job);
+            }
+
+            return jobs.build();
+        };
+
+        return ApiFutures.transform(querySnapshotFuture, function, MoreExecutors.directExecutor());
     }
 
     /**

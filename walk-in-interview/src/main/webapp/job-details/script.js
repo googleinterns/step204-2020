@@ -62,9 +62,13 @@ async function renderJobDetailsPageElements() {
   const updateButton = document.getElementById('update');
   updateButton.setAttribute('value', STRINGS['update']);
   updateButton.setAttribute('type', 'submit');
+  // in case it was disabled earlier
+  updateButton.disabled = false;
 
   const deleteButtonElement = document.getElementById('delete');
   deleteButtonElement.innerText = STRINGS['delete'];
+  // in case it was disabled earlier
+  deleteButtonElement.disabled = false;
 
   map = createMap('jobpage-map');
 
@@ -73,6 +77,9 @@ async function renderJobDetailsPageElements() {
         console.error('error fetching job post', error);
         setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
             /* include default msg= */ false);
+        // disable the buttons if theres an error
+        updateButton.disabled = true;
+        deleteButtonElement.disabled = true;
       });
 
   displayJobDetails(job);
@@ -86,8 +93,15 @@ function displayJobDetails(job) {
   if (job === undefined || job.length === 0) {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
+    // disable the buttons if theres an error
+    document.getElementById('update').disabled = true;
+    document.getElementById('delete').disabled = true;
     return;
   }
+
+  // in case they were disabled earlier
+  document.getElementById('update').disabled = false;
+  document.getElementById('delete').disabled = false;
 
   const jobTitle = document.getElementById('job-title');
   jobTitle.innerText = job['jobTitle'];
@@ -132,14 +146,20 @@ function displayJobDetails(job) {
   const requirementsList = getRequirementsList();
   const requirementTemplate =
     document.getElementById('requirement-element-template');
-  job['requirements'].forEach((req) => {
-    const requirementElement = requirementTemplate
-        .cloneNode(/* and child elements */ true);
-    requirementElement.setAttribute('id', req);
-    requirementElement.innerText = requirementsList[req];
 
-    requirementsListElement.appendChild(requirementElement);
-  });
+  const jobRequirements = job['requirements'];
+  for (const key in jobRequirements) {
+    if (jobRequirements.hasOwnProperty(key)) {
+      if (jobRequirements[key] /* is true */) {
+        const requirementElement = requirementTemplate
+            .cloneNode(/* and child elements */ true);
+        requirementElement.setAttribute('id', key);
+        requirementElement.innerText = requirementsList[key];
+
+        requirementsListElement.appendChild(requirementElement);
+      }
+    }
+  }
 }
 
 /**

@@ -1,6 +1,7 @@
 // package com.google.job.data;
 
 // import com.google.api.core.ApiFuture;
+// import com.google.common.collect.ImmutableMap;
 // import com.google.cloud.firestore.*;
 // import com.google.utils.FireStoreUtils;
 // import com.google.common.collect.ImmutableList; 
@@ -20,7 +21,8 @@
 //     // TODO(issue/15): Add failure test case
 
 //     private static final String TEST_JOB_COLLECTION = "Jobs";
-//     private static final int BATCH_SIZE = 10;
+//     // should delete all the documents that the tests create
+//     private static final int BATCH_SIZE = 20;
 
 //     static JobsDatabase jobsDatabase;
 //     static Firestore firestore;
@@ -54,11 +56,14 @@
 //         // Arrange.
 //         JobStatus expectedJobStatus = JobStatus.ACTIVE;
 //         String expectedJobName = "Software Engineer";
-//         Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
+//         Location expectedLocation =  new Location(
+//                 "Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
 //         String expectedJobDescription = "Programming using java";
 //         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-//         List<String> expectedRequirements = Requirement.getLocalizedNames(
-//                 Arrays.asList(DRIVING_LICENSE_C, O_LEVEL, ENGLISH), "en");
+//         Map<String, Boolean> expectedRequirements = ImmutableMap.of(
+//                                                         DRIVING_LICENSE_C.getRequirementId(), true,
+//                                                         O_LEVEL.getRequirementId(), true,
+//                                                         ENGLISH.getRequirementId(), true);
 //         long expectedPostExpiry = System.currentTimeMillis();
 //         JobDuration expectedJobDuration = JobDuration.SIX_MONTHS;
 
@@ -109,11 +114,14 @@
 //     public void setJob_normalInput_success() throws ExecutionException, InterruptedException, IOException {
 //         JobStatus expectedJobStatus = JobStatus.ACTIVE;
 //         String expectedJobName = "Noogler";
-//         Location expectedLocation =  new Location("Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
+//         Location expectedLocation =  new Location(
+//                 "Google", "123456", SingaporeRegion.ENTIRE, 0, 0);
 //         String expectedJobDescription = "New employee";
 //         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-//         List<String> expectedRequirements = Requirement.getLocalizedNames(
-//                 Arrays.asList(O_LEVEL, ENGLISH), "en");
+//         Map<String, Boolean> expectedRequirements = ImmutableMap.of(
+//                                                         DRIVING_LICENSE_C.getRequirementId(), false,
+//                                                         O_LEVEL.getRequirementId(), true,
+//                                                         ENGLISH.getRequirementId(), true);
 //         long expectedPostExpiry = System.currentTimeMillis();
 //         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
@@ -159,10 +167,10 @@
 //         DocumentReference editedDocRef = editedDocRefFuture.get();
 
 //         // Asynchronously retrieve the document.
-//         Future<DocumentSnapshot> documentSnapshoFuture = editedDocRef.get();
+//         Future<DocumentSnapshot> documentSnapshotFuture = editedDocRef.get();
 
 //         // future.get() blocks on response.
-//         DocumentSnapshot documentSnapshot = documentSnapshoFuture.get();
+//         DocumentSnapshot documentSnapshot = documentSnapshotFuture.get();
 
 //         Job actualJob = documentSnapshot.toObject(Job.class);
 
@@ -170,7 +178,8 @@
 //     }
 
 //     @Test
-//     public void markJobPostAsDeleted_normalInput_success() throws ExecutionException, InterruptedException, IOException {
+//     public void markJobPostAsDeleted_normalInput_success()
+//             throws ExecutionException, InterruptedException, IOException {
 //         // Arrange.
 //         Job job = new Job();
 //         Future<DocumentReference> addedJobFuture = firestore.collection(TEST_JOB_COLLECTION).add(job);
@@ -208,11 +217,15 @@
 //         // Arrange.
 //         JobStatus expectedJobStatus = JobStatus.ACTIVE;
 //         String expectedJobName = "Programmer";
-//         Location expectedLocation =  new Location("Maple Tree", "123456", SingaporeRegion.ENTIRE, 0, 0);
+//         Location expectedLocation =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.ENTIRE, 0, 0);
 //         String expectedJobDescription = "Fighting to defeat hair line recede";
 //         JobPayment expectedJobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
-//         List<String> expectedRequirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
-//         long expectedPostExpiry = System.currentTimeMillis();;
+//         Map<String, Boolean> expectedRequirements = ImmutableMap.of(
+//                                                         DRIVING_LICENSE_C.getRequirementId(), false,
+//                                                         O_LEVEL.getRequirementId(), true,
+//                                                         ENGLISH.getRequirementId(), false);
+//         long expectedPostExpiry = System.currentTimeMillis();
 //         JobDuration expectedJobDuration = JobDuration.ONE_MONTH;
 
 //         Job job = Job.newBuilder()
@@ -248,33 +261,266 @@
 //     }
 
 //     @Test
+//     public void fetchAllEligibleJobs_normalInput_success()
+//             throws IOException, ExecutionException, InterruptedException {
+//         // Arrange.
+//         Map<String, Boolean> requirements = ImmutableMap.of(
+//                                                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                                                 O_LEVEL.getRequirementId(), true,
+//                                                 ENGLISH.getRequirementId(), false);
+//         Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
+
+//         // Act.
+//         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+//         // Assert.
+//         Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job2, job5));
+//         Collection<Job> actualJobs = jobsFuture.get();
+//         assertEquals(expectedJobs, actualJobs);
+//     }
+
+//     @Test
+//     public void fetchAllEligibleJobs_noJobMatch_noJobSelected()
+//             throws IOException, ExecutionException, InterruptedException {
+//         // Arrange.
+//         Map<String, Boolean> requirements = ImmutableMap.of(
+//                                                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                                                 O_LEVEL.getRequirementId(), true,
+//                                                 ENGLISH.getRequirementId(), false);
+//         Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         List<String> skills = Requirement.getRequirementIds(Arrays.asList(DRIVING_LICENSE_C));
+
+//         // Act.
+//         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+//         // Assert.
+//         Collection<Job> expectedJobs = new HashSet<>();
+//         Collection<Job> actualJobs = jobsFuture.get();
+//         assertEquals(expectedJobs, actualJobs);
+//     }
+
+//     @Test
+//     public void fetchAllEligibleJobs_hasDeletedJob_deletedJobNotSelected()
+//             throws IOException, ExecutionException, InterruptedException {
+//         // Arrange.
+//         Map<String, Boolean> requirements = ImmutableMap.of(
+//                                                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                                                 O_LEVEL.getRequirementId(), true,
+//                                                 ENGLISH.getRequirementId(), false);
+//         Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job2 = requirementFileterTestJobDataCreation(JobStatus.DELETED, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
+
+//         // Act.
+//         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+//         // Assert.
+//         Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job5));
+//         Collection<Job> actualJobs = jobsFuture.get();
+//         assertEquals(expectedJobs, actualJobs);
+//     }
+
+//     @Test
+//     public void fetchAllEligibleJobs_missingRequirement_success()
+//             throws IOException, ExecutionException, InterruptedException {
+//         // Arrange.
+//         // DRIVING_LICENSE_C is missing
+//         Map<String, Boolean> requirements = ImmutableMap.of(
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), false);
+//         Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
+
+//         // Act.
+//         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+//         // Assert.
+//         Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job2, job5));
+//         Collection<Job> actualJobs = jobsFuture.get();
+//         assertEquals(expectedJobs, actualJobs);
+//     }
+
+//     @Test
+//     public void fetchAllEligibleJobs_redundantAndMissingRequirement_success()
+//             throws IOException, ExecutionException, InterruptedException {
+//         // Arrange.
+//         // DRIVING_LICENSE_C is missing
+//         // "HEIGHT" is redundant
+//         Map<String, Boolean> requirements = ImmutableMap.of(
+//                 "HEIGHT", true,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), false);
+//         Job job1 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job2 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job3 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), true,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job4 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), false,
+//                 ENGLISH.getRequirementId(), true);
+//         Job job5 = requirementFileterTestJobDataCreation(JobStatus.ACTIVE, requirements);
+
+//         List<String> skills = Requirement.getRequirementIds(Arrays.asList(O_LEVEL, ENGLISH));
+
+//         // Act.
+//         Future<Collection<Job>> jobsFuture = jobsDatabase.fetchAllEligibleJobs(skills);
+
+//         // Assert.
+//         Collection<Job> expectedJobs = new HashSet<>(Arrays.asList(job1, job2, job5));
+//         Collection<Job> actualJobs = jobsFuture.get();
+//         assertEquals(expectedJobs, actualJobs);
+//     }
+
+//     @Test
 //     public void fetchJobPage_normalInput_success() throws ExecutionException, InterruptedException, IOException {
 //         // Arrange
 //         /* fields that affect the sorting/filtering of the job page details */
 //         // this should be returned first (order will be descending by salary, and region will be central)
-//         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         Location location1 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
 //         JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
 
 //         // this should be returned second
-//         Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         Location location2 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
 //         JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
 
 //         // this should be returned third
-//         Location location3 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         Location location3 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
 //         JobPayment jobPayment3 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY);
 
 //         // this should not be returned (minLimit will be set to 104001)
-//         Location location4 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         Location location4 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
 //         JobPayment jobPayment4 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY);
 
 //         // this should not be returned (region will be set to CENTRAL)
-//         Location location5 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+//         Location location5 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
 //         JobPayment jobPayment5 = new JobPayment(0, 2000, PaymentFrequency.WEEKLY);
 //         int annualMaxJob5 = (int) jobPayment5.getAnnualMax();
 
 //         // this should not be returned (only active jobs should be shown)
 //         JobStatus jobStatusExpired = JobStatus.EXPIRED;
-//         Location location6 =  new Location("Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
+//         Location location6 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.NORTH, 0, 0);
 //         JobPayment jobPayment6 = new JobPayment(0, 3000, PaymentFrequency.WEEKLY);
 
 //         List<Job> jobs = createTestJobs(6);
@@ -289,86 +535,154 @@
 //                         .setJobPay(jobPayment2)
 //                         .build();
         
-//         Job job3 = jobs.get(2).toBuilder()
-//                         .setLocation(location3)
-//                         .setJobPay(jobPayment3)
-//                         .build();
+// //         Job job3 = jobs.get(2).toBuilder()
+// //                         .setLocation(location3)
+// //                         .setJobPay(jobPayment3)
+// //                         .build();
         
-//         Job job4 = jobs.get(3).toBuilder()
-//                         .setLocation(location4)
-//                         .setJobPay(jobPayment4)
-//                         .build();
+// //         Job job4 = jobs.get(3).toBuilder()
+// //                         .setLocation(location4)
+// //                         .setJobPay(jobPayment4)
+// //                         .build();
 
-//         Job job5 = jobs.get(4).toBuilder()
-//                         .setLocation(location5)
-//                         .setJobPay(jobPayment5)
-//                         .build();
+// //         Job job5 = jobs.get(4).toBuilder()
+// //                         .setLocation(location5)
+// //                         .setJobPay(jobPayment5)
+// //                         .build();
 
-//         Job job6 = jobs.get(5).toBuilder()
-//                         .setLocation(location6)
-//                         .setJobPay(jobPayment6)
-//                         .setJobStatus(jobStatusExpired)
-//                         .build();
+// //         Job job6 = jobs.get(5).toBuilder()
+// //                         .setLocation(location6)
+// //                         .setJobPay(jobPayment6)
+// //                         .setJobStatus(jobStatusExpired)
+// //                         .build();
     
-//         // the jobs will be added in a random order
-//         firestore.collection(TEST_JOB_COLLECTION).add(job5).get();
-//         firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
-//         firestore.collection(TEST_JOB_COLLECTION).add(job3).get();
-//         firestore.collection(TEST_JOB_COLLECTION).add(job4).get();
-//         firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
-//         firestore.collection(TEST_JOB_COLLECTION).add(job6).get();
+// //         // the jobs will be added in a random order
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job5).get();
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job3).get();
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job4).get();
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job6).get();
 
-//         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(job1, job2, job3),
-//             /* totalCount= */ 3, Range.between(1, 3));
+// //         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(job1, job2, job3),
+// //             /* totalCount= */ 3, Range.between(1, 3));
 
-//         // Act
-//         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
-//         // maxLimit is defaulted to Integer.MAX_VALUE
-//         JobQuery jobQuery = new JobQuery().setMinLimit(annualMaxJob5 + 1).setRegion(SingaporeRegion.CENTRAL);
+// //         // Act
+// //         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+// //         // maxLimit is defaulted to Integer.MAX_VALUE
+// //         JobQuery jobQuery = new JobQuery().setMinLimit(annualMaxJob5 + 1).setRegion(SingaporeRegion.CENTRAL);
         
+// //         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
+
+// //         // Assert
+// //         assertEquals(expectedJobPage, actualJobPage);
+// //     }
+
+// <<<<<<< HEAD
+// //      @Test
+// //     public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
+// //         // Arrange
+// //         /* fields that affect the sorting/filtering of the job page details */
+// //         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+// //         JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+
+// //         Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+// //         JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
+// =======
+//      @Test
+//     public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
+//         // Arrange
+//         /* fields that affect the sorting/filtering of the job page details */
+//         Location location1 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+
+//         Location location2 =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
+// >>>>>>> small-fixes
+
+// //         List<Job> jobs = createTestJobs(6);
+
+// //         Job job1 = jobs.get(0).toBuilder()
+// //                         .setLocation(location1)
+// //                         .setJobPay(jobPayment1)
+// //                         .build();
+
+// //         Job job2 = jobs.get(1).toBuilder()
+// //                         .setLocation(location2)
+// //                         .setJobPay(jobPayment2)
+// //                         .build();
+    
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
+// //         firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
+
+// //         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(),
+// //             /* totalCount= */ 0, Range.between(0, 0));
+
+// //         // Act
+// //         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
+// //         // minLimit is defaulted to 0 and maxLimit is defaulted to Integer.MAX_VALUE
+// //         JobQuery jobQuery = new JobQuery().setRegion(SingaporeRegion.NORTH);
+        
+// <<<<<<< HEAD
+// //         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
+
+// //         // Assert
+// //         assertEquals(expectedJobPage, actualJobPage);
+// //     }
+
+// //     /**
+// //      * This will add all the default properties to the job. For particular tests, if the properties of 
+// //      * a job need to be changed, then we can just use the job.toBuilder() method and then reset the properties
+// //      * that way.
+// //      * @param count The number of jobs you want created.
+// //      * 
+// //      * @return The list of jobs created.
+// //      */
+// //     private static List<Job> createTestJobs(int count) {
+// //         // Arrange
+// //         /* fields that don't affect the job page details */
+// //         JobStatus jobStatus = JobStatus.ACTIVE;
+// //         String jobName = "Programmer";
+// //         String jobDescription = "Fighting to defeat hair line recede";
+// //         Location location =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+// //         List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+// //         long postExpiry = System.currentTimeMillis();
+// //         JobDuration jobDuration = JobDuration.ONE_MONTH;
+// //         JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+// =======
 //         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
 
 //         // Assert
 //         assertEquals(expectedJobPage, actualJobPage);
 //     }
 
-//      @Test
-//     public void fetchJobPage_noJobsFitFilters_success() throws ExecutionException, InterruptedException, IOException {
-//         // Arrange
-//         /* fields that affect the sorting/filtering of the job page details */
-//         Location location1 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-//         JobPayment jobPayment1 = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+//     private Job requirementFileterTestJobDataCreation(JobStatus jobStatus, Map<String, Boolean> requirements)
+//             throws ExecutionException, InterruptedException {
+//         String jobName = "Programmer";
+//         Location location = new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL,0, 0);
+//         String jobDescription = "Fighting to defeat hair line recede";
+//         JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.MONTHLY);
+//         long postExpiry = System.currentTimeMillis();
+//         JobDuration jobDuration = JobDuration.ONE_MONTH;
 
-//         Location location2 =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-//         JobPayment jobPayment2 = new JobPayment(0, 4000, PaymentFrequency.WEEKLY);
+//         Job job = Job.newBuilder()
+//                 .setJobStatus(jobStatus)
+//                 .setJobTitle(jobName)
+//                 .setLocation(location)
+//                 .setJobDescription(jobDescription)
+//                 .setJobPay(jobPayment)
+//                 .setRequirements(requirements)
+//                 .setPostExpiry(postExpiry)
+//                 .setJobDuration(jobDuration)
+//                 .build();
 
-//         List<Job> jobs = createTestJobs(6);
+//         // future.get() blocks on response.
+//         firestore.collection(TEST_JOB_COLLECTION).add(job).get();
 
-//         Job job1 = jobs.get(0).toBuilder()
-//                         .setLocation(location1)
-//                         .setJobPay(jobPayment1)
-//                         .build();
-
-//         Job job2 = jobs.get(1).toBuilder()
-//                         .setLocation(location2)
-//                         .setJobPay(jobPayment2)
-//                         .build();
-    
-//         firestore.collection(TEST_JOB_COLLECTION).add(job1).get();
-//         firestore.collection(TEST_JOB_COLLECTION).add(job2).get();
-
-//         JobPage expectedJobPage = new JobPage(/* jobList= */ Arrays.asList(),
-//             /* totalCount= */ 0, Range.between(0, 0));
-
-//         // Act
-//         // sorting is already defaulted to SALARY and ordering is defaulted to DESCENDING
-//         // minLimit is defaulted to 0 and maxLimit is defaulted to Integer.MAX_VALUE
-//         JobQuery jobQuery = new JobQuery().setRegion(SingaporeRegion.NORTH);
-        
-//         JobPage actualJobPage = jobsDatabase.fetchJobPage(jobQuery).get();
-
-//         // Assert
-//         assertEquals(expectedJobPage, actualJobPage);
+//         return job;
 //     }
 
 //     /**
@@ -385,51 +699,56 @@
 //         JobStatus jobStatus = JobStatus.ACTIVE;
 //         String jobName = "Programmer";
 //         String jobDescription = "Fighting to defeat hair line recede";
-//         Location location =  new Location("Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
-//         List<String> requirements = Requirement.getLocalizedNames(Arrays.asList(O_LEVEL), "en");
+//         Location location =  new Location(
+//                 "Maple Tree", "123456", SingaporeRegion.CENTRAL, 0, 0);
+//         Map<String, Boolean> requirements = ImmutableMap.of(
+//                 DRIVING_LICENSE_C.getRequirementId(), false,
+//                 O_LEVEL.getRequirementId(), true,
+//                 ENGLISH.getRequirementId(), false);
 //         long postExpiry = System.currentTimeMillis();
 //         JobDuration jobDuration = JobDuration.ONE_MONTH;
 //         JobPayment jobPayment = new JobPayment(0, 5000, PaymentFrequency.WEEKLY);
+// >>>>>>> small-fixes
         
-//         ImmutableList.Builder<Job> jobs = ImmutableList.builder();
+// //         ImmutableList.Builder<Job> jobs = ImmutableList.builder();
 
-//         /* add the required number of jobs to the list */
-//         for (int i = 0; i < count; i++) {
-//             Job job = Job.newBuilder()
-//                     .setJobStatus(jobStatus)
-//                     .setJobTitle(jobName)
-//                     .setJobDescription(jobDescription)
-//                     .setLocation(location)
-//                     .setRequirements(requirements)
-//                     .setPostExpiry(postExpiry)
-//                     .setJobDuration(jobDuration)
-//                     .setJobPay(jobPayment)
-//                     .build();
-//             jobs.add(job);
-//         }
+// //         /* add the required number of jobs to the list */
+// //         for (int i = 0; i < count; i++) {
+// //             Job job = Job.newBuilder()
+// //                     .setJobStatus(jobStatus)
+// //                     .setJobTitle(jobName)
+// //                     .setJobDescription(jobDescription)
+// //                     .setLocation(location)
+// //                     .setRequirements(requirements)
+// //                     .setPostExpiry(postExpiry)
+// //                     .setJobDuration(jobDuration)
+// //                     .setJobPay(jobPayment)
+// //                     .build();
+// //             jobs.add(job);
+// //         }
 
-//         return jobs.build();
-//     }
+// //         return jobs.build();
+// //     }
 
-//     /**
-//      * Delete a collection in batches to avoid out-of-memory errors.
-//      *
-//      * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
-//      */
-//     private static void deleteCollection(CollectionReference collection, int batchSize)
-//             throws ExecutionException, InterruptedException {
-//         // retrieve a small batch of documents to avoid out-of-memory errors
-//         ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
-//         int deleted = 0;
-//         // future.get() blocks on document retrieval
-//         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//         for (QueryDocumentSnapshot document : documents) {
-//             document.getReference().delete();
-//             ++deleted;
-//         }
-//         if (deleted >= batchSize) {
-//             // retrieve and delete another batch
-//             deleteCollection(collection, batchSize);
-//         }
-//     }
-// }
+// //     /**
+// //      * Delete a collection in batches to avoid out-of-memory errors.
+// //      *
+// //      * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
+// //      */
+// //     private static void deleteCollection(CollectionReference collection, int batchSize)
+// //             throws ExecutionException, InterruptedException {
+// //         // retrieve a small batch of documents to avoid out-of-memory errors
+// //         ApiFuture<QuerySnapshot> future = collection.limit(batchSize).get();
+// //         int deleted = 0;
+// //         // future.get() blocks on document retrieval
+// //         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+// //         for (QueryDocumentSnapshot document : documents) {
+// //             document.getReference().delete();
+// //             ++deleted;
+// //         }
+// //         if (deleted >= batchSize) {
+// //             // retrieve and delete another batch
+// //             deleteCollection(collection, batchSize);
+// //         }
+// //     }
+// // }

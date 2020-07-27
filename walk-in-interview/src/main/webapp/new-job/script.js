@@ -130,6 +130,7 @@ function renderRequirementsList() {
       const checkbox = requirementElement.children[0];
       checkbox.setAttribute('id', key);
       checkbox.setAttribute('value', key);
+      checkbox.setAttribute('name', 'requirement');
 
       const label = requirementElement.children[1];
       label.setAttribute('for', key);
@@ -182,12 +183,10 @@ function getJobDetailsFromUserInput() {
   const payMax = document.getElementById('pay-max').valueAsNumber;
 
   const requirementsCheckboxes =
-    document.getElementsByName('requirements-list');
-  const requirementsList = [];
+    document.getElementsByName('requirement');
+  const requirementsMap = new Map();
   requirementsCheckboxes.forEach(({checked, id}) => {
-    if (checked) {
-      requirementsList.push(id);
-    }
+    requirementsMap[id] = checked;
   });
 
   const expiry = document.getElementById('expiry').valueAsNumber;
@@ -208,7 +207,7 @@ function getJobDetailsFromUserInput() {
       min: payMin,
       max: payMax,
     },
-    requirements: requirementsList,
+    requirements: requirementsMap,
     postExpiryTimestamp: expiry,
     jobDuration: duration,
   };
