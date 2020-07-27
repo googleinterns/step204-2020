@@ -95,8 +95,8 @@ function displayJobDetails(job) {
   }
 
   // in case they were disabled earlier
-  document.getElementById('update').disabled = true;
-  document.getElementById('delete').disabled = true;
+  document.getElementById('update').disabled = false;
+  document.getElementById('delete').disabled = false;
 
   const jobTitle = document.getElementById('job-title');
   jobTitle.innerText = job['jobTitle'];
