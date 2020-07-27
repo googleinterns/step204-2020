@@ -8,4 +8,5 @@ export const API = {
     'get-job-listings': '/jobs/listings',
     'delete-job': '/jobs/delete',
     'expire-job': '/jobs/expire',
+    'mark-job-as-interested': '/my-interested-list',
 };

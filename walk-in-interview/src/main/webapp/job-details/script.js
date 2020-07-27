@@ -6,6 +6,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
 import {JOB_ID_PARAM, setCookie, setErrorMessage} from '../common-functions.js';
 
@@ -20,6 +21,32 @@ const UPDATE_JOB_PATH = '../update-job/index.html';
 function getJobId() {
   return 'Not Implemented';
 }
+
+const interestButton = document.getElementById('interest');
+interestButton.addEventListener('click', (_) => {
+  const jobId = getJobId();
+
+  if (jobId === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */ COMMON_STRINGS['empty-job-id-error-message'], /* includesDefault= */false);
+    return;
+  }
+
+  fetch(API['mark-job-as-interested'], {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+  })
+  .then(() => {
+    /** reset the error (there might have been an error msg from earlier) */
+    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', 
+      /* includesDefault= */false);
+  })
+  .catch((error) => {
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['mark-interest-error-message'], /* includesDefault= */false);
+      console.log('error', error);
+  });
+});
 
 const updateButton = document.getElementById('update');
 updateButton.addEventListener('click', (_) => {

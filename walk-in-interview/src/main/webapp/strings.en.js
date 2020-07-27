@@ -115,7 +115,9 @@ AppStrings['delete-job'] = {
  * Strings used in job-details.
  */
 AppStrings['job-details'] = {
+  'mark-interest': 'Interested',
   'update-error-message': 'Error occur when directing to update page',
+  'mark-interest-error-message': 'Error occur when marking this job post as interested',
 };
 
 /**
