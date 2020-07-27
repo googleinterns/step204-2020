@@ -1,9 +1,9 @@
 package com.google.job.data;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.*;
 
 /** Class for a job post. */
 public final class Job {
@@ -14,7 +14,7 @@ public final class Job {
     private final Location jobLocation;
     private final String jobDescription;
     private final JobPayment jobPay;
-    private final List<String> requirements;
+    private final Map<String, Boolean> requirements; // requirement stable id : true/false
     private final long postExpiryTimestamp;
     private final JobDuration jobDuration;
 
@@ -40,7 +40,7 @@ public final class Job {
         this.jobLocation = new Location();
         this.jobDescription = "";
         this.jobPay = new JobPayment();
-        this.requirements = ImmutableList.of();
+        this.requirements = ImmutableMap.of();
         this.postExpiryTimestamp = 0;
         this.jobDuration = JobDuration.OTHER;
     }
@@ -70,7 +70,7 @@ public final class Job {
     public static final class JobBuilder {
         // Optional parameters - initialized to default values
         private String jobId = "";
-        private List<String> requirements = ImmutableList.of();
+        private Map<String, Boolean> requirements = ImmutableMap.of();
         private JobDuration jobDuration = JobDuration.OTHER;
 
         // TODO(issue/25): merge the account stuff into job post.
@@ -129,8 +129,23 @@ public final class Job {
             return this;
         }
 
-        public JobBuilder setRequirements(List<String> requirements) {
-            this.requirements = ImmutableList.copyOf(requirements);
+        public JobBuilder setRequirements(Map<String, Boolean> requirements) {
+            Map<String, Boolean> inputRequirementsMap = new HashMap<>(requirements);
+            Set<String> requirementsSet = new HashSet<>(Requirement.getAllRequirementIds());
+
+            // Removes redundant requirement
+            inputRequirementsMap.entrySet().removeIf(entry -> !requirementsSet.contains(entry.getKey()));
+
+            // Checks if requirement missing and adds accordingly
+            for (String requirement: requirementsSet) {
+                if (inputRequirementsMap.containsKey(requirement)) {
+                    continue;
+                }
+
+                inputRequirementsMap.put(requirement, false);
+            }
+
+            this.requirements = ImmutableMap.copyOf(inputRequirementsMap);
             return this;
         }
 
@@ -203,8 +218,8 @@ public final class Job {
         return jobPay;
     }
 
-    /** Returns a list of requirements of the job post. */
-    public List<String> getRequirements() {
+    /** Returns a map of requirements (stable ids) of the job post. */
+    public Map<String, Boolean> getRequirements() {
         return requirements;
     }
 

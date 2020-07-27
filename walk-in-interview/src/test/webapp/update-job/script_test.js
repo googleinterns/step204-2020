@@ -222,25 +222,31 @@ describe('Update Job Tests', function() {
             });
       });
 
-      it('checks the default option properly ticked', () => {
-        return driver.findElement(By.id('requirements-list'))
-            .getText()
-            .then((text) => {
-              for (const requirement in text) {
-                if (requirement === 'O Level') {
-                  requirement.getAttribute('checked')
-                      .then((checked) => {
-                        assert.isTrue(checked);
-                      });
-                }
-
-                if (requirement === 'English') {
-                  requirement.getAttribute('checked')
-                      .then((checked) => {
-                        assert.isTrue(checked);
-                      });
-                }
-              }
+      it('checks only the default options properly ticked', () => {
+        return driver.findElements(By.name('requirement'))
+            .then((requirements) => {
+              requirements.map((requirement) => {
+                requirement.getAttribute('id')
+                    .then((id) => {
+                      if (id === 'O Level' || id === 'English') {
+                        driver.findElement(By.id(id))
+                            .then((requirement) => {
+                              requirement.getAttribute('checked')
+                                  .then((checked) => {
+                                    assert.isTrue(checked);
+                                  });
+                            });
+                      } else {
+                        driver.findElement(By.id(id))
+                            .then((requirement) => {
+                              requirement.getAttribute('checked')
+                                  .then((checked) => {
+                                    assert.isNotTrue(checked);
+                                  });
+                            });
+                      }
+                    });
+              });
             });
       });
     });
@@ -449,20 +455,6 @@ describe('Update Job Tests', function() {
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Title'));
-      });
-
-      it('should not be false positive', () => {
-        /**
-         * The job title must be cleared here to test it.
-         * This test is making sure that the test is actually working
-         * properly and not just passing for any string.
-         * Note the use of assert.notEqual().
-         */
-        return driver.findElement(By.id('title')).clear()
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.notEqual(text,
-                'There is an error in the following field: '));
       });
 
       it('incorrect job address format', () => {
