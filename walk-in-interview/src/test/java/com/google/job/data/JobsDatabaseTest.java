@@ -21,8 +21,7 @@ public final class JobsDatabaseTest {
     // TODO(issue/15): Add failure test case
 
     private static final String TEST_JOB_COLLECTION = "Jobs";
-    // Should delete all the documents that the tests create.
-    private static final int BATCH_SIZE = 20;
+    private static final int BATCH_SIZE = 10;
 
     static JobsDatabase jobsDatabase;
     static Firestore firestore;
