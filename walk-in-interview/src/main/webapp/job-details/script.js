@@ -139,14 +139,20 @@ function displayJobDetails(job) {
   const requirementsList = getRequirementsList();
   const requirementTemplate =
     document.getElementById('requirement-element-template');
-  job['requirements'].forEach((req) => {
-    const requirementElement = requirementTemplate
-        .cloneNode(/* and child elements */ true);
-    requirementElement.setAttribute('id', req);
-    requirementElement.innerText = requirementsList[req];
 
-    requirementsListElement.appendChild(requirementElement);
-  });
+  const jobRequirements = job['requirements'];
+  for (const key in jobRequirements) {
+    if (jobRequirements.hasOwnProperty(key)) {
+      if (jobRequirements[key] /* is true */) {
+        const requirementElement = requirementTemplate
+            .cloneNode(/* and child elements */ true);
+        requirementElement.setAttribute('id', key);
+        requirementElement.innerText = requirementsList[key];
+
+        requirementsListElement.appendChild(requirementElement);
+      }
+    }
+  }
 }
 
 /**
