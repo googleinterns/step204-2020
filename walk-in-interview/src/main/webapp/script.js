@@ -266,8 +266,8 @@ function buildJobElement(job) {
     new google.maps.InfoWindow({
       content: jobListing.innerHTML,
     }).open(map, marker);
+    // TODO(issue/73): link this to the job in the list?
   });
-
 
   return jobListing;
 }
