@@ -7,7 +7,7 @@
 const SG_LATITUDE = 1.3521;
 const SG_LONGITUDE = 103.8198;
 const SG_MAP_ZOOM = 11;
-// Appropriate zoom for the map to show the individual job
+// appropriate zoom for the map to show the individual job
 const JOB_MAP_ZOOM = 15;
 
 /**

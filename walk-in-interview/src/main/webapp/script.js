@@ -269,7 +269,7 @@ function buildJobElement(job) {
     // TODO(issue/73): link this to the job in the list?
   });
 
-  /* double click on the marker goes to the job details page */
+  /* double clicking on the marker goes to the job details page */
   marker.addListener('dblclick', function() {
     if (jobId === '') {
       throw new Error('jobId should not be empty');
