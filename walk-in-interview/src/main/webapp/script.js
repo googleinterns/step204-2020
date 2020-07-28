@@ -269,6 +269,14 @@ function buildJobElement(job) {
     // TODO(issue/73): link this to the job in the list?
   });
 
+  /* on double click of the marker, this will go to the job details page */
+  marker.addListener('dblclick', function() {
+    if (jobId === '') {
+      throw new Error('jobId should not be empty');
+    }
+    detailsForm.submit();
+  });
+
   return jobListing;
 }
 
