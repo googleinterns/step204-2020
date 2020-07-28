@@ -17,8 +17,6 @@ import {API} from '../apis.js';
 import {JOB_ID_PARAM, setErrorMessage,
   getRequirementsList} from '../common-functions.js';
 
-import {API} from '../apis.js';
-
 const UPDATE_JOB_PATH = '../update-job/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
