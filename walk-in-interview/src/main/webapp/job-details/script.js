@@ -26,6 +26,9 @@ const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
 const JOB_STRINGS = AppStrings['job'];
 
+// Appropriate zoom for the map to show the individual job
+MAP_ZOOM = 15;
+
 let map;
 
 window.onload = () => {
@@ -70,8 +73,6 @@ async function renderJobDetailsPageElements() {
   // in case it was disabled earlier
   deleteButtonElement.disabled = false;
 
-  map = createMap('jobpage-map');
-
   const job = await getJobDetails(jobId)
       .catch((error) => {
         console.error('error fetching job post', error);
@@ -81,6 +82,10 @@ async function renderJobDetailsPageElements() {
         updateButton.disabled = true;
         deleteButtonElement.disabled = true;
       });
+
+  const location = job['jobLocation'];
+  map = createMap('jobpage-map', location['latitude'], location['longitude'],
+      MAP_ZOOM);
 
   displayJobDetails(job);
 }

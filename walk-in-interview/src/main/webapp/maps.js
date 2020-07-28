@@ -3,24 +3,22 @@
  * It contains the functions necessary to the google maps api.
  */
 
-// coordinates for centering the map around Singapore
-const SG_LATITUDE = 1.3521;
-const SG_LONGITUDE = 103.8198;
-const SG_MAP_ZOOM = 11;
-
 /**
  * Creates a map in the provided html div.
  * @param {String} mapElementId The map element id.
+ * @param {float} latitude The center latitude.
+ * @param {float} longitude The center longitude.
+ * @param {int} zoom The amount of zoom for the map.
  * @return {google.maps.Map} The map object created.
  */
-function createMap(mapElementId) {
+function createMap(mapElementId, latitude, longitude, zoom) {
   if (mapElementId === '') {
     throw new Error('map element id should not be empty');
   }
 
   return new google.maps.Map(document.getElementById(mapElementId), {
-    center: {lat: SG_LATITUDE, lng: SG_LONGITUDE},
-    zoom: SG_MAP_ZOOM,
+    center: {lat: latitude, lng: longitude},
+    zoom: zoom,
   });
 }
 
