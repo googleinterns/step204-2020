@@ -140,5 +140,10 @@ AppStrings['job-details'] = {
 AppStrings['applicant'] = {
   'back': 'Back to Homepage',
   'edit': 'Edit',
+  'submit': 'Submit',
+  'name': 'Name',
   'skills-title': 'Skills',
+  'error-message':
+    'There was an error while loading the applicant account details. Please try again',
+  'update-error-message': 'Error occur when updating applicant account',
 };

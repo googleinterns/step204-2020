@@ -75,11 +75,13 @@ function renderPageElements(accountId) {
  * @returns Detail json.
  */
 function getAccountDetails(accountId) {
+  const applicantId = getId();
   let accountDetails = {
+    accountId: applicantId,
     name: 'test',
     skills: [
-      'test1',
-      'test2',
+      'O Level',
+      'English',
     ],
   };
 
