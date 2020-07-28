@@ -21,11 +21,6 @@ const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
 const SALARY_PARAM = 'SALARY';
 
-// coordinates for centering the map around Singapore
-const SG_LATITUDE = 1.3521;
-const SG_LONGITUDE = 103.8198;
-const SG_MAP_ZOOM = 11;
-
 /**
  * Note that this is needed because in JS we can hold bigger Integer
  * values than in Java.
@@ -83,7 +78,7 @@ function renderHomepageElements() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  map = createMap('homepage-map', SG_LATITUDE, SG_LONGITUDE, SG_MAP_ZOOM);
+  map = createMap('homepage-map');
 
   loadAndDisplayJobListings();
 
@@ -274,7 +269,7 @@ function buildJobElement(job) {
     // TODO(issue/73): link this to the job in the list?
   });
 
-  /* on double click of the marker, this will go to the job details page */
+  /* double click on the marker goes to the job details page */
   marker.addListener('dblclick', function() {
     if (jobId === '') {
       throw new Error('jobId should not be empty');

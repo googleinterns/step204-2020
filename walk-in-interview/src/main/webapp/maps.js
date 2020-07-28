@@ -1,17 +1,25 @@
 /**
  * This file is specific to rendering and add markers to a specific map.
- * It contains the functions necessary to the google maps api.
+ * It contains the functions specific to the google maps api.
  */
+
+// coordinates for centering the map around Singapore
+const SG_LATITUDE = 1.3521;
+const SG_LONGITUDE = 103.8198;
+const SG_MAP_ZOOM = 11;
+// Appropriate zoom for the map to show the individual job
+const JOB_MAP_ZOOM = 15;
 
 /**
  * Creates a map in the provided html div.
  * @param {String} mapElementId The map element id.
- * @param {float} latitude The center latitude.
- * @param {float} longitude The center longitude.
- * @param {int} zoom The amount of zoom for the map.
+ * @param {float} latitude The center latitude. Defaulted to Singapore lat.
+ * @param {float} longitude The center longitude. Defaulted to Singapore lon.
+ * @param {int} zoom The zoom of the map. Defaulted to Singapore zoom.
  * @return {google.maps.Map} The map object created.
  */
-function createMap(mapElementId, latitude, longitude, zoom) {
+function createMap(mapElementId, latitude=SG_LATITUDE,
+    longitude=SG_LONGITUDE, zoom=SG_MAP_ZOOM) {
   if (mapElementId === '') {
     throw new Error('map element id should not be empty');
   }
@@ -44,4 +52,4 @@ function addMarker(map, job) {
   });
 }
 
-export {createMap, addMarker};
+export {createMap, addMarker, JOB_MAP_ZOOM};

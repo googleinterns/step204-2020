@@ -15,7 +15,7 @@ import {AppStrings} from '../strings.en.js';
 
 import {JOB_ID_PARAM, setErrorMessage,
   getRequirementsList} from '../common-functions.js';
-import {createMap, addMarker} from '../maps.js';
+import {createMap, addMarker, JOB_MAP_ZOOM} from '../maps.js';
 
 import {API} from '../apis.js';
 
@@ -25,9 +25,6 @@ const HOMEPAGE_PATH = '../index.html';
 const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
 const JOB_STRINGS = AppStrings['job'];
-
-// Appropriate zoom for the map to show the individual job
-MAP_ZOOM = 15;
 
 let map;
 
@@ -85,7 +82,7 @@ async function renderJobDetailsPageElements() {
 
   const location = job['jobLocation'];
   map = createMap('jobpage-map', location['latitude'], location['longitude'],
-      MAP_ZOOM);
+      JOB_MAP_ZOOM);
 
   displayJobDetails(job);
 }
@@ -108,14 +105,15 @@ function displayJobDetails(job) {
   document.getElementById('update').disabled = false;
   document.getElementById('delete').disabled = false;
 
+  // does not require info window
+  addMarker(map, job);
+
   const jobTitle = document.getElementById('job-title');
   jobTitle.innerText = job['jobTitle'];
 
   const jobAddress = document.getElementById('address');
   const location = job['jobLocation'];
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
-
-  addMarker(map, job);
 
   const jobDescription = document.getElementById('description');
   jobDescription.innerText = job['jobDescription'];
