@@ -57,6 +57,8 @@ AppStrings['homepage'] = {
 AppStrings['log-in'] = {
   'applicant-log-in': 'Log in as an Applicant',
   'business-log-in': 'Log in as a Business',
+  'back': 'Back',
+  'submit': 'Submit',
 };
 
 /**

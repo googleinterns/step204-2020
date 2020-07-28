@@ -15,6 +15,7 @@ import {AppStrings} from '../strings.en.js';
 const STRINGS = AppStrings['log-in'];
 const APPLICANT_LOG_IN_PAGE = './applicant-log-in.html';
 const BUSINESS_LOG_IN_PAGE = './business-log-in.html';
+const HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
   renderPageElements();
@@ -27,6 +28,9 @@ function renderPageElements() {
 
   const businessButton = document.getElementById('business-log-in');
   businessButton.innerText = STRINGS['business-log-in'];
+
+  const backButton = document.getElementById('back');
+  backButton.innerText = STRINGS['back'];
 }
 
 const applicantButton = document.getElementById('applicant-log-in');
@@ -37,4 +41,9 @@ applicantButton.addEventListener('click', (_) => {
 const businessButton = document.getElementById('business-log-in');
 businessButton.addEventListener('click', (_) => {
   window.location.href = BUSINESS_LOG_IN_PAGE;
+});
+
+const backButton = document.getElementById('back');
+backButton.addEventListener('click', (_) => {
+  window.location.href = HOMEPAGE_PATH;
 });

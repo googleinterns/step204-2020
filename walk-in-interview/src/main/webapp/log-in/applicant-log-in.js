@@ -12,7 +12,9 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
+const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['applicant-log-in'];
+const HOMEPAGE_PATH = './log-in.html';
 
 window.onload = () => {
   renderPageElements();
@@ -40,9 +42,25 @@ function renderPageElements() {
 
   const otpButton = document.getElementById('otp');
   otpButton.innerText = STRINGS['otp'];
+
+  const backButton = document.getElementById('back');
+  backButton.innerText = COMMONG_STRINGS['back'];
+
+  const submitButton = document.getElementById('submit');
+  submitButton.innerText = COMMONG_STRINGS['submit'];
 }
 
 const otpButton = document.getElementById('otp');
 otpButton.addEventListener('click', (_) => {
   // TODO: send a OTP sms
+});
+
+const backButton = document.getElementById('back');
+backButton.addEventListener('click', (_) => {
+  window.location.href = HOMEPAGE_PATH;
+});
+
+const submitButton = document.getElementById('submit');
+submitButton.addEventListener('click', (_) => {
+  // TODO
 });

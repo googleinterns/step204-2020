@@ -12,7 +12,9 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
+const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
+const HOMEPAGE_PATH = './log-in.html';
 
 window.onload = () => {
   renderPageElements();
@@ -37,4 +39,20 @@ function renderPageElements() {
   const passwordInputElement = passwordElement.children[1];
   passwordInputElement.setAttribute('type', 'text');
   // TODO: send the input to the log-in related stuff
+
+  const backButton = document.getElementById('back');
+  backButton.innerText = COMMONG_STRINGS['back'];
+
+  const submitButton = document.getElementById('submit');
+  submitButton.innerText = COMMONG_STRINGS['submit'];
 }
+
+const backButton = document.getElementById('back');
+backButton.addEventListener('click', (_) => {
+  window.location.href = HOMEPAGE_PATH;
+});
+
+const submitButton = document.getElementById('submit');
+submitButton.addEventListener('click', (_) => {
+  // TODO
+});
