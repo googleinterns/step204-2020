@@ -222,25 +222,31 @@ describe('Update Job Tests', function() {
             });
       });
 
-      it('checks the default option properly ticked', () => {
-        return driver.findElement(By.id('requirements-list'))
-            .getText()
-            .then((text) => {
-              for (const requirement in text) {
-                if (requirement === 'O Level') {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isTrue(checked);
-                  })
-                }
-
-                if (requirement === 'English') {
-                  requirement.getAttribute('checked')
-                  .then((checked) => {
-                    assert.isTrue(checked);
-                  })
-                }
-              }
+      it('checks only the default options properly ticked', () => {
+        return driver.findElements(By.name('requirement'))
+            .then((requirements) => {
+              requirements.map((requirement) => {
+                requirement.getAttribute('id')
+                    .then((id) => {
+                      if (id === 'O Level' || id === 'English') {
+                        driver.findElement(By.id(id))
+                            .then((requirement) => {
+                              requirement.getAttribute('checked')
+                                  .then((checked) => {
+                                    assert.isTrue(checked);
+                                  });
+                            });
+                      } else {
+                        driver.findElement(By.id(id))
+                            .then((requirement) => {
+                              requirement.getAttribute('checked')
+                                  .then((checked) => {
+                                    assert.isNotTrue(checked);
+                                  });
+                            });
+                      }
+                    });
+              });
             });
       });
     });
@@ -413,10 +419,10 @@ describe('Update Job Tests', function() {
        * For the functionality tests, since we are testing the
        * cancel/submit buttons, the page url may have changed
        * in the test.
-       * Always resets the current page to the job page 
+       * Always resets the current page to the job page
        * for the rest of the tests.
        */
-        return driver.get(JOBPAGE_URL);
+      return driver.get(JOBPAGE_URL);
     });
 
     describe('Cancel Button', () => {
@@ -437,10 +443,6 @@ describe('Update Job Tests', function() {
      * message with the invalid field, and no POST request will be made.
      */
     describe('Submit Button', () => {
-      const date = new Date();
-      const today = `${(date.getMonth() + 1)}-${date.getDate()}` +
-        `-${date.getFullYear()}`;
-
       // Since all fields should be pre-filled with existing job post,
       // there is no need to add valid inputs to all fields again.
 
@@ -453,20 +455,6 @@ describe('Update Job Tests', function() {
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Title'));
-      });
-
-      it('should not be false positive', () => {
-        /**
-         * The job title must be cleared here to test it.
-         * This test is making sure that the test is actually working
-         * properly and not just passing for any string.
-         * Note the use of assert.notEqual().
-         */
-        return driver.findElement(By.id('title')).clear()
-            .then(() => clickUpdate(driver))
-            .then(() => driver.findElement(By.id('error-message')).getText())
-            .then((text) => assert.notEqual(text,
-                'There is an error in the following field: '));
       });
 
       it('incorrect job address format', () => {
@@ -490,7 +478,7 @@ describe('Update Job Tests', function() {
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
                 'There is an error in the following field: Job Pay'));
-        });
+      });
 
       it('expiry date not chosen', () => {
         return driver.findElement(By.id('expiry')).clear()
@@ -501,8 +489,8 @@ describe('Update Job Tests', function() {
       });
 
       /**
-       * If all the fields(including jobId) are valid, then a POST request should be made and the
-       * user should be returned to the homepage. 
+       * If all the fields(including jobId) are valid, then a POST request
+       * should be made and the user should be returned to the homepage.
        * However, since so far cloud firestore cannot be set up locally
        * and only a dummy jobId is passed, it can only catch an error.
        */
@@ -510,7 +498,8 @@ describe('Update Job Tests', function() {
         return clickUpdate(driver)
             .then(() => driver.findElement(By.id('error-message')).getText())
             .then((text) => assert.equal(text,
-                'There was an error while storing the job post. Please try again'));
+                'There was an error while storing the job post. ' +
+                  'Please try again'));
       });
 
       /**

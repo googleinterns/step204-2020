@@ -4,7 +4,7 @@
  * is submitted.
  */
 
- // TODO(issue/21): get the language from the browser
+// TODO(issue/21): get the language from the browser
 const CurrentLocale = 'en';
 
 /**
@@ -14,43 +14,47 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../strings.en.js';
 import {API} from '../apis.js';
 
-import {JOB_ID_PARAM, getCookie, getRequirementsList, 
+import {JOB_ID_PARAM, getRequirementsList,
   setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const COMMON_STRINGS = AppStrings['common'];
-const HOMEPAGE_PATH = '../job-details/index.html';
+const HOMEPAGE_PATH = '../index.html';
 const BAD_REQUEST_STATUS_CODE = 400;
 
 // Status of this job post, default to be ACTIVE
-var status = 'ACTIVE';
+let status = 'ACTIVE';
 
 window.onload = () => {
-  var jobId = getJobId();
-  loadAndShowJob(jobId);
+  loadAndShowJob(getJobId());
 };
 
 /**
- * Gets the jobId from cookie.
+ * Gets the jobId from the url.
+ * @return {String} The jobId.
  */
 function getJobId() {
-  // Only run it for selenium test.
-  // return getJobIdForSeleniumTest();
+  const queryString = window.location.search;
 
-  const jobId = getCookie(JOB_ID_PARAM);
-  return jobId;
+  const urlParams = new URLSearchParams(queryString);
+  if (urlParams === '') {
+    throw new Error('url params should not be empty');
+  }
+
+  return urlParams.get(JOB_ID_PARAM);
 }
 
 /**
  * Gets the Job post given its id.
- * 
+ *
  * @param {String} jobId Cloud Firestore Job Id.
  */
 function loadAndShowJob(jobId) {
   if (jobId === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
-      /* msg= */ COMMON_STRINGS['empty-job-id-error-message'], /* includesDefault= */false);
+        /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
+        /* includesDefault= */false);
     return;
   }
 
@@ -69,17 +73,18 @@ function loadAndShowJob(jobId) {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
   })
-  .then(response => response.json())
-  .then(job => {
-    addPrefilledInfo(job);
-    // Sets the status of this job post
-    status = job.jobStatus;
-  })
-  .catch(error => {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-      /* includesDefault= */false);
-    console.log('error', error);
-  })
+      .then((response) => response.json())
+      .then((job) => {
+        addPrefilledInfo(job);
+        // Sets the status of this job post
+        status = job.jobStatus;
+      })
+      .catch((error) => {
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+            /* includesDefault= */false);
+        console.log('error', error);
+      });
 }
 
 /**
@@ -108,13 +113,13 @@ function renderPageElements() {
 
   const postalCode = document.getElementById('postal-code');
   postalCode.setAttribute('type', 'text');
-    
+
   const requirementsTitle = document.getElementById('requirements-title');
   requirementsTitle.innerText = STRINGS['requirements-title'];
 
   const payTitle = document.getElementById('pay-title');
   payTitle.innerText = STRINGS['pay-title'];
-    
+
   const jobPayMin = document.getElementById('pay-min');
   jobPayMin.setAttribute('type', 'number');
 
@@ -130,12 +135,13 @@ function renderPageElements() {
   jobExpiry.setAttribute('type', 'date');
 
   // Resets the error to make sure no error msg initially present.
-  setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */'', /* includesDefault= */false);
+  setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */'', /* includesDefault= */false);
 }
 
 /**
  * Adds pre-filled info to the fields on this page.
- * 
+ *
  * @param {Job} job Job json.
  */
 function addPrefilledInfo(job) {
@@ -158,13 +164,13 @@ function addPrefilledInfo(job) {
   const postalCode = document.getElementById('postal-code');
   const postalCodeContent = job.jobLocation.postalCode;
   postalCode.setAttribute('value', postalCodeContent);
-    
+
   const requirements = job.requirements;
   renderRequirementsList(requirements);
 
   const jobPayFrequency = job.jobPay.paymentFrequency;
   renderJobPayFrequencyOptions(jobPayFrequency);
-    
+
   const jobPayMin = document.getElementById('pay-min');
   const jobPayMinContent = job.jobPay.min;
   jobPayMin.setAttribute('value', jobPayMinContent);
@@ -180,12 +186,13 @@ function addPrefilledInfo(job) {
   renderJobExpiryLimits(jobExpiryTimestamp);
 
   // Resets the error to make sure no error msg initially present.
-  setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */'', /* includesDefault= */false);
+  setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */'', /* includesDefault= */false);
 }
 
 /**
  * Adds the list of requirements that are stored in the database.
- * 
+ *
  * @param {Array} requirements An array of requirements(string) of the job post.
  */
 function renderRequirementsList(requirements) {
@@ -194,23 +201,28 @@ function renderRequirementsList(requirements) {
 
   // Resets the list in case renders the same requirements twice
   requirementsListElement.innerHTML = '';
-  const requirementElementTemplate = document.getElementById('requirement-element-template');
+  const requirementElementTemplate =
+    document.getElementById('requirement-element-template');
 
   for (const key in requirementsMap) {
     if (!requirementsMap.hasOwnProperty(key)) {
       continue;
     }
 
-    const requirementElement = requirementElementTemplate.cloneNode(/* includes child elements */ true);
-    requirementElement.setAttribute('id', key);
+    const requirementElement = requirementElementTemplate
+        .cloneNode(/* includes child elements */ true);
 
     // tick box
     const checkbox = requirementElement.children[0];
     checkbox.setAttribute('id', key);
     checkbox.setAttribute('value', key);
+    checkbox.setAttribute('name', 'requirement');
 
     // If this requirement is one of the criteria for this job box, tick it
-    tickExistingRequirements(requirementsMap[key], requirements, checkbox);
+    const selected = requirements[key];
+    if (selected) {
+      checkbox.setAttribute('checked', requirements[key]);
+    }
 
     // text label
     const label = requirementElement.children[1];
@@ -222,52 +234,39 @@ function renderRequirementsList(requirements) {
 }
 
 /**
- * Ticks the existing requirement.
- * 
- * @param {String} requirement Requirement localized name.
- * @param {String} requirements Requirements list of current job post.
- * @param {HTMLElement} requirementElement HTML checkbox for that requirement
- */
-function tickExistingRequirements(requirement, requirements, requirementCheckbox) {
-  if (requirements.includes(requirement)) {
-    requirementCheckbox.setAttribute('checked', true);
-  }
-}
-
-/**
  * Dynamically adds the options for job pay frequency.
- * 
- * @param {String} jobPayFrequency Original payment frequency of the current job.
+ *
+ * @param {String} jobPayFrequency Original pay frequency of the current job.
  */
 function renderJobPayFrequencyOptions(jobPayFrequency) {
   const jobPaySelectElement = document.getElementById('pay-frequency');
   jobPaySelectElement.setAttribute('required', true);
-  
+
   renderSelectOptions(jobPaySelectElement, STRINGS['pay-frequency']);
   jobPaySelectElement.value = jobPayFrequency;
 }
 
 /**
  * Dynamically adds the options for job duration.
- * 
+ *
  * @param {String} jobDuration Original duration of the current job.
  */
 function renderJobDurationOptions(jobDuration) {
   const jobDurationSelect = document.getElementById('duration');
   jobDurationSelect.setAttribute('required', true);
-  
+
   renderSelectOptions(jobDurationSelect, STRINGS['duration']);
   jobDurationSelect.value = jobDuration;
 }
 
 /**
  * Dynamically adds the limits for choosing the new job post expiry.
- * 
- * @param {long} jobExpiryTimestamp Timestamp of the expiry date for this job post.
+ *
+ * @param {long} jobExpiryTimestamp Timestamp of the expiry for this job post.
  */
 function renderJobExpiryLimits(jobExpiryTimestamp) {
   const expiryDate = new Date(jobExpiryTimestamp).toISOString().substr(0, 10);
-  
+
   const date = new Date();
   const min = date.toISOString().substr(0, 10);
   date.setFullYear(date.getFullYear() + 1);
@@ -293,16 +292,14 @@ function getJobDetailsFromUserInput() {
   const payFrequency = document.getElementById('pay-frequency').value;
   const payMin = document.getElementById('pay-min').valueAsNumber;
   const payMax = document.getElementById('pay-max').valueAsNumber;
-  
+
   const requirementsCheckboxes =
-    document.getElementsByName('requirements-list');
-  const requirementsList = [];
+    document.getElementsByName('requirement');
+  const requirementsMap = new Map();
   requirementsCheckboxes.forEach(({checked, id}) => {
-    if (checked) {
-      requirementsList.push(id);
-    }
+    requirementsMap[id] = checked;
   });
-  
+
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
@@ -311,7 +308,7 @@ function getJobDetailsFromUserInput() {
   if (status === '') {
     status = 'ACTIVE';
   }
-  
+
   const jobDetails = {
     jobId: jobPostId,
     jobStatus: status,
@@ -328,14 +325,14 @@ function getJobDetailsFromUserInput() {
       min: payMin,
       max: payMax,
     },
-    requirements: requirementsList,
+    requirements: requirementsMap,
     postExpiryTimestamp: expiry,
     jobDuration: duration,
   };
-  
+
   return jobDetails;
 }
-  
+
 /**
 * Validates the user input.
 * Shows error message on the webpage if there is field with invalid input.
@@ -356,46 +353,51 @@ function validateRequiredUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
 
   if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ 'Empty Job Id found.',
-      /* includesDefault= */false);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ 'Empty Job Id found.',
+        /* includesDefault= */false);
     return false;
   }
-  
+
   if (name.value === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['title']);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['title']);
     return false;
   }
 
   if (description.value === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['description']);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['description']);
     return false;
   }
 
   if (address.value === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['address']);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['address']);
     return false;
   }
 
   if (postalCode.value === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ STRINGS['postal-code']);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['postal-code']);
     return false;
   }
 
   if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
     payMin > payMax || payMin < 0 || payMax < 0) {
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ document.getElementById('pay-title')
-        .textContent);
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ document.getElementById('pay-title').textContent);
     return false;
   }
 
   if (duration === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message', 
+    setErrorMessage(/* errorMessageElementId= */'error-message',
         /* msg= */ document.getElementById('duration-title').textContent);
     return false;
   }
 
   if (Number.isNaN(expiry)) {
-    setErrorMessage(/* errorMessageElementId= */'error-message', 
+    setErrorMessage(/* errorMessageElementId= */'error-message',
         /* msg= */ document.getElementById('expiry-title').textContent);
     return false;
   }
@@ -416,25 +418,28 @@ submitButton.addEventListener('click', (_) => {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(jobDetails),
   })
-  .then((response) => {
-    if (response.status == BAD_REQUEST_STATUS_CODE) {
-      setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'], /* includesDefault= */false);
-      throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
-    }
+      .then((response) => {
+        if (response.status == BAD_REQUEST_STATUS_CODE) {
+          setErrorMessage(/* errorMessageElementId= */'error-message',
+              /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
+              /* includesDefault= */false);
+          throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
+        }
 
-    /** reset the error (there might have been an error msg from earlier) */
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '', /* includesDefault= */false);
-    window.location.href= HOMEPAGE_PATH;
-  })
-  .catch((error) => {
-    // Not the server response error already caught and thrown
-    if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
-      setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-        /* includesDefault= */false);
-      console.log('error', error);
-    }
-  });
+        /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ '', /* includesDefault= */false);
+        window.location.href= HOMEPAGE_PATH;
+      })
+      .catch((error) => {
+        // Not the server response error already caught and thrown
+        if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
+          setErrorMessage(/* errorMessageElementId= */'error-message',
+              /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+              /* includesDefault= */false);
+          console.log('error', error);
+        }
+      });
 });
 
 const cancelButton = document.getElementById('cancel');
@@ -445,6 +450,7 @@ cancelButton.addEventListener('click', (_) => {
 /**
  * Returns a dummy jobId only for selenium ui test
  * since getJobId is not implemented yet.
+ * @return {String} jobId for selenium test.
  */
 function getJobIdForSeleniumTest() {
   return 'seleniumTestJobId';
@@ -454,6 +460,7 @@ function getJobIdForSeleniumTest() {
  * Returns a hard-coded job object only for selenium ui test
  * since the GET request to retreive the job from servlet
  * is not implemented by partner yet.
+ * @return {Object} jobDetails for selenium test.
  */
 function getJobForSeleniumTest() {
   const jobDetails = {
@@ -471,7 +478,11 @@ function getJobForSeleniumTest() {
       min: 1,
       max: 4,
     },
-    requirements: ['O Level', 'English'],
+    requirements: {
+      'O_LEVEL': true,
+      'LANGUAGE_ENGLISH': true,
+      'DRIVING_LICENSE_C': false,
+    },
     postExpiryTimestamp: 1601856000000,
     jobDuration: 'ONE_WEEK',
   };
