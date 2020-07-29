@@ -120,3 +120,25 @@ AppStrings['job-details'] = {
   'delete-error-message': 'There was an error while deleting ' +
     'the job post. Please try again',
 };
+
+/**
+ * Strings used in account folder
+ */
+AppStrings['account'] = {
+  'back': 'Back to Homepage',
+  'edit': 'Edit',
+  'submit': 'Submit',
+};
+
+/**
+ * Strings used in account/business
+ */
+AppStrings['business'] = {
+  'name': 'Company Name',
+  'active-job-posts-title': 'Active Job Posts',
+  'error-message':
+    'There was an error while loading the business account details. Please try again',
+  'update-error-message': 'Error occur when updating business account',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occured while getting the job listings.',
+};

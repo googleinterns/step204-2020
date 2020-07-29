@@ -13,6 +13,8 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
+const BUSINESS_ID_PARAM = 'businessId';
+const BUSINESS_DETAILS_PARAM = 'businessDetails';
 
 /**
  * Gets the requirements list from the servlet
@@ -60,5 +62,5 @@ function renderSelectOptions(select, options) {
   }
 }
 
-export {JOB_ID_PARAM, getRequirementsList, setErrorMessage,
-  renderSelectOptions};
+export {JOB_ID_PARAM, BUSINESS_ID_PARAM, BUSINESS_DETAILS_PARAM,
+  getRequirementsList, setErrorMessage, renderSelectOptions};

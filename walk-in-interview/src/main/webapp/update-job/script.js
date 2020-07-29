@@ -67,7 +67,6 @@ function loadAndShowJob(jobId) {
   // status = job.jobStatus;
   // return;
 
-  // TODO(issue/53): run the web page to test once doGet finishes in JobServlet
   const url = `${API['get-individual-job']}?jobId=${jobId}`;
   fetch(url, {
     method: 'GET',
