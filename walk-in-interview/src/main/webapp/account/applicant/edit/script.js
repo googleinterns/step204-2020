@@ -25,9 +25,11 @@ window.onload = () => {
   renderPageElements();
 };
 
+/**
+ * Adds text into the page.
+ */
 function renderPageElements() {
   const applicantDetails = getApplicantDetails();
-  console.log(applicantDetails);
 
   const backButton = document.getElementById('back');
   backButton.innerText = STRINGS['back'];
