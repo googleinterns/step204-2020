@@ -12,6 +12,7 @@ const JOB_MAP_ZOOM = 15;
 
 /**
  * Creates a map in the provided html div.
+ *
  * @param {String} mapElementId The map element id.
  * @param {float} latitude The center latitude. Defaulted to Singapore lat.
  * @param {float} longitude The center longitude. Defaulted to Singapore lon.
@@ -34,6 +35,7 @@ function createMap(mapElementId, latitude=SG_LATITUDE,
  * Drops the markers so that the user can see them falling.
  * The pins indicate the location of the job. You can also
  * click on them to get some information about them.
+ *
  * @param {google.maps.Map} map The map to add the marker to.
  * @param {Object} job The job to be added to the marker.
  * @return {google.maps.Marker} The marker created.

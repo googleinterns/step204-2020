@@ -210,25 +210,26 @@ function displayJobListings(jobPageData) {
  * @return {Element} The job listing element.
  */
 function buildJobElement(job) {
-  const jobListingTemplate = document.getElementById('job-listing-template');
+  const jobPostPreviewTemplate =
+    document.getElementById('job-listing-template');
 
-  const jobListing =
-  jobListingTemplate.cloneNode( /* and child elements */ true);
-  jobListing.setAttribute('id', job['jobId']);
+  const jobPostPreview =
+    jobPostPreviewTemplate.cloneNode( /* and child elements */ true);
+  jobPostPreview.setAttribute('id', job['jobId']);
 
-  const jobTitle = jobListing.children[0];
+  const jobTitle = jobPostPreview.children[0];
   jobTitle.innerText = job['jobTitle'];
 
-  const jobAddress = jobListing.children[1];
+  const jobAddress = jobPostPreview.children[1];
   const location = job['jobLocation'];
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
 
-  const jobPay = jobListing.children[2];
+  const jobPay = jobPostPreview.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
   `(${pay['paymentFrequency'].toLowerCase()})`;
 
-  const requirementsList = jobListing.children[3];
+  const requirementsList = jobPostPreview.children[3];
   const fullRequirementsList = getRequirementsList();
   const requirementsArr = [];
 
@@ -244,17 +245,17 @@ function buildJobElement(job) {
   requirementsList.innerText =
   `Requirements List: ${requirementsArr.join(', ')}`;
 
-  const detailsForm = jobListing.children[4];
+  const detailsForm = jobPostPreview.children[4];
   detailsForm.method = 'GET';
   detailsForm.action = JOB_DETAILS_PATH;
 
-  const jobIdElement = jobListing.children[4].children[0];
+  const jobIdElement = jobPostPreview.children[4].children[0];
   jobIdElement.setAttribute('type', 'hidden');
   jobIdElement.setAttribute('name', JOB_ID_PARAM);
   const jobId = job[JOB_ID_PARAM];
   jobIdElement.setAttribute('value', jobId);
 
-  jobListing.addEventListener('click', (_) => {
+  jobPostPreview.addEventListener('click', (_) => {
     if (jobId === '') {
       throw new Error('jobId should not be empty');
     }
@@ -264,7 +265,7 @@ function buildJobElement(job) {
   const marker = addMarker(map, job);
   marker.addListener('click', function() {
     new google.maps.InfoWindow({
-      content: jobListing.innerHTML,
+      content: jobPostPreview.innerHTML,
     }).open(map, marker);
     // TODO(issue/73): link this to the job in the list?
   });
@@ -277,7 +278,7 @@ function buildJobElement(job) {
     detailsForm.submit();
   });
 
-  return jobListing;
+  return jobPostPreview;
 }
 
 /**
