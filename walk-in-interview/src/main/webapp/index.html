@@ -3,6 +3,27 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o",
+    authDomain: "com-walk-in-interview.firebaseapp.com",
+    databaseURL: "https://com-walk-in-interview.firebaseio.com",
+    projectId: "google.com:walk-in-interview",
+    storageBucket: "undefined",
+    messagingSenderId: "610715446188",
+    appId: "1:610715446188:web:8cec0c2798940bb9d32809",
+    measurementId: "G-RJ55G4ZXN8"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
   <link rel="stylesheet" href="../style.css">
 </head>
 

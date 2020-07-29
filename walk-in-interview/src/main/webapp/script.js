@@ -31,7 +31,13 @@ const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
 
 window.onload = () => {
-  renderHomepageElements();
+  // renderHomepageElements();
+  firebase.auth().createUserWithEmailAndPassword("riyan@gmail.com", "pass").catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ...
+  });
 };
 
 /** Adds all the titles to the fields on this page. */
