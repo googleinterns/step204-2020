@@ -14,7 +14,7 @@ import {AppStrings} from '../../strings.en.js';
 import {APPLICANT_ID_PARAM, APPLICANT_DETAILS_PARAM} from '../../common-functions.js';
 
 const HOMEPAGE_PATH = '../../index.html';
-const EDIT_ACCOUNT_PATH = '/edit/index.html';
+const EDIT_ACCOUNT_PATH = './edit/index.html';
 const STRINGS = AppStrings['applicant'];
 
 window.onload = () => {
