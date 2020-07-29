@@ -1,5 +1,5 @@
 /**
- * This file is specific to log-in/log-in.html. 
+ * This file is specific to log-in/index.html. 
  * It renders the fields on the page dynamically
  */
 
