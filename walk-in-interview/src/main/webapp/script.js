@@ -14,6 +14,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from './strings.en.js';
 import {getRequirementsList, JOB_ID_PARAM,
   setErrorMessage} from './common-functions.js';
+import {createMap, addMarker} from './maps.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
@@ -29,6 +30,8 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 // TODO(issue/34): implement pagination for job listings
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
+
+let map;
 
 window.onload = () => {
   renderHomepageElements();
@@ -74,6 +77,8 @@ function renderHomepageElements() {
   const jobListingsTitle =
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
+
+  map = createMap('homepage-map');
 
   loadAndDisplayJobListings();
 
@@ -205,25 +210,26 @@ function displayJobListings(jobPageData) {
  * @return {Element} The job listing element.
  */
 function buildJobElement(job) {
-  const jobListingTemplate = document.getElementById('job-listing-template');
+  const jobPostPreviewTemplate =
+    document.getElementById('job-listing-template');
 
-  const jobListing =
-  jobListingTemplate.cloneNode( /* and child elements */ true);
-  jobListing.setAttribute('id', job['jobId']);
+  const jobPostPreview =
+    jobPostPreviewTemplate.cloneNode( /* and child elements */ true);
+  jobPostPreview.setAttribute('id', job['jobId']);
 
-  const jobTitle = jobListing.children[0];
+  const jobTitle = jobPostPreview.children[0];
   jobTitle.innerText = job['jobTitle'];
 
-  const jobAddress = jobListing.children[1];
+  const jobAddress = jobPostPreview.children[1];
   const location = job['jobLocation'];
   jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
 
-  const jobPay = jobListing.children[2];
+  const jobPay = jobPostPreview.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
   `(${pay['paymentFrequency'].toLowerCase()})`;
 
-  const requirementsList = jobListing.children[3];
+  const requirementsList = jobPostPreview.children[3];
   const fullRequirementsList = getRequirementsList();
   const requirementsArr = [];
 
@@ -239,24 +245,40 @@ function buildJobElement(job) {
   requirementsList.innerText =
   `Requirements List: ${requirementsArr.join(', ')}`;
 
-  const detailsForm = jobListing.children[4];
+  const detailsForm = jobPostPreview.children[4];
   detailsForm.method = 'GET';
   detailsForm.action = JOB_DETAILS_PATH;
 
-  const jobIdElement = jobListing.children[4].children[0];
+  const jobIdElement = jobPostPreview.children[4].children[0];
   jobIdElement.setAttribute('type', 'hidden');
   jobIdElement.setAttribute('name', JOB_ID_PARAM);
   const jobId = job[JOB_ID_PARAM];
   jobIdElement.setAttribute('value', jobId);
 
-  jobListing.addEventListener('click', (_) => {
+  jobPostPreview.addEventListener('click', (_) => {
     if (jobId === '') {
       throw new Error('jobId should not be empty');
     }
     detailsForm.submit();
   });
 
-  return jobListing;
+  const marker = addMarker(map, job);
+  marker.addListener('click', function() {
+    new google.maps.InfoWindow({
+      content: jobPostPreview.innerHTML,
+    }).open(map, marker);
+    // TODO(issue/73): link this to the job in the list?
+  });
+
+  /* double clicking on the marker goes to the job details page */
+  marker.addListener('dblclick', function() {
+    if (jobId === '') {
+      throw new Error('jobId should not be empty');
+    }
+    detailsForm.submit();
+  });
+
+  return jobPostPreview;
 }
 
 /**
