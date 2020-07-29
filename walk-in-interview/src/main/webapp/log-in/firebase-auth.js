@@ -51,7 +51,7 @@ function signIntoBusinessAccount(email, password) {
 
 /**
  * This will create a new applicant account.
- * @param {Number} phoneNumber The phone number for the new applicant account.
+ * @param {String} phoneNumber The phone number for the new applicant account.
  * @param {Object} appVerifier The recaptcha verifier.
  * @return {String} The otp for the new applicant account.
  */

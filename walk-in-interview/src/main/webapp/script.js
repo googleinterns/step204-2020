@@ -15,7 +15,7 @@ import {AppStrings} from './strings.en.js';
 import {getRequirementsList, JOB_ID_PARAM,
   setErrorMessage} from './common-functions.js';
 
-import {createBusinessAccount, createApplicantAccount} from './log-in/firebase-auth.js';
+import {signIntoBusinessAccount} from './log-in/firebase-auth.js';
 
 const STRINGS = AppStrings['homepage'];
 const JOBPAGE_PATH = '/new-job/index.html';
@@ -33,9 +33,7 @@ const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_PAGE_INDEX = 0;
 
 window.onload = () => {
-  console.log('in heree');
-  // createBusinessAccount('riyannn@gmail.com', 'okk123456k');
-  createApplicantAccount(+12159003133);
+  signIntoBusinessAccount('riyannn@gmail.com', 'okk123456k');
   renderHomepageElements();
 };
 
