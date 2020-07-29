@@ -1,6 +1,6 @@
 
 /**
- * This file is specific to account/edit-applicant-account.html. 
+ * This file is specific to account/applicant/edit/index.html. 
  * It renders the fields on the page dynamically.
  */
 
@@ -11,13 +11,13 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from '../strings.en.js';
-import {API} from '../apis.js';
+import {AppStrings} from '../../../strings.en.js';
+import {API} from '../../../apis.js';
 
 import {APPLICANT_ID_PARAM, APPLICANT_DETAILS_PARAM, 
-  getRequirementsList, setErrorMessage} from '../common-functions.js';
+  getRequirementsList, setErrorMessage} from '../../../common-functions.js';
 
-const HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../../../index.html';
 const STRINGS = AppStrings['applicant'];
 const BAD_REQUEST_STATUS_CODE = 400;
 
