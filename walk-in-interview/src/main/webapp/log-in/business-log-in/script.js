@@ -29,7 +29,7 @@ function renderPageElements() {
 
   const accountInputElement = accountElement.children[1];
   accountInputElement.setAttribute('type', 'text');
-  // TODO: send the input to the log-in related stuff
+  // TODO(issue/78): send the input to the firebase auth related stuff
 
   const passwordElement = document.getElementById('password');
 
@@ -38,7 +38,7 @@ function renderPageElements() {
 
   const passwordInputElement = passwordElement.children[1];
   passwordInputElement.setAttribute('type', 'text');
-  // TODO: send the input to the log-in related stuff
+  // TODO(issue/78): send the input to the firebase auth related stuff
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
@@ -54,5 +54,5 @@ backButton.addEventListener('click', (_) => {
 
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
-  // TODO
+  // TODO(issue/78): send the input to the firebase auth related stuff
 });
