@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "walk-in-interview/src/main/webapp/folld",
+    "public": "walk-in-interview/src/main/webapp/log-in",
     "ignore": [
       "firebase.json",
       "**/.*",
