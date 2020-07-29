@@ -1,7 +1,8 @@
 /**
  * This file will handle all the functions related to firebase auth.
+ *
  * Note that the following lines would need to be added to any html
- * file that wishes to use firebase auth.
+ * file that wishes to use firebase auth:
  * <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
  * <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
  */
@@ -17,7 +18,6 @@ const firebaseConfig = {
   measurementId: 'G-RJ55G4ZXN8',
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 // TODO(issue/21): get the language from the browser
@@ -56,13 +56,7 @@ function signIntoBusinessAccount(email, password) {
  * @return {String} The otp for the new applicant account.
  */
 function createApplicantAccount(phoneNumber, appVerifier) {
-  return firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        console.log('otp sms', confirmationResult);
-        // TODO(issue/xx): set up otp for the applicant account
-      }).catch((error) => {
-        console.error(error);
-      });
+  // TODO(issue/79): set up phone number sign in with otp and recaptcha
 }
 
 /**
