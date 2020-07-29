@@ -21,7 +21,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // TODO(issue/21): get the language from the browser
-firebase.auth().languageCode = 'en';
+const CurrentLocale = 'en';
+
+firebase.auth().languageCode = CurrentLocale;
 
 /**
  * This will create a new business account.
@@ -53,7 +55,6 @@ function signIntoBusinessAccount(email, password) {
  * This will create a new applicant account.
  * @param {String} phoneNumber The phone number for the new applicant account.
  * @param {Object} appVerifier The recaptcha verifier.
- * @return {String} The otp for the new applicant account.
  */
 function createApplicantAccount(phoneNumber, appVerifier) {
   // TODO(issue/79): set up phone number sign in with otp and recaptcha
