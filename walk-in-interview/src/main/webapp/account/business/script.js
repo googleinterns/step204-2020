@@ -69,6 +69,8 @@ function renderPageElements(accountId) {
   // in case it was disabled earlier
   editButton.disabled = false;
 
+  const nameLabel = document.getElementById('name-label');
+  nameLabel.innerText = STRINGS['name'];
   const name = document.getElementById('name');
   name.innerText = accountDetails.name;
 

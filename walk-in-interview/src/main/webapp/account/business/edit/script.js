@@ -12,8 +12,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {API} from '../../../apis.js';
-import {BUSINESS_ID_PARAM, BUSINESS_DETAILS_PARAM} 
-  from '../../../common-functions.js';
+import {BUSINESS_ID_PARAM, BUSINESS_DETAILS_PARAM, 
+  setErrorMessage} from '../../../common-functions.js';
 
 const HOMEPAGE_PATH = '../../../index.html';
 const STRINGS = AppStrings['business'];
@@ -94,7 +94,7 @@ function getBusinessDetailsFromUserInput() {
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
-  const businessId = getApplicantId();
+  const businessId = getBusinessId();
   const name = document.getElementById('name').value;
 
   if (businessId === '') {
