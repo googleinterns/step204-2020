@@ -1,5 +1,5 @@
 /**
- * This file is specific to log-in/business-log-in/index.html. 
+ * This file is specific to log-in/applicant/index.html. 
  * It renders the fields on the page dynamically
  */
 
@@ -13,7 +13,7 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../../strings.en.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
-const STRINGS = AppStrings['business-log-in'];
+const STRINGS = AppStrings['applicant-log-in'];
 const HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
@@ -28,6 +28,7 @@ function renderPageElements() {
   accountLabelElement.innerText = STRINGS['account'];
 
   const accountInputElement = accountElement.children[1];
+  accountInputElement.setAttribute('name', 'account-input');
   accountInputElement.setAttribute('type', 'text');
   // TODO(issue/78): send the input to the firebase auth related stuff
 
@@ -37,8 +38,12 @@ function renderPageElements() {
   passwordLabelElement.innerText = STRINGS['password'];
 
   const passwordInputElement = passwordElement.children[1];
+  passwordInputElement.setAttribute('name', 'password-input');
   passwordInputElement.setAttribute('type', 'text');
   // TODO(issue/78): send the input to the firebase auth related stuff
+
+  const otpButton = document.getElementById('otp');
+  otpButton.innerText = STRINGS['otp'];
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
@@ -46,6 +51,11 @@ function renderPageElements() {
   const submitButton = document.getElementById('submit');
   submitButton.innerText = COMMONG_STRINGS['submit'];
 }
+
+const otpButton = document.getElementById('otp');
+otpButton.addEventListener('click', (_) => {
+  // TODO(issue/78): send a OTP sms
+});
 
 const backButton = document.getElementById('back');
 backButton.addEventListener('click', (_) => {

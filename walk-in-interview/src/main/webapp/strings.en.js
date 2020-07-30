@@ -52,7 +52,7 @@ AppStrings['homepage'] = {
 };
 
 /**
- * All the strings to be used in the log-in/log-in.html.
+ * All the strings to be used in the log-in/index.html.
  */
 AppStrings['log-in'] = {
   'applicant-log-in': 'Log in as an Applicant',
@@ -62,7 +62,7 @@ AppStrings['log-in'] = {
 };
 
 /**
- * All the strings to be used in the log-in/business-log-in.html.
+ * All the strings to be used in the log-in/business/index.html.
  */
 AppStrings['business-log-in'] = {
   'account': 'Account (Email)',
@@ -70,12 +70,12 @@ AppStrings['business-log-in'] = {
 };
 
 /**
- * All the strings to be used in the log-in/applicant-log-in.html.
+ * All the strings to be used in the log-in/applicant/index.html.
  */
 AppStrings['applicant-log-in'] = {
   'account': 'Account (Phone Number)',
-  'password': 'Password',
-  'otp': 'Get OTP instead',
+  'password': 'OTP',
+  'otp': 'Send OTP',
 };
 
 /**
