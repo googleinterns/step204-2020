@@ -17,6 +17,7 @@ import {getRequirementsList, JOB_ID_PARAM,
 import {createMap, addMarker} from './maps.js';
 
 const STRINGS = AppStrings['homepage'];
+const LOG_IN_PAGE_PATH = '/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
 const SALARY_PARAM = 'SALARY';
@@ -45,11 +46,17 @@ function renderHomepageElements() {
   const newPostButton = document.getElementById('new-post');
   newPostButton.innerText = STRINGS['new-post'];
   newPostButton.addEventListener('click', (_) => {
-    window.location.href= JOBPAGE_PATH;
+    window.location.href = JOBPAGE_PATH;
   });
 
   const accountButton = document.getElementById('account');
   accountButton.innerText = STRINGS['account'];
+
+  const loginButton = document.getElementById('log-in');
+  loginButton.innerText = STRINGS['log-in'];
+  loginButton.addEventListener('click', (_) => {
+    window.location.href = LOG_IN_PAGE_PATH;
+  });
 
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
