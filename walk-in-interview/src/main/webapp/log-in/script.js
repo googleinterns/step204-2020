@@ -13,8 +13,8 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../strings.en.js';
 
 const STRINGS = AppStrings['log-in'];
-const APPLICANT_LOG_IN_PAGE = './applicant-log-in/index.html';
-const BUSINESS_LOG_IN_PAGE = './business-log-in/index.html';
+const APPLICANT_LOG_IN_PAGE = './applicant/index.html';
+const BUSINESS_LOG_IN_PAGE = './business/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
