@@ -38,7 +38,7 @@ function renderPageElements() {
 
   const passwordInputElement = passwordElement.children[1];
   passwordInputElement.setAttribute('name', 'password-input');
-  passwordInputElement.setAttribute('type', 'text');
+  passwordInputElement.setAttribute('type', 'password');
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];

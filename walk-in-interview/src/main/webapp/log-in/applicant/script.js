@@ -31,16 +31,16 @@ function renderPageElements() {
   accountInputElement.setAttribute('name', 'account-input');
   accountInputElement.setAttribute('type', 'text');
 
-  const passwordElement = document.getElementById('password');
+  const otpElement = document.getElementById('otp');
 
-  const passwordLabelElement = passwordElement.children[0];
-  passwordLabelElement.innerText = STRINGS['otp'];
+  const otpLabelElement = otpElement.children[0];
+  otpLabelElement.innerText = STRINGS['otp'];
 
-  const passwordInputElement = passwordElement.children[1];
-  passwordInputElement.setAttribute('name', 'password-input');
-  passwordInputElement.setAttribute('type', 'text');
+  const otpInputElement = otpElement.children[1];
+  otpInputElement.setAttribute('name', 'otp-input');
+  otpInputElement.setAttribute('type', 'text');
 
-  const otpButton = document.getElementById('otp');
+  const otpButton = document.getElementById('otp-button');
   otpButton.innerText = STRINGS['otp-button'];
 
   const backButton = document.getElementById('back');
