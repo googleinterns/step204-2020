@@ -74,8 +74,8 @@ AppStrings['business-log-in'] = {
  */
 AppStrings['applicant-log-in'] = {
   'account': 'Account (Phone Number)',
-  'password': 'OTP',
-  'otp': 'Send OTP',
+  'otp': 'OTP',
+  'otp-button': 'Send OTP',
 };
 
 /**

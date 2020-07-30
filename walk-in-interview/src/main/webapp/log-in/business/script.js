@@ -14,7 +14,7 @@ import {AppStrings} from '../../strings.en.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
-const HOMEPAGE_PATH = '../index.html';
+const LOGIN_HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
   renderPageElements();
@@ -30,7 +30,6 @@ function renderPageElements() {
   const accountInputElement = accountElement.children[1];
   accountInputElement.setAttribute('name', 'account-input');
   accountInputElement.setAttribute('type', 'text');
-  // TODO(issue/78): send the input to the firebase auth related stuff
 
   const passwordElement = document.getElementById('password');
 
@@ -40,7 +39,6 @@ function renderPageElements() {
   const passwordInputElement = passwordElement.children[1];
   passwordInputElement.setAttribute('name', 'password-input');
   passwordInputElement.setAttribute('type', 'text');
-  // TODO(issue/78): send the input to the firebase auth related stuff
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
@@ -51,10 +49,10 @@ function renderPageElements() {
 
 const backButton = document.getElementById('back');
 backButton.addEventListener('click', (_) => {
-  window.location.href = HOMEPAGE_PATH;
+  window.location.href = LOGIN_HOMEPAGE_PATH;
 });
 
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
-  // TODO(issue/78): send the input to the firebase auth related stuff
+  // TODO(issue/78): send the account & password input to the firebase auth related stuff
 });
