@@ -61,6 +61,15 @@ function createApplicantAccount(phoneNumber, appVerifier) {
 }
 
 /**
+ * This will sign into an existing applicant account.
+ * @param {String} phoneNumber The number for the existing applicant account.
+ * @param {Object} appVerifier The recaptcha verifier.
+ */
+function signIntoApplicantAccount(phoneNumber, appVerifier) {
+  // TODO(issue/79): set up phone number sign in with otp and recaptcha
+}
+
+/**
  * Signs out the current user.
  */
 function signOutCurrentUser() {
@@ -72,7 +81,7 @@ function signOutCurrentUser() {
 }
 
 /**
- * Prints the current state of the user
+ * Checks the user sign in status.
  */
 function checkCurrentUser() {
   firebase.auth().onAuthStateChanged((firebaseUser) => {
@@ -85,4 +94,4 @@ function checkCurrentUser() {
 }
 
 export {createBusinessAccount, signIntoBusinessAccount,
-  createApplicantAccount, signOutCurrentUser};
+  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser};
