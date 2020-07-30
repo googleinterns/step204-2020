@@ -7,6 +7,8 @@
  * <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
  */
 
+import {AppStrings} from '../strings.en.js';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
   authDomain: 'com-walk-in-interview.firebaseapp.com',
@@ -25,8 +27,11 @@ const CurrentLocale = 'en';
 
 firebase.auth().languageCode = CurrentLocale;
 
+const STRINGS = AppStrings['auth'];
+
 /**
  * This will create a new business account.
+ *
  * @param {String} email The email for the new business account.
  * @param {String} password The password for the new business account.
  */
@@ -40,6 +45,7 @@ function createBusinessAccount(email, password) {
 
 /**
  * This will sign into an existing business account.
+ *
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
  */
@@ -53,6 +59,7 @@ function signIntoBusinessAccount(email, password) {
 
 /**
  * This will create a new applicant account.
+ *
  * @param {String} phoneNumber The phone number for the new applicant account.
  * @param {Object} appVerifier The recaptcha verifier.
  */
@@ -62,6 +69,7 @@ function createApplicantAccount(phoneNumber, appVerifier) {
 
 /**
  * This will sign into an existing applicant account.
+ *
  * @param {String} phoneNumber The number for the existing applicant account.
  * @param {Object} appVerifier The recaptcha verifier.
  */
@@ -71,10 +79,13 @@ function signIntoApplicantAccount(phoneNumber, appVerifier) {
 
 /**
  * Signs out the current user.
+ *
+ * @param {String} elementId The div in which to show the signed out status.
  */
-function signOutCurrentUser() {
+function signOutCurrentUser(elementId) {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
+    document.getElementById(elementId).innerText = STRINGS['sign-out-success'];
   }).catch((error) => {
     console.error(error);
   });
