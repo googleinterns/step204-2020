@@ -148,3 +148,10 @@ AppStrings['job-details'] = {
   'delete-error-message': 'There was an error while deleting ' +
     'the job post. Please try again',
 };
+
+/**
+ * Strings used in firebase-auth.
+ */
+AppStrings['auth'] = {
+  'sign-out-success': 'Signed Out Successfully',
+};
