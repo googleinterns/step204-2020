@@ -67,6 +67,22 @@ function createApplicantAccount(phoneNumber, appVerifier) {
   // TODO(issue/79): set up phone number sign in with otp and recaptcha
 }
 
+
+//   // add this to the applicant account login page
+//   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+//     'sign-in-button', {
+//       'size': 'invisible',
+//       'callback': (response) => {
+//       // reCAPTCHA solved, allow signInWithPhoneNumber.
+//         onSignInSubmit();
+//       },
+//     });
+
+// const appVerifier = window.recaptchaVerifier;
+
+//   <div id="sign-in-button"></div> in the html file
+
+
 /**
  * This will sign into an existing applicant account.
  *
