@@ -8,7 +8,7 @@
  */
 
 import {AppStrings} from '../strings.en.js';
-import {} from '../common-functions.js';
+import {getCookie} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -53,7 +53,7 @@ function createBusinessAccount(email, password) {
  */
 function signIntoBusinessAccount(email, password) {
   return firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(user => {
+      .then(({user}) => {
         // Get the user's ID token as it is needed to exchange for a session cookie.
         return user.getIdToken()
             .then(idToken => {
@@ -109,6 +109,26 @@ function checkCurrentUser() {
     } else {
       console.log('not signed in');
     }
+  });
+}
+
+/**
+ * Makes a POST request to session log in endpoint.
+ * 
+ * @param {*} url Login endpoint.
+ * @param {*} idToken Id token.
+ * @param {*} csrfToken CSRF token.
+ */
+function postIdTokenToSessionLogin(url, idToken, csrfToken) {
+  const params = new URLSearchParams();
+  params.append('idToken', idToken);
+  params.append('csrfToken', csrfToken);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: params,
+    credentials: 'include',
   });
 }
 
