@@ -72,23 +72,22 @@ function findCoordinates(postalCode) {
   const service = new google.maps.places.PlacesService(
       document.getElementById('places-results'));
 
-  service.findPlaceFromQuery(request, (results, status) => {
+  return service.findPlaceFromQuery(request, (results, status) => {
     console.log('response', status);
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       // there should only be one location with that postal code
       if (results.length != 1) {
-        return {};
+        throw new Error('unable to find one location for given postal code: ' +
+            postalCode);
       }
       const location = results[0].geometry.location;
       console.log('location', location.lat(), location.lng());
       return {
         latitude: location.lat(),
-        longitude: longitude.lng(),
+        longitude: location.lng(),
       };
     }
   });
-
-  return {};
 }
 
 export {createMap, addMarker, findCoordinates, JOB_MAP_ZOOM};

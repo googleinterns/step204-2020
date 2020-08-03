@@ -286,7 +286,7 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
  * @param {String} status Status for the current job post.
  * @return {Object} containing the user inputs.
  */
-function getJobDetailsFromUserInput() {
+async function getJobDetailsFromUserInput() {
   const name = document.getElementById('title').value;
   const description = document.getElementById('description').value;
   const address = document.getElementById('address').value;
@@ -311,6 +311,8 @@ function getJobDetailsFromUserInput() {
     status = 'ACTIVE';
   }
 
+  const location = await findCoordinates(postalCode);
+
   const jobDetails = {
     jobId: jobPostId,
     jobStatus: status,
@@ -318,8 +320,8 @@ function getJobDetailsFromUserInput() {
     jobLocation: {
       address: address,
       postalCode: postalCode,
-      latitude: findCoordinates(postalCode).latitude,
-      longitude: findCoordinates(postalCode).longitude,
+      latitude: location.latitude,
+      longitude: location.longitude,
     },
     jobDescription: description,
     jobPay: {
@@ -380,12 +382,6 @@ function validateRequiredUserInput() {
   }
 
   if (postalCode.value === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ STRINGS['postal-code']);
-    return false;
-  }
-
-  if (findCoordinates(postalCode.value).length === 0) {
     setErrorMessage(/* errorMessageElementId= */'error-message',
         /* msg= */ STRINGS['postal-code']);
     return false;

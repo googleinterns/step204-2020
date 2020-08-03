@@ -175,7 +175,7 @@ function renderJobExpiryLimits() {
  * Gets job detail from user input.
  * @return {Object} containing the user inputs.
  */
-function getJobDetailsFromUserInput() {
+async function getJobDetailsFromUserInput() {
   const name = document.getElementById('title').value;
   const description = document.getElementById('description').value;
   const address = document.getElementById('address').value;
@@ -194,14 +194,16 @@ function getJobDetailsFromUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
+  const location = await findCoordinates(postalCode);
+
   const jobDetails = {
     jobTitle: name,
     jobLocation: {
       address: address,
       postalCode: postalCode,
       region: findRegion(postalCode),
-      latitude: findCoordinates(postalCode).latitude,
-      longitude: findCoordinates(postalCode).longitude,
+      latitude: location.latitude,
+      longitude: location.longitude,
     },
     jobDescription: description,
     jobPay: {
@@ -359,12 +361,6 @@ function validatePostalCode() {
   const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
   if (Number.isNaN(postalCodeDigits) || postalCodeDigits < 0 ||
     postalCodeDigits === 74 || postalCodeDigits > 82) {
-    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
-        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
-    return false;
-  }
-
-  if (findCoordinates(postalCode).length === 0) {
     setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
         /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
     return false;
