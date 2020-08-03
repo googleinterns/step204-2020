@@ -17,6 +17,8 @@ import {API} from '../apis.js';
 import {getRequirementsList, setErrorMessage,
   renderSelectOptions} from '../common-functions.js';
 
+import {findCoordinates} from '../maps.js';
+
 const STRINGS = AppStrings['job'];
 const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
@@ -198,8 +200,8 @@ function getJobDetailsFromUserInput() {
       address: address,
       postalCode: postalCode,
       region: findRegion(postalCode),
-      latitude: 1.3039, // TODO(issue/13): get these from places api
-      longitude: 103.8358,
+      latitude: findCoordinates(postalCode).latitude,
+      longitude: findCoordinates(postalCode).longitude,
     },
     jobDescription: description,
     jobPay: {
@@ -357,6 +359,12 @@ function validatePostalCode() {
   const postalCodeDigits = parseInt(postalCode.value.substring(0, 2));
   if (Number.isNaN(postalCodeDigits) || postalCodeDigits < 0 ||
     postalCodeDigits === 74 || postalCodeDigits > 82) {
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+        /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  if (findCoordinates(postalCode).length === 0) {
     setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
         /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
     return false;

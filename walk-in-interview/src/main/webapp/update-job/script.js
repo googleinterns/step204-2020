@@ -17,6 +17,8 @@ import {API} from '../apis.js';
 import {JOB_ID_PARAM, getRequirementsList,
   setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
+import {findCoordinates} from '../maps.js';
+
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const COMMON_STRINGS = AppStrings['common'];
@@ -316,8 +318,8 @@ function getJobDetailsFromUserInput() {
     jobLocation: {
       address: address,
       postalCode: postalCode,
-      lat: 1.3039, // TODO(issue/13): get these from places api
-      lon: 103.8358,
+      latitude: findCoordinates(postalCode).latitude,
+      longitude: findCoordinates(postalCode).longitude,
     },
     jobDescription: description,
     jobPay: {
@@ -378,6 +380,12 @@ function validateRequiredUserInput() {
   }
 
   if (postalCode.value === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['postal-code']);
+    return false;
+  }
+
+  if (findCoordinates(postalCode.value).length === 0) {
     setErrorMessage(/* errorMessageElementId= */'error-message',
         /* msg= */ STRINGS['postal-code']);
     return false;

@@ -54,4 +54,41 @@ function addMarker(map, job) {
   });
 }
 
-export {createMap, addMarker, JOB_MAP_ZOOM};
+/**
+ * Finds the coordinates based on the Singapore postal code.
+ *
+ * @param {String} postalCode The postal code.
+ * @return {Object} The coordinates. Returns empty object for any error.
+ */
+function findCoordinates(postalCode) {
+  const request = {
+    query: `Singapore ${postalCode}`,
+    fields: ['name', 'geometry'],
+  };
+
+  console.log('request', request);
+
+  /* HTML element required for rendering the results. */
+  const service = new google.maps.places.PlacesService(
+      document.getElementById('places-results'));
+
+  service.findPlaceFromQuery(request, (results, status) => {
+    console.log('response', status);
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      // there should only be one location with that postal code
+      if (results.length != 1) {
+        return {};
+      }
+      const location = results[0].geometry.location;
+      console.log('location', location.lat(), location.lng());
+      return {
+        latitude: location.lat(),
+        longitude: longitude.lng(),
+      };
+    }
+  });
+
+  return {};
+}
+
+export {createMap, addMarker, findCoordinates, JOB_MAP_ZOOM};
