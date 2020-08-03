@@ -197,32 +197,6 @@ function getJobId() {
   return urlParams.get(JOB_ID_PARAM);
 }
 
-const interestButton = document.getElementById('interest');
-interestButton.addEventListener('click', (_) => {
-  const jobId = getJobId();
-
-  if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-      /* msg= */ COMMON_STRINGS['empty-job-id-error-message'], /* includesDefault= */false);
-    return;
-  }
-
-  fetch(API['mark-job-as-interested'], {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-  })
-  .then(() => {
-    /** reset the error (there might have been an error msg from earlier) */
-    setErrorMessage(/* errorMessageElementId= */'error-message', /* msg= */ '',
-      /* includesDefault= */false);
-  })
-  .catch((error) => {
-      setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ STRINGS['mark-interest-error-message'], /* includesDefault= */false);
-      console.log('error', error);
-  });
-});
-
 /**
  * Tells the server to delete the this job post.
  * @param {String} jobId Job id for this job post.
