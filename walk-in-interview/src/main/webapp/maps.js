@@ -58,7 +58,7 @@ function addMarker(map, job) {
  * Finds the coordinates based on the Singapore postal code.
  *
  * @param {String} postalCode The postal code.
- * @return {Object} The coordinates. Returns empty object for any error.
+ * @return {Promise} With the coordinates.
  */
 function findCoordinates(postalCode) {
   const request = {
@@ -72,21 +72,25 @@ function findCoordinates(postalCode) {
   const service = new google.maps.places.PlacesService(
       document.getElementById('places-results'));
 
-  return service.findPlaceFromQuery(request, (results, status) => {
-    console.log('response', status);
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
+  return new Promise((resolve, reject) => {
+    service.findPlaceFromQuery(request, (results, status) => {
+      console.log('response', status);
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
       // there should only be one location with that postal code
-      if (results.length != 1) {
-        throw new Error('unable to find one location for given postal code: ' +
+        if (results.length != 1) {
+          throw new Error('cannot find one location for given postal code: ' +
             postalCode);
+        }
+        const location = results[0].geometry.location;
+        console.log('location', location.lat(), location.lng());
+        resolve({
+          latitude: location.lat(),
+          longitude: location.lng(),
+        });
+      } else {
+        reject(results);
       }
-      const location = results[0].geometry.location;
-      console.log('location', location.lat(), location.lng());
-      return {
-        latitude: location.lat(),
-        longitude: location.lng(),
-      };
-    }
+    });
   });
 }
 

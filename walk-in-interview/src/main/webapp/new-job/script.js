@@ -194,7 +194,10 @@ async function getJobDetailsFromUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
-  const location = await findCoordinates(postalCode);
+  const location = await findCoordinates(postalCode).then((coords) => {
+    return coords;
+  });
+  console.log('locaion', location);
 
   const jobDetails = {
     jobTitle: name,
@@ -375,26 +378,30 @@ submitButton.addEventListener('click', (_) => {
     return;
   }
 
-  const jobDetails = getJobDetailsFromUserInput();
-  fetch(API['new-job'], {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(jobDetails),
-  })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log('data', data);
-        /* reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */ 'error-message',
-            /* msg= */ '', /* include default msg= */ false);
-        window.location.href= HOMEPAGE_PATH;
-      })
-      .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */ 'error-message',
-            /* msg= */ STRINGS['creating-job-error-message'],
-            /* include default msg= */ false);
-        console.error('error creating job listing', error);
-      });
+  getJobDetailsFromUserInput().then((jobDetails) => {
+    console.log('jobdeets', jobDetails);
+    fetch(API['new-job'], {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(jobDetails),
+    })
+        .then((response) => response.text())
+        .then((data) => {
+          console.log('data', data);
+          /* reset the error (there might have been an error
+           * msg from earlier)
+           */
+          setErrorMessage(/* errorMessageElementId= */ 'error-message',
+              /* msg= */ '', /* include default msg= */ false);
+          window.location.href= HOMEPAGE_PATH;
+        })
+        .catch((error) => {
+          setErrorMessage(/* errorMessageElementId= */ 'error-message',
+              /* msg= */ STRINGS['creating-job-error-message'],
+              /* include default msg= */ false);
+          console.error('error creating job listing', error);
+        });
+  });
 });
 
 const cancelButton = document.getElementById('cancel');
