@@ -8,6 +8,7 @@
  */
 
 import {AppStrings} from '../strings.en.js';
+import {} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -51,7 +52,7 @@ function createBusinessAccount(email, password) {
  * @param {String} password The password for the existing business account.
  */
 function signIntoBusinessAccount(email, password) {
-  firebase.auth().signInWithEmailAndPassword(email, password)
+  return firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => {
         // Get the user's ID token as it is needed to exchange for a session cookie.
         return user.getIdToken()
@@ -61,11 +62,7 @@ function signIntoBusinessAccount(email, password) {
               const csrfToken = getCookie('csrfToken');
               return postIdTokenToSessionLogin(API['business-log-in'], idToken, csrfToken);
             });
-      })
-      .catch((error) => {
-        console.error(error);
       });
-  checkCurrentUser();
 }
 
 /**
@@ -116,4 +113,4 @@ function checkCurrentUser() {
 }
 
 export {createBusinessAccount, signIntoBusinessAccount,
-  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser};
+  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser, checkCurrentUser};

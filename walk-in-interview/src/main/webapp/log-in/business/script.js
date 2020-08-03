@@ -12,10 +12,16 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../strings.en.js';
 import {signIntoBusinessAccount} from '../firebase-auth.js';
+import {setErrorMessage} from '../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
+
+const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
+const USER_DISABLED_ERROR_CODE = 'auth/user-disabled';
+const USER_NOT_FOUND_ERROR_CODE = 'auth/user-not-found';
+const WRONG_PASSWORD_ERROR_CODE = 'auth/wrong-password';
 
 window.onload = () => {
   renderPageElements();
@@ -57,6 +63,49 @@ const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   // TODO(issue/78): send the account & password input to the firebase auth related stuff
   const account = document.getElementById('account-input').value;
+
+  if (account === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['empty-email'],
+        /* includesDefault= */false);
+    return;
+  }
+
   const password = document.getElementById('password-input').value;
-  signIntoBusinessAccount(account, password);
+
+  setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */ '',
+      /* includesDefault= */false);
+
+  signIntoBusinessAccount(account, password)
+      .catch(error => {
+        switch(error.code) {
+          case INVALID_EMAIL_ERROR_CODE:
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ STRINGS['invalid-email-error'],
+                /* includesDefault= */false);
+            break;
+          case USER_DISABLED_ERROR_CODE:
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ STRINGS['user-disabled'],
+                /* includesDefault= */false);
+            break;
+          case USER_NOT_FOUND_ERROR_CODE:
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ STRINGS['user-not-found'],
+                /* includesDefault= */false);
+            break;
+          case WRONG_PASSWORD_ERROR_CODE:
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ STRINGS['wrong-password'],
+                /* includesDefault= */false);
+            break;
+          default:
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ error.message,
+                /* includesDefault= */false);
+            console.log(error.message);
+            break;
+        }
+      });
 });
