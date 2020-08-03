@@ -125,6 +125,9 @@ function renderSkillsList(skills) {
   }
 }
 
+/**
+ * Gets applicant details from user input.
+ */
 function getApplicantDetailsFromUserInput() {
   const applicantId = getApplicantId();
   const applicantName = document.getElementById('name').value;
