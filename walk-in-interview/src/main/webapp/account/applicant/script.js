@@ -25,7 +25,7 @@ window.onload = () => {
 /** Gets the ID of this account. */
 function getId() {
   // TODO
-  return 'xxxxx';
+  return 'Not Implemented';
 }
 
 /**
