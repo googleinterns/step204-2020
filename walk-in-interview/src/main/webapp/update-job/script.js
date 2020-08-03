@@ -311,7 +311,9 @@ async function getJobDetailsFromUserInput() {
     status = 'ACTIVE';
   }
 
-  const location = await findCoordinates(postalCode);
+  const location = await findCoordinates(postalCode).then((coords) => {
+    return coords;
+  });
 
   const jobDetails = {
     jobId: jobPostId,
@@ -415,35 +417,37 @@ submitButton.addEventListener('click', (_) => {
     return;
   }
 
-  const jobDetails = getJobDetailsFromUserInput();
+  getJobDetailsFromUserInput().then((jobDetails) => {
+    fetch(API['update-job'], {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(jobDetails),
+    })
+        .then((response) => {
+          if (response.status == BAD_REQUEST_STATUS_CODE) {
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
+                /* includesDefault= */false);
+            throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
+          }
 
-  fetch(API['update-job'], {
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(jobDetails),
-  })
-      .then((response) => {
-        if (response.status == BAD_REQUEST_STATUS_CODE) {
+          /*
+           * reset the error (there might have been an error msg from earlier)
+           */
           setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
-              /* includesDefault= */false);
-          throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
-        }
-
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ '', /* includesDefault= */false);
-        window.location.href= HOMEPAGE_PATH;
-      })
-      .catch((error) => {
+              /* msg= */ '', /* includesDefault= */false);
+          window.location.href= HOMEPAGE_PATH;
+        })
+        .catch((error) => {
         // Not the server response error already caught and thrown
-        if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
-          setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-              /* includesDefault= */false);
-          console.log('error', error);
-        }
-      });
+          if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+                /* includesDefault= */false);
+            console.log('error', error);
+          }
+        });
+  });
 });
 
 const cancelButton = document.getElementById('cancel');
