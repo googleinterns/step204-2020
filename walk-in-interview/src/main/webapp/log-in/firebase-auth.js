@@ -56,7 +56,7 @@ function signIntoBusinessAccount(email, password) {
       .then(({user}) => {
         // Get the user's ID token as it is needed to exchange for a session cookie.
         return user.getIdToken()
-            .then(idToken => {
+            .then((idToken) => {
               // Session login endpoint is queried and the session cookie is set.
               // CSRF protection should be taken into account.
               const csrfToken = getCookie('csrfToken');
@@ -115,9 +115,9 @@ function checkCurrentUser() {
 /**
  * Makes a POST request to session log in endpoint.
  * 
- * @param {*} url Login endpoint.
- * @param {*} idToken Id token.
- * @param {*} csrfToken CSRF token.
+ * @param {String} url Login endpoint.
+ * @param {String} idToken Id token.
+ * @param {String} csrfToken CSRF token.
  */
 function postIdTokenToSessionLogin(url, idToken, csrfToken) {
   const params = new URLSearchParams();

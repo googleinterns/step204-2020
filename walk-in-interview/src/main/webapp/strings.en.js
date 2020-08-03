@@ -59,6 +59,7 @@ AppStrings['log-in'] = {
   'business-log-in': 'Log in as a Business',
   'back': 'Back',
   'submit': 'Submit',
+  'error-message': 'Error occur. Please try again.',
 };
 
 /**

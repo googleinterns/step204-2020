@@ -78,7 +78,7 @@ submitButton.addEventListener('click', (_) => {
       /* includesDefault= */false);
 
   signIntoBusinessAccount(account, password)
-      .catch(error => {
+      .catch((error) => {
         switch(error.code) {
           case INVALID_EMAIL_ERROR_CODE:
             setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -102,7 +102,7 @@ submitButton.addEventListener('click', (_) => {
             break;
           default:
             setErrorMessage(/* errorMessageElementId= */'error-message',
-                /* msg= */ error.message,
+                /* msg= */ COMMONG_STRINGS['error-message'],
                 /* includesDefault= */false);
             console.log(error.message);
             break;
