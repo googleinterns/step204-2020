@@ -73,6 +73,7 @@ submitButton.addEventListener('click', (_) => {
 
   const password = document.getElementById('password-input').value;
 
+  // Resets the error (there might have been an error msg from earlier)
   setErrorMessage(/* errorMessageElementId= */'error-message',
       /* msg= */ '',
       /* includesDefault= */false);
