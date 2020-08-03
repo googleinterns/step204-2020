@@ -133,4 +133,4 @@ function postIdTokenToSessionLogin(url, idToken, csrfToken) {
 }
 
 export {createBusinessAccount, signIntoBusinessAccount,
-  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser, checkCurrentUser};
+  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser};
