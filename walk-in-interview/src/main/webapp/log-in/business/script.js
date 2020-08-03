@@ -11,6 +11,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../../strings.en.js';
+import {signIntoBusinessAccount} from '../firebase-auth.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
@@ -55,4 +56,7 @@ backButton.addEventListener('click', (_) => {
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   // TODO(issue/78): send the account & password input to the firebase auth related stuff
+  const account = document.getElementById('account-input').value;
+  const password = document.getElementById('password-input').value;
+  signIntoBusinessAccount(account, password);
 });

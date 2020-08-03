@@ -8,6 +8,7 @@
  */
 
 import {AppStrings} from '../strings.en.js';
+import {API} from '../apis.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
@@ -51,6 +52,16 @@ function createBusinessAccount(email, password) {
  */
 function signIntoBusinessAccount(email, password) {
   firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(user => {
+        // Get the user's ID token as it is needed to exchange for a session cookie.
+        return user.getIdToken()
+            .then(idToken => {
+              // Session login endpoint is queried and the session cookie is set.
+              // CSRF protection should be taken into account.
+              const csrfToken = getCookie('csrfToken');
+              return postIdTokenToSessionLogin(API['business-log-in'], idToken, csrfToken);
+            });
+      })
       .catch((error) => {
         console.error(error);
       });
