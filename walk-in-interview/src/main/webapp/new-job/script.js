@@ -384,9 +384,7 @@ submitButton.addEventListener('click', (_) => {
         .then((response) => response.text())
         .then((data) => {
           console.log('data', data);
-          /*
-           * reset the error (there might have been an error msg from earlier)
-           */
+          /* reset the error (there might have been an error msg earlier) */
           setErrorMessage(/* errorMessageElementId= */ 'error-message',
               /* msg= */ '', /* include default msg= */ false);
           window.location.href= HOMEPAGE_PATH;

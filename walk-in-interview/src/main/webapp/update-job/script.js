@@ -429,15 +429,13 @@ submitButton.addEventListener('click', (_) => {
             throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
           }
 
-          /**
-           * reset the error (there might have been an error msg from earlier)
-           */
+          /* reset the error (there might have been an error msg earlier) */
           setErrorMessage(/* errorMessageElementId= */'error-message',
               /* msg= */ '', /* includesDefault= */false);
           window.location.href= HOMEPAGE_PATH;
         })
         .catch((error) => {
-        // Not the server response error already caught and thrown
+          // Not the server response error already caught and thrown
           if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
             setErrorMessage(/* errorMessageElementId= */'error-message',
                 /* msg= */ UPDATE_JOB_STRINGS['error-message'],
