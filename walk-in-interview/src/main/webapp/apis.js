@@ -9,5 +9,7 @@ export const API = {
   'delete-job': '/jobs/delete',
   'expire-job': '/jobs/expire',
   'mark-job-as-interested': '/my-interested-list',
+  'business-log-in': '/business-log-in',
+  'applicant-log-in': '/applicant-log-in',
   'update-applicant-account': 'TODO',
 };
