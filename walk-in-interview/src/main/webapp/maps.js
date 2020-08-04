@@ -91,7 +91,7 @@ function findCoordinates(postalCode) {
         // rectangular bounds for Singapore
         if (latitude > SG_NORTH_LIMIT || latitude < SG_SOUTH_LIMIT ||
           longitude > SG_EAST_LIMIT || longitude < SG_WEST_LIMIT) {
-          throw new Error('coordinates should be in Singapore');
+          return reject(results);
         }
 
         return resolve({
@@ -99,7 +99,7 @@ function findCoordinates(postalCode) {
           longitude: longitude,
         });
       } else {
-        reject(results);
+        return reject(results);
       }
     });
   });

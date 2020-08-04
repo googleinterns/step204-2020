@@ -194,7 +194,13 @@ async function getJobDetailsFromUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
-  const location = await findCoordinates(postalCode);
+  const location = await findCoordinates(postalCode).catch((error) => {
+    console.error(error);
+    // location depends only on postal code so the error would be here
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+    /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
+    return;
+  });
 
   const jobDetails = {
     jobTitle: name,

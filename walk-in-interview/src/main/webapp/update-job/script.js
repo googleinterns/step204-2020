@@ -317,7 +317,13 @@ async function getJobDetailsFromUserInput() {
     status = 'ACTIVE';
   }
 
-  const location = await findCoordinates(postalCode);
+  const location = await findCoordinates(postalCode).catch((error) => {
+    console.error(error);
+    // location depends only on postal code so the error would be here
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['postal-code']);
+    return;
+  });
 
   const jobDetails = {
     jobId: jobPostId,
