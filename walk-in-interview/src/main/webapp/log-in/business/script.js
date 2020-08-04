@@ -62,7 +62,7 @@ backButton.addEventListener('click', (_) => {
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   // Disables the button to avoid accidental double click
-  document.getElementById('submit').setAttribute('disabled', true);
+  document.getElementById('submit').disabled = true;
 
   const account = document.getElementById('account-input').value;
 
@@ -83,11 +83,11 @@ submitButton.addEventListener('click', (_) => {
   signIntoBusinessAccount(account, password)
       .then(() => {
         // Enables the button regardless of success or failure
-        document.getElementById('submit').setAttribute('disabled', false);
+        document.getElementById('submit').disabled = false;
       })
       .catch((error) => {
         showErrorMessageFromError(error);
-        document.getElementById('submit').setAttribute('disabled', false);
+        document.getElementById('submit').disabled = false;
       });
 });
 
