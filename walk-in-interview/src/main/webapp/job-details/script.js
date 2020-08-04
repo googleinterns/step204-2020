@@ -216,7 +216,7 @@ function deleteJobPost(jobId) {
         setErrorMessage(/* errorMessageElementId= */'error-message',
             /* msg= */ STRINGS['delete-error-message'],
             /* includesDefault= */false);
-        console.log('error', error);
+        console.error(error);
       });
 }
 
