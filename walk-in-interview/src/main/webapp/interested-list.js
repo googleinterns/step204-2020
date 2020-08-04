@@ -17,6 +17,7 @@ import {API} from './apis.js';
 
 const STRINGS = AppStrings['interested-list'];
 const JOB_DETAILS_PATH = '/job-details/index.html';
+const HOMEPAGE_PATH = './index.html';
 
 // TODO(issue/34): implement pagination for job listings
 
@@ -31,6 +32,12 @@ window.onload = () => {
  */
 async function loadAndDisplayInterestedJobListings() {
   map = createMap('interested-jobs-map');
+
+  const backButton = document.getElementById('back');
+  backButton.innerText = STRINGS['back'];
+  backButton.addEventListener('click', (_) => {
+    window.location.href = HOMEPAGE_PATH;
+  });
 
   const jobListingsTitle =
     document.getElementById('job-listings-title');

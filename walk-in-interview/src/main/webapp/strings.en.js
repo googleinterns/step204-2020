@@ -56,6 +56,7 @@ AppStrings['homepage'] = {
  * All the strings to be used in the interested-list.html.
  */
 AppStrings['interested-list'] = {
+  'back': 'Back',
   'job-listings-title': 'My Interested Job Listings:',
   'details': 'Show Details',
   'job-listings-showing': 'out of',
