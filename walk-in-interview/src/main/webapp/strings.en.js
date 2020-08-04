@@ -24,6 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
+  'interest-job-list': 'Interest Jobs',
   'sort-by-title': 'Sort By',
   'sort-by': {
     'SALARY-DESCENDING': 'Salary (high to low)',
@@ -49,6 +50,17 @@ AppStrings['homepage'] = {
   'get-jobs-error-message': 'An error occured while getting the job listings.',
   'job-details-error-message': 'An error occured while getting ' +
     'the details of this job.',
+};
+
+/**
+ * All the strings to be used in the interest-list.html.
+ */
+AppStrings['interest-list'] = {
+  'job-listings-title': 'Interest Job Listings:',
+  'details': 'Show Details',
+  'job-listings-showing': 'out of',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occured while getting the job listings.',
 };
 
 /**
