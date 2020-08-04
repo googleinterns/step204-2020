@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+
+  <body>
+    <div class="header-container">
+      <button id="back"></button>
+    </div>
+    
+    <div class="content-container">
+      <div class="job-listings-container">
+        <div id="job-listings-title"></div>
+        <div id="job-listings-showing"></div>
+
+        <ul id="job-listings"></ul>
+      </div>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+
+    <!-- hidden div to be used as a template to render job listings -->
+    <div hidden>
+        <li class="job-listing" id="job-listing-template">
+          <div class="job-name"></div>
+          <div class="job-address"></div>
+          <div class="job-pay"></div>
+          <div class="requirements-list"></div>
+          <form><input></form>
+        </li>
+    </div>
+  </body>
+
+  <script type="module" src="./show-job-posts-made.js"></script>
+</html>

@@ -24,6 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
+  'show-job-posts-made': 'Show Job Posts Made',
   'sort-by-title': 'Sort By',
   'sort-by': {
     'SALARY-DESCENDING': 'Salary (high to low)',
@@ -49,6 +50,18 @@ AppStrings['homepage'] = {
   'get-jobs-error-message': 'An error occured while getting the job listings.',
   'job-details-error-message': 'An error occured while getting ' +
     'the details of this job.',
+};
+
+/**
+ * All the strings to be used in the show-job-posts-made.html.
+ */
+AppStrings['show-job-posts-made'] = {
+  'back': 'Back',
+  'job-listings-title': 'Job Posts Made:',
+  'details': 'Show Details',
+  'job-listings-showing': 'out of',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occured while getting the job listings.',
 };
 
 /**

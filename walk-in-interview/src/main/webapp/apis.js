@@ -10,4 +10,5 @@ export const API = {
   'expire-job': '/jobs/expire',
   'business-log-in': '/business-log-in',
   'applicant-log-in': '/applicant-log-in',
+  'show-job-posts-made': '/my-jobs',
 };

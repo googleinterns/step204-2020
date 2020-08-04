@@ -13,6 +13,8 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
+const DEFAULT_PAGE_SIZE = 20;
+const DEFAULT_PAGE_INDEX = 0;
 
 /**
  * Gets the requirements list from the servlet
@@ -81,5 +83,6 @@ function getCookie(cname) {
   return '';
 }
 
-export {JOB_ID_PARAM, getRequirementsList, setErrorMessage,
+export {JOB_ID_PARAM, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE,
+  getRequirementsList, setErrorMessage,
   renderSelectOptions, getCookie};
