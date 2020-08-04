@@ -7,6 +7,17 @@
 const CurrentLocale = 'en';
 
 /**
+ * Account id is not involved in the client side
+ * 
+ * stretch: 
+ * 1) show account detail
+ * GET '/applicant'
+ * 
+ * 2) edit account info
+ * use cookie to pass the account info to edit page
+ */
+
+/**
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
@@ -18,23 +29,14 @@ const EDIT_ACCOUNT_PATH = './edit/index.html';
 const STRINGS = AppStrings['applicant'];
 
 window.onload = () => {
-  let accountId = getId();
-  renderPageElements(accountId);
+  renderPageElements();
 };
-
-/** Gets the ID of this account. */
-function getId() {
-  // TODO
-  return 'Not Implemented';
-}
 
 /**
  * Adds all the text element in the page.
- * 
- * @param {String} accountId Id of this account.
  */
-function renderPageElements(accountId) {
-  var accountDetails = getAccountDetails(accountId);
+function renderPageElements() {
+  var accountDetails = getAccountDetails();
 
   const backButton = document.getElementById('back');
   backButton.innerText = STRINGS['back'];
@@ -73,10 +75,9 @@ function renderPageElements(accountId) {
 /**
  * Gets the account detail from the database
  * 
- * @param {String} accountId Id of this account.
  * @returns Detail json.
  */
-function getAccountDetails(accountId) {
+function getAccountDetails() {
   const applicantId = getId();
   let accountDetails = {
     accountId: applicantId,
