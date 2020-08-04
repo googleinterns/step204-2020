@@ -194,9 +194,7 @@ async function getJobDetailsFromUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
-  const location = await findCoordinates(postalCode).then((coords) => {
-    return coords;
-  });
+  const location = await findCoordinates(postalCode);
   console.log('locaion', location);
 
   const jobDetails = {

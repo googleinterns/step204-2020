@@ -83,7 +83,7 @@ function findCoordinates(postalCode) {
         }
         const location = results[0].geometry.location;
         console.log('location', location.lat(), location.lng());
-        resolve({
+        return resolve({
           latitude: location.lat(),
           longitude: location.lng(),
         });

@@ -311,9 +311,7 @@ async function getJobDetailsFromUserInput() {
     status = 'ACTIVE';
   }
 
-  const location = await findCoordinates(postalCode).then((coords) => {
-    return coords;
-  });
+  const location = await findCoordinates(postalCode);
 
   const jobDetails = {
     jobId: jobPostId,
