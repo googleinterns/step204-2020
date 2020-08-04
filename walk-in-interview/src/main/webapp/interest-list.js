@@ -10,8 +10,8 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
-import {DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
-    setErrorMessage} from './common-functions.js';
+import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
+    setErrorMessage, getRequirementsList} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
 import {API} from './apis.js';
 
@@ -36,67 +36,14 @@ async function loadAndDisplayInterestJobListings() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  // const jobPageData = 
-  //   await getInterestJobs(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
-  //     .catch((error) => {
-  //       console.error('error fetching job listings', error);
-  //       setErrorMessage(/* errorMessageElementId= */ 'error-message',
-  //           /* msg= */ STRINGS['get-jobs-error-message'],
-  //           /* include default msg= */ false);
-  //     });
-
-  const jobPageData = {
-    jobList: [{
-      jobStatus: 'ACTIVE',
-      jobTitle: 'Software Engineer1',
-      jobLocation: {
-        address: 'Maple Tree',
-        postalCode: '123',
-        lat: 1.3039, // TODO(issue/13): get these from places api
-        lon: 103.8358,
-      },
-      jobDescription: 'Fight to defeat hair line receding',
-      jobPay: {
-        paymentFrequency: 'MONTHLY',
-        min: 1,
-        max: 4,
-      },
-      requirements: {
-        'O_LEVEL': true,
-        'LANGUAGE_ENGLISH': true,
-        'DRIVING_LICENSE_C': false,
-      },
-      postExpiryTimestamp: 1601856000000,
-      jobDuration: 'ONE_WEEK',
-    }, {
-      jobStatus: 'ACTIVE',
-      jobTitle: 'Software Engineer2',
-      jobLocation: {
-        address: 'Maple Tree',
-        postalCode: '123',
-        lat: 1.3039, // TODO(issue/13): get these from places api
-        lon: 103.8358,
-      },
-      jobDescription: 'Fight to defeat hair line receding',
-      jobPay: {
-        paymentFrequency: 'MONTHLY',
-        min: 1,
-        max: 4,
-      },
-      requirements: {
-        'O_LEVEL': true,
-        'LANGUAGE_ENGLISH': true,
-        'DRIVING_LICENSE_C': false,
-      },
-      postExpiryTimestamp: 1601856000000,
-      jobDuration: 'ONE_WEEK',
-    }],
-    totalCount: 2,
-    range: {
-      minimum: 0,
-      maximum: 1,
-    },
-  };
+  const jobPageData = 
+    await getInterestJobs(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+      .catch((error) => {
+        console.error('error fetching job listings', error);
+        setErrorMessage(/* errorMessageElementId= */ 'error-message',
+            /* msg= */ STRINGS['get-jobs-error-message'],
+            /* include default msg= */ false);
+      });
   
   displayInterestJobListings(jobPageData);
 }

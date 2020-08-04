@@ -29,6 +29,13 @@ body {
     margin: 10px 0px;
 }
 
+#interest-jobs-map {
+    background-color: lightgrey;
+    height: 300px;
+    width: -webkit-fill-available;
+    margin: 10px 0px;
+}
+
 #jobpage-map {
     background-color: lightgrey;
     height: 300px;
