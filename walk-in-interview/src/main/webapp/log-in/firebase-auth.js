@@ -8,6 +8,8 @@
  */
 
 import {AppStrings} from '../strings.en.js';
+import {getCookie} from '../common-functions.js';
+import {API} from '../apis.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
@@ -50,11 +52,17 @@ function createBusinessAccount(email, password) {
  * @param {String} password The password for the existing business account.
  */
 function signIntoBusinessAccount(email, password) {
-  firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch((error) => {
-        console.error(error);
+  return firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(({user}) => {
+        // Get the user's ID token as it is needed to exchange for a session cookie.
+        return user.getIdToken()
+            .then((idToken) => {
+              // Session login endpoint is queried and the session cookie is set.
+              // CSRF protection should be taken into account.
+              const csrfToken = getCookie('csrfToken');
+              return postIdTokenToSessionLogin(API['business-log-in'], idToken, csrfToken);
+            });
       });
-  checkCurrentUser();
 }
 
 /**
@@ -101,6 +109,26 @@ function checkCurrentUser() {
     } else {
       console.log('not signed in');
     }
+  });
+}
+
+/**
+ * Makes a POST request to session log in endpoint.
+ * 
+ * @param {String} url Login endpoint.
+ * @param {String} idToken Id token.
+ * @param {String} csrfToken CSRF token.
+ */
+function postIdTokenToSessionLogin(url, idToken, csrfToken) {
+  const params = new URLSearchParams();
+  params.append('idToken', idToken);
+  params.append('csrfToken', csrfToken);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: params,
+    credentials: 'include',
   });
 }
 
