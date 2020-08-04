@@ -49,9 +49,9 @@ async function loadAndDisplayInterestJobListings() {
 }
 
 /**
- * Makes GET request to retrieve all the job listings from the database
- * given the sorting and order. This function is called when the
- * homepage is loaded and also when the sorting is changed.
+ * Makes GET request to retrieve all the interested job listings
+ * belonging to the current applicant user. 
+ * This function is called when the interest page is loaded.
  * 
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
@@ -67,7 +67,7 @@ function getInterestJobs(pageSize, pageIndex) {
       .then((response) => response.json())
       .then((data) => {
         console.log('data', data);
-        /* reset the error (there might have been an error msg from earlier) */
+        // Resets the error (there might have been an error msg from earlier)
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
             /* msg= */ '', /* includesDefaultMsg= */ false);
         return data;
@@ -174,7 +174,7 @@ function buildJobElement(job) {
     // TODO(issue/73): link this to the job in the list?
   });
 
-  /* double clicking on the marker goes to the job details page */
+  // double clicking on the marker goes to the job details page
   marker.addListener('dblclick', function() {
     if (jobId === '') {
       throw new Error('jobId should not be empty');
