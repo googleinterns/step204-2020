@@ -1,5 +1,5 @@
 /**
- * This file is specific to interest-list.html
+ * This file is specific to interested-list.html
  */
 
 // TODO(issue/21): get the language from the browser
@@ -15,7 +15,7 @@ import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
 import {createMap, addMarker} from './maps.js';
 import {API} from './apis.js';
 
-const STRINGS = AppStrings['interest-list'];
+const STRINGS = AppStrings['interested-list'];
 const JOB_DETAILS_PATH = '/job-details/index.html';
 
 // TODO(issue/34): implement pagination for job listings
@@ -23,21 +23,21 @@ const JOB_DETAILS_PATH = '/job-details/index.html';
 let map;
 
 window.onload = () => {
-  loadAndDisplayInterestJobListings();
+  loadAndDisplayInterestedJobListings();
 }
 
 /**
  * Add the list of interested jobs.
  */
-async function loadAndDisplayInterestJobListings() {
-  map = createMap('interest-jobs-map');
+async function loadAndDisplayInterestedJobListings() {
+  map = createMap('interested-jobs-map');
 
   const jobListingsTitle =
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
   const jobPageData = 
-    await getInterestJobs(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+    await getInterestedJobs(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
       .catch((error) => {
         console.error('error fetching job listings', error);
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
@@ -45,7 +45,7 @@ async function loadAndDisplayInterestJobListings() {
             /* include default msg= */ false);
       });
   
-  displayInterestJobListings(jobPageData);
+  displayInterestedJobListings(jobPageData);
 }
 
 /**
@@ -57,10 +57,10 @@ async function loadAndDisplayInterestJobListings() {
  * @param {int} pageIndex The page index (starting from 0).
  * @return {Object} The data returned from the servlet.
  */
-function getInterestJobs(pageSize, pageIndex) {
+function getInterestedJobs(pageSize, pageIndex) {
   const params = `pageSize=${pageSize}&pageIndex=${pageIndex}`;
     
-  fetch(`${API['my-interest-list']}?${params}`, {
+  fetch(`${API['my-interested-list']}?${params}`, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
   })
@@ -75,11 +75,11 @@ function getInterestJobs(pageSize, pageIndex) {
 }
 
 /**
- * This will add all the interest job listings onto the page.
+ * This will add all the interested job listings onto the page.
  * 
  * @param {Object} jobPageData The details to be shown on the page.
  */
-function displayInterestJobListings(jobPageData) {
+function displayInterestedJobListings(jobPageData) {
   const jobListingsElement = document.getElementById('job-listings');
   const jobShowing = document.getElementById('job-listings-showing');
 

@@ -20,7 +20,7 @@ const STRINGS = AppStrings['homepage'];
 const LOG_IN_PAGE_PATH = '/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
-const INTEREST_JOBS_PATH = './interest-list.html';
+const INTEREST_JOBS_PATH = './interested-list.html';
 const SALARY_PARAM = 'SALARY';
 
 /**
@@ -57,9 +57,9 @@ function renderHomepageElements() {
     window.location.href = LOG_IN_PAGE_PATH;
   });
 
-  const interestJobButton = document.getElementById('interest-job-list');
-  interestJobButton.innerText = STRINGS['interest-job-list'];
-  interestJobButton.addEventListener('click', (_) => {
+  const interestedJobButton = document.getElementById('interested-job-list');
+  interestedJobButton.innerText = STRINGS['interested-job-list'];
+  interestedJobButton.addEventListener('click', (_) => {
     window.location.href = INTEREST_JOBS_PATH;
   });
 

@@ -24,7 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
-  'interest-job-list': 'Interest Jobs',
+  'interested-job-list': 'Interested Jobs',
   'sort-by-title': 'Sort By',
   'sort-by': {
     'SALARY-DESCENDING': 'Salary (high to low)',
@@ -53,10 +53,10 @@ AppStrings['homepage'] = {
 };
 
 /**
- * All the strings to be used in the interest-list.html.
+ * All the strings to be used in the interested-list.html.
  */
-AppStrings['interest-list'] = {
-  'job-listings-title': 'Interest Job Listings:',
+AppStrings['interested-list'] = {
+  'job-listings-title': 'My Interested Job Listings:',
   'details': 'Show Details',
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
