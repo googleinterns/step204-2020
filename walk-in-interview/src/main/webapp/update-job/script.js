@@ -26,6 +26,12 @@ const BAD_REQUEST_STATUS_CODE = 400;
 // Status of this job post, default to be ACTIVE
 let status = 'ACTIVE';
 
+/**
+ * Note that this is needed because in JS we can hold bigger Integer
+ * values than in Java.
+ */
+const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
+
 window.onload = () => {
   loadAndShowJob(getJobId());
 };
@@ -383,10 +389,25 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
-    payMin > payMax || payMin < 0 || payMax < 0) {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ document.getElementById('pay-title').textContent);
+  if (payFrequency === '') {
+    setErrorMessageAndField(/* errorFieldId= */'pay-frequency',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
+    setErrorMessageAndField(/* errorFieldId= */ 'pay-min',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
+    payMin > payMax || payMax < 0) {
+    setErrorMessageAndField(/* errorFieldId= */ 'pay-max',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
