@@ -83,11 +83,11 @@ submitButton.addEventListener('click', (_) => {
   signIntoBusinessAccount(account, password)
       .then(() => {
         // Enables the button regardless of success or failure
-        this.setAttribute('disabled', false);
+        document.getElementById('submit').setAttribute('disabled', false);
       })
       .catch((error) => {
         showErrorMessageFromError(error);
-        this.setAttribute('disabled', false);
+        document.getElementById('submit').setAttribute('disabled', false);
       });
 });
 
