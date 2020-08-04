@@ -91,7 +91,7 @@ function loadAndShowJob(jobId) {
         setErrorMessage(/* errorMessageElementId= */'error-message',
             /* msg= */ UPDATE_JOB_STRINGS['error-message'],
             /* includesDefault= */false);
-        console.log('error', error);
+        console.error(error);
       });
 }
 
@@ -455,10 +455,6 @@ submitButton.addEventListener('click', (_) => {
                 /* includesDefault= */false);
             throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
           }
-
-          /* reset the error (there might have been an error msg earlier) */
-          setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ '', /* includesDefault= */false);
           window.location.href= HOMEPAGE_PATH;
         })
         .catch((error) => {
@@ -467,7 +463,7 @@ submitButton.addEventListener('click', (_) => {
             setErrorMessage(/* errorMessageElementId= */'error-message',
                 /* msg= */ UPDATE_JOB_STRINGS['error-message'],
                 /* includesDefault= */false);
-            console.log('error', error);
+            console.error(error);
           }
         });
   });

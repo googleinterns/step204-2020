@@ -77,30 +77,29 @@ function findCoordinates(postalCode) {
 
   return new Promise((resolve, reject) => {
     service.findPlaceFromQuery(request, (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        // there should only be one location with that postal code
-        if (results.length != 1) {
-          throw new Error('unable to find one place for given postal code: ' +
-            postalCode);
-        }
-
-        const location = results[0].geometry.location;
-        const latitude = location.lat();
-        const longitude = location.lng();
-
-        // rectangular bounds for Singapore
-        if (latitude > SG_NORTH_LIMIT || latitude < SG_SOUTH_LIMIT ||
-          longitude > SG_EAST_LIMIT || longitude < SG_WEST_LIMIT) {
-          return reject(results);
-        }
-
-        return resolve({
-          latitude: latitude,
-          longitude: longitude,
-        });
-      } else {
+      if (status !== google.maps.places.PlacesServiceStatus.OK) {
         return reject(results);
       }
+      // there should only be one location with that postal code
+      if (results.length != 1) {
+        throw new Error('unable to find one place for given postal code: ' +
+          postalCode);
+      }
+
+      const location = results[0].geometry.location;
+      const latitude = location.lat();
+      const longitude = location.lng();
+
+      // rectangular bounds for Singapore
+      if (latitude > SG_NORTH_LIMIT || latitude < SG_SOUTH_LIMIT ||
+          longitude > SG_EAST_LIMIT || longitude < SG_WEST_LIMIT) {
+        return reject(results);
+      }
+
+      return resolve({
+        latitude: latitude,
+        longitude: longitude,
+      });
     });
   });
 }
