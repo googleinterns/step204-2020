@@ -70,7 +70,8 @@ AppStrings['business-log-in'] = {
   'password': 'Password',
   'empty-email': 'Empty email input',
   'invalid-email-error': 'The email address is not valid',
-  'user-disabled': 'The user corresponding to the given email has been disabled',
+  'user-disabled': 'The user corresponding to the given email has been disabled '
+                    + 'by some administrator or Access Management to prevent further logins to that account',
   'user-not-found': 'There is no user corresponding to the given email',
   'wrong-password': 'The password is invalid for the given email',
 };
