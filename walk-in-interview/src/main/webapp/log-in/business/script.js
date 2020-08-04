@@ -62,7 +62,7 @@ backButton.addEventListener('click', (_) => {
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   // Disables the button to avoid accidental double click
-  this.setAttribute('disabled', true);
+  document.getElementById('submit').setAttribute('disabled', true);
 
   const account = document.getElementById('account-input').value;
 
