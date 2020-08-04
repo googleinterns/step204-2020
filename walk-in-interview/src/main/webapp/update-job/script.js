@@ -17,6 +17,8 @@ import {API} from '../apis.js';
 import {JOB_ID_PARAM, getRequirementsList,
   setErrorMessage, renderSelectOptions} from '../common-functions.js';
 
+import {findCoordinates} from '../maps.js';
+
 const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const COMMON_STRINGS = AppStrings['common'];
@@ -25,6 +27,12 @@ const BAD_REQUEST_STATUS_CODE = 400;
 
 // Status of this job post, default to be ACTIVE
 let status = 'ACTIVE';
+
+/**
+ * Note that this is needed because in JS we can hold bigger Integer
+ * values than in Java.
+ */
+const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 
 window.onload = () => {
   loadAndShowJob(getJobId());
@@ -83,7 +91,7 @@ function loadAndShowJob(jobId) {
         setErrorMessage(/* errorMessageElementId= */'error-message',
             /* msg= */ UPDATE_JOB_STRINGS['error-message'],
             /* includesDefault= */false);
-        console.log('error', error);
+        console.error(error);
       });
 }
 
@@ -284,7 +292,7 @@ function renderJobExpiryLimits(jobExpiryTimestamp) {
  * @param {String} status Status for the current job post.
  * @return {Object} containing the user inputs.
  */
-function getJobDetailsFromUserInput() {
+async function getJobDetailsFromUserInput() {
   const name = document.getElementById('title').value;
   const description = document.getElementById('description').value;
   const address = document.getElementById('address').value;
@@ -309,6 +317,14 @@ function getJobDetailsFromUserInput() {
     status = 'ACTIVE';
   }
 
+  const location = await findCoordinates(postalCode).catch((error) => {
+    console.error(error);
+    // location depends only on postal code so the error would be here
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['postal-code']);
+    return;
+  });
+
   const jobDetails = {
     jobId: jobPostId,
     jobStatus: status,
@@ -316,8 +332,8 @@ function getJobDetailsFromUserInput() {
     jobLocation: {
       address: address,
       postalCode: postalCode,
-      lat: 1.3039, // TODO(issue/13): get these from places api
-      lon: 103.8358,
+      latitude: location.latitude,
+      longitude: location.longitude,
     },
     jobDescription: description,
     jobPay: {
@@ -383,10 +399,25 @@ function validateRequiredUserInput() {
     return false;
   }
 
-  if (payFrequency === '' || Number.isNaN(payMin) || Number.isNaN(payMax) ||
-    payMin > payMax || payMin < 0 || payMax < 0) {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ document.getElementById('pay-title').textContent);
+  if (payFrequency === '') {
+    setErrorMessageAndField(/* errorFieldId= */'pay-frequency',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  if (Number.isNaN(payMin) || (payMin > JAVA_INTEGER_MAX_VALUE) || payMin < 0) {
+    setErrorMessageAndField(/* errorFieldId= */ 'pay-min',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includesDefaultMsg= */ true);
+    return false;
+  }
+
+  if (Number.isNaN(payMax) || (payMax > JAVA_INTEGER_MAX_VALUE) ||
+    payMin > payMax || payMax < 0) {
+    setErrorMessageAndField(/* errorFieldId= */ 'pay-max',
+        /* msg= */ document.getElementById('pay-title').textContent,
+        /* includesDefaultMsg= */ true);
     return false;
   }
 
@@ -411,35 +442,31 @@ submitButton.addEventListener('click', (_) => {
     return;
   }
 
-  const jobDetails = getJobDetailsFromUserInput();
-
-  fetch(API['update-job'], {
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(jobDetails),
-  })
-      .then((response) => {
-        if (response.status == BAD_REQUEST_STATUS_CODE) {
-          setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
-              /* includesDefault= */false);
-          throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
-        }
-
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ '', /* includesDefault= */false);
-        window.location.href= HOMEPAGE_PATH;
-      })
-      .catch((error) => {
-        // Not the server response error already caught and thrown
-        if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
-          setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ UPDATE_JOB_STRINGS['error-message'],
-              /* includesDefault= */false);
-          console.log('error', error);
-        }
-      });
+  getJobDetailsFromUserInput().then((jobDetails) => {
+    fetch(API['update-job'], {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(jobDetails),
+    })
+        .then((response) => {
+          if (response.status == BAD_REQUEST_STATUS_CODE) {
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
+                /* includesDefault= */false);
+            throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
+          }
+          window.location.href= HOMEPAGE_PATH;
+        })
+        .catch((error) => {
+          // Not the server response error already caught and thrown
+          if (error.message != UPDATE_JOB_STRINGS['storing-error-message']) {
+            setErrorMessage(/* errorMessageElementId= */'error-message',
+                /* msg= */ UPDATE_JOB_STRINGS['error-message'],
+                /* includesDefault= */false);
+            console.error(error);
+          }
+        });
+  });
 });
 
 const cancelButton = document.getElementById('cancel');

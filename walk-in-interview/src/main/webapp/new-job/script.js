@@ -17,6 +17,8 @@ import {API} from '../apis.js';
 import {getRequirementsList, setErrorMessage,
   renderSelectOptions} from '../common-functions.js';
 
+import {findCoordinates} from '../maps.js';
+
 const STRINGS = AppStrings['job'];
 const NEW_JOB_STRINGS = AppStrings['new-job'];
 const HOMEPAGE_PATH = '../index.html';
@@ -173,7 +175,7 @@ function renderJobExpiryLimits() {
  * Gets job detail from user input.
  * @return {Object} containing the user inputs.
  */
-function getJobDetailsFromUserInput() {
+async function getJobDetailsFromUserInput() {
   const name = document.getElementById('title').value;
   const description = document.getElementById('description').value;
   const address = document.getElementById('address').value;
@@ -192,14 +194,22 @@ function getJobDetailsFromUserInput() {
   const expiry = document.getElementById('expiry').valueAsNumber;
   const duration = document.getElementById('duration').value;
 
+  const location = await findCoordinates(postalCode).catch((error) => {
+    console.error(error);
+    // location depends only on postal code so the error would be here
+    setErrorMessageAndField(/* errorFieldId= */ 'postal-code',
+    /* msg= */ STRINGS['postal-code'], /* includesDefaultMsg= */ true);
+    return;
+  });
+
   const jobDetails = {
     jobTitle: name,
     jobLocation: {
       address: address,
       postalCode: postalCode,
       region: findRegion(postalCode),
-      latitude: 1.3039, // TODO(issue/13): get these from places api
-      longitude: 103.8358,
+      latitude: location.latitude,
+      longitude: location.longitude,
     },
     jobDescription: description,
     jobPay: {
@@ -371,26 +381,27 @@ submitButton.addEventListener('click', (_) => {
     return;
   }
 
-  const jobDetails = getJobDetailsFromUserInput();
-  fetch(API['new-job'], {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(jobDetails),
-  })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log('data', data);
-        /* reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */ 'error-message',
-            /* msg= */ '', /* include default msg= */ false);
-        window.location.href= HOMEPAGE_PATH;
-      })
-      .catch((error) => {
-        setErrorMessage(/* errorMessageElementId= */ 'error-message',
-            /* msg= */ STRINGS['creating-job-error-message'],
-            /* include default msg= */ false);
-        console.error('error creating job listing', error);
-      });
+  getJobDetailsFromUserInput().then((jobDetails) => {
+    fetch(API['new-job'], {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(jobDetails),
+    })
+        .then((response) => response.text())
+        .then((data) => {
+          console.log('data', data);
+          /* reset the error (there might have been an error msg earlier) */
+          setErrorMessage(/* errorMessageElementId= */ 'error-message',
+              /* msg= */ '', /* include default msg= */ false);
+          window.location.href= HOMEPAGE_PATH;
+        })
+        .catch((error) => {
+          setErrorMessage(/* errorMessageElementId= */ 'error-message',
+              /* msg= */ STRINGS['creating-job-error-message'],
+              /* include default msg= */ false);
+          console.error('error creating job listing', error);
+        });
+  });
 });
 
 const cancelButton = document.getElementById('cancel');

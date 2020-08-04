@@ -11,10 +11,17 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../../strings.en.js';
+import {signIntoBusinessAccount} from '../firebase-auth.js';
+import {setErrorMessage} from '../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
+
+const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
+const USER_DISABLED_ERROR_CODE = 'auth/user-disabled';
+const USER_NOT_FOUND_ERROR_CODE = 'auth/user-not-found';
+const WRONG_PASSWORD_ERROR_CODE = 'auth/wrong-password';
 
 window.onload = () => {
   renderPageElements();
@@ -54,5 +61,68 @@ backButton.addEventListener('click', (_) => {
 
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
-  // TODO(issue/78): send the account & password input to the firebase auth related stuff
+  // Disables the button to avoid accidental double click
+  document.getElementById('submit').disabled = true;
+
+  const account = document.getElementById('account-input').value;
+
+  if (account === '') {
+    setErrorMessage(/* errorMessageElementId= */'error-message',
+        /* msg= */ STRINGS['empty-email'],
+        /* includesDefault= */false);
+    return;
+  }
+
+  const password = document.getElementById('password-input').value;
+
+  // Resets the error (there might have been an error msg from earlier)
+  setErrorMessage(/* errorMessageElementId= */'error-message',
+      /* msg= */ '',
+      /* includesDefault= */false);
+
+  signIntoBusinessAccount(account, password)
+      .then(() => {
+        // Enables the button regardless of success or failure
+        document.getElementById('submit').disabled = false;
+      })
+      .catch((error) => {
+        showErrorMessageFromError(error);
+        document.getElementById('submit').disabled = false;
+      });
 });
+
+/**
+ * Displays the error messages according to different situations.
+ *
+ * @param {Error} error Error from sign in.
+ */
+function showErrorMessageFromError(error) {
+  switch (error.code) {
+    case INVALID_EMAIL_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['invalid-email-error'],
+          /* includesDefault= */false);
+      break;
+    case USER_DISABLED_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['user-disabled'],
+          /* includesDefault= */false);
+      break;
+    case USER_NOT_FOUND_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['user-not-found'],
+          /* includesDefault= */false);
+      break;
+    case WRONG_PASSWORD_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['wrong-password'],
+          /* includesDefault= */false);
+      break;
+    default:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMONG_STRINGS['error-message'],
+          /* includesDefault= */false);
+      console.error(error.message);
+      break;
+  }
+}

@@ -10,6 +10,11 @@ const SG_MAP_ZOOM = 11;
 // appropriate zoom for the map to show the individual job
 const JOB_MAP_ZOOM = 15;
 
+const SG_NORTH_LIMIT = 1.4775;
+const SG_SOUTH_LIMIT = 1.1356;
+const SG_EAST_LIMIT = 104.1215;
+const SG_WEST_LIMIT = 103.5582;
+
 /**
  * Creates a map in the provided html div.
  *
@@ -54,4 +59,49 @@ function addMarker(map, job) {
   });
 }
 
-export {createMap, addMarker, JOB_MAP_ZOOM};
+/**
+ * Finds the coordinates based on the Singapore postal code.
+ *
+ * @param {String} postalCode The postal code.
+ * @return {Promise} With the coordinates.
+ */
+function findCoordinates(postalCode) {
+  const request = {
+    query: `Singapore ${postalCode}`,
+    fields: ['name', 'geometry'],
+  };
+
+  /* HTML element required for rendering the results. */
+  const service = new google.maps.places.PlacesService(
+      document.getElementById('places-results'));
+
+  return new Promise((resolve, reject) => {
+    service.findPlaceFromQuery(request, (results, status) => {
+      if (status !== google.maps.places.PlacesServiceStatus.OK) {
+        return reject(results);
+      }
+      // there should only be one location with that postal code
+      if (results.length != 1) {
+        throw new Error('unable to find one place for given postal code: ' +
+          postalCode);
+      }
+
+      const location = results[0].geometry.location;
+      const latitude = location.lat();
+      const longitude = location.lng();
+
+      // rectangular bounds for Singapore
+      if (latitude > SG_NORTH_LIMIT || latitude < SG_SOUTH_LIMIT ||
+          longitude > SG_EAST_LIMIT || longitude < SG_WEST_LIMIT) {
+        return reject(results);
+      }
+
+      return resolve({
+        latitude: latitude,
+        longitude: longitude,
+      });
+    });
+  });
+}
+
+export {createMap, addMarker, findCoordinates, JOB_MAP_ZOOM};
