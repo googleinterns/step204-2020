@@ -80,9 +80,18 @@ function findCoordinates(postalCode) {
         }
 
         const location = results[0].geometry.location;
+        const latitude = location.lat();
+        const longitude = location.lng();
+
+        // rectangular bounds for Singapore
+        if (latitude > 1.4775 || latitude < 1.1356 ||
+            longitude > 104.1215 || longitude < 103.5582) {
+          throw new Error('coordinates should be in Singapore');
+        }
+
         return resolve({
-          latitude: location.lat(),
-          longitude: location.lng(),
+          latitude: latitude,
+          longitude: longitude,
         });
       } else {
         reject(results);
