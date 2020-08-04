@@ -429,7 +429,7 @@ submitButton.addEventListener('click', (_) => {
             throw new Error(UPDATE_JOB_STRINGS['storing-error-message']);
           }
 
-          /*
+          /**
            * reset the error (there might have been an error msg from earlier)
            */
           setErrorMessage(/* errorMessageElementId= */'error-message',

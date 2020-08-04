@@ -66,23 +66,20 @@ function findCoordinates(postalCode) {
     fields: ['name', 'geometry'],
   };
 
-  console.log('request', request);
-
   /* HTML element required for rendering the results. */
   const service = new google.maps.places.PlacesService(
       document.getElementById('places-results'));
 
   return new Promise((resolve, reject) => {
     service.findPlaceFromQuery(request, (results, status) => {
-      console.log('response', status);
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-      // there should only be one location with that postal code
+        // there should only be one location with that postal code
         if (results.length != 1) {
-          throw new Error('cannot find one location for given postal code: ' +
+          throw new Error('unable to find one place for given postal code: ' +
             postalCode);
         }
+
         const location = results[0].geometry.location;
-        console.log('location', location.lat(), location.lng());
         return resolve({
           latitude: location.lat(),
           longitude: location.lng(),

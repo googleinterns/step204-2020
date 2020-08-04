@@ -195,7 +195,6 @@ async function getJobDetailsFromUserInput() {
   const duration = document.getElementById('duration').value;
 
   const location = await findCoordinates(postalCode);
-  console.log('locaion', location);
 
   const jobDetails = {
     jobTitle: name,
@@ -377,7 +376,6 @@ submitButton.addEventListener('click', (_) => {
   }
 
   getJobDetailsFromUserInput().then((jobDetails) => {
-    console.log('jobdeets', jobDetails);
     fetch(API['new-job'], {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
