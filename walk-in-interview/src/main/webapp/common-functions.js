@@ -16,6 +16,8 @@ const JOB_ID_PARAM = 'jobId';
 const APPLICANT_ID_PARAM = 'applicantId';
 const APPLICANT_DETAILS_PARAM = 'applicantDetails';
 
+const DAY_MILLISECOND = 24*60*60*1000;
+
 /**
  * Gets the requirements list from the servlet
  * (which gets it from the database).
@@ -63,6 +65,21 @@ function renderSelectOptions(select, options) {
 }
 
 /**
+ * Sets a cookie value.
+ * 
+ * @param {String} cname The name of the cookie.
+ * @param {String} cvalue The value of the cookie.
+ * @param {String} exdays The number of days until the cookie should expire.
+ *                         Default set to be half day.
+ */
+function setCookie(cname, cvalue, exdays=0.5) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * DAY_MILLISECOND));
+  var expires = `expires=${d.toUTCString()}`;
+  document.cookie = `${cname}=${cvalue};${expires};path=/`;
+}
+
+/**
  * Gets the value of a specified cookie.
  * 
  * @param {String} cname Cookie name.
@@ -84,5 +101,5 @@ function getCookie(cname) {
 }
 
 export {JOB_ID_PARAM, APPLICANT_ID_PARAM, APPLICANT_DETAILS_PARAM,
-  getRequirementsList, setErrorMessage, renderSelectOptions,
-  getCookie};
+  getRequirementsList, setErrorMessage, renderSelectOptions, 
+  setCookie, getCookie};
