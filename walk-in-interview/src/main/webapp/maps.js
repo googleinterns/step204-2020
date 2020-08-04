@@ -10,6 +10,11 @@ const SG_MAP_ZOOM = 11;
 // appropriate zoom for the map to show the individual job
 const JOB_MAP_ZOOM = 15;
 
+const SG_NORTH_LIMIT = 1.4775;
+const SG_SOUTH_LIMIT = 1.1356;
+const SG_EAST_LIMIT = 104.1215;
+const SG_WEST_LIMIT = 103.5582;
+
 /**
  * Creates a map in the provided html div.
  *
@@ -84,8 +89,8 @@ function findCoordinates(postalCode) {
         const longitude = location.lng();
 
         // rectangular bounds for Singapore
-        if (latitude > 1.4775 || latitude < 1.1356 ||
-            longitude > 104.1215 || longitude < 103.5582) {
+        if (latitude > SG_NORTH_LIMIT || latitude < SG_SOUTH_LIMIT ||
+          longitude > SG_EAST_LIMIT || longitude < SG_WEST_LIMIT) {
           throw new Error('coordinates should be in Singapore');
         }
 
