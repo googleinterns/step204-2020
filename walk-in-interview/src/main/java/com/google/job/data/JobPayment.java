@@ -27,6 +27,10 @@ public final class JobPayment {
             throw new IllegalArgumentException("\"max\" should not be less than \"min\"");
         }
 
+        if (max > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException("\"max\" should be no greater than " + Integer.MAX_VALUE);
+        }
+
         this.min = min;
         this.max = max;
         this.paymentFrequency = paymentFrequency;
