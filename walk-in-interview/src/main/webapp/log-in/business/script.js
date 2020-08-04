@@ -61,7 +61,9 @@ backButton.addEventListener('click', (_) => {
 
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
-  // TODO(issue/78): send the account & password input to the firebase auth related stuff
+  // Disables the button to avoid accidental double click
+  this.setAttribute('disabled', true);
+
   const account = document.getElementById('account-input').value;
 
   if (account === '') {
@@ -79,34 +81,48 @@ submitButton.addEventListener('click', (_) => {
       /* includesDefault= */false);
 
   signIntoBusinessAccount(account, password)
+      .then(() => {
+        // Enables the button regardless of success or failure
+        this.setAttribute('disabled', false);
+      })
       .catch((error) => {
-        switch(error.code) {
-          case INVALID_EMAIL_ERROR_CODE:
-            setErrorMessage(/* errorMessageElementId= */'error-message',
-                /* msg= */ STRINGS['invalid-email-error'],
-                /* includesDefault= */false);
-            break;
-          case USER_DISABLED_ERROR_CODE:
-            setErrorMessage(/* errorMessageElementId= */'error-message',
-                /* msg= */ STRINGS['user-disabled'],
-                /* includesDefault= */false);
-            break;
-          case USER_NOT_FOUND_ERROR_CODE:
-            setErrorMessage(/* errorMessageElementId= */'error-message',
-                /* msg= */ STRINGS['user-not-found'],
-                /* includesDefault= */false);
-            break;
-          case WRONG_PASSWORD_ERROR_CODE:
-            setErrorMessage(/* errorMessageElementId= */'error-message',
-                /* msg= */ STRINGS['wrong-password'],
-                /* includesDefault= */false);
-            break;
-          default:
-            setErrorMessage(/* errorMessageElementId= */'error-message',
-                /* msg= */ COMMONG_STRINGS['error-message'],
-                /* includesDefault= */false);
-            console.log(error.message);
-            break;
-        }
+        showErrorMessageFromError(error);
+        this.setAttribute('disabled', false);
       });
 });
+
+/**
+ * Displays the error messages according to different situations.
+ * 
+ * @param {Error} error Error from sign in.
+ */
+function showErrorMessageFromError(error) {
+  switch(error.code) {
+    case INVALID_EMAIL_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['invalid-email-error'],
+          /* includesDefault= */false);
+      break;
+    case USER_DISABLED_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['user-disabled'],
+          /* includesDefault= */false);
+      break;
+    case USER_NOT_FOUND_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['user-not-found'],
+          /* includesDefault= */false);
+      break;
+    case WRONG_PASSWORD_ERROR_CODE:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ STRINGS['wrong-password'],
+          /* includesDefault= */false);
+      break;
+    default:
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMONG_STRINGS['error-message'],
+          /* includesDefault= */false);
+      console.log(error.message);
+      break;
+  }
+}
