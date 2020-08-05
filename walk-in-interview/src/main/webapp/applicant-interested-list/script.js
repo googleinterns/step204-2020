@@ -10,7 +10,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
-import {StringsFormat} from './strings.format.js';
+import {StringsFormat} from '../strings.format.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
     setErrorMessage, getRequirementsList} from '../common-functions.js';
 import {createMap, addMarker} from '../maps.js';
@@ -111,9 +111,11 @@ function displayInterestedJobListings(jobPageData) {
     jobListingsElement.appendChild(buildJobElement(job));
   });
 
-  jobShowing.innerText = `${jobPageData['range'].minimum} -` +
-    ` ${jobPageData['range'].maximum} ${STRINGS['job-listings-showing']} ` +
-    `${jobPageData['totalCount']}`;
+  jobShowing.innerText = StringsFormat['jobShowing']
+    .replace('{MINIMUM}', jobPageData['range'].minimum)
+    .replace('{MAXIMUM}', jobPageData['range'].maximum)
+    .replace('{JOB_LISTINGS_SHOWING}', STRINGS['job-listings-showing'])
+    .replace('{TOTAL_COUNT}', jobPageData['totalCount']);
 }
 
 /**
@@ -135,13 +137,17 @@ function buildJobElement(job) {
 
   const jobAddress = jobPostPreview.children[1];
   const location = job['jobLocation'];
-  jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
+  jobAddress.innerText = StringsFormat['jobAddressDescription']
+    .replace('{ADDRESS}', location['address'])
+    .replace('{POSTAL_CODE}', location['postalCode']);
 
   const jobPay = jobPostPreview.children[2];
   const pay = job['jobPay'];
-  jobPay.innerText = StringsFormat['jobPayDescription'].format(
-    pay['min'], pay['max'], JOB_STRINGS['sgd'], pay['paymentFrequency'].toLowerCase());
-  console.log(StringsFormat['jobPayDescription'].format(pay['min'], pay['max'], JOB_STRINGS['sgd'], pay['paymentFrequency'].toLowerCase()));
+  jobPay.innerText = StringsFormat['jobPayDescription']
+    .replace('{MIN_PAY}', pay['min'])
+    .replace('{MAX_PAY}', pay['max'])
+    .replace('{CURRENCY}', JOB_STRINGS['sgd'])
+    .replace('{FREQUENCY}', JOB_STRINGS['pay-frequency'][pay['paymentFrequency']]);
 
   const requirementsList = jobPostPreview.children[3];
   const fullRequirementsList = getRequirementsList();
@@ -156,8 +162,9 @@ function buildJobElement(job) {
     }
   }
 
-  requirementsList.innerText =
-  `Requirements List: ${requirementsArr.join(', ')}`;
+  requirementsList.innerText = StringsFormat['requirementsDescription']
+    .replace('{REQUIREMENTS_TITLE}', JOB_STRINGS['requirements-title'])
+    .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
 
   const detailsForm = jobPostPreview.children[4];
   detailsForm.method = 'GET';
