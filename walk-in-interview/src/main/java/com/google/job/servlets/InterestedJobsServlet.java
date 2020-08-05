@@ -51,7 +51,6 @@ public final class InterestedJobsServlet extends HttpServlet {
         try {
 
             String jobId = JobServlet.parseJobId(request);
-
             // true if the applicant is already interested (they want to remove it now)
             boolean interested = parseInterested(request);
 
@@ -108,7 +107,7 @@ public final class InterestedJobsServlet extends HttpServlet {
             throw new IllegalArgumentException("interested param should not be empty");
         }
 
-        if (!interestedStr.equalsIgnoreCase("true") && !interestedStr.equalsIgnoreCase("false")) {
+        if (!(interestedStr.equalsIgnoreCase("true") || interestedStr.equalsIgnoreCase("false"))) {
             throw new IllegalArgumentException("interested param should be either true or false");
         }
 
