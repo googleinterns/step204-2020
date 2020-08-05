@@ -247,7 +247,7 @@ public final class JobsDatabase {
         CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
 
         // TODO(issue/91): get userId from firebase session cookie
-        String applicantId = '';
+        String applicantId = "";
 
         DocumentReference docRef = applicantAccountsCollection.document(applicantId);
 
