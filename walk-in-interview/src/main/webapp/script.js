@@ -20,7 +20,7 @@ const STRINGS = AppStrings['homepage'];
 const LOG_IN_PAGE_PATH = '/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
-const POSTS_MADE_PATH = './show-job-posts-made.html';
+const POSTS_MADE_PATH = '/business-jobs-list/index.html';
 const SALARY_PARAM = 'SALARY';
 
 /**

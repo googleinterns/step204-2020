@@ -53,12 +53,11 @@ AppStrings['homepage'] = {
 };
 
 /**
- * All the strings to be used in the show-job-posts-made.html.
+ * All the strings to be used in the business-jobs-list/index.html.
  */
-AppStrings['show-job-posts-made'] = {
+AppStrings['business-jobs-list'] = {
   'back': 'Back',
   'job-listings-title': 'Job Posts Made:',
-  'details': 'Show Details',
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occured while getting the job listings.',

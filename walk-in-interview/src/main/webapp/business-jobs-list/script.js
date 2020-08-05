@@ -9,14 +9,14 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from './strings.en.js';
+import {AppStrings} from '../strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
-    setErrorMessage, getRequirementsList} from './common-functions.js';
-import {API} from './apis.js';
+    setErrorMessage, getRequirementsList} from '../common-functions.js';
+import {API} from '../apis.js';
 
-const STRINGS = AppStrings['show-job-posts-made'];
-const JOB_DETAILS_PATH = '/job-details/index.html';
-const HOMEPAGE_PATH = './index.html';
+const STRINGS = AppStrings['business-jobs-list'];
+const JOB_DETAILS_PATH = '../job-details/index.html';
+const HOMEPAGE_PATH = '../index.html';
 
 // TODO(issue/34): implement pagination for job listings
 
@@ -62,7 +62,7 @@ async function loadAndDisplayJobListings() {
 function getJobsMade(pageSize, pageIndex) {
   const params = `pageSize=${pageSize}&pageIndex=${pageIndex}`;
 
-  fetch(`${API['show-job-posts-made']}?${params}`, {
+  fetch(`${API['business-jobs-list']}?${params}`, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
   })
