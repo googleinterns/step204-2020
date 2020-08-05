@@ -11,7 +11,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 import {StringsFormat} from '../strings.format.en.js';
-import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
+import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
     setErrorMessage, getRequirementsList} from '../common-functions.js';
 import {createMap, addMarker} from '../maps.js';
 import {API} from '../apis.js';
@@ -46,7 +46,7 @@ async function loadAndDisplayInterestedJobListings() {
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
   const jobPageData = 
-    await getInterestedJobs(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+    await getInterestedJobs(DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
       .catch((error) => {
         console.error('error fetching job listings', error);
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
@@ -156,7 +156,7 @@ function buildJobElement(job) {
   const jobRequirements = job['requirements'];
   for (const key in jobRequirements) {
     if (jobRequirements.hasOwnProperty(key)) {
-      if (jobRequirements[key] /* is true */) {
+      if (jobRequirements[key] === true) {
         requirementsArr.push(fullRequirementsList[key]);
       }
     }

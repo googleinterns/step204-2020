@@ -12,8 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
-import {StringsFormat} from './strings.format.js';
-import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
+import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
   getRequirementsList, setErrorMessage} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
 
@@ -333,7 +332,7 @@ async function loadAndDisplayJobListings() {
 
   const jobPageData = await getJobListings(regionParam, sortByParam,
       minLimitParam, maxLimitParam, orderByParam,
-      DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+      DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
       .catch((error) => {
         console.error('error fetching job listings', error);
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
