@@ -58,7 +58,7 @@ public final class InterestedJobsServlet extends HttpServlet {
             updateInterestedList(jobId, interested);
 
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (ExecutionException | IllegalArgumentException | ServletException | IOException | TimeoutException e) {
+        } catch (ExecutionException | IllegalArgumentException | ServletException | TimeoutException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }

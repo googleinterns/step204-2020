@@ -303,9 +303,9 @@ public final class JobsDatabase {
      * @return The updated interested jobs list.
      * @throws IllegalArgumentException If params are invalid.
      */
-    private List<String> updatedInterestedJobs(DocumentSnapshot documentSnapshot, String jobId, boolean interested) throws IllegalArgumentException{
+    private static List<String> updatedInterestedJobs(DocumentSnapshot documentSnapshot, String jobId, boolean interested) throws IllegalArgumentException{
 
-        List<String> jobsList = documentSnapshot.get(INTERESTED_JOBS_FIELD, List<String>);
+        List<String> jobsList = documentSnapshot.get(INTERESTED_JOBS_FIELD, List.class);
 
         if (interested != jobsList.contains(jobId)) {
             throw new IllegalArgumentException("interested param inconsistent with interestedJobs list");
