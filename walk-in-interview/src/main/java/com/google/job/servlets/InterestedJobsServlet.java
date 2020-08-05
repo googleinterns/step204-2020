@@ -89,7 +89,7 @@ public final class InterestedJobsServlet extends HttpServlet {
         try {
             this.jobsDatabase.updateInterestedJobsList(jobId, interested)
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        } catch (InterruptedException | IOException e) {
+        } catch (Exception e) {
             throw new ServletException(e);
         }
     }

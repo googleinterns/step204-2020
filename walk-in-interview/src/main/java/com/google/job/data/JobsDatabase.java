@@ -248,7 +248,7 @@ public final class JobsDatabase {
         CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
 
         // TODO(issue/91): get userId from firebase session cookie
-        String applicantId = "";
+        String applicantId = "dummyApplicantId";
 
         DocumentReference docRef = applicantAccountsCollection.document(applicantId);
 
@@ -271,52 +271,25 @@ public final class JobsDatabase {
      * @return A future of document reference for the applicant's update job list.
      * @throws IllegalArgumentException If the params are invalid.
      */
-    public static Future<DocumentReference> updateInterestedJobsList(String jobId, boolean interested) throws IOException, IllegalArgumentException {
+    public static Future<DocumentReference> updateInterestedJobsList(String jobId, boolean interested) throws IOException, IllegalArgumentException, Exception {
         return FireStoreUtils.getFireStore().runTransaction(transaction -> {
             // TODO(issue/91): get userId from firebase session cookie
-            String applicantId = "";
+            String applicantId = "dummyApplicantId";
 
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
                     .collection(APPLICANT_ACCOUNTS_COLLECTION).document(applicantId);
 
-            DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
-
-            if (!documentSnapshot.exists()) {
-                throw new IllegalArgumentException("Invalid applicantId");
+            if (interested) {
+                // Remove the jobId
+                // Does nothing if it already isn't there
+                documentReference.update(INTERESTED_JOBS_FIELD, FieldValue.arrayRemove(jobId));
+            } else {
+                // Add the jobId
+                // Does nothing if it already exists
+                documentReference.update(INTERESTED_JOBS_FIELD, FieldValue.arrayUnion(jobId));
             }
-
-            List<String> jobsList = updatedInterestedJobs(documentSnapshot, jobId, interested);
-
-            // Updates the interestedJobs field
-            transaction.update(documentReference, INTERESTED_JOBS_FIELD, jobsList);
 
             return documentReference;
         });
-    }
-
-    /**
-     * Adds or removes the jobId from the currentJobsList depending on the interested boolean.
-     *
-     * @param documentSnapshot The applicant's document snapshot.
-     * @param jobId The job id.
-     * @param interested Whether the applicant is currently interested in it or not.
-     * @return The updated interested jobs list.
-     * @throws IllegalArgumentException If params are invalid.
-     */
-    private static List<String> updatedInterestedJobs(DocumentSnapshot documentSnapshot, String jobId, boolean interested) throws IllegalArgumentException{
-
-        List<String> jobsList = documentSnapshot.get(INTERESTED_JOBS_FIELD, List.class);
-
-        if (interested != jobsList.contains(jobId)) {
-            throw new IllegalArgumentException("interested param inconsistent with interestedJobs list");
-        }
-
-        if (interested) {
-            jobsList.remove(jobId);
-        } else {
-            jobsList.add(jobId);
-        }
-
-        return jobsList;
     }
 }
