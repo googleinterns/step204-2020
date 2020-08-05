@@ -66,7 +66,14 @@ async function loadAndDisplayInterestedJobListings() {
  * @return {Object} The data returned from the servlet.
  */
 function getInterestedJobs(pageSize, pageIndex) {
-  const params = `pageSize=${pageSize}&pageIndex=${pageIndex}`;
+  const pageSizeParam = parseInt(pageSize);
+  const pageIndexParam = parseInt(pageIndex);
+
+  if (Number.isNaN(pageSizeParam) || Number.isNan(pageIndexParam)) {
+    throw new Error('Illegal pagination param');
+  }
+
+  const params = `pageSize=${pageSizeParam}&pageIndex=${pageIndexParam}`;
     
   fetch(`${API['applicant-interested-list']}?${params}`, {
     method: 'GET',
