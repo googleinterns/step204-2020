@@ -116,6 +116,7 @@ AppStrings['job'] = {
   },
   'pay-min': 'min (sgd)',
   'pay-max': 'max (sgd)',
+  'sgd': 'SGD',
   'duration-title': 'Job Duration',
   'duration': {
     'ONE_WEEK': '1 Week',

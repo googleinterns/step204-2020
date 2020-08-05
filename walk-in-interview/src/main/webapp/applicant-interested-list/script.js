@@ -10,12 +10,14 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
+import {StringsFormat} from './strings.format.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
     setErrorMessage, getRequirementsList} from '../common-functions.js';
 import {createMap, addMarker} from '../maps.js';
 import {API} from '../apis.js';
 
 const STRINGS = AppStrings['applicant-interested-list'];
+const JOB_STRINGS = AppStrings['job'];
 const JOB_DETAILS_PATH = '../job-details/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
@@ -126,7 +128,7 @@ function buildJobElement(job) {
 
   const jobPostPreview =
     jobPostPreviewTemplate.cloneNode( /* and child elements */ true);
-  jobPostPreview.setAttribute('id', job['jobId']);
+  jobPostPreview.setAttribute('id', 'job-listing-id-' + job['jobId']);
 
   const jobTitle = jobPostPreview.children[0];
   jobTitle.innerText = job['jobTitle'];
@@ -137,8 +139,9 @@ function buildJobElement(job) {
 
   const jobPay = jobPostPreview.children[2];
   const pay = job['jobPay'];
-  jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
-  `(${pay['paymentFrequency'].toLowerCase()})`;
+  jobPay.innerText = StringsFormat['jobPayDescription'].format(
+    pay['min'], pay['max'], JOB_STRINGS['sgd'], pay['paymentFrequency'].toLowerCase());
+  console.log(StringsFormat['jobPayDescription'].format(pay['min'], pay['max'], JOB_STRINGS['sgd'], pay['paymentFrequency'].toLowerCase()));
 
   const requirementsList = jobPostPreview.children[3];
   const fullRequirementsList = getRequirementsList();

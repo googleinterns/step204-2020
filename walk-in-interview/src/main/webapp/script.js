@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
+import {StringsFormat} from './strings.format.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
   getRequirementsList, setErrorMessage} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
