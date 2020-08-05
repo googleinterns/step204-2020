@@ -61,7 +61,7 @@ AppStrings['business-jobs-list'] = {
   'job-listings-title': 'Job Posts Made:',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occurred while getting the job listings.',
-}
+};
 
 /**
  * All the strings to be used in the applicant-interested-list/index.html.
@@ -92,8 +92,9 @@ AppStrings['business-log-in'] = {
   'password': 'Password',
   'empty-email': 'Empty email input',
   'invalid-email-error': 'The email address is not valid',
-  'user-disabled': 'The user corresponding to the given email has been disabled '
-                    + 'by some administrator or Access Management to prevent further logins to that account',
+  'user-disabled': 'The user corresponding to the given email has been ' +
+    'disabled by some administrator or Access Management to prevent ' +
+    'further logins to that account',
   'user-not-found': 'There is no user corresponding to the given email',
   'wrong-password': 'The password is invalid for the given email',
 };
@@ -130,8 +131,8 @@ AppStrings['job'] = {
   'expiry-title': 'Job Expiry',
   'creating-job-error-message': 'There was an error while creating ' +
       'the job listing, please try submitting again',
-  
-  'jobAddressDescription': '{ADDRESS}, {POSTAL_CODE}', 
+
+  'jobAddressDescription': '{ADDRESS}, {POSTAL_CODE}',
   'jobPayDescription': '{MIN_PAY} - {MAX_PAY} {CURRENCY} ({FREQUENCY})',
   'requirementsDescription': 'Requirements List: {REQUIREMENTS_LIST}',
   'jobShowing': '{MINIMUM} - {MAXIMUM} out of {TOTAL_COUNT}',

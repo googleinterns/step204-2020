@@ -11,7 +11,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
-    setErrorMessage, getRequirementsList} from '../common-functions.js';
+  setErrorMessage, getRequirementsList} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const STRINGS = AppStrings['business-jobs-list'];
@@ -23,7 +23,7 @@ const HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
   loadAndDisplayJobListings();
-}
+};
 
 /**
  * Add the list of jobs made.
@@ -39,23 +39,23 @@ async function loadAndDisplayJobListings() {
     document.getElementById('job-listings-title');
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
-  const jobPageData = 
+  const jobPageData =
     await getJobsMade(DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
-      .catch((error) => {
-        console.error('error fetching job listings', error);
-        setErrorMessage(/* errorMessageElementId= */ 'error-message',
-            /* msg= */ STRINGS['get-jobs-error-message'],
-            /* include default msg= */ false);
-      });
+        .catch((error) => {
+          console.error('error fetching job listings', error);
+          setErrorMessage(/* errorMessageElementId= */ 'error-message',
+              /* msg= */ STRINGS['get-jobs-error-message'],
+              /* include default msg= */ false);
+        });
 
   displayJobListings(jobPageData);
 }
 
 /**
  * Makes GET request to retrieve all the job posts made
- * by the current business user. 
+ * by the current business user.
  * This function is called when the interest page is loaded.
- * 
+ *
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  * @return {Object} The data returned from the servlet.
@@ -71,7 +71,7 @@ function getJobsMade(pageSize, pageIndex) {
 
   const params = `pageSize=${pageSizeParam}&pageIndex=${pageIndexParam}`;
 
-  fetch(`${API['business-jobs-list']}?${params}`, {
+  return fetch(`${API['business-jobs-list']}?${params}`, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
   })
@@ -87,7 +87,7 @@ function getJobsMade(pageSize, pageIndex) {
 
 /**
  * This will add all the job listings onto the page.
- * 
+ *
  * @param {Object} jobPageData The details to be shown on the page.
  */
 function displayJobListings(jobPageData) {
@@ -114,14 +114,14 @@ function displayJobListings(jobPageData) {
   });
 
   jobShowing.innerText = JOB_STRINGS['jobShowing']
-    .replace('{MINIMUM}', jobPageData['range'].minimum)
-    .replace('{MAXIMUM}', jobPageData['range'].maximum)
-    .replace('{TOTAL_COUNT}', jobPageData['totalCount']);
+      .replace('{MINIMUM}', jobPageData['range'].minimum)
+      .replace('{MAXIMUM}', jobPageData['range'].maximum)
+      .replace('{TOTAL_COUNT}', jobPageData['totalCount']);
 }
 
 /**
  * Builds the job element given the job details from the servlet response.
- * 
+ *
  * @param {Object} job The job to be displayed.
  * @return {Element} The job listing element.
  */
@@ -139,16 +139,17 @@ function buildJobElement(job) {
   const jobAddress = jobPost.children[1];
   const location = job['jobLocation'];
   jobAddress.innerText = JOB_STRINGS['jobAddressDescription']
-    .replace('{ADDRESS}', location['address'])
-    .replace('{POSTAL_CODE}', location['postalCode']);
+      .replace('{ADDRESS}', location['address'])
+      .replace('{POSTAL_CODE}', location['postalCode']);
 
   const jobPay = jobPost.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = JOB_STRINGS['jobPayDescription']
-    .replace('{MIN_PAY}', pay['min'])
-    .replace('{MAX_PAY}', pay['max'])
-    .replace('{CURRENCY}', JOB_STRINGS['sgd'])
-    .replace('{FREQUENCY}', JOB_STRINGS['pay-frequency'][pay['paymentFrequency']]);
+      .replace('{MIN_PAY}', pay['min'])
+      .replace('{MAX_PAY}', pay['max'])
+      .replace('{CURRENCY}', JOB_STRINGS['sgd'])
+      .replace('{FREQUENCY}',
+          JOB_STRINGS['pay-frequency'][pay['paymentFrequency']]);
 
   const requirementsList = jobPost.children[3];
   const fullRequirementsList = getRequirementsList();
@@ -164,7 +165,7 @@ function buildJobElement(job) {
   }
 
   requirementsList.innerText = JOB_STRINGS['requirementsDescription']
-    .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
+      .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
 
   const detailsForm = jobPost.children[4];
   detailsForm.method = 'GET';

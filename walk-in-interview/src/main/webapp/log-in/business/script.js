@@ -1,5 +1,5 @@
 /**
- * This file is specific to log-in/business/index.html. 
+ * This file is specific to log-in/business/index.html.
  * It renders the fields on the page dynamically
  */
 
@@ -25,7 +25,7 @@ const WRONG_PASSWORD_ERROR_CODE = 'auth/wrong-password';
 
 window.onload = () => {
   renderPageElements();
-}
+};
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
