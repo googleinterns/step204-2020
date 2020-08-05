@@ -53,9 +53,9 @@ AppStrings['homepage'] = {
 };
 
 /**
- * All the strings to be used in the interested-list.html.
+ * All the strings to be used in the applicant-interested-list/index.html.
  */
-AppStrings['interested-list'] = {
+AppStrings['applicant-interested-list'] = {
   'back': 'Back',
   'job-listings-title': 'My Interested Job Listings:',
   'job-listings-showing': 'out of',

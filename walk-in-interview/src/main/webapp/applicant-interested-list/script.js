@@ -15,7 +15,7 @@ import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
 import {createMap, addMarker} from '../maps.js';
 import {API} from '../apis.js';
 
-const STRINGS = AppStrings['interested-list'];
+const STRINGS = AppStrings['applicant-interested-list'];
 const JOB_DETAILS_PATH = '../job-details/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
@@ -67,7 +67,7 @@ async function loadAndDisplayInterestedJobListings() {
 function getInterestedJobs(pageSize, pageIndex) {
   const params = `pageSize=${pageSize}&pageIndex=${pageIndex}`;
     
-  fetch(`${API['my-interested-list']}?${params}`, {
+  fetch(`${API['applicant-interested-list']}?${params}`, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
   })
