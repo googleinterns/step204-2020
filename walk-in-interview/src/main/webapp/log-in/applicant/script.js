@@ -18,7 +18,7 @@ const LOGIN_HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
   renderPageElements();
-}
+};
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
