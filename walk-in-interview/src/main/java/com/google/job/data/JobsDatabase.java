@@ -261,4 +261,30 @@ public final class JobsDatabase {
             MoreExecutors.directExecutor()
         );
     }
+
+    /**
+     * Updates the applicant's interested list to add or remove the job.
+     *
+     * @param jobId The job id.
+     * @param interested Whether the applicant is currently interested in it or not.
+     * @return A future of the detailed information of the writing.
+     */
+    public static Future<WriteResult> updateInterestedJobList(String jobId, boolean interested) throws IOException {
+        // CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
+
+        // // TODO(issue/91): get userId from firebase session cookie
+        // String applicantId = "";
+
+        // DocumentReference docRef = applicantAccountsCollection.document(applicantId);
+
+        // return ApiFutures.transform(
+        //     docRef.get(),
+        //     documentSnapshot -> {
+        //         // TODO(issue/92): get the applican't jobsList and iterate through it to get the job documents
+        //         // for now just return an empty job page
+        //         return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
+        //     },
+        //     MoreExecutors.directExecutor()
+        // );
+    }
 }
