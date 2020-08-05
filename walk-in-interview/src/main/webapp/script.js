@@ -12,7 +12,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from './strings.en.js';
-import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
+import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
   getRequirementsList, setErrorMessage} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
 
@@ -21,6 +21,7 @@ const LOG_IN_PAGE_PATH = '/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
 const POSTS_MADE_PATH = '/business-jobs-list/index.html';
+const INTEREST_JOBS_PATH = '/applicant-interested-list/index.html';
 const SALARY_PARAM = 'SALARY';
 
 /**
@@ -61,6 +62,12 @@ function renderHomepageElements() {
   showJobPostsButton.innerText = STRINGS['show-job-posts-made'];
   showJobPostsButton.addEventListener('click', (_) => {
     window.location.href = POSTS_MADE_PATH;
+  };
+
+  const interestedJobButton = document.getElementById('interested-job-list');
+  interestedJobButton.innerText = STRINGS['interested-job-list'];
+  interestedJobButton.addEventListener('click', (_) => {
+    window.location.href = INTEREST_JOBS_PATH;
   });
 
   const sortByTitle = document.getElementById('sort-by-title');
@@ -332,7 +339,7 @@ async function loadAndDisplayJobListings() {
 
   const jobPageData = await getJobListings(regionParam, sortByParam,
       minLimitParam, maxLimitParam, orderByParam,
-      DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+      DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
       .catch((error) => {
         console.error('error fetching job listings', error);
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
