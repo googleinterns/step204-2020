@@ -1,5 +1,5 @@
 /**
- * This file is specific to interested-list.html
+ * This file is specific to show-job-posts-made.html
  */
 
 // TODO(issue/21): get the language from the browser
@@ -12,28 +12,23 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
     setErrorMessage, getRequirementsList} from '../common-functions.js';
-import {createMap, addMarker} from '../maps.js';
 import {API} from '../apis.js';
 
-const STRINGS = AppStrings['applicant-interested-list'];
+const STRINGS = AppStrings['business-jobs-list'];
 const JOB_STRINGS = AppStrings['job'];
 const JOB_DETAILS_PATH = '../job-details/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
 // TODO(issue/34): implement pagination for job listings
 
-let map;
-
 window.onload = () => {
-  loadAndDisplayInterestedJobListings();
+  loadAndDisplayJobListings();
 }
 
 /**
- * Add the list of interested jobs.
+ * Add the list of jobs made.
  */
-async function loadAndDisplayInterestedJobListings() {
-  map = createMap('interested-jobs-map');
-
+async function loadAndDisplayJobListings() {
   const backButton = document.getElementById('back');
   backButton.innerText = STRINGS['back'];
   backButton.addEventListener('click', (_) => {
@@ -45,27 +40,27 @@ async function loadAndDisplayInterestedJobListings() {
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
   const jobPageData = 
-    await getInterestedJobs(DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
+    await getJobsMade(DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
       .catch((error) => {
         console.error('error fetching job listings', error);
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
             /* msg= */ STRINGS['get-jobs-error-message'],
             /* include default msg= */ false);
       });
-  
-  displayInterestedJobListings(jobPageData);
+
+  displayJobListings(jobPageData);
 }
 
 /**
- * Makes GET request to retrieve all the interested job listings
- * belonging to the current applicant user. 
+ * Makes GET request to retrieve all the job posts made
+ * by the current business user. 
  * This function is called when the interest page is loaded.
  * 
  * @param {int} pageSize The number of jobs for one page.
  * @param {int} pageIndex The page index (starting from 0).
  * @return {Object} The data returned from the servlet.
  */
-function getInterestedJobs(pageSize, pageIndex) {
+function getJobsMade(pageSize, pageIndex) {
   // Checks input type
   const pageSizeParam = parseInt(pageSize);
   const pageIndexParam = parseInt(pageIndex);
@@ -75,8 +70,8 @@ function getInterestedJobs(pageSize, pageIndex) {
   }
 
   const params = `pageSize=${pageSizeParam}&pageIndex=${pageIndexParam}`;
-    
-  fetch(`${API['applicant-interested-list']}?${params}`, {
+
+  fetch(`${API['business-jobs-list']}?${params}`, {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
   })
@@ -91,11 +86,11 @@ function getInterestedJobs(pageSize, pageIndex) {
 }
 
 /**
- * This will add all the interested job listings onto the page.
+ * This will add all the job listings onto the page.
  * 
  * @param {Object} jobPageData The details to be shown on the page.
  */
-function displayInterestedJobListings(jobPageData) {
+function displayJobListings(jobPageData) {
   const jobListingsElement = document.getElementById('job-listings');
   const jobShowing = document.getElementById('job-listings-showing');
 
@@ -134,20 +129,20 @@ function buildJobElement(job) {
   const jobPostPreviewTemplate =
     document.getElementById('job-listing-template');
 
-  const jobPostPreview =
+  const jobPost =
     jobPostPreviewTemplate.cloneNode( /* and child elements */ true);
-  jobPostPreview.setAttribute('id', 'job-listing-id-' + job['jobId']);
+  jobPost.setAttribute('id', 'job-listing-id-' + job['jobId']);
 
-  const jobTitle = jobPostPreview.children[0];
+  const jobTitle = jobPost.children[0];
   jobTitle.innerText = job['jobTitle'];
 
-  const jobAddress = jobPostPreview.children[1];
+  const jobAddress = jobPost.children[1];
   const location = job['jobLocation'];
   jobAddress.innerText = JOB_STRINGS['jobAddressDescription']
     .replace('{ADDRESS}', location['address'])
     .replace('{POSTAL_CODE}', location['postalCode']);
 
-  const jobPay = jobPostPreview.children[2];
+  const jobPay = jobPost.children[2];
   const pay = job['jobPay'];
   jobPay.innerText = JOB_STRINGS['jobPayDescription']
     .replace('{MIN_PAY}', pay['min'])
@@ -155,7 +150,7 @@ function buildJobElement(job) {
     .replace('{CURRENCY}', JOB_STRINGS['sgd'])
     .replace('{FREQUENCY}', JOB_STRINGS['pay-frequency'][pay['paymentFrequency']]);
 
-  const requirementsList = jobPostPreview.children[3];
+  const requirementsList = jobPost.children[3];
   const fullRequirementsList = getRequirementsList();
   const requirementsArr = [];
 
@@ -171,38 +166,22 @@ function buildJobElement(job) {
   requirementsList.innerText = JOB_STRINGS['requirementsDescription']
     .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
 
-  const detailsForm = jobPostPreview.children[4];
+  const detailsForm = jobPost.children[4];
   detailsForm.method = 'GET';
   detailsForm.action = JOB_DETAILS_PATH;
 
-  const jobIdElement = jobPostPreview.children[4].children[0];
+  const jobIdElement = jobPost.children[4].children[0];
   jobIdElement.setAttribute('type', 'hidden');
   jobIdElement.setAttribute('name', JOB_ID_PARAM);
   const jobId = job[JOB_ID_PARAM];
   jobIdElement.setAttribute('value', jobId);
 
-  jobPostPreview.addEventListener('click', (_) => {
+  jobPost.addEventListener('click', (_) => {
     if (jobId === '') {
       throw new Error('jobId should not be empty');
     }
     detailsForm.submit();
   });
 
-  const marker = addMarker(map, job);
-  marker.addListener('click', function() {
-    new google.maps.InfoWindow({
-      content: jobPostPreview.innerHTML,
-    }).open(map, marker);
-    // TODO(issue/73): link this to the job in the list?
-  });
-
-  // double clicking on the marker goes to the job details page
-  marker.addListener('dblclick', function() {
-    if (jobId === '') {
-      throw new Error('jobId should not be empty');
-    }
-    detailsForm.submit();
-  });
-
-  return jobPostPreview;
+  return jobPost;
 }

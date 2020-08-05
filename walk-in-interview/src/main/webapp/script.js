@@ -20,6 +20,7 @@ const STRINGS = AppStrings['homepage'];
 const LOG_IN_PAGE_PATH = '/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
+const POSTS_MADE_PATH = '/business-jobs-list/index.html';
 const INTEREST_JOBS_PATH = '/applicant-interested-list/index.html';
 const SALARY_PARAM = 'SALARY';
 
@@ -55,6 +56,12 @@ function renderHomepageElements() {
   loginButton.innerText = STRINGS['log-in'];
   loginButton.addEventListener('click', (_) => {
     window.location.href = LOG_IN_PAGE_PATH;
+  });
+
+  const showJobPostsButton = document.getElementById('show-job-posts-made');
+  showJobPostsButton.innerText = STRINGS['show-job-posts-made'];
+  showJobPostsButton.addEventListener('click', (_) => {
+    window.location.href = POSTS_MADE_PATH;
   });
 
   const interestedJobButton = document.getElementById('interested-job-list');

@@ -24,6 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
+  'show-job-posts-made': 'Show Job Posts Made',
   'interested-job-list': 'Interested Jobs',
   'sort-by-title': 'Sort By',
   'sort-by': {
@@ -47,10 +48,20 @@ AppStrings['homepage'] = {
   'details': 'Show Details',
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
-  'get-jobs-error-message': 'An error occured while getting the job listings.',
-  'job-details-error-message': 'An error occured while getting ' +
+  'get-jobs-error-message': 'An error occurred while getting the job listings.',
+  'job-details-error-message': 'An error occurred while getting ' +
     'the details of this job.',
 };
+
+/**
+ * All the strings to be used in the business-jobs-list/index.html.
+ */
+AppStrings['business-jobs-list'] = {
+  'back': 'Back',
+  'job-listings-title': 'Job Posts Made:',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occurred while getting the job listings.',
+}
 
 /**
  * All the strings to be used in the applicant-interested-list/index.html.
@@ -59,7 +70,7 @@ AppStrings['applicant-interested-list'] = {
   'back': 'Back',
   'job-listings-title': 'My Interested Job Listings:',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
-  'get-jobs-error-message': 'An error occured while getting the job listings.',
+  'get-jobs-error-message': 'An error occurred while getting the job listings.',
 };
 
 /**
