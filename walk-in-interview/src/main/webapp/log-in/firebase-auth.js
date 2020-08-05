@@ -34,19 +34,21 @@ const ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 const STRINGS = AppStrings['auth'];
 
+const Auth = {};
+
 /**
  * This will create a new business account.
  *
  * @param {String} email The email for the new business account.
  * @param {String} password The password for the new business account.
  */
-function createBusinessAccount(email, password) {
+Auth.createBusinessAccount = (email, password) => {
   firebase.auth().createUserWithEmailAndPassword(email, password)
       .catch((error) => {
         console.error(error);
       });
   checkCurrentUser();
-}
+};
 
 /**
  * This will sign into an existing business account.
@@ -54,7 +56,7 @@ function createBusinessAccount(email, password) {
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
  */
-function signIntoBusinessAccount(email, password) {
+Auth.signIntoBusinessAccount = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password)
       .then(({user}) => {
         // Get the user's ID token as it is needed to exchange for a session cookie.
@@ -66,7 +68,7 @@ function signIntoBusinessAccount(email, password) {
               return postIdTokenToSessionLogin(API['business-log-in'], idToken, csrfToken);
             });
       });
-}
+};
 
 /**
  * This will add the firebase ui for phone authentication
@@ -75,7 +77,7 @@ function signIntoBusinessAccount(email, password) {
  * @param {String} elementId The div element to add the UI.
  * @param {String} successPath The url for redirect on login success.
  */
-function addPhoneAuthUI(elementId, successPath) {
+Auth.addPhoneAuthUI = (elementId, successPath) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -92,7 +94,7 @@ function addPhoneAuthUI(elementId, successPath) {
     },
     signInSuccessUrl: successPath,
   });
-}
+};
 
 /**
  * This will create a new applicant account.
@@ -100,9 +102,9 @@ function addPhoneAuthUI(elementId, successPath) {
  * @param {String} phoneNumber The phone number for the new applicant account.
  * @param {Object} appVerifier The recaptcha verifier.
  */
-function createApplicantAccount(phoneNumber, appVerifier) {
+Auth.createApplicantAccount = (phoneNumber, appVerifier) => {
   // TODO(issue/79): set up phone number sign in with otp and recaptcha
-}
+};
 
 /**
  * This will sign into an existing applicant account.
@@ -110,28 +112,28 @@ function createApplicantAccount(phoneNumber, appVerifier) {
  * @param {String} phoneNumber The number for the existing applicant account.
  * @param {Object} appVerifier The recaptcha verifier.
  */
-function signIntoApplicantAccount(phoneNumber, appVerifier) {
+Auth.signIntoApplicantAccount = (phoneNumber, appVerifier) => {
   // TODO(issue/79): set up phone number sign in with otp and recaptcha
-}
+};
 
 /**
  * Signs out the current user.
  *
  * @param {String} elementId The div in which to show the signed out status.
  */
-function signOutCurrentUser(elementId) {
+Auth.signOutCurrentUser = (elementId) => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
     document.getElementById(elementId).innerText = STRINGS['sign-out-success'];
   }).catch((error) => {
     console.error(error);
   });
-}
+};
 
 /**
  * Checks the user sign in status.
  */
-function checkCurrentUser() {
+Auth.checkCurrentUser = () => {
   firebase.auth().onAuthStateChanged((firebaseUser) => {
     if (firebaseUser) {
       console.log('signed in', firebaseUser);
@@ -139,7 +141,7 @@ function checkCurrentUser() {
       console.log('not signed in');
     }
   });
-}
+};
 
 /**
  * Makes a POST request to session log in endpoint.
@@ -148,7 +150,7 @@ function checkCurrentUser() {
  * @param {String} idToken Id token.
  * @param {String} csrfToken CSRF token.
  */
-function postIdTokenToSessionLogin(url, idToken, csrfToken) {
+Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   const params = new URLSearchParams();
   params.append('idToken', idToken);
   params.append('csrfToken', csrfToken);
@@ -159,8 +161,6 @@ function postIdTokenToSessionLogin(url, idToken, csrfToken) {
     body: params,
     credentials: 'include',
   });
-}
+};
 
-export {createBusinessAccount, signIntoBusinessAccount,
-  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser,
-  addPhoneAuthUI};
+export {Auth};

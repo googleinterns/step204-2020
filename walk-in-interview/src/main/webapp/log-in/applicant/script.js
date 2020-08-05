@@ -11,7 +11,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../../strings.en.js';
-import {addPhoneAuthUI} from '../firebase-auth.js';
+import {Auth} from '../firebase-auth.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
@@ -23,7 +23,7 @@ window.onload = () => {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  addPhoneAuthUI('phone-auth', HOMEPAGE_PATH);
+  Auth.addPhoneAuthUI('phone-auth', HOMEPAGE_PATH);
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
