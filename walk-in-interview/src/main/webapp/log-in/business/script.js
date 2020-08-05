@@ -93,11 +93,11 @@ submitButton.addEventListener('click', (_) => {
 
 /**
  * Displays the error messages according to different situations.
- * 
+ *
  * @param {Error} error Error from sign in.
  */
 function showErrorMessageFromError(error) {
-  switch(error.code) {
+  switch (error.code) {
     case INVALID_EMAIL_ERROR_CODE:
       setErrorMessage(/* errorMessageElementId= */'error-message',
           /* msg= */ STRINGS['invalid-email-error'],
@@ -122,7 +122,7 @@ function showErrorMessageFromError(error) {
       setErrorMessage(/* errorMessageElementId= */'error-message',
           /* msg= */ COMMONG_STRINGS['error-message'],
           /* includesDefault= */false);
-      console.log(error.message);
+      console.error(error.message);
       break;
   }
 }
