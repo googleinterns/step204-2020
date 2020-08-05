@@ -77,15 +77,6 @@ AppStrings['business-log-in'] = {
 };
 
 /**
- * All the strings to be used in the log-in/applicant/index.html.
- */
-AppStrings['applicant-log-in'] = {
-  'account': 'Account (Phone Number)',
-  'otp': 'OTP',
-  'otp-button': 'Send OTP',
-};
-
-/**
  * All the common strings to be used in the job information related page.
  */
 AppStrings['job'] = {

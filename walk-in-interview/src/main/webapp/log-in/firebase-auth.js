@@ -73,8 +73,9 @@ function signIntoBusinessAccount(email, password) {
  * to the provided element.
  *
  * @param {String} elementId The div element to add the UI.
+ * @param {String} successPath The url for redirect on login success.
  */
-function addPhoneAuthUI(elementId) {
+function addPhoneAuthUI(elementId, successPath) {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -83,16 +84,13 @@ function addPhoneAuthUI(elementId) {
       },
     ],
     callbacks: {
-      signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-        console.log('authresult', authResult);
-        console.log('redirectedUrl', redirectUrl);
-        // User successfully signed in.
-        // Return type determines whether we continue the redirect automatically
-        // or whether we leave that to developer to handle.
-        return true;
+      signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+        // TODO(issue/89): add new user pages for name/skills
+        // for now, this will only redirect to homepage for exisiting users
+        return !authResult.additionalUserInfo.isNewUser;
       },
     },
-    // signInSuccessUrl: ,
+    signInSuccessUrl: successPath,
   });
 }
 
@@ -105,22 +103,6 @@ function addPhoneAuthUI(elementId) {
 function createApplicantAccount(phoneNumber, appVerifier) {
   // TODO(issue/79): set up phone number sign in with otp and recaptcha
 }
-
-
-//   // add this to the applicant account login page
-//   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-//     'sign-in-button', {
-//       'size': 'invisible',
-//       'callback': (response) => {
-//       // reCAPTCHA solved, allow signInWithPhoneNumber.
-//         onSignInSubmit();
-//       },
-//     });
-
-// const appVerifier = window.recaptchaVerifier;
-
-//   <div id="sign-in-button"></div> in the html file
-
 
 /**
  * This will sign into an existing applicant account.
