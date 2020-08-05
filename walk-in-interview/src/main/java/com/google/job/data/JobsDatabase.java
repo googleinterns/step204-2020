@@ -20,6 +20,8 @@ import java.util.List;
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
+    private static final String APPLICANT_ACCOUNTS_COLLECTION = "ApplicantAccounts";
+
     private static final String SALARY_FIELD = "jobPay.annualMax";
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
@@ -229,6 +231,32 @@ public final class JobsDatabase {
                 Range<Integer> range = Range.between(1, documents.size());
 
                 return new JobPage(jobList.build(), totalCount, range);  
+            },
+            MoreExecutors.directExecutor()
+        );
+    }
+
+    /**
+     * Gets all the applicant's interested jobs given the params.
+     *
+     * @param pageSize The the number of jobs to be shown on the page.
+     * @param pageIndex The page number on which we are at.
+     * @return Future of the JobPage object.
+     */
+    public static Future<JobPage> fetchInterestedJobPage(int pageSize, int pageIndex) throws IOException {
+        CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
+
+        // TODO(issue/91): get userId from firebase session cookie
+        String applicantId = '';
+
+        DocumentReference docRef = applicantAccountsCollection.document(applicantId);
+
+        return ApiFutures.transform(
+            docRef.get(),
+            documentSnapshot -> {
+                // TODO(issue/92): get the applican't jobsList and iterate through it to get the job documents
+                // for now just return an empty job page
+                return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
             },
             MoreExecutors.directExecutor()
         );
