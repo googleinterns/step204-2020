@@ -1,6 +1,6 @@
 /**
  * This file is specific to log-in/applicant/index.html.
- * It renders the fields on the page dynamically
+ * It renders the fields on the page dynamically.
  */
 
 // TODO(issue/21): get the language from the browser
