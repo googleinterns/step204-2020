@@ -58,7 +58,6 @@ AppStrings['homepage'] = {
 AppStrings['interested-list'] = {
   'back': 'Back',
   'job-listings-title': 'My Interested Job Listings:',
-  'details': 'Show Details',
   'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occured while getting the job listings.',

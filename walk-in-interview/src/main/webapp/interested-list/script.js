@@ -9,15 +9,15 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from './strings.en.js';
+import {AppStrings} from '../strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
-    setErrorMessage, getRequirementsList} from './common-functions.js';
-import {createMap, addMarker} from './maps.js';
-import {API} from './apis.js';
+    setErrorMessage, getRequirementsList} from '../common-functions.js';
+import {createMap, addMarker} from '../maps.js';
+import {API} from '../apis.js';
 
 const STRINGS = AppStrings['interested-list'];
-const JOB_DETAILS_PATH = '/job-details/index.html';
-const HOMEPAGE_PATH = './index.html';
+const JOB_DETAILS_PATH = '../job-details/index.html';
+const HOMEPAGE_PATH = '../index.html';
 
 // TODO(issue/34): implement pagination for job listings
 
