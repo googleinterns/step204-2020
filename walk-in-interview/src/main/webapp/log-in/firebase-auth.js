@@ -55,17 +55,20 @@ Auth.createBusinessAccount = (email, password) => {
  *
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
+ * @return {*} Returns the function that makes the POST request.
  */
 Auth.signIntoBusinessAccount = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password)
       .then(({user}) => {
-        // Get the user's ID token as it is needed to exchange for a session cookie.
+        // Get the user's ID token as it is needed to exchange
+        // for a session cookie.
         return user.getIdToken()
             .then((idToken) => {
-              // Session login endpoint is queried and the session cookie is set.
+              // Session login endpoint is queried and session cookie is set.
               // CSRF protection should be taken into account.
               const csrfToken = getCookie('csrfToken');
-              return postIdTokenToSessionLogin(API['business-log-in'], idToken, csrfToken);
+              return postIdTokenToSessionLogin(API['business-log-in'],
+                  idToken, csrfToken);
             });
       });
 };
@@ -149,8 +152,9 @@ Auth.checkCurrentUser = () => {
  * @param {String} url Login endpoint.
  * @param {String} idToken Id token.
  * @param {String} csrfToken CSRF token.
+ * @return {*} Makes POST request.
  */
-Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
+postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   const params = new URLSearchParams();
   params.append('idToken', idToken);
   params.append('csrfToken', csrfToken);
