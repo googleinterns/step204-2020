@@ -10,11 +10,12 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
-import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX,
+import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
     setErrorMessage, getRequirementsList} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const STRINGS = AppStrings['business-jobs-list'];
+const JOB_STRINGS = AppStrings['job'];
 const JOB_DETAILS_PATH = '../job-details/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
@@ -39,7 +40,7 @@ async function loadAndDisplayJobListings() {
   jobListingsTitle.innerText = STRINGS['job-listings-title'];
 
   const jobPageData = 
-    await getJobsMade(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_INDEX)
+    await getJobsMade(DEFAULT_PAGE_SIZE, /* pageIndex= */ 0)
       .catch((error) => {
         console.error('error fetching job listings', error);
         setErrorMessage(/* errorMessageElementId= */ 'error-message',
@@ -60,7 +61,15 @@ async function loadAndDisplayJobListings() {
  * @return {Object} The data returned from the servlet.
  */
 function getJobsMade(pageSize, pageIndex) {
-  const params = `pageSize=${pageSize}&pageIndex=${pageIndex}`;
+  // Checks input type
+  const pageSizeParam = parseInt(pageSize);
+  const pageIndexParam = parseInt(pageIndex);
+
+  if (Number.isNaN(pageSizeParam) || Number.isNan(pageIndexParam)) {
+    throw new Error('Illegal pagination param');
+  }
+
+  const params = `pageSize=${pageSizeParam}&pageIndex=${pageIndexParam}`;
 
   fetch(`${API['business-jobs-list']}?${params}`, {
     method: 'GET',
@@ -104,9 +113,10 @@ function displayJobListings(jobPageData) {
     jobListingsElement.appendChild(buildJobElement(job));
   });
 
-  jobShowing.innerText = `${jobPageData['range'].minimum} -` +
-    ` ${jobPageData['range'].maximum} ${STRINGS['job-listings-showing']} ` +
-    `${jobPageData['totalCount']}`;
+  jobShowing.innerText = JOB_STRINGS['jobShowing']
+    .replace('{MINIMUM}', jobPageData['range'].minimum)
+    .replace('{MAXIMUM}', jobPageData['range'].maximum)
+    .replace('{TOTAL_COUNT}', jobPageData['totalCount']);
 }
 
 /**
@@ -128,12 +138,17 @@ function buildJobElement(job) {
 
   const jobAddress = jobPost.children[1];
   const location = job['jobLocation'];
-  jobAddress.innerText = `${location['address']}, ${location['postalCode']}`;
+  jobAddress.innerText = JOB_STRINGS['jobAddressDescription']
+    .replace('{ADDRESS}', location['address'])
+    .replace('{POSTAL_CODE}', location['postalCode']);
 
   const jobPay = jobPost.children[2];
   const pay = job['jobPay'];
-  jobPay.innerText = `${pay['min']} - ${pay['max']} SGD ` +
-  `(${pay['paymentFrequency'].toLowerCase()})`;
+  jobPay.innerText = JOB_STRINGS['jobPayDescription']
+    .replace('{MIN_PAY}', pay['min'])
+    .replace('{MAX_PAY}', pay['max'])
+    .replace('{CURRENCY}', JOB_STRINGS['sgd'])
+    .replace('{FREQUENCY}', JOB_STRINGS['pay-frequency'][pay['paymentFrequency']]);
 
   const requirementsList = jobPost.children[3];
   const fullRequirementsList = getRequirementsList();
@@ -142,14 +157,14 @@ function buildJobElement(job) {
   const jobRequirements = job['requirements'];
   for (const key in jobRequirements) {
     if (jobRequirements.hasOwnProperty(key)) {
-      if (jobRequirements[key] /* is true */) {
+      if (jobRequirements[key] === true) {
         requirementsArr.push(fullRequirementsList[key]);
       }
     }
   }
 
-  requirementsList.innerText =
-  `Requirements List: ${requirementsArr.join(', ')}`;
+  requirementsList.innerText = JOB_STRINGS['requirementsDescription']
+    .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
 
   const detailsForm = jobPost.children[4];
   detailsForm.method = 'GET';

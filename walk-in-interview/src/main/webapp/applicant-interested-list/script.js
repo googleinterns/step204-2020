@@ -66,6 +66,7 @@ async function loadAndDisplayInterestedJobListings() {
  * @return {Object} The data returned from the servlet.
  */
 function getInterestedJobs(pageSize, pageIndex) {
+  // Checks input type
   const pageSizeParam = parseInt(pageSize);
   const pageIndexParam = parseInt(pageIndex);
 
