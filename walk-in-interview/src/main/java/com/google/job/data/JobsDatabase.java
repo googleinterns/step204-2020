@@ -26,6 +26,7 @@ public final class JobsDatabase {
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
+    private static final String INTERESTED_JOBS_FIELD = "interestedJobs";
 
     /**
      * Adds a newly created job post.
@@ -267,24 +268,55 @@ public final class JobsDatabase {
      *
      * @param jobId The job id.
      * @param interested Whether the applicant is currently interested in it or not.
-     * @return A future of the detailed information of the writing.
+     * @return A future of document reference for the applicant's update job list.
+     * @throws IllegalArgumentException If the params are invalid.
      */
-    public static Future<WriteResult> updateInterestedJobList(String jobId, boolean interested) throws IOException {
-        // CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
+    public static Future<DocumentReference> updateInterestedJobsList(String jobId, boolean interested) throws IOException, IllegalArgumentException {
+        return FireStoreUtils.getFireStore().runTransaction(transaction -> {
+            // TODO(issue/91): get userId from firebase session cookie
+            String applicantId = "";
 
-        // // TODO(issue/91): get userId from firebase session cookie
-        // String applicantId = "";
+            final DocumentReference documentReference = FireStoreUtils.getFireStore()
+                    .collection(APPLICANT_ACCOUNTS_COLLECTION).document(applicantId);
 
-        // DocumentReference docRef = applicantAccountsCollection.document(applicantId);
+            DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
 
-        // return ApiFutures.transform(
-        //     docRef.get(),
-        //     documentSnapshot -> {
-        //         // TODO(issue/92): get the applican't jobsList and iterate through it to get the job documents
-        //         // for now just return an empty job page
-        //         return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
-        //     },
-        //     MoreExecutors.directExecutor()
-        // );
+            if (!documentSnapshot.exists()) {
+                throw new IllegalArgumentException("Invalid applicantId");
+            }
+
+            List<String> jobsList = updatedInterestedJobs(documentSnapshot, jobId, interested);
+
+            // Updates the interestedJobs field
+            transaction.update(documentReference, INTERESTED_JOBS_FIELD, jobsList);
+
+            return documentReference;
+        });
+    }
+
+    /**
+     * Adds or removes the jobId from the currentJobsList depending on the interested boolean.
+     *
+     * @param documentSnapshot The applicant's document snapshot.
+     * @param jobId The job id.
+     * @param interested Whether the applicant is currently interested in it or not.
+     * @return The updated interested jobs list.
+     * @throws IllegalArgumentException If params are invalid.
+     */
+    private List<String> updatedInterestedJobs(DocumentSnapshot documentSnapshot, String jobId, boolean interested) throws IllegalArgumentException{
+
+        List<String> jobsList = documentSnapshot.get(INTERESTED_JOBS_FIELD, List<String>);
+
+        if (interested != jobsList.contains(jobId)) {
+            throw new IllegalArgumentException("interested param inconsistent with interestedJobs list");
+        }
+
+        if (interested) {
+            jobsList.remove(jobId);
+        } else {
+            jobsList.add(jobId);
+        }
+
+        return jobsList;
     }
 }

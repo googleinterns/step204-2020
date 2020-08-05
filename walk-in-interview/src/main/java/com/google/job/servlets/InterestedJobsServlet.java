@@ -53,7 +53,7 @@ public final class InterestedJobsServlet extends HttpServlet {
             String jobId = JobServlet.parseJobId(request);
 
             // true if the applicant is already interested (they want to remove it now)
-            Boolean interested = parseInterested(request);
+            boolean interested = parseInterested(request);
 
             updateInterestedList(jobId, interested);
 
@@ -87,7 +87,7 @@ public final class InterestedJobsServlet extends HttpServlet {
      */
     private void updateInterestedList(String jobId, boolean interested) throws ServletException, ExecutionException, TimeoutException {
         try {
-            this.jobsDatabase.updateInterestedJobList(jobId, interested)
+            this.jobsDatabase.updateInterestedJobsList(jobId, interested)
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
@@ -101,7 +101,7 @@ public final class InterestedJobsServlet extends HttpServlet {
      * @return interested.
      * @throws IllegalArgumentException if the interested param doesn't exist.
      */
-    public static String parseInterested(HttpServletRequest request) throws IllegalArgumentException {
+    public static boolean parseInterested(HttpServletRequest request) throws IllegalArgumentException {
         String interestedStr = ServletUtils.getStringParameter(request, INTERESTED_PARAM, /* defaultValue= */ "");
 
         if (interestedStr.isEmpty()) {
