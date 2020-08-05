@@ -62,7 +62,7 @@ function renderHomepageElements() {
   showJobPostsButton.innerText = STRINGS['show-job-posts-made'];
   showJobPostsButton.addEventListener('click', (_) => {
     window.location.href = POSTS_MADE_PATH;
-  };
+  });
 
   const interestedJobButton = document.getElementById('interested-job-list');
   interestedJobButton.innerText = STRINGS['interested-job-list'];
