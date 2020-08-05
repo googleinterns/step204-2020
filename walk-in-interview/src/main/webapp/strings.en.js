@@ -24,6 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
+  'interested-job-list': 'Interested Jobs',
   'sort-by-title': 'Sort By',
   'sort-by': {
     'SALARY-DESCENDING': 'Salary (high to low)',
@@ -49,6 +50,16 @@ AppStrings['homepage'] = {
   'get-jobs-error-message': 'An error occured while getting the job listings.',
   'job-details-error-message': 'An error occured while getting ' +
     'the details of this job.',
+};
+
+/**
+ * All the strings to be used in the applicant-interested-list/index.html.
+ */
+AppStrings['applicant-interested-list'] = {
+  'back': 'Back',
+  'job-listings-title': 'My Interested Job Listings:',
+  'no-jobs-error-message': 'There are no jobs to display at the moment.',
+  'get-jobs-error-message': 'An error occured while getting the job listings.',
 };
 
 /**
@@ -104,6 +115,7 @@ AppStrings['job'] = {
   },
   'pay-min': 'min (sgd)',
   'pay-max': 'max (sgd)',
+  'sgd': 'SGD',
   'duration-title': 'Job Duration',
   'duration': {
     'ONE_WEEK': '1 Week',
@@ -116,6 +128,11 @@ AppStrings['job'] = {
   'expiry-title': 'Job Expiry',
   'creating-job-error-message': 'There was an error while creating ' +
       'the job listing, please try submitting again',
+  
+  'jobAddressDescription': '{ADDRESS}, {POSTAL_CODE}', 
+  'jobPayDescription': '{MIN_PAY} - {MAX_PAY} {CURRENCY} ({FREQUENCY})',
+  'requirementsDescription': 'Requirements List: {REQUIREMENTS_LIST}',
+  'jobShowing': '{MINIMUM} - {MAXIMUM} out of {TOTAL_COUNT}',
 };
 
 /**
