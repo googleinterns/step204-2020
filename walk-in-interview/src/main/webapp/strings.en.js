@@ -129,6 +129,11 @@ AppStrings['job'] = {
   'expiry-title': 'Job Expiry',
   'creating-job-error-message': 'There was an error while creating ' +
       'the job listing, please try submitting again',
+  
+  'jobAddressDescription': '{ADDRESS}, {POSTAL_CODE}', 
+  'jobPayDescription': '{MIN_PAY} - {MAX_PAY} {CURRENCY} ({FREQUENCY})',
+  'requirementsDescription': '{REQUIREMENTS_TITLE}: {REQUIREMENTS_LIST}',
+  'jobShowing': '{MINIMUM} - {MAXIMUM} {JOB_LISTINGS_SHOWING} {TOTAL_COUNT}',
 };
 
 /**

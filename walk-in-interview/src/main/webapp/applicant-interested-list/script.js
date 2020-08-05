@@ -10,7 +10,6 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../strings.en.js';
-import {StringsFormat} from '../strings.format.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
     setErrorMessage, getRequirementsList} from '../common-functions.js';
 import {createMap, addMarker} from '../maps.js';
@@ -111,7 +110,7 @@ function displayInterestedJobListings(jobPageData) {
     jobListingsElement.appendChild(buildJobElement(job));
   });
 
-  jobShowing.innerText = StringsFormat['jobShowing']
+  jobShowing.innerText = JOB_STRINGS['jobShowing']
     .replace('{MINIMUM}', jobPageData['range'].minimum)
     .replace('{MAXIMUM}', jobPageData['range'].maximum)
     .replace('{JOB_LISTINGS_SHOWING}', STRINGS['job-listings-showing'])
@@ -137,13 +136,13 @@ function buildJobElement(job) {
 
   const jobAddress = jobPostPreview.children[1];
   const location = job['jobLocation'];
-  jobAddress.innerText = StringsFormat['jobAddressDescription']
+  jobAddress.innerText = JOB_STRINGS['jobAddressDescription']
     .replace('{ADDRESS}', location['address'])
     .replace('{POSTAL_CODE}', location['postalCode']);
 
   const jobPay = jobPostPreview.children[2];
   const pay = job['jobPay'];
-  jobPay.innerText = StringsFormat['jobPayDescription']
+  jobPay.innerText = JOB_STRINGS['jobPayDescription']
     .replace('{MIN_PAY}', pay['min'])
     .replace('{MAX_PAY}', pay['max'])
     .replace('{CURRENCY}', JOB_STRINGS['sgd'])
@@ -162,7 +161,7 @@ function buildJobElement(job) {
     }
   }
 
-  requirementsList.innerText = StringsFormat['requirementsDescription']
+  requirementsList.innerText = JOB_STRINGS['requirementsDescription']
     .replace('{REQUIREMENTS_TITLE}', JOB_STRINGS['requirements-title'])
     .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
 
