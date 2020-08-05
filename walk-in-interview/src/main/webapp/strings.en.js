@@ -58,7 +58,6 @@ AppStrings['homepage'] = {
 AppStrings['applicant-interested-list'] = {
   'back': 'Back',
   'job-listings-title': 'My Interested Job Listings:',
-  'job-listings-showing': 'out of',
   'no-jobs-error-message': 'There are no jobs to display at the moment.',
   'get-jobs-error-message': 'An error occured while getting the job listings.',
 };
@@ -132,8 +131,8 @@ AppStrings['job'] = {
   
   'jobAddressDescription': '{ADDRESS}, {POSTAL_CODE}', 
   'jobPayDescription': '{MIN_PAY} - {MAX_PAY} {CURRENCY} ({FREQUENCY})',
-  'requirementsDescription': '{REQUIREMENTS_TITLE}: {REQUIREMENTS_LIST}',
-  'jobShowing': '{MINIMUM} - {MAXIMUM} {JOB_LISTINGS_SHOWING} {TOTAL_COUNT}',
+  'requirementsDescription': 'Requirements List: {REQUIREMENTS_LIST}',
+  'jobShowing': '{MINIMUM} - {MAXIMUM} out of {TOTAL_COUNT}',
 };
 
 /**

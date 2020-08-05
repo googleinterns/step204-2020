@@ -113,7 +113,6 @@ function displayInterestedJobListings(jobPageData) {
   jobShowing.innerText = JOB_STRINGS['jobShowing']
     .replace('{MINIMUM}', jobPageData['range'].minimum)
     .replace('{MAXIMUM}', jobPageData['range'].maximum)
-    .replace('{JOB_LISTINGS_SHOWING}', STRINGS['job-listings-showing'])
     .replace('{TOTAL_COUNT}', jobPageData['totalCount']);
 }
 
@@ -162,7 +161,6 @@ function buildJobElement(job) {
   }
 
   requirementsList.innerText = JOB_STRINGS['requirementsDescription']
-    .replace('{REQUIREMENTS_TITLE}', JOB_STRINGS['requirements-title'])
     .replace('{REQUIREMENTS_LIST}', requirementsArr.join(', '));
 
   const detailsForm = jobPostPreview.children[4];
