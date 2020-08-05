@@ -32,8 +32,8 @@ public final class InterestedJobsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            int pageSize = parsePageIndex(request);
-            int pageIndex = parsePageIndex(request);
+            int pageSize = JobsListingsServlet.parsePageIndex(request);
+            int pageIndex = JobsListingsServlet.parsePageIndex(request);
             
             JobPage jobPage = fetchJobPageDetails(pageSize, pageIndex);
 
@@ -58,48 +58,6 @@ public final class InterestedJobsServlet extends HttpServlet {
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
-        }
-    }
-
-    /**
-     * Returns the page size as an int.
-     *
-     * @param request From the GET request.
-     * @return the page size.
-     * @throws IllegalArgumentException if the page size is invalid.
-     */
-    public static int parsePageSize(HttpServletRequest request) throws IllegalArgumentException {
-        String pageSizeStr = ServletUtils.getStringParameter(request, PAGE_SIZE_PARAM, /* defaultValue= */ "");
-
-        if (pageSizeStr.isEmpty()) {
-            throw new IllegalArgumentException("page size param should not be empty");
-        }
-
-        try {
-            return Integer.parseInt(pageSizeStr);
-        } catch(NumberFormatException e) {
-            throw new IllegalArgumentException("page size param should be an int");
-        }
-    }
-
-    /**
-     * Returns the page index as an int.
-     *
-     * @param request From the GET request.
-     * @return the page index.
-     * @throws IllegalArgumentException if the page index is invalid.
-     */
-    public static int parsePageIndex(HttpServletRequest request) throws IllegalArgumentException {
-        String pageIndexStr = ServletUtils.getStringParameter(request, PAGE_INDEX_PARAM, /* defaultValue= */ "");
-
-        if (pageIndexStr.isEmpty()) {
-            throw new IllegalArgumentException("page index param should not be empty");
-        }
-
-        try {
-            return Integer.parseInt(pageIndexStr);
-        } catch(NumberFormatException e) {
-            throw new IllegalArgumentException("page index param should be an int");
         }
     }
 }
