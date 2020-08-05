@@ -29,6 +29,9 @@ const CurrentLocale = 'en';
 
 firebase.auth().languageCode = CurrentLocale;
 
+// Firebase UI
+const ui = new firebaseui.auth.AuthUI(firebase.auth());
+
 const STRINGS = AppStrings['auth'];
 
 /**
@@ -63,6 +66,34 @@ function signIntoBusinessAccount(email, password) {
               return postIdTokenToSessionLogin(API['business-log-in'], idToken, csrfToken);
             });
       });
+}
+
+/**
+ * This will add the firebase ui for phone authentication
+ * to the provided element.
+ *
+ * @param {String} elementId The div element to add the UI.
+ */
+function addPhoneAuthUI(elementId) {
+  ui.start(`#${elementId}`, {
+    signInOptions: [
+      {
+        provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+        defaultCountry: 'SG',
+      },
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+        console.log('authresult', authResult);
+        console.log('redirectedUrl', redirectUrl);
+        // User successfully signed in.
+        // Return type determines whether we continue the redirect automatically
+        // or whether we leave that to developer to handle.
+        return true;
+      },
+    },
+    // signInSuccessUrl: ,
+  });
 }
 
 /**
@@ -130,7 +161,7 @@ function checkCurrentUser() {
 
 /**
  * Makes a POST request to session log in endpoint.
- * 
+ *
  * @param {String} url Login endpoint.
  * @param {String} idToken Id token.
  * @param {String} csrfToken CSRF token.
@@ -149,4 +180,5 @@ function postIdTokenToSessionLogin(url, idToken, csrfToken) {
 }
 
 export {createBusinessAccount, signIntoBusinessAccount,
-  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser};
+  createApplicantAccount, signIntoApplicantAccount, signOutCurrentUser,
+  addPhoneAuthUI};
