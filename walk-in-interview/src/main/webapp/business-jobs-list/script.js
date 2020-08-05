@@ -131,7 +131,7 @@ function buildJobElement(job) {
 
   const jobPost =
     jobPostPreviewTemplate.cloneNode( /* and child elements */ true);
-  jobPost.setAttribute('id', job['jobId']);
+  jobPost.setAttribute('id', 'job-listing-id-' + job['jobId']);
 
   const jobTitle = jobPost.children[0];
   jobTitle.innerText = job['jobTitle'];
