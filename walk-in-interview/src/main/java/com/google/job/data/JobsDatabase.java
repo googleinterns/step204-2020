@@ -254,7 +254,7 @@ public final class JobsDatabase {
         return ApiFutures.transform(
             docRef.get(),
             documentSnapshot -> {
-                // TODO(issue/92): get the applican't jobsList and iterate through it to get the job documents
+                // TODO(issue/92): get the applicant's jobsList and iterate through it to get the job documents
                 // for now just return an empty job page
                 return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
             },
