@@ -12,10 +12,14 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /** Servlet that handles adding/removing and getting an applicant's interested jobs. */
 @WebServlet("/my-interested-list")
 public final class InterestedJobsServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(InterestedJobsServlet.class.getName());
+
     private static final long TIMEOUT_SECONDS = 5;
 
     private static final String PAGE_SIZE_PARAM = "pageSize";
@@ -41,6 +45,7 @@ public final class InterestedJobsServlet extends HttpServlet {
             response.setContentType("application/json;");
             response.getWriter().println(json);
         } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
+            log.log(Level.SEVERE, "unable to get interested list", e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
@@ -58,7 +63,7 @@ public final class InterestedJobsServlet extends HttpServlet {
             String applicantId = "";
             return this.jobsDatabase.fetchInterestedJobPage(applicantId, pageSize, pageIndex)
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException | IOException | IllegalArgumentException e) {
             throw new ServletException(e);
         }
     }

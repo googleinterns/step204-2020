@@ -19,9 +19,13 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
+    private static final Logger log = Logger.getLogger(JobsDatabase.class.getName());
+
     private static final String JOB_COLLECTION = "Jobs";
     private static final String APPLICANT_ACCOUNTS_COLLECTION = "ApplicantAccounts";
 
@@ -29,6 +33,7 @@ public final class JobsDatabase {
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
+    private static final String INTERESTED_JOBS_FIELD = "interestedJobs";
     
     private static final long TIMEOUT_SECONDS = 5;
 
@@ -242,14 +247,16 @@ public final class JobsDatabase {
     }
 
     /**
-     * Gets all the applicant's interested jobs given the params.
+     * Gets all the applicant's interested jobs given the params. If there's an error in getting a particular job
+     * from the jobId, then that specific job will not be returned.
      *
      * @param applicantId The applicant's userId.
      * @param pageSize The the number of jobs to be shown on the page.
      * @param pageIndex The page number on which we are at.
      * @return Future of the JobPage object.
+     * @throws IllegalArgumentException If the applicantId doesn't have a corresponding document.
      */
-    public Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException {
+    public Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException, IllegalArgumentException {
         CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
 
         DocumentReference docRef = applicantAccountsCollection.document(applicantId);
@@ -257,17 +264,28 @@ public final class JobsDatabase {
         return ApiFutures.transform(
             docRef.get(),
             documentSnapshot -> {
+                if (!documentSnapshot.exists()) {
+                    throw new IllegalArgumentException("Invalid applicantId");
+                }
+
                 ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
-                List<String> interestedList = (List<String>) documentSnapshot.get("interestedJobs");
+                List<String> interestedList = (List<String>) documentSnapshot.get(INTERESTED_JOBS_FIELD);
+
+                if (interestedList == null || interestedList.isEmpty()) {
+                    return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
+                }
 
                 for (String jobId: interestedList) {
                     try {
-                        Optional<Job> job = fetchJob(jobId).get(5, TimeUnit.SECONDS);
-                        if (job.isPresent()) {
+                        Optional<Job> job = fetchJob(jobId).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                        if (job.isPresent() && job.get().getJobStatus().equals(JobStatus.ACTIVE)) {
                             // Only add the job to this list if its active or valid.
                             jobListBuilder.add(job.get());
                         }
-                    } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {}
+                    } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+                        // The individual job is not added to the list if an error is caught here.
+                        log.log(Level.SEVERE, "error while getting job with jobId: " + jobId, e);
+                    }
                 }
 
                 List<Job> jobList = jobListBuilder.build();
