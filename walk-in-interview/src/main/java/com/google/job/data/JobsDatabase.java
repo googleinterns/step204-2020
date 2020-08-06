@@ -272,23 +272,25 @@ public final class JobsDatabase {
                 List<String> interestedList = (List<String>) documentSnapshot.get(INTERESTED_JOBS_FIELD);
                 // TODO(issue/34): adjust the interestedList the be looked at based on pagination
 
-                List<Job> jobList = ImmutableList.of();
+                ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
                 try {
                     int counter = 0;
                     while (counter + 10 < interestedList.size()) {
-                        List<Job> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
+                        List<String> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
                         List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                        jobList.addAll(fetchedList);
+                        jobListBuilder.addAll(fetchedList);
                         counter = counter + 10;
                     }
-                    List<Job> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ interestedList.size());
+                    List<String> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ interestedList.size());
                     List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                    jobList.addAll(fetchedList);
-                    log.info("returned jobList: " + jobList.toString());
+                    jobListBuilder.addAll(fetchedList);
                     // TODO(issue/34): adjust range/total count based on pagination
                 } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
                     log.log(Level.SEVERE, "error while getting interested job list ", e);
                 }
+
+                List<Job> jobList = jobListBuilder.build();
+                log.info("jobList final: " + jobList.toString());
 
                 long totalCount = jobList.size();
                 Range<Integer> range = Range.between(1, jobList.size());
