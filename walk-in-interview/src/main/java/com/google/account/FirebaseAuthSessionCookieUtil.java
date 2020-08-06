@@ -89,6 +89,7 @@ public final class FirebaseAuthSessionCookieUtil {
         return Response.temporaryRedirect(URI.create(LOG_IN_PAGE_PATH)).cookie(newCookie).build();
     }
 
+    /** Gets the id token from the log in request. */
     private static String getIDToken(HttpServletRequest request) throws IllegalArgumentException {
         String idToken = request.getParameter(ID_TOKEN_PARAM).trim();
 
@@ -99,6 +100,7 @@ public final class FirebaseAuthSessionCookieUtil {
         return idToken;
     }
 
+    /** Gets the uid the of the current account. */
     private static Response getUid(FirebaseToken decodedToken) {
         String uid = decodedToken.getUid();
         return Response.ok(uid).build();
