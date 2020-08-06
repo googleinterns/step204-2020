@@ -7,7 +7,7 @@ import java.util.List;
 /** Class for a business account. */
 public final class Business {
     private final String name;
-    private final List<String> jobs;
+    private final List<String> jobs; // List of jobId
 
     // For serialization
     public Business() {
