@@ -23,6 +23,12 @@ public final class FirebaseAuthSessionCookieUtil {
 
     private FirebaseAuthSessionCookieUtil() {};
 
+    /**
+     * Creates the session cookies. It is evoked when the user signs in.
+     *
+     * @param request Log in request.
+     * @return Response with session cookie.
+     */
     @POST
     @Path("/business-log-in")
     @Consumes("application/json")
@@ -47,6 +53,12 @@ public final class FirebaseAuthSessionCookieUtil {
         }
     }
 
+    /**
+     * Verifies session cookies.
+     *
+     * @param cookie Session cookie.
+     * @return Response with uid of the current user account.
+     */
     @POST
     @Path("/profile")
     public static Response verifySessionCookie(@CookieParam("session") Cookie cookie) {
@@ -63,6 +75,12 @@ public final class FirebaseAuthSessionCookieUtil {
         }
     }
 
+    /**
+     * Clears the session cookie when the user signs out at the client side.
+     *
+     * @param cookie Session cookie
+     * @return Response to direct to log in page.
+     */
     @POST
     @Path("/business-log-out")
     public static Response clearSessionCookie(@CookieParam("session") Cookie cookie) {
