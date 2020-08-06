@@ -272,17 +272,19 @@ public final class JobsDatabase {
                 List<String> interestedList = (List<String>) documentSnapshot.get(INTERESTED_JOBS_FIELD);
                 // TODO(issue/34): adjust the interestedList the be looked at based on pagination
 
+                List<Job> jobList = ImmutableList.of();
                 try {
-                    List<Job> jobList = fetchJobsFromIds(interestedList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    jobList = fetchJobsFromIds(interestedList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
                     log.info("returned jobList: " + jobList.toString());
                     // TODO(issue/34): adjust range/total count based on pagination
-                    long totalCount = jobList.size();
-                    Range<Integer> range = Range.between(1, jobList.size());
-
-                    return new JobPage(jobList, totalCount, range);
                 } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
                     log.log(Level.SEVERE, "error while getting interested job list ", e);
                 }
+
+                long totalCount = jobList.size();
+                Range<Integer> range = Range.between(1, jobList.size());
+
+                return new JobPage(jobList, totalCount, range);
             },
             MoreExecutors.directExecutor()
         );
