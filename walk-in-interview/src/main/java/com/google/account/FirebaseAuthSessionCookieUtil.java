@@ -1,5 +1,8 @@
 package com.google.account;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -13,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +25,9 @@ public final class FirebaseAuthSessionCookieUtil {
     private static final String ID_TOKEN_PARAM = "idToken";
     private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
 
-    private FirebaseAuthSessionCookieUtil() {};
+    public FirebaseAuthSessionCookieUtil() throws IOException {
+        initAdminSDK();
+    }
 
     /**
      * Creates the session cookies. It is evoked when the user signs in.
@@ -32,7 +38,7 @@ public final class FirebaseAuthSessionCookieUtil {
     @POST
     @Path("/business-log-in")
     @Consumes("application/json")
-    public static Response createSessionCookie(HttpServletRequest request) {
+    public Response createSessionCookie(HttpServletRequest request) {
         try {
             // Gets the ID token sent by the client
             String idToken = getIDToken(request);
@@ -61,7 +67,7 @@ public final class FirebaseAuthSessionCookieUtil {
      */
     @POST
     @Path("/profile")
-    public static Response verifySessionCookie(@CookieParam("session") Cookie cookie) {
+    public Response verifySessionCookie(@CookieParam("session") Cookie cookie) {
         String sessionCookie = cookie.getValue();
         try {
             // Verify the session cookie. In this case an additional check is added to detect
@@ -89,8 +95,19 @@ public final class FirebaseAuthSessionCookieUtil {
         return Response.temporaryRedirect(URI.create(LOG_IN_PAGE_PATH)).cookie(newCookie).build();
     }
 
+    /** Initializes the admin SDK. */
+    private void initAdminSDK() throws IOException {
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.getApplicationDefault())
+                .setDatabaseUrl("https://com-walk-in-interview.firebaseio.com/")
+                .setProjectId("com-walk-in-interview")
+                .build();
+
+        FirebaseApp.initializeApp(options);
+    }
+
     /** Gets the id token from the log in request. */
-    private static String getIDToken(HttpServletRequest request) throws IllegalArgumentException {
+    private String getIDToken(HttpServletRequest request) throws IllegalArgumentException {
         String idToken = request.getParameter(ID_TOKEN_PARAM).trim();
 
         if (idToken == null || idToken.isEmpty()) {
@@ -101,7 +118,7 @@ public final class FirebaseAuthSessionCookieUtil {
     }
 
     /** Gets the uid the of the current account. */
-    private static Response getUid(FirebaseToken decodedToken) {
+    private Response getUid(FirebaseToken decodedToken) {
         String uid = decodedToken.getUid();
         return Response.ok(uid).build();
     }
