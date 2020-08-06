@@ -284,14 +284,12 @@ public final class JobsDatabase {
                     List<String> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ interestedList.size());
                     List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
                     jobListBuilder.addAll(fetchedList);
-                    // TODO(issue/34): adjust range/total count based on pagination
                 } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
                     log.log(Level.SEVERE, "error while getting interested job list ", e);
                 }
 
                 List<Job> jobList = jobListBuilder.build();
-                log.info("jobList final: " + jobList.toString());
-
+                // TODO(issue/34): adjust range/total count based on pagination
                 long totalCount = jobList.size();
                 Range<Integer> range = Range.between(1, jobList.size());
 
@@ -319,13 +317,11 @@ public final class JobsDatabase {
             query.get(),
             querySnapshot -> {
                 if (querySnapshot == null) {
-                    log.info("return empty 0");
                     return ImmutableList.of();
                 }
 
                 List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
                 if (documents.size() == 0) {
-                    log.info("return empty 1");
                     return ImmutableList.of();
                 }
 
@@ -333,7 +329,6 @@ public final class JobsDatabase {
 
                 for (QueryDocumentSnapshot document : documents) {
                     Job job = document.toObject(Job.class);
-                    log.info("adding job: " + job.toString());
                     jobList.add(job);
                 }
 
