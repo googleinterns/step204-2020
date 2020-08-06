@@ -34,6 +34,7 @@ public final class JobsDatabase {
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
     private static final String INTERESTED_JOBS_FIELD = "interestedJobs";
+    private static final String JOB_ID_FIELD = "jobId";
     
     private static final long TIMEOUT_SECONDS = 5;
 
@@ -268,32 +269,62 @@ public final class JobsDatabase {
                     throw new IllegalArgumentException("Invalid applicantId");
                 }
 
-                ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
                 List<String> interestedList = (List<String>) documentSnapshot.get(INTERESTED_JOBS_FIELD);
+                // TODO(issue/34): adjust the interestedList the be looked at based on pagination
 
-                if (interestedList == null || interestedList.isEmpty()) {
-                    return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
+                try {
+                    List<Job> jobList = fetchJobsFromIds(interestedList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    log.info("returned jobList: " + jobList.toString());
+                    // TODO(issue/34): adjust range/total count based on pagination
+                    long totalCount = jobList.size();
+                    Range<Integer> range = Range.between(1, jobList.size());
+
+                    return new JobPage(jobList, totalCount, range);
+                } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+                    log.log(Level.SEVERE, "error while getting interested job list ", e);
+                }
+            },
+            MoreExecutors.directExecutor()
+        );
+    }
+
+    /**
+     * This will return a future of a list of jobs given the list of jobIds.
+     * Any jobs that are not active or invalid will not be included in the list returned.
+     *
+     * @param jobIds The list of jobIds.
+     * @return Future of the list of jobs.
+     */
+    public Future<List<Job>> fetchJobsFromIds(List<String> jobIds) {
+        CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
+
+        // TODO(issue/xx): this will need to be done 10 jobIds at a time
+        Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
+            .whereIn(JOB_ID_FIELD, jobIds);
+
+        return ApiFutures.transform(
+            query.get(),
+            querySnapshot -> {
+                if (querySnapshot == null) {
+                    log.info("return empty 0");
+                    return ImmutableList.of();
                 }
 
-                for (String jobId: interestedList) {
-                    try {
-                        Optional<Job> job = fetchJob(jobId).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                        if (job.isPresent() && job.get().getJobStatus().equals(JobStatus.ACTIVE)) {
-                            // Only add the job to this list if its active or valid.
-                            jobListBuilder.add(job.get());
-                        }
-                    } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
-                        // The individual job is not added to the list if an error is caught here.
-                        log.log(Level.SEVERE, "error while getting job with jobId: " + jobId, e);
-                    }
+                List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+                if (documents.size() == 0) {
+                    log.info("return empty 1");
+                    return ImmutableList.of();
                 }
 
-                List<Job> jobList = jobListBuilder.build();
-                // TODO(issue/34): adjust range/total count based on pagination
-                long totalCount = jobList.size();
-                Range<Integer> range = Range.between(1, jobList.size());
+                ImmutableList.Builder<Job> jobList = ImmutableList.builder();
 
-                return new JobPage(jobList, totalCount, range);
+                for (QueryDocumentSnapshot document : documents) {
+                    Job job = document.toObject(Job.class);
+                    log.info("adding job: " + job.toString());
+                    jobList.add(job);
+                }
+
+                return jobList.build();  
             },
             MoreExecutors.directExecutor()
         );
