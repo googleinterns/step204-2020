@@ -11,11 +11,13 @@ import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.apache.commons.lang3.Range;
 import java.lang.UnsupportedOperationException;
+import java.util.concurrent.ExecutionException;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
@@ -26,6 +28,8 @@ public final class JobsDatabase {
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
+    
+    private static final long TIMEOUT_SECONDS = 5;
 
     /**
      * Adds a newly created job post.
@@ -244,7 +248,7 @@ public final class JobsDatabase {
      * @param pageIndex The page number on which we are at.
      * @return Future of the JobPage object.
      */
-    public static Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException {
+    public Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException {
         CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
 
         DocumentReference docRef = applicantAccountsCollection.document(applicantId);
@@ -252,9 +256,25 @@ public final class JobsDatabase {
         return ApiFutures.transform(
             docRef.get(),
             documentSnapshot -> {
-                // TODO(issue/92): get the applicant's jobsList and iterate through it to get the job documents
-                // for now just return an empty job page
-                return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
+                ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
+                List<String> interestedList = (List<String>) documentSnapshot.get("interestedJobs");
+
+                for (String jobId: interestedList) {
+                    try {
+                        Optional<Job> job = fetchJob(jobId).get(5, TimeUnit.SECONDS);
+                        if (job.isPresent()) {
+                            // Only add the job to this list if its active or valid.
+                            jobListBuilder.add(job.get());
+                        }
+                    } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {}
+                }
+
+                List<Job> jobList = jobListBuilder.build();
+                // TODO(issue/34): adjust range/total count based on pagination
+                long totalCount = jobList.size();
+                Range<Integer> range = Range.between(1, jobList.size());
+
+                return new JobPage(jobList, totalCount, range);
             },
             MoreExecutors.directExecutor()
         );
