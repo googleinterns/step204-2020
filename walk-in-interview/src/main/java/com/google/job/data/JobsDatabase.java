@@ -275,6 +275,8 @@ public final class JobsDatabase {
                 ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
                 try {
                     int counter = 0;
+                    // Handles the jobIds 10 at a time.
+                    // TODO(issue/34): pagination could also be included here.
                     while (counter + 10 < interestedList.size()) {
                         List<String> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
                         List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -302,6 +304,7 @@ public final class JobsDatabase {
     /**
      * This will return a future of a list of jobs given the list of jobIds.
      * Any jobs that are not active or invalid will not be included in the list returned.
+     * This only handles jobIds of max 10 at a time.
      *
      * @param jobIds The list of jobIds.
      * @return Future of the list of jobs.
@@ -309,7 +312,6 @@ public final class JobsDatabase {
     public Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
-        // TODO(issue/xx): this will need to be done 10 jobIds at a time
         Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
             .whereIn(JOB_ID_FIELD, jobIds);
 
