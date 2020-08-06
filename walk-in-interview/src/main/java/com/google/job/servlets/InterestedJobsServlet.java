@@ -12,10 +12,14 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /** Servlet that handles adding/removing and getting an applicant's interested jobs. */
 @WebServlet("/my-interested-list")
 public final class InterestedJobsServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(InterestedJobsServlet.class.getName());
+
     private static final long TIMEOUT_SECONDS = 5;
 
     private static final String INTERESTED_PARAM = "interested";
@@ -39,6 +43,7 @@ public final class InterestedJobsServlet extends HttpServlet {
 
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (ExecutionException | IllegalArgumentException | ServletException | TimeoutException e) {
+            log.log(Level.SEVERE, "unable to update interestedList", e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
@@ -74,10 +79,6 @@ public final class InterestedJobsServlet extends HttpServlet {
             throw new IllegalArgumentException("interested param should not be empty");
         }
 
-        if (!(interestedStr.equalsIgnoreCase("true") || interestedStr.equalsIgnoreCase("false"))) {
-            throw new IllegalArgumentException("interested param should be either true or false");
-        }
-
-        return Boolean.parseBoolean(interestedStr);
+        return interestedStr.equalsIgnoreCase("true");
     }
 }
