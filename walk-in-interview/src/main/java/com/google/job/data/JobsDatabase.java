@@ -20,10 +20,13 @@ import java.util.List;
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
     private static final String JOB_COLLECTION = "Jobs";
+    private static final String APPLICANT_ACCOUNTS_COLLECTION = "ApplicantAccounts";
+
     private static final String SALARY_FIELD = "jobPay.annualMax";
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
+    private static final String INTERESTED_JOBS_FIELD = "interestedJobs";
 
     /**
      * Adds a newly created job post.
@@ -232,5 +235,32 @@ public final class JobsDatabase {
             },
             MoreExecutors.directExecutor()
         );
+    }
+
+    /**
+     * Updates the applicant's interested list to add or remove the job.
+     *
+     * @param applicantId The applicant's userId.
+     * @param jobId The job id.
+     * @param interested Whether the applicant is currently interested in it or not.
+     * @return A future of document reference for the applicant's update job list.
+     */
+    public static Future<DocumentReference> updateInterestedJobsList(String applicantId, String jobId, boolean interested) throws IOException, IllegalArgumentException, Exception {
+        return FireStoreUtils.getFireStore().runTransaction(transaction -> {
+            final DocumentReference documentReference = FireStoreUtils.getFireStore()
+                    .collection(APPLICANT_ACCOUNTS_COLLECTION).document(applicantId);
+
+            if (interested) {
+                // Remove the jobId
+                // Does nothing if it already isn't there
+                documentReference.update(INTERESTED_JOBS_FIELD, FieldValue.arrayRemove(jobId));
+            } else {
+                // Add the jobId
+                // Does nothing if it already exists
+                documentReference.update(INTERESTED_JOBS_FIELD, FieldValue.arrayUnion(jobId));
+            }
+
+            return documentReference;
+        });
     }
 }
