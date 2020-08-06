@@ -89,7 +89,7 @@ public final class FirebaseAuthSessionCookieUtil {
      */
     @POST
     @Path("/business-log-out")
-    public static Response clearSessionCookie(@CookieParam("session") Cookie cookie) {
+    public Response clearSessionCookie(@CookieParam("session") Cookie cookie) {
         final int maxAge = 0;
         NewCookie newCookie = new NewCookie(cookie, /* comment= */ null, maxAge, /* secure= */ true);
         return Response.temporaryRedirect(URI.create(LOG_IN_PAGE_PATH)).cookie(newCookie).build();
