@@ -238,32 +238,6 @@ public final class JobsDatabase {
     }
 
     /**
-     * Gets all the applicant's interested jobs given the params.
-     *
-     * @param pageSize The the number of jobs to be shown on the page.
-     * @param pageIndex The page number on which we are at.
-     * @return Future of the JobPage object.
-     */
-    public static Future<JobPage> fetchInterestedJobPage(int pageSize, int pageIndex) throws IOException {
-        CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
-
-        // TODO(issue/91): get userId from firebase session cookie
-        String applicantId = "dummyApplicantId";
-
-        DocumentReference docRef = applicantAccountsCollection.document(applicantId);
-
-        return ApiFutures.transform(
-            docRef.get(),
-            documentSnapshot -> {
-                // TODO(issue/92): get the applicant's jobsList and iterate through it to get the job documents
-                // for now just return an empty job page
-                return new JobPage(/* jobList= */ ImmutableList.of(), /* totalCount= */ 0, Range.between(0, 0));
-            },
-            MoreExecutors.directExecutor()
-        );
-    }
-
-    /**
      * Updates the applicant's interested list to add or remove the job.
      *
      * @param applicantId The applicant's userId.

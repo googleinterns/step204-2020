@@ -18,8 +18,6 @@ import java.util.concurrent.TimeoutException;
 public final class InterestedJobsServlet extends HttpServlet {
     private static final long TIMEOUT_SECONDS = 5;
 
-    private static final String PAGE_SIZE_PARAM = "pageSize";
-    private static final String PAGE_INDEX_PARAM = "pageIndex";
     private static final String INTERESTED_PARAM = "interested";
 
     private JobsDatabase jobsDatabase;
@@ -27,23 +25,6 @@ public final class InterestedJobsServlet extends HttpServlet {
     @Override
     public void init() {
         this.jobsDatabase = new JobsDatabase();
-    }
-
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-
-            int pageSize = JobsListingsServlet.parsePageIndex(request);
-            int pageIndex = JobsListingsServlet.parsePageIndex(request);
-            
-            JobPage jobPage = fetchJobPageDetails(pageSize, pageIndex);
-
-            String json = ServletUtils.convertToJsonUsingGson(jobPage);
-            response.setContentType("application/json;");
-            response.getWriter().println(json);
-        } catch(IllegalArgumentException | ServletException | ExecutionException | TimeoutException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
     }
 
     @Override
@@ -59,22 +40,6 @@ public final class InterestedJobsServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (ExecutionException | IllegalArgumentException | ServletException | TimeoutException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Returns the JobPage object.
-     *
-     * @param pageSize The the number of jobs to be shown on the page.
-     * @param pageIndex The page number on which we are at.
-     * @return JobPage object with all the details for the GET response.
-     */
-    private JobPage fetchJobPageDetails(int pageSize, int pageIndex) throws ServletException, ExecutionException, TimeoutException {
-        try {
-            return this.jobsDatabase.fetchInterestedJobPage(pageSize, pageIndex)
-                    .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        } catch (InterruptedException | IOException e) {
-            throw new ServletException(e);
         }
     }
 
