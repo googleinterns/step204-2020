@@ -266,15 +266,13 @@ public final class JobsDatabase {
     /**
      * Updates the applicant's interested list to add or remove the job.
      *
+     * @param applicantId The applicant's userId.
      * @param jobId The job id.
      * @param interested Whether the applicant is currently interested in it or not.
      * @return A future of document reference for the applicant's update job list.
      */
-    public static Future<DocumentReference> updateInterestedJobsList(String jobId, boolean interested) throws IOException, IllegalArgumentException, Exception {
+    public static Future<DocumentReference> updateInterestedJobsList(String applicantId, String jobId, boolean interested) throws IOException, IllegalArgumentException, Exception {
         return FireStoreUtils.getFireStore().runTransaction(transaction -> {
-            // TODO(issue/91): get userId from firebase session cookie
-            String applicantId = "dummyApplicantId";
-
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
                     .collection(APPLICANT_ACCOUNTS_COLLECTION).document(applicantId);
 

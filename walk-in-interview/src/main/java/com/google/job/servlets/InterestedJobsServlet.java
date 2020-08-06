@@ -86,7 +86,9 @@ public final class InterestedJobsServlet extends HttpServlet {
      */
     private void updateInterestedList(String jobId, boolean interested) throws ServletException, ExecutionException, TimeoutException {
         try {
-            this.jobsDatabase.updateInterestedJobsList(jobId, interested)
+            // TODO(issue/91): get userId from firebase session cookie
+            String applicantId = "";
+            this.jobsDatabase.updateInterestedJobsList(applicantId, jobId, interested)
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (Exception e) {
             throw new ServletException(e);
