@@ -16,7 +16,9 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
+/** Util methods related to firebase auth session cookies. */
 public final class FirebaseAuthSessionCookieUtil {
+    private static final String ID_TOKEN_PARAM = "idToken";
     private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
 
     private FirebaseAuthSessionCookieUtil() {};
@@ -27,7 +29,7 @@ public final class FirebaseAuthSessionCookieUtil {
     public static Response createSessionCookie(HttpServletRequest request) {
         try {
             // Gets the ID token sent by the client
-            String idToken = FirebaseAuthIDTokenUtil.getUID(request);
+            String idToken = getIDToken(request);
 
             // Sets session expiration to 5 days
             long expiresIn = TimeUnit.DAYS.toMillis(/* duration= */5);
@@ -54,7 +56,7 @@ public final class FirebaseAuthSessionCookieUtil {
             // if the user's Firebase session was revoked, user deleted/disabled, etc.
             final boolean checkRevoked = true;
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifySessionCookie(sessionCookie, checkRevoked);
-            return serveContentForUser(decodedToken);
+            return getUid(decodedToken);
         } catch (FirebaseAuthException e) {
             // Session cookie is unavailable, invalid or revoked. Force user to login.
             return Response.temporaryRedirect(URI.create(LOG_IN_PAGE_PATH)).build();
@@ -69,7 +71,18 @@ public final class FirebaseAuthSessionCookieUtil {
         return Response.temporaryRedirect(URI.create(LOG_IN_PAGE_PATH)).cookie(newCookie).build();
     }
 
-    private static Response serveContentForUser(FirebaseToken decodedToken) {
-        return null;
+    private static String getIDToken(HttpServletRequest request) throws IllegalArgumentException {
+        String idToken = request.getParameter(ID_TOKEN_PARAM).trim();
+
+        if (idToken == null || idToken.isEmpty()) {
+            throw new IllegalArgumentException("ID Token should be an non-empty string");
+        }
+
+        return idToken;
+    }
+
+    private static Response getUid(FirebaseToken decodedToken) {
+        String uid = decodedToken.getUid();
+        return Response.ok(uid).build();
     }
 }
