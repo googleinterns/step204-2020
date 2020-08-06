@@ -274,7 +274,16 @@ public final class JobsDatabase {
 
                 List<Job> jobList = ImmutableList.of();
                 try {
-                    jobList = fetchJobsFromIds(interestedList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    int counter = 0;
+                    while (counter + 10 < interestedList.size()) {
+                        List<Job> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
+                        List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                        jobList.addAll(fetchedList);
+                        counter = counter + 10;
+                    }
+                    List<Job> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ interestedList.size());
+                    List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    jobList.addAll(fetchedList);
                     log.info("returned jobList: " + jobList.toString());
                     // TODO(issue/34): adjust range/total count based on pagination
                 } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
