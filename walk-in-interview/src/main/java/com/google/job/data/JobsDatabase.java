@@ -239,15 +239,13 @@ public final class JobsDatabase {
     /**
      * Gets all the applicant's interested jobs given the params.
      *
+     * @param applicantId The applicant's userId.
      * @param pageSize The the number of jobs to be shown on the page.
      * @param pageIndex The page number on which we are at.
      * @return Future of the JobPage object.
      */
-    public static Future<JobPage> fetchInterestedJobPage(int pageSize, int pageIndex) throws IOException {
+    public static Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException {
         CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
-
-        // TODO(issue/91): get userId from firebase session cookie
-        String applicantId = "";
 
         DocumentReference docRef = applicantAccountsCollection.document(applicantId);
 

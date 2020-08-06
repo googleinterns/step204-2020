@@ -54,7 +54,9 @@ public final class InterestedJobsServlet extends HttpServlet {
      */
     private JobPage fetchJobPageDetails(int pageSize, int pageIndex) throws ServletException, ExecutionException, TimeoutException {
         try {
-            return this.jobsDatabase.fetchInterestedJobPage(pageSize, pageIndex)
+            // TODO(issue/91): get userId from firebase session cookie
+            String applicantId = "";
+            return this.jobsDatabase.fetchInterestedJobPage(applicantId, pageSize, pageIndex)
                     .get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
