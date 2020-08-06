@@ -34,12 +34,9 @@ public final class JobsDatabase {
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
     private static final String INTERESTED_JOBS_FIELD = "interestedJobs";
-<<<<<<< HEAD
     private static final String JOB_ID_FIELD = "jobId";
     
     private static final long TIMEOUT_SECONDS = 5;
-=======
->>>>>>> master
 
     /**
      * Adds a newly created job post.
@@ -300,7 +297,7 @@ public final class JobsDatabase {
      * @param jobIds The list of jobIds.
      * @return Future of the list of jobs.
      */
-    public Future<List<Job>> fetchJobsFromIds(List<String> jobIds) {
+    public Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
         // TODO(issue/xx): this will need to be done 10 jobIds at a time
