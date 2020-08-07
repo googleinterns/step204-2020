@@ -258,8 +258,10 @@ public final class JobsDatabase {
      * @return Future of the JobPage object.
      * @throws IllegalArgumentException If the applicantId doesn't have a corresponding document.
      */
-    public Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException, IllegalArgumentException {
-        CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
+    public Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex)
+            throws IOException, IllegalArgumentException {
+        CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore()
+                .collection(APPLICANT_ACCOUNTS_COLLECTION);
 
         DocumentReference docRef = applicantAccountsCollection.document(applicantId);
 
@@ -296,7 +298,7 @@ public final class JobsDatabase {
         if (jobIds.isEmpty()) {
             return ImmutableList.of();
         }
-        
+
         ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
         try {
             int counter = 0;
@@ -326,10 +328,6 @@ public final class JobsDatabase {
      * @return Future of the list of jobs.
      */
     private Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
-        if (jobIds.isEmpty()) {
-            return ImmutableList.of();
-        }
-
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
         Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
