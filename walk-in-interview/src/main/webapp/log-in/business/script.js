@@ -17,6 +17,7 @@ import {setErrorMessage} from '../../common-functions.js';
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../../index.html';
 
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const USER_DISABLED_ERROR_CODE = 'auth/user-disabled';
@@ -84,10 +85,16 @@ submitButton.addEventListener('click', (_) => {
       .then(() => {
         // Enables the button regardless of success or failure
         document.getElementById('submit').disabled = false;
+
+        // Back to home page
+        window.location.href = HOMEPAGE_PATH;
       })
       .catch((error) => {
         showErrorMessageFromError(error);
         document.getElementById('submit').disabled = false;
+
+        // Back to home page
+        window.location.href = HOMEPAGE_PATH;
       });
 });
 
