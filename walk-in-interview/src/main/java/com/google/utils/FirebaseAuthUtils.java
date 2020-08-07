@@ -16,24 +16,23 @@ import java.util.Optional;
 public final class FirebaseAuthUtils {
     private static final String SESSION_COOKIE_NAME = "session";
 
-    // TODO(issue/87): move to config file
-    private static final String DATABASE_URL = "https://com-walk-in-interview.firebaseio.com/";
-    private static final String PROJECT_ID = "com-walk-in-interview";
-    private static final String PROJECT_NAME = "Walk-In-Interview";
-
     private FirebaseAuthUtils() {}
 
     /**
      * Initializes the admin SDK.
+     *
+     * @param databaseUrl Url to database.
+     * @param projectId Project Id.
+     * @param projectName Project Name.
      */
-    public static void initAdminSDK() throws IOException {
+    public static void initAdminSDK(String databaseUrl, String projectId, String projectName) throws IOException {
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.getApplicationDefault())
-                .setDatabaseUrl(DATABASE_URL)
-                .setProjectId(PROJECT_ID)
+                .setDatabaseUrl(databaseUrl)
+                .setProjectId(projectId)
                 .build();
 
-        FirebaseApp.initializeApp(options, /* name= */ PROJECT_NAME);
+        FirebaseApp.initializeApp(options, /* name= */ projectName);
     }
 
 

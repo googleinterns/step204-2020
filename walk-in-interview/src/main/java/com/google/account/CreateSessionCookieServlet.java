@@ -25,10 +25,16 @@ public final class CreateSessionCookieServlet extends HttpServlet {
     private static final String ID_TOKEN_PARAM = "idToken";
     private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
 
+    // TODO(issue/87): move to config file
+    private static final String DATABASE_URL = "https://com-walk-in-interview.firebaseio.com/";
+    private static final String PROJECT_ID = "com-walk-in-interview";
+    private static final String PROJECT_NAME = "Walk-In-Interview";
+
+
     @Override
     public void init() {
         try {
-            FirebaseAuthUtils.initAdminSDK();
+            FirebaseAuthUtils.initAdminSDK(DATABASE_URL, PROJECT_ID, PROJECT_NAME);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error occur when initializing the Admin SDK: ", e);
         }
