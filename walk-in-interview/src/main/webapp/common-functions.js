@@ -13,6 +13,7 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
+const DEFAULT_PAGE_SIZE = 20;
 
 /**
  * Gets the requirements list from the servlet
@@ -62,15 +63,16 @@ function renderSelectOptions(select, options) {
 
 /**
  * Gets the value of a specified cookie.
- * 
+ *
  * @param {String} cname Cookie name.
+ * @return {String} The value in the cookie.
  */
 function getCookie(cname) {
-  var name = `${cname}=`;
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+  const name = `${cname}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
     }
@@ -81,5 +83,6 @@ function getCookie(cname) {
   return '';
 }
 
-export {JOB_ID_PARAM, getRequirementsList, setErrorMessage,
+export {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
+  getRequirementsList, setErrorMessage,
   renderSelectOptions, getCookie};
