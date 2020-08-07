@@ -285,19 +285,24 @@ public final class JobsDatabase {
 
     /**
      * This will return a list of jobs given the list of jobIds.
-     * It will call on a helper function that will process the list at max 10 ids at a time.
+     * It will call on a helper function that will process the list at max {@link #FIRESTORE_IN_QUERY_MAX_ARGS}
+     * ids at a time.
      * Any jobs that are not active or invalid will not be included in the list returned.
      *
      * @param jobIds The list of jobIds.
      * @return The list of jobs.
      */
     public List<Job> fetchAllJobsFromIds(List<String> jobIds) {
+        if (jobIds.isEmpty()) {
+            return ImmutableList.of();
+        }
+        
         ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
         try {
             int counter = 0;
             // TODO(issue/34): pagination could also be included here.
             while (counter + FIRESTORE_IN_QUERY_MAX_ARGS < jobIds.size()) {
-                List<String> subList = jobIds.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
+                List<String> subList = jobIds.subList(/* inclusive */ counter, /* exclusive */ counter + FIRESTORE_IN_QUERY_MAX_ARGS);
                 List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 jobListBuilder.addAll(fetchedList);
                 counter = counter + FIRESTORE_IN_QUERY_MAX_ARGS;
@@ -315,12 +320,16 @@ public final class JobsDatabase {
     /**
      * This will return a future of a list of jobs given the list of jobIds.
      * Any jobs that are not active or invalid will not be included in the list returned.
-     * This only handles jobIds of max 10 at a time.
+     * This can only handle up to {@link #FIRESTORE_IN_QUERY_MAX_ARGS} jobIds at a time.
      *
      * @param jobIds The list of jobIds.
      * @return Future of the list of jobs.
      */
     private Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
+        if (jobIds.isEmpty()) {
+            return ImmutableList.of();
+        }
+
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
         Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
