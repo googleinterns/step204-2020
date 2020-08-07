@@ -1,10 +1,8 @@
 package com.google.account;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SessionCookieOptions;
+import com.google.utils.FirebaseAuthUtils;
 import com.google.utils.ServletUtils;
 
 import javax.servlet.annotation.WebServlet;
@@ -27,13 +25,10 @@ public final class CreateSessionCookieServlet extends HttpServlet {
     private static final String ID_TOKEN_PARAM = "idToken";
     private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
 
-    private static final String DATABASE_URL = "https://com-walk-in-interview.firebaseio.com/";
-    private static final String PROJECT_ID = "com-walk-in-interview";
-
     @Override
     public void init() {
         try {
-            initAdminSDK();
+            FirebaseAuthUtils.initAdminSDK();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error occur when initializing the Admin SDK: ", e);
         }
@@ -67,17 +62,6 @@ public final class CreateSessionCookieServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect(LOG_IN_PAGE_PATH);
         }
-    }
-
-    /** Initializes the admin SDK. */
-    private void initAdminSDK() throws IOException {
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.getApplicationDefault())
-                .setDatabaseUrl(DATABASE_URL)
-                .setProjectId(PROJECT_ID)
-                .build();
-
-        FirebaseApp.initializeApp(options, /* name= */ "Walk-In-Interview");
     }
 
     /** Gets the id token from the log in request. */

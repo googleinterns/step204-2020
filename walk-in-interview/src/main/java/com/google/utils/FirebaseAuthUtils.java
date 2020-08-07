@@ -1,19 +1,41 @@
 package com.google.utils;
 
-import com.google.appengine.repackaged.com.google.api.client.http.HttpRequest;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Cookie;
+import java.io.IOException;
 import java.util.Optional;
 
 /** Util methods related to Firebase Auth.  */
 public final class FirebaseAuthUtils {
     private static final String SESSION_COOKIE_NAME = "session";
 
+    // TODO(issue/87): move to config file
+    private static final String DATABASE_URL = "https://com-walk-in-interview.firebaseio.com/";
+    private static final String PROJECT_ID = "com-walk-in-interview";
+    private static final String PROJECT_NAME = "Walk-In-Interview";
+
     private FirebaseAuthUtils() {}
+
+    /**
+     * Initializes the admin SDK.
+     */
+    public static void initAdminSDK() throws IOException {
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.getApplicationDefault())
+                .setDatabaseUrl(DATABASE_URL)
+                .setProjectId(PROJECT_ID)
+                .build();
+
+        FirebaseApp.initializeApp(options, /* name= */ PROJECT_NAME);
+    }
+
 
     /**
      * Gets the uid from firebase auth session cookie.
