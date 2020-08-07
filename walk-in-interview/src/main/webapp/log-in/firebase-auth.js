@@ -67,7 +67,7 @@ Auth.signIntoBusinessAccount = (email, password) => {
               // Session login endpoint is queried and session cookie is set.
               // CSRF protection should be taken into account.
               const csrfToken = getCookie('csrfToken');
-              return postIdTokenToSessionLogin(API['business-log-in'],
+              return Auth.postIdTokenToSessionLogin(API['business-log-in'],
                   idToken, csrfToken);
             });
       });
@@ -154,7 +154,7 @@ Auth.checkCurrentUser = () => {
  * @param {String} csrfToken CSRF token.
  * @return {*} Makes POST request.
  */
-postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
+Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   const params = new URLSearchParams();
   params.append('idToken', idToken);
   params.append('csrfToken', csrfToken);
