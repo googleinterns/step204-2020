@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.SessionCookieOptions;
 import com.google.utils.ServletUtils;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -21,9 +22,14 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Servlet that handles creating and clearing firebase auth session cookie. */
+@WebServlet("/business-log-in")
 public final class FirebaseAuthSessionCookieServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(FirebaseAuthSessionCookieServlet.class.getName());
+
     private static final int SESSION_COOKIE_DURATION_DAYS = 5;
     private static final String SESSION_COOKIE_NAME = "session";
     private static final String ID_TOKEN_PARAM = "idToken";
@@ -32,8 +38,16 @@ public final class FirebaseAuthSessionCookieServlet extends HttpServlet {
     private static final String DATABASE_URL = "https://com-walk-in-interview.firebaseio.com/";
     private static final String PROJECT_ID = "com-walk-in-interview";
 
-    public FirebaseAuthSessionCookieServlet() throws IOException {
-        initAdminSDK();
+//    public FirebaseAuthSessionCookieServlet() throws IOException {
+//        initAdminSDK();
+//    }
+    @Override
+    public void init() {
+        try {
+            initAdminSDK();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error occur when initializing the Admin SDK: ", e);
+        }
     }
 
     /**
@@ -63,7 +77,7 @@ public final class FirebaseAuthSessionCookieServlet extends HttpServlet {
             return Response.ok().cookie(cookie).build();
         } catch (Exception e) {
             String errorMessage = "Failed to create a session cookie";
-            request.getServletContext().log(errorMessage);
+            LOGGER.log(Level.SEVERE, errorMessage, e);
             return Response.status(Response.Status.UNAUTHORIZED).entity(errorMessage).build();
         }
     }
