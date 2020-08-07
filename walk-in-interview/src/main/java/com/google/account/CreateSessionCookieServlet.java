@@ -59,6 +59,8 @@ public final class CreateSessionCookieServlet extends HttpServlet {
             // Sets cookie policy parameters as required
             Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionCookie);
             response.addCookie(cookie);
+
+            response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             String errorMessage = "Failed to create a session cookie";
             LOGGER.log(Level.SEVERE, errorMessage, e);

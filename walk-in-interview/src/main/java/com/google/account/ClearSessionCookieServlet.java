@@ -39,6 +39,7 @@ public final class ClearSessionCookieServlet extends HttpServlet {
             sessionCookie.setSecure(true);
 
             response.addCookie(sessionCookie);
+
             response.setStatus(HttpServletResponse.SC_OK);
             response.sendRedirect(LOG_IN_PAGE_PATH);
         } catch (FirebaseAuthException e) {
