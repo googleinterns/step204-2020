@@ -5,7 +5,8 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableSet;
 import com.google.cloud.firestore.*;
-import com.google.common.collect.ImmutableList; 
+import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
@@ -328,6 +329,10 @@ public final class JobsDatabase {
      * @return Future of the list of jobs.
      */
     private Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
+        if (jobIds.isEmpty()) {
+            return Futures.immediateFuture(ImmutableList.of());
+        }
+
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
         Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
