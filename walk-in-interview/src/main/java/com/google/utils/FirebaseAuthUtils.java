@@ -46,7 +46,7 @@ public final class FirebaseAuthUtils {
      */
     public Optional<String> getUid(HttpServletRequest request)
             throws IllegalArgumentException, FirebaseAuthException {
-        String sessionCookie = getCookieValue(request, SESSION_COOKIE_NAME).getValue();
+        String sessionCookie = getCookie(request, SESSION_COOKIE_NAME).getValue();
 
         // Verifies the session cookie. In this case an additional check is added to detect
         // if the user's Firebase session was revoked, user deleted/disabled, etc.
@@ -70,7 +70,7 @@ public final class FirebaseAuthUtils {
      * @return The whole cookie.
      * @throws IllegalArgumentException If no cookie matched the given name.
      */
-    public static Cookie getCookieValue(HttpServletRequest request, String name) throws IllegalArgumentException {
+    public static Cookie getCookie(HttpServletRequest request, String name) throws IllegalArgumentException {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie: cookies) {
             if (cookie.getName().equals(name)) {

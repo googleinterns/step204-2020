@@ -24,7 +24,7 @@ public final class ClearSessionCookieServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Cookie sessionCookie = FirebaseAuthUtils.getCookieValue(request, SESSION_COOKIE_NAME);
+        Cookie sessionCookie = FirebaseAuthUtils.getCookie(request, SESSION_COOKIE_NAME);
         String sessionCookieValue = sessionCookie.getValue();
 
         try {
