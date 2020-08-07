@@ -75,7 +75,7 @@ public final class CreateSessionCookieServlet extends HttpServlet {
                 .setProjectId(PROJECT_ID)
                 .build();
 
-        FirebaseApp.initializeApp(options);
+        FirebaseApp.initializeApp(options, /* name= */ "Walk-In-Interview");
     }
 
     /** Gets the id token from the log in request. */
