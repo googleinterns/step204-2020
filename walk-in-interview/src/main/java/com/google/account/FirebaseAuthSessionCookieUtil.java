@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 /** Util methods related to firebase auth session cookies. */
 public final class FirebaseAuthSessionCookieUtil {
-    private static final int SESSION_COOKIE_DURATION_DAY = 5;
+    private static final int SESSION_COOKIE_DURATION_DAYS = 5;
     private static final String SESSION_COOKIE_NAME = "session";
     private static final String ID_TOKEN_PARAM = "idToken";
     private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
@@ -50,7 +50,7 @@ public final class FirebaseAuthSessionCookieUtil {
             String idToken = parseIDToken(request);
 
             // Sets session expiration to 5 days
-            long expiresIn = TimeUnit.DAYS.toMillis(/* duration= */SESSION_COOKIE_DURATION_DAY);
+            long expiresIn = TimeUnit.DAYS.toMillis(/* duration= */SESSION_COOKIE_DURATION_DAYS);
             SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(expiresIn).build();
 
             // Creates the session cookie. This will also verify the ID token in the process.
@@ -78,8 +78,8 @@ public final class FirebaseAuthSessionCookieUtil {
         try {
             // Verify the session cookie. In this case an additional check is added to detect
             // if the user's Firebase session was revoked, user deleted/disabled, etc.
-            final boolean checkRevoked = true;
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifySessionCookie(sessionCookie, checkRevoked);
+            FirebaseToken decodedToken = FirebaseAuth.getInstance()
+                    .verifySessionCookie(sessionCookie, /* checkRevoked= */ true);
             return getUid(decodedToken);
         } catch (FirebaseAuthException e) {
             // Session cookie is unavailable, invalid or revoked. Force user to login.
