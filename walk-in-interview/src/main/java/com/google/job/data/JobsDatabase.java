@@ -37,6 +37,7 @@ public final class JobsDatabase {
     private static final String JOB_ID_FIELD = "jobId";
     
     private static final long TIMEOUT_SECONDS = 5;
+    private static final int FIRESTORE_IN_QUERY_MAX_ARGS = 10;
 
     /**
      * Adds a newly created job post.
@@ -270,27 +271,8 @@ public final class JobsDatabase {
                 }
 
                 List<String> interestedList = (List<String>) documentSnapshot.get(INTERESTED_JOBS_FIELD);
-                // TODO(issue/34): adjust the interestedList the be looked at based on pagination
 
-                ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
-                try {
-                    int counter = 0;
-                    // Handles the jobIds 10 at a time.
-                    // TODO(issue/34): pagination could also be included here.
-                    while (counter + 10 < interestedList.size()) {
-                        List<String> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
-                        List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                        jobListBuilder.addAll(fetchedList);
-                        counter = counter + 10;
-                    }
-                    List<String> subList = interestedList.subList(/* inclusive */ counter, /* exclusive */ interestedList.size());
-                    List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                    jobListBuilder.addAll(fetchedList);
-                } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
-                    log.log(Level.SEVERE, "error while getting interested job list ", e);
-                }
-
-                List<Job> jobList = jobListBuilder.build();
+                List<Job> jobList = fetchAllJobsFromIds(interestedList);
                 // TODO(issue/34): adjust range/total count based on pagination
                 long totalCount = jobList.size();
                 Range<Integer> range = Range.between(1, jobList.size());
@@ -302,6 +284,35 @@ public final class JobsDatabase {
     }
 
     /**
+     * This will return a list of jobs given the list of jobIds.
+     * It will call on a helper function that will process the list at max 10 ids at a time.
+     * Any jobs that are not active or invalid will not be included in the list returned.
+     *
+     * @param jobIds The list of jobIds.
+     * @return The list of jobs.
+     */
+    public List<Job> fetchAllJobsFromIds(List<String> jobIds) {
+        ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
+        try {
+            int counter = 0;
+            // TODO(issue/34): pagination could also be included here.
+            while (counter + FIRESTORE_IN_QUERY_MAX_ARGS < jobIds.size()) {
+                List<String> subList = jobIds.subList(/* inclusive */ counter, /* exclusive */ counter + 10);
+                List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                jobListBuilder.addAll(fetchedList);
+                counter = counter + FIRESTORE_IN_QUERY_MAX_ARGS;
+            }
+            List<String> subList = jobIds.subList(/* inclusive */ counter, /* exclusive */ jobIds.size());
+            List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            jobListBuilder.addAll(fetchedList);
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            log.log(Level.SEVERE, "error while getting interested job list ", e);
+        }
+
+        return jobListBuilder.build();
+    }
+
+    /**
      * This will return a future of a list of jobs given the list of jobIds.
      * Any jobs that are not active or invalid will not be included in the list returned.
      * This only handles jobIds of max 10 at a time.
@@ -309,7 +320,7 @@ public final class JobsDatabase {
      * @param jobIds The list of jobIds.
      * @return Future of the list of jobs.
      */
-    public Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
+    private Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
         CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
 
         Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
