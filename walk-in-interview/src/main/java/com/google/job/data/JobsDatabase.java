@@ -11,19 +11,33 @@ import com.google.utils.FireStoreUtils;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.apache.commons.lang3.Range;
 import java.lang.UnsupportedOperationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /** Helps persist and retrieve job posts. */
 public final class JobsDatabase {
+    private static final Logger log = Logger.getLogger(JobsDatabase.class.getName());
+
     private static final String JOB_COLLECTION = "Jobs";
+    private static final String APPLICANT_ACCOUNTS_COLLECTION = "ApplicantAccounts";
+
     private static final String SALARY_FIELD = "jobPay.annualMax";
     private static final String REGION_FIELD = "jobLocation.region";
     private static final String JOB_STATUS_FIELD = "jobStatus";
     private static final String JOB_REQUIREMENTS_FIELD = "requirements";
+    private static final String INTERESTED_JOBS_FIELD = "interestedJobs";
+    private static final String JOB_ID_FIELD = "jobId";
+    
+    private static final long TIMEOUT_SECONDS = 5;
+    private static final int FIRESTORE_IN_QUERY_MAX_ARGS = 10;
 
     /**
      * Adds a newly created job post.
@@ -232,5 +246,144 @@ public final class JobsDatabase {
             },
             MoreExecutors.directExecutor()
         );
+    }
+
+    /**
+     * Gets all the applicant's interested jobs given the params. If there's an error in getting a particular job
+     * from the jobId, then that specific job will not be returned.
+     *
+     * @param applicantId The applicant's userId.
+     * @param pageSize The the number of jobs to be shown on the page.
+     * @param pageIndex The page number on which we are at.
+     * @return Future of the JobPage object.
+     * @throws IllegalArgumentException If the applicantId doesn't have a corresponding document.
+     */
+    public Future<JobPage> fetchInterestedJobPage(String applicantId, int pageSize, int pageIndex) throws IOException, IllegalArgumentException {
+        CollectionReference applicantAccountsCollection = FireStoreUtils.getFireStore().collection(APPLICANT_ACCOUNTS_COLLECTION);
+
+        DocumentReference docRef = applicantAccountsCollection.document(applicantId);
+
+        return ApiFutures.transform(
+            docRef.get(),
+            documentSnapshot -> {
+                if (!documentSnapshot.exists()) {
+                    throw new IllegalArgumentException("Invalid applicantId");
+                }
+
+                List<String> interestedList = (List<String>) documentSnapshot.get(INTERESTED_JOBS_FIELD);
+
+                List<Job> jobList = fetchAllJobsFromIds(interestedList);
+                // TODO(issue/34): adjust range/total count based on pagination
+                long totalCount = jobList.size();
+                Range<Integer> range = Range.between(1, jobList.size());
+
+                return new JobPage(jobList, totalCount, range);
+            },
+            MoreExecutors.directExecutor()
+        );
+    }
+
+    /**
+     * This will return a list of jobs given the list of jobIds.
+     * It will call on a helper function that will process the list at max {@link #FIRESTORE_IN_QUERY_MAX_ARGS}
+     * ids at a time.
+     * Any jobs that are not active or invalid will not be included in the list returned.
+     *
+     * @param jobIds The list of jobIds.
+     * @return The list of jobs.
+     */
+    public List<Job> fetchAllJobsFromIds(List<String> jobIds) {
+        if (jobIds.isEmpty()) {
+            return ImmutableList.of();
+        }
+        
+        ImmutableList.Builder<Job> jobListBuilder = ImmutableList.builder();
+        try {
+            int counter = 0;
+            // TODO(issue/34): pagination could also be included here.
+            while (counter + FIRESTORE_IN_QUERY_MAX_ARGS < jobIds.size()) {
+                List<String> subList = jobIds.subList(/* inclusive */ counter, /* exclusive */ counter + FIRESTORE_IN_QUERY_MAX_ARGS);
+                List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                jobListBuilder.addAll(fetchedList);
+                counter = counter + FIRESTORE_IN_QUERY_MAX_ARGS;
+            }
+            List<String> subList = jobIds.subList(/* inclusive */ counter, /* exclusive */ jobIds.size());
+            List<Job> fetchedList = fetchJobsFromIds(subList).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            jobListBuilder.addAll(fetchedList);
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            log.log(Level.SEVERE, "error while getting interested job list ", e);
+        }
+
+        return jobListBuilder.build();
+    }
+
+    /**
+     * This will return a future of a list of jobs given the list of jobIds.
+     * Any jobs that are not active or invalid will not be included in the list returned.
+     * This can only handle up to {@link #FIRESTORE_IN_QUERY_MAX_ARGS} jobIds at a time.
+     *
+     * @param jobIds The list of jobIds.
+     * @return Future of the list of jobs.
+     */
+    private Future<List<Job>> fetchJobsFromIds(List<String> jobIds) throws IOException {
+        if (jobIds.isEmpty()) {
+            return ImmutableList.of();
+        }
+
+        CollectionReference jobsCollection = FireStoreUtils.getFireStore().collection(JOB_COLLECTION);
+
+        Query query = jobsCollection.whereEqualTo(JOB_STATUS_FIELD, JobStatus.ACTIVE.name())
+            .whereIn(JOB_ID_FIELD, jobIds);
+
+        return ApiFutures.transform(
+            query.get(),
+            querySnapshot -> {
+                if (querySnapshot == null) {
+                    return ImmutableList.of();
+                }
+
+                List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+                if (documents.size() == 0) {
+                    return ImmutableList.of();
+                }
+
+                ImmutableList.Builder<Job> jobList = ImmutableList.builder();
+
+                for (QueryDocumentSnapshot document : documents) {
+                    Job job = document.toObject(Job.class);
+                    jobList.add(job);
+                }
+
+                return jobList.build();  
+            },
+            MoreExecutors.directExecutor()
+        );
+    }
+    
+    /*
+     * Updates the applicant's interested list to add or remove the job.
+     *
+     * @param applicantId The applicant's userId.
+     * @param jobId The job id.
+     * @param interested Whether the applicant is currently interested in it or not.
+     * @return A future of document reference for the applicant's update job list.
+     */
+    public static Future<DocumentReference> updateInterestedJobsList(String applicantId, String jobId, boolean interested) throws IOException, IllegalArgumentException, Exception {
+        return FireStoreUtils.getFireStore().runTransaction(transaction -> {
+            final DocumentReference documentReference = FireStoreUtils.getFireStore()
+                    .collection(APPLICANT_ACCOUNTS_COLLECTION).document(applicantId);
+
+            if (interested) {
+                // Remove the jobId
+                // Does nothing if it already isn't there
+                documentReference.update(INTERESTED_JOBS_FIELD, FieldValue.arrayRemove(jobId));
+            } else {
+                // Add the jobId
+                // Does nothing if it already exists
+                documentReference.update(INTERESTED_JOBS_FIELD, FieldValue.arrayUnion(jobId));
+            }
+
+            return documentReference;
+        });
     }
 }
