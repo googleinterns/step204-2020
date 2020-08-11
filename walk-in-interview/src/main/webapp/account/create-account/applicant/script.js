@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
+import {setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-applicant-account'];
