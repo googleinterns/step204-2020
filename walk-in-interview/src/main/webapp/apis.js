@@ -8,8 +8,7 @@ export const API = {
   'get-job-listings': '/jobs/listings',
   'delete-job': '/jobs/delete',
   'expire-job': '/jobs/expire',
-  'business-log-in': '/business-log-in',
-  'applicant-log-in': '/applicant-log-in',
+  'log-in': '/log-in',
   'business-jobs-list': '/my-jobs',
   'applicant-interested-list': '/my-interested-list',
 };

@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Servlet that handles creating firebase auth session cookie. */
-@WebServlet("/business-log-in")
+@WebServlet("/log-in")
 public final class CreateSessionCookieServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(CreateSessionCookieServlet.class.getName());
 

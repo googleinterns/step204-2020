@@ -49,6 +49,7 @@ Auth.createBusinessAccount = (email, password) => {
       });
   checkCurrentUser();
 };
+};
 
 /**
  * This will sign into an existing business account.
@@ -67,7 +68,7 @@ Auth.signIntoBusinessAccount = (email, password) => {
               // Session login endpoint is queried and session cookie is set.
               // CSRF protection should be taken into account.
               const csrfToken = getCookie('csrfToken');
-              return Auth.postIdTokenToSessionLogin(API['business-log-in'],
+              return Auth.postIdTokenToSessionLogin(API['log-in'],
                   idToken, csrfToken);
             });
       });

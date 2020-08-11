@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Servlet that handles clearing firebase auth session cookie at server side. */
-@WebServlet("/business-log-out")
+@WebServlet("/log-out")
 public final class ClearSessionCookieServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(ClearSessionCookieServlet.class.getName());
 
