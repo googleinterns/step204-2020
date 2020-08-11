@@ -1,5 +1,5 @@
 /**
- * This file is specific to log-in/applicant/index.html.
+ * This file is specific to create-account/applicant/index.html.
  * It renders the fields on the page dynamically.
  */
 
