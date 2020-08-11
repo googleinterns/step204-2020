@@ -33,7 +33,7 @@ function renderPageElements() {
 
         // Back to home page
         window.location.href = HOMEPAGE_PATH;
-      });;
+      });
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
