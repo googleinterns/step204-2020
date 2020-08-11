@@ -13,8 +13,8 @@ const CurrentLocale = 'en';
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
 
-const COMMONG_STRINGS = AppStrings['log-in'];
-const STRINGS = AppStrings['applicant-log-in'];
+const COMMONG_STRINGS = AppStrings['create-account'];
+const STRINGS = AppStrings['create-applicant-account'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
 const HOMEPAGE_PATH = '../../../index.html';
 

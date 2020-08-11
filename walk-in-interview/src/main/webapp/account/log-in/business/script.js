@@ -11,7 +11,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../../../strings.en.js';
-import {Auth} from '../firebase-auth.js';
+import {Auth} from '../../firebase-auth.js';
 import {setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];

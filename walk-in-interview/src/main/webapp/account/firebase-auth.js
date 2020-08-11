@@ -49,7 +49,6 @@ Auth.createBusinessAccount = (email, password) => {
       });
   checkCurrentUser();
 };
-};
 
 /**
  * This will sign into an existing business account.
@@ -75,14 +74,36 @@ Auth.signIntoBusinessAccount = (email, password) => {
 };
 
 /**
+ * This will create a new applicant account.
+ *
+ * @param {String} elementId The div element to add the UI.
+ * @param {String} successPath The url for redirect on login success.
+ * @param {String} newUserInfo The message to be displayed if the it is a new user.
+ */
+Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
+  Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
+};
+
+/**
+ * This will sign into an existing applicant account.
+ *
+ * @param {String} elementId The div element to add the UI.
+ * @param {String} successPath The url for redirect on login success.
+ * @param {String} newUserInfo The message to be displayed if the it is a new user.
+ */
+Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
+  Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
+};
+
+/**
  * This will add the firebase ui for phone authentication
  * to the provided element.
  *
  * @param {String} elementId The div element to add the UI.
  * @param {String} successPath The url for redirect on login success.
- * @param {String} newUserPath The url for redirect to new user info filled in page.
+ * @param {String} newUserInfo The message to be displayed if the it is a new user.
  */
-Auth.addPhoneAuthUI = (elementId, successPath, newUserPath) => {
+Auth.addPhoneAuthUI = (elementId, successPath, newUserInfo) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -95,36 +116,14 @@ Auth.addPhoneAuthUI = (elementId, successPath, newUserPath) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
         if (authResult.additionalUserInfo.isNewUser) {
-          redirectUrl = successPath;
-          return true;
-        } else {
-          redirectUrl = newUserPath;
-          return true;
+          alert(newUserInfo);
         }
+
+        return true;
       },
     },
     signInSuccessUrl: successPath,
   });
-};
-
-/**
- * This will create a new applicant account.
- *
- * @param {String} phoneNumber The phone number for the new applicant account.
- * @param {Object} appVerifier The recaptcha verifier.
- */
-Auth.createApplicantAccount = (phoneNumber, appVerifier) => {
-  // TODO(issue/79): set up phone number sign in with otp and recaptcha
-};
-
-/**
- * This will sign into an existing applicant account.
- *
- * @param {String} phoneNumber The number for the existing applicant account.
- * @param {Object} appVerifier The recaptcha verifier.
- */
-Auth.signIntoApplicantAccount = (phoneNumber, appVerifier) => {
-  // TODO(issue/79): set up phone number sign in with otp and recaptcha
 };
 
 /**
