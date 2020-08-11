@@ -24,7 +24,16 @@ window.onload = () => {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneAuthUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
+  Auth.signIntoBusinessAccount('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
+      .catch((error) => {
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMONG_STRINGS['error-message'],
+          /* includesDefault= */false);
+        console.error(error.message);
+
+        // Back to home page
+        window.location.href = HOMEPAGE_PATH;
+      });;
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];

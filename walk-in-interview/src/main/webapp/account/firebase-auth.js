@@ -10,6 +10,7 @@
 import {AppStrings} from '../strings.en.js';
 import {getCookie} from '../common-functions.js';
 import {API} from '../apis.js';
+import { use } from 'chai';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
@@ -82,6 +83,22 @@ Auth.signIntoBusinessAccount = (email, password) => {
  */
 Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
   Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
+
+  var user = firebase.auth().currentUser;
+  if (user) {
+    // User is signed in.
+    
+    // Get the user's ID token as it is needed to exchange
+    // for a session cookie.
+    return user.getIdToken()
+    .then((idToken) => {
+      // Session login endpoint is queried and session cookie is set.
+      // CSRF protection should be taken into account.
+      const csrfToken = getCookie('csrfToken');
+      return Auth.postIdTokenToSessionLogin(API['create-applicant-account'],
+          idToken, csrfToken);
+    });
+  }
 };
 
 /**
@@ -93,6 +110,22 @@ Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
  */
 Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
   Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
+
+  var user = firebase.auth().currentUser;
+  if (user) {
+    // User is signed in.
+    
+    // Get the user's ID token as it is needed to exchange
+    // for a session cookie.
+    return user.getIdToken()
+    .then((idToken) => {
+      // Session login endpoint is queried and session cookie is set.
+      // CSRF protection should be taken into account.
+      const csrfToken = getCookie('csrfToken');
+      return Auth.postIdTokenToSessionLogin(API['log-in'],
+          idToken, csrfToken);
+    });
+  }
 };
 
 /**

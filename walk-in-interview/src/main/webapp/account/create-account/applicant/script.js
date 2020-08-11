@@ -24,7 +24,7 @@ window.onload = () => {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneAuthUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
+  Auth.createApplicantAccount('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
