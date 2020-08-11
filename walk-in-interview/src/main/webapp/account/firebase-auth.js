@@ -10,7 +10,6 @@
 import {AppStrings} from '../strings.en.js';
 import {getCookie} from '../common-functions.js';
 import {API} from '../apis.js';
-import { use } from 'chai';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
