@@ -97,6 +97,8 @@ Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
       return Auth.postIdTokenToSessionLogin(API['create-applicant-account'],
           idToken, csrfToken);
     });
+  } else {
+    return Promise.resolve("Not Signed In");
   }
 };
 
@@ -124,6 +126,8 @@ Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
       return Auth.postIdTokenToSessionLogin(API['log-in'],
           idToken, csrfToken);
     });
+  } else {
+    return Promise.resolve("Not Signed In");
   }
 };
 
