@@ -83,6 +83,7 @@ Auth.signIntoBusinessAccount = (email, password) => {
 Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
   Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
 
+  // Send id token to the backend
   var user = firebase.auth().currentUser;
   if (user) {
     // User is signed in.
@@ -112,6 +113,7 @@ Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
 Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
   Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
 
+  // Send id token to the backend
   var user = firebase.auth().currentUser;
   if (user) {
     // User is signed in.
