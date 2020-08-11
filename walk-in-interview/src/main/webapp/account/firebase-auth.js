@@ -80,8 +80,9 @@ Auth.signIntoBusinessAccount = (email, password) => {
  *
  * @param {String} elementId The div element to add the UI.
  * @param {String} successPath The url for redirect on login success.
+ * @param {String} newUserPath The url for redirect to new user info filled in page.
  */
-Auth.addPhoneAuthUI = (elementId, successPath) => {
+Auth.addPhoneAuthUI = (elementId, successPath, newUserPath) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -93,7 +94,13 @@ Auth.addPhoneAuthUI = (elementId, successPath) => {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
-        return !authResult.additionalUserInfo.isNewUser;
+        if (authResult.additionalUserInfo.isNewUser) {
+          redirectUrl = successPath;
+          return true;
+        } else {
+          redirectUrl = newUserPath;
+          return true;
+        }
       },
     },
     signInSuccessUrl: successPath,
