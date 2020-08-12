@@ -12,11 +12,11 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['applicant-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../../../index.html';
 
 window.onload = () => {
   renderPageElements();
