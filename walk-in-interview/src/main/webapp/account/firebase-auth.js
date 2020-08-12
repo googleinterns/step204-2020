@@ -81,6 +81,8 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
+
+        // TODO(issue/100): set the cookie at the server side instead
         setCookie(USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT);
 
         if (authResult.additionalUserInfo.isNewUser) {
@@ -108,6 +110,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
 Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
+    // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
     alert(STRINGS['sign-out-success']);
   }).catch((error) => {
