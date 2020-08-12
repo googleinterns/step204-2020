@@ -126,13 +126,20 @@ Auth.subscribeToUserAuthenticationChanges = () => {
   firebase.auth().onAuthStateChanged((firebaseUser) => {
     // User not signed in.
     if (!firebaseUser) {
-      console.log('User Not Signed In');
-      // Clears the session cookie
-      Auth.postIdTokenToSessionLogout(API['log-out'])
-          .catch((error) => {
-            console.log(error);
-          });
-      return;
+      console.log('User Signed Out');
+
+      if (localStorage.getItem('sessionCookie') != 'true') {
+        // Already signed out and cleared the session cookie, no need operation
+        return;
+      } else {
+        // Clears the session cookie
+        Auth.postIdTokenToSessionLogout(API['log-out'])
+            .catch((error) => {
+              console.log(error);
+            });
+        localStorage.setItem('sessionCookie', 'false');
+        return;
+      }
     }
       
     // User signed in.
@@ -145,7 +152,8 @@ Auth.subscribeToUserAuthenticationChanges = () => {
           // CSRF protection should be taken into account.
           const csrfToken = getCookie('csrfToken');
 
-          if (idToken == localStorage.getItem('idToken') && csrfToken == localStorage.getItem('csrfToken')) {
+          if (idToken == localStorage.getItem('idToken') 
+          && csrfToken == localStorage.getItem('csrfToken')) {
             return;
           }
 
@@ -157,8 +165,8 @@ Auth.subscribeToUserAuthenticationChanges = () => {
             localStorage.setItem('csrfToken', csrfToken);
           }
 
-          return Auth.postIdTokenToSessionLogin(API['log-in'],
-              idToken, csrfToken);
+          Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
+          localStorage.setItem('sessionCookie', 'true');
         })
         .catch((error) => {
           console.log(error);
