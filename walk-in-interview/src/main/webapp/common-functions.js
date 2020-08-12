@@ -103,7 +103,7 @@ function getCookie(cname) {
 }
 
 export {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
-  USER_TYPE_APPLICANT as TYPE_APPLICANT, USER_TYPE_BUSINESS as TYPE_BUSINESS, USER_TYPE_NO_USER as TYPE_NO_USER,
+  USER_TYPE_APPLICANT, USER_TYPE_BUSINESS, USER_TYPE_NO_USER,
   DEFAULT_PAGE_SIZE,
   getRequirementsList, setErrorMessage, renderSelectOptions, 
   setCookie, getCookie};
