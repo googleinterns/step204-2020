@@ -12,7 +12,6 @@ import {setCookie, getCookie,
   USER_TYPE_COOKIE_PARAM, TYPE_NO_USER, TYPE_APPLICANT} from '../common-functions.js';
 import {API} from '../apis.js';
 
-const HOMEPAGE_PATH = '../index.html';
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
   authDomain: 'com-walk-in-interview.firebaseapp.com',
@@ -78,6 +77,8 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
+
+        // TODO(issue/100): set the cookie at the server side instead
         setCookie(USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT);
 
         if (authResult.additionalUserInfo.isNewUser) {
@@ -91,8 +92,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
       signInFailure: (error) => {
         console.error(error.message);
 
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
+        alert(STRINGS['sign-in-failure']);
       }
     },
     signInSuccessUrl: successPath,
@@ -105,11 +105,13 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
 Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
+    // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
     alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
   });
+  Auth.subscribeToUserAuthenticationChanges();
 };
 
 /**
@@ -118,26 +120,53 @@ Auth.signOutCurrentUser = () => {
  * Makes a POST request to clear the session cookie when the user signs out.
  */
 Auth.subscribeToUserAuthenticationChanges = () => {
+  // To make sure it only triggered once when sign in and out
+  var authFlag = true;
+
   firebase.auth().onAuthStateChanged((firebaseUser) => {
-    if (!firebaseUser) {
-      // User not signed in.
-      console.log('User Not Signed In');
-      // Clears the session cookie
-      return Auth.postIdTokenToSessionLogout(API['log-out']);
+    if (authFlag) {
+      authFlag = false;
+
+      if (!firebaseUser) {
+        // User not signed in.
+        console.log('User Not Signed In');
+        // Clears the session cookie
+        Auth.postIdTokenToSessionLogout(API['log-out'])
+            .catch((error) => {
+              console.log(error);
+            });
+        return;
+      }
+        
+      // User signed in.
+      console.log('User Signed In');
+      // Get the user's ID token as it is needed to exchange
+      // for a session cookie.
+      firebaseUser.getIdToken()
+          .then((idToken) => {
+            // Session login endpoint is queried and session cookie is set.
+            // CSRF protection should be taken into account.
+            const csrfToken = getCookie('csrfToken');
+
+            if (idToken == localStorage.getItem('idToken') && csrfToken == localStorage.getItem('csrfToken')) {
+              return;
+            }
+
+            if (idToken != localStorage.getItem('idToken')) {
+              localStorage.setItem('idToken', idToken);
+            }
+
+            if (csrfToken != localStorage.getItem('csrfToken')) {
+              localStorage.setItem('csrfToken', csrfToken);
+            }
+
+            return Auth.postIdTokenToSessionLogin(API['log-in'],
+                idToken, csrfToken);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     }
-      
-    // User signed in.
-    console.log('User Signed In');
-    // Get the user's ID token as it is needed to exchange
-    // for a session cookie.
-    return firebaseUser.getIdToken()
-        .then((idToken) => {
-          // Session login endpoint is queried and session cookie is set.
-          // CSRF protection should be taken into account.
-          const csrfToken = getCookie('csrfToken');
-          return Auth.postIdTokenToSessionLogin(API['log-in'],
-              idToken, csrfToken);
-        });
   });
 };
 

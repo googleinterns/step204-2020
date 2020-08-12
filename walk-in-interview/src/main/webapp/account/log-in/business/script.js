@@ -87,6 +87,7 @@ submitButton.addEventListener('click', (_) => {
         // Enables the button regardless of success or failure
         document.getElementById('submit').disabled = false;
 
+        // TODO(issue/100): set the cookie at the server side instead
         setCookie(USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS);
 
         // Back to home page
@@ -95,10 +96,8 @@ submitButton.addEventListener('click', (_) => {
       .catch((error) => {
         showErrorMessageFromError(error);
         document.getElementById('submit').disabled = false;
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
       });
+  Auth.subscribeToUserAuthenticationChanges();
 });
 
 /**

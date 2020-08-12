@@ -216,5 +216,6 @@ AppStrings['job-details'] = {
  * Strings used in firebase-auth.
  */
 AppStrings['auth'] = {
+  'sign-in-failure': 'Error occur when signing in',
   'sign-out-success': 'Signed Out Successfully',
 };
