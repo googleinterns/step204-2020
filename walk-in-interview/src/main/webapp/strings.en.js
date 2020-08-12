@@ -94,7 +94,7 @@ AppStrings['create-applicant-account'] = {
 };
 
 /**
- * All the strings to be used in the account/create-account/business/index.html.
+ * All the strings to be used in the account/create-account/business
  */
 AppStrings['create-business-account'] = {
   'new-user-info': 'Account is successfully created!',
