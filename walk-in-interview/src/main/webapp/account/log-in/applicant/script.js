@@ -17,7 +17,6 @@ import {setErrorMessage} from '../../../common-functions.js';
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['applicant-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
-const HOMEPAGE_PATH = '../../../index.html';
 
 window.onload = () => {
   renderPageElements();
@@ -25,17 +24,7 @@ window.onload = () => {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
-      .catch((error) => {
-        console.error(error.message);
-        
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ COMMONG_STRINGS['error-message'],
-          /* includesDefault= */false);
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
-      });
+  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];

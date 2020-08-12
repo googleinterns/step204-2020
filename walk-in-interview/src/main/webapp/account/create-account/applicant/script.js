@@ -12,7 +12,6 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-applicant-account'];
@@ -25,17 +24,7 @@ window.onload = () => {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
-      .catch((error) => {
-        console.error(error.message);
-        
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ COMMONG_STRINGS['error-message'],
-          /* includesDefault= */false);
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
-      });
+  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
