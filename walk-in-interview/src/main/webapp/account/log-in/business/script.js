@@ -97,9 +97,6 @@ submitButton.addEventListener('click', (_) => {
       .catch((error) => {
         showErrorMessageFromError(error);
         document.getElementById('submit').disabled = false;
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
       });
 
 });
