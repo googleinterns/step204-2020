@@ -8,7 +8,8 @@
  */
 
 import {AppStrings} from '../strings.en.js';
-import {getCookie} from '../common-functions.js';
+import {setCookie, getCookie,
+  USER_TYPE_COOKIE_PARAM, TYPE_NO_USER} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -97,6 +98,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
 Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
+    setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
     alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);

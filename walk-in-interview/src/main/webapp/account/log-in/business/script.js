@@ -12,7 +12,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {setErrorMessage} from '../../../common-functions.js';
+import {USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS,
+  setCookie, setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
@@ -85,6 +86,8 @@ submitButton.addEventListener('click', (_) => {
       .then(() => {
         // Enables the button regardless of success or failure
         document.getElementById('submit').disabled = false;
+
+        setCookie(USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS);
 
         // Back to home page
         window.location.href = HOMEPAGE_PATH;
