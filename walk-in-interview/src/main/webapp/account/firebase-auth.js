@@ -136,7 +136,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
         // Clears the session cookie
         Auth.postIdTokenToSessionLogout(API['log-out'])
             .catch((error) => {
-              console.error(error);
+              console.log(error);
             });
         return;
       }
@@ -167,7 +167,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
                 idToken, csrfToken);
           })
           .catch((error) => {
-            console.error(error);
+            console.log(error);
           });
     }
   });

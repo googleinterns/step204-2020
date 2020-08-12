@@ -11,6 +11,7 @@ const CurrentLocale = 'en';
  * TODO(issue/22): figure out how to use dynamic imports
  */
 import {AppStrings} from '../../strings.en.js';
+import {Auth} from '/account/firebase-auth.js';
 
 const STRINGS = AppStrings['log-in'];
 const APPLICANT_LOG_IN_PAGE = './applicant/index.html';
@@ -18,6 +19,7 @@ const BUSINESS_LOG_IN_PAGE = './business/index.html';
 const HOMEPAGE_PATH = '../../index.html';
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges();
   renderPageElements();
 };
 
