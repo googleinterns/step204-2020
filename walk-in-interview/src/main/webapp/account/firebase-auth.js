@@ -12,7 +12,6 @@ import {setCookie, getCookie,
   USER_TYPE_COOKIE_PARAM, TYPE_NO_USER, TYPE_APPLICANT} from '../common-functions.js';
 import {API} from '../apis.js';
 
-const HOMEPAGE_PATH = '../index.html';
 const firebaseConfig = {
   apiKey: 'AIzaSyDhpzKNLAMNyEdw6ovQ5sPvnOhXDwhse-o',
   authDomain: 'com-walk-in-interview.firebaseapp.com',
@@ -96,8 +95,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
       signInFailure: (error) => {
         console.error(error.message);
 
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
+        alert(STRINGS['sign-in-failure']);
       }
     },
     signInSuccessUrl: successPath,
