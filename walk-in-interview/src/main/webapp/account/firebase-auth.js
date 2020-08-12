@@ -85,22 +85,22 @@ Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
 
   // Send id token to the backend
   var user = firebase.auth().currentUser;
-  if (user) {
-    // User is signed in.
-    
-    // Get the user's ID token as it is needed to exchange
-    // for a session cookie.
-    return user.getIdToken()
-    .then((idToken) => {
-      // Session login endpoint is queried and session cookie is set.
-      // CSRF protection should be taken into account.
-      const csrfToken = getCookie('csrfToken');
-      return Auth.postIdTokenToSessionLogin(API['create-applicant-account'],
-          idToken, csrfToken);
-    });
-  } else {
+
+  if (!user) {
+    // User not signed in.
     return Promise.resolve("Not Signed In");
   }
+
+  // Get the user's ID token as it is needed to exchange
+  // for a session cookie.
+  return user.getIdToken()
+  .then((idToken) => {
+    // Session login endpoint is queried and session cookie is set.
+    // CSRF protection should be taken into account.
+    const csrfToken = getCookie('csrfToken');
+    return Auth.postIdTokenToSessionLogin(API['create-applicant-account'],
+        idToken, csrfToken);
+  });
 };
 
 /**
@@ -115,22 +115,22 @@ Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
 
   // Send id token to the backend
   var user = firebase.auth().currentUser;
-  if (user) {
-    // User is signed in.
-    
-    // Get the user's ID token as it is needed to exchange
-    // for a session cookie.
-    return user.getIdToken()
-    .then((idToken) => {
-      // Session login endpoint is queried and session cookie is set.
-      // CSRF protection should be taken into account.
-      const csrfToken = getCookie('csrfToken');
-      return Auth.postIdTokenToSessionLogin(API['log-in'],
-          idToken, csrfToken);
-    });
-  } else {
+
+  if (!user) {
+    // User not signed in.
     return Promise.resolve("Not Signed In");
   }
+    
+  // Get the user's ID token as it is needed to exchange
+  // for a session cookie.
+  return user.getIdToken()
+  .then((idToken) => {
+    // Session login endpoint is queried and session cookie is set.
+    // CSRF protection should be taken into account.
+    const csrfToken = getCookie('csrfToken');
+    return Auth.postIdTokenToSessionLogin(API['log-in'],
+        idToken, csrfToken);
+  });
 };
 
 /**
@@ -154,6 +154,7 @@ Auth.addPhoneAuthUI = (elementId, successPath, newUserInfo) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
         if (authResult.additionalUserInfo.isNewUser) {
+          // Informs user
           alert(newUserInfo);
         }
 

@@ -27,10 +27,11 @@ window.onload = () => {
 function renderPageElements() {
   Auth.createApplicantAccount('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
       .catch((error) => {
+        console.error(error.message);
+        
         setErrorMessage(/* errorMessageElementId= */'error-message',
           /* msg= */ COMMONG_STRINGS['error-message'],
           /* includesDefault= */false);
-        console.error(error.message);
 
         // Back to home page
         window.location.href = HOMEPAGE_PATH;
