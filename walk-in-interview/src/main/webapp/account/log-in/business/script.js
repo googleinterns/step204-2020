@@ -82,7 +82,6 @@ submitButton.addEventListener('click', (_) => {
       /* msg= */ '',
       /* includesDefault= */false);
 
-  Auth.subscribeToUserAuthenticationChanges();
   Auth.signIntoBusinessAccount(account, password)
       .then(() => {
         // Enables the button regardless of success or failure
@@ -98,7 +97,7 @@ submitButton.addEventListener('click', (_) => {
         showErrorMessageFromError(error);
         document.getElementById('submit').disabled = false;
       });
-
+  Auth.subscribeToUserAuthenticationChanges();
 });
 
 /**
