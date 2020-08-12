@@ -83,6 +83,7 @@ AppStrings['create-account'] = {
   'back': 'Back',
   'submit': 'Submit',
   'error-message': 'Error occur. Please try again.',
+  'create-account-error-message': 'Some error occur when creating the account.',
 };
 
 /**
@@ -90,6 +91,14 @@ AppStrings['create-account'] = {
  */
 AppStrings['create-applicant-account'] = {
   'new-user-info': 'Account is successfully created!',
+};
+
+/**
+ * All the strings to be used in the account/create-account/business/index.html.
+ */
+AppStrings['create-business-account'] = {
+  'new-user-info': 'Account is successfully created!',
+  'name': 'Company Name',
 };
 
 /**

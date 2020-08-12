@@ -45,10 +45,7 @@ const Auth = {};
  * @param {String} password The password for the new business account.
  */
 Auth.createBusinessAccount = (email, password) => {
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-      .catch((error) => {
-        console.error(error);
-      });
+  return firebase.auth().createUserWithEmailAndPassword(email, password);
 };
 
 /**
