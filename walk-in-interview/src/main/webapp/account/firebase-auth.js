@@ -47,7 +47,6 @@ Auth.createBusinessAccount = (email, password) => {
       .catch((error) => {
         console.error(error);
       });
-  checkCurrentUser();
 };
 
 /**
@@ -55,82 +54,9 @@ Auth.createBusinessAccount = (email, password) => {
  *
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
- * @return {*} Returns the function that makes the POST request.
  */
 Auth.signIntoBusinessAccount = (email, password) => {
-  return firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(({user}) => {
-        // Get the user's ID token as it is needed to exchange
-        // for a session cookie.
-        return user.getIdToken()
-            .then((idToken) => {
-              // Session login endpoint is queried and session cookie is set.
-              // CSRF protection should be taken into account.
-              const csrfToken = getCookie('csrfToken');
-              return Auth.postIdTokenToSessionLogin(API['log-in'],
-                  idToken, csrfToken);
-            });
-      });
-};
-
-/**
- * This will create a new applicant account.
- *
- * @param {String} elementId The div element to add the UI.
- * @param {String} successPath The url for redirect on login success.
- * @param {String} newUserInfo The message to be displayed if the it is a new user.
- */
-Auth.createApplicantAccount = (elementId, successPath, newUserInfo) => {
-  Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
-
-  // Send id token to the backend
-  var user = firebase.auth().currentUser;
-
-  if (!user) {
-    // User not signed in.
-    return Promise.resolve("Not Signed In");
-  }
-
-  // Get the user's ID token as it is needed to exchange
-  // for a session cookie.
-  return user.getIdToken()
-  .then((idToken) => {
-    // Session login endpoint is queried and session cookie is set.
-    // CSRF protection should be taken into account.
-    const csrfToken = getCookie('csrfToken');
-    return Auth.postIdTokenToSessionLogin(API['create-applicant-account'],
-        idToken, csrfToken);
-  });
-};
-
-/**
- * This will sign into an existing applicant account.
- *
- * @param {String} elementId The div element to add the UI.
- * @param {String} successPath The url for redirect on login success.
- * @param {String} newUserInfo The message to be displayed if the it is a new user.
- */
-Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
-  Auth.addPhoneAuthUI(elementId, successPath, newUserInfo);
-
-  // Send id token to the backend
-  var user = firebase.auth().currentUser;
-
-  if (!user) {
-    // User not signed in.
-    return Promise.resolve("Not Signed In");
-  }
-    
-  // Get the user's ID token as it is needed to exchange
-  // for a session cookie.
-  return user.getIdToken()
-  .then((idToken) => {
-    // Session login endpoint is queried and session cookie is set.
-    // CSRF protection should be taken into account.
-    const csrfToken = getCookie('csrfToken');
-    return Auth.postIdTokenToSessionLogin(API['log-in'],
-        idToken, csrfToken);
-  });
+  return firebase.auth().signInWithEmailAndPassword(email, password);
 };
 
 /**
@@ -141,7 +67,7 @@ Auth.signIntoApplicantAccount = (elementId, successPath, newUserInfo) => {
  * @param {String} successPath The url for redirect on login success.
  * @param {String} newUserInfo The message to be displayed if the it is a new user.
  */
-Auth.addPhoneAuthUI = (elementId, successPath, newUserInfo) => {
+Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -167,13 +93,11 @@ Auth.addPhoneAuthUI = (elementId, successPath, newUserInfo) => {
 
 /**
  * Signs out the current user.
- *
- * @param {String} elementId The div in which to show the signed out status.
  */
-Auth.signOutCurrentUser = (elementId) => {
+Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
-    document.getElementById(elementId).innerText = STRINGS['sign-out-success'];
+    alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
   });
@@ -181,14 +105,30 @@ Auth.signOutCurrentUser = (elementId) => {
 
 /**
  * Checks the user sign in status.
+ * Makes a POST request to create a session cookie when the user signs in.
+ * Makes a POST request to clear the session cookie when the user signs out.
  */
-Auth.checkCurrentUser = () => {
+Auth.subscribeToUserAuthenticationChanges = () => {
   firebase.auth().onAuthStateChanged((firebaseUser) => {
-    if (firebaseUser) {
-      console.log('signed in', firebaseUser);
-    } else {
-      console.log('not signed in');
+    if (!firebaseUser) {
+      // User not signed in.
+      console.log('User Not Signed In');
+      // Clears the session cookie
+      return Auth.postIdTokenToSessionLogout(API['log-out']);
     }
+      
+    // User signed in.
+    console.log('User Signed In');
+    // Get the user's ID token as it is needed to exchange
+    // for a session cookie.
+    return firebaseUser.getIdToken()
+        .then((idToken) => {
+          // Session login endpoint is queried and session cookie is set.
+          // CSRF protection should be taken into account.
+          const csrfToken = getCookie('csrfToken');
+          return Auth.postIdTokenToSessionLogin(API['log-in'],
+              idToken, csrfToken);
+        });
   });
 };
 
@@ -198,7 +138,7 @@ Auth.checkCurrentUser = () => {
  * @param {String} url Login endpoint.
  * @param {String} idToken Id token.
  * @param {String} csrfToken CSRF token.
- * @return {*} Makes POST request.
+ * @return {Promise} Makes POST request.
  */
 Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   const params = new URLSearchParams();
@@ -208,6 +148,19 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   return fetch(url, {
     method: 'POST',
     body: params,
+    credentials: 'include',
+  });
+};
+
+/**
+ * Makes a POST request to session log out endpoint.
+ *
+ * @param {String} url Login endpoint.
+ * @return {Promise} Makes POST request.
+ */
+Auth.postIdTokenToSessionLogout = (url) => {
+  return fetch(url, {
+    method: 'POST',
     credentials: 'include',
   });
 };

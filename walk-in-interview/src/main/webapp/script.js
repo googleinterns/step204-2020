@@ -15,6 +15,7 @@ import {AppStrings} from './strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
   getRequirementsList, setErrorMessage} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
+import {Auth} from '/account/firebase-auth.js';
 
 const STRINGS = AppStrings['homepage'];
 const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
@@ -60,6 +61,12 @@ function renderHomepageElements() {
   loginButton.innerText = STRINGS['log-in'];
   loginButton.addEventListener('click', (_) => {
     window.location.href = LOG_IN_PAGE_PATH;
+  });
+
+  const logoutButton = document.getElementById('log-out');
+  logoutButton.innerText = STRINGS['log-out'];
+  logoutButton.addEventListener('click', (_) => {
+    Auth.signOutCurrentUser();
   });
 
   const showJobPostsButton = document.getElementById('show-job-posts-made');

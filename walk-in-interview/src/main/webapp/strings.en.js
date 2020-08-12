@@ -24,6 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
+  'log-out': 'Log Out',
   'show-job-posts-made': 'Show Job Posts Made',
   'interested-job-list': 'Interested Jobs',
   'sort-by-title': 'Sort By',

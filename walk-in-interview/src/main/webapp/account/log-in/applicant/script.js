@@ -25,7 +25,7 @@ window.onload = () => {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.signIntoApplicantAccount('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
+  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
       .catch((error) => {
         console.error(error.message);
         
