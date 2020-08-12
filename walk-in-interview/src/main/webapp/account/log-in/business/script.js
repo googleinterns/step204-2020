@@ -87,6 +87,8 @@ submitButton.addEventListener('click', (_) => {
         // Enables the button regardless of success or failure
         document.getElementById('submit').disabled = false;
 
+        Auth.subscribeToUserAuthenticationChanges();
+
         // TODO(issue/100): set the cookie at the server side instead
         setCookie(USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS);
 

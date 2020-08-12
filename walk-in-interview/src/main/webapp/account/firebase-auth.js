@@ -107,6 +107,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
  */
 Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
+    Auth.subscribeToUserAuthenticationChanges();
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
@@ -122,26 +123,52 @@ Auth.signOutCurrentUser = () => {
  * Makes a POST request to clear the session cookie when the user signs out.
  */
 Auth.subscribeToUserAuthenticationChanges = () => {
+  // To make sure it only triggered once when sign in and out
+  var authFlag = true;
+
   firebase.auth().onAuthStateChanged((firebaseUser) => {
-    if (!firebaseUser) {
-      // User not signed in.
-      console.log('User Not Signed In');
-      // Clears the session cookie
-      return Auth.postIdTokenToSessionLogout(API['log-out']);
+    if (authFlag) {
+      authFlag = false;
+
+      if (!firebaseUser) {
+        // User not signed in.
+        console.log('User Not Signed In');
+        // Clears the session cookie
+        Auth.postIdTokenToSessionLogout(API['log-out'])
+            .catch((error) => {
+              console.error(error);
+            });
+      }
+        
+      // User signed in.
+      console.log('User Signed In');
+      // Get the user's ID token as it is needed to exchange
+      // for a session cookie.
+      firebaseUser.getIdToken()
+          .then((idToken) => {
+            // Session login endpoint is queried and session cookie is set.
+            // CSRF protection should be taken into account.
+            const csrfToken = getCookie('csrfToken');
+
+            if (idToken == localStorage.getItem('idToken') && csrfToken == localStorage.getItem('csrfToken')) {
+              continue;
+            }
+
+            if (idToken != localStorage.getItem('idToken')) {
+              localStorage.setItem('idToken', idToken);
+            }
+
+            if (csrfToken != localStorage.getItem('csrfToken')) {
+              localStorage.setItem('csrfToken', csrfToken);
+            }
+
+            return Auth.postIdTokenToSessionLogin(API['log-in'],
+                idToken, csrfToken);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
     }
-      
-    // User signed in.
-    console.log('User Signed In');
-    // Get the user's ID token as it is needed to exchange
-    // for a session cookie.
-    return firebaseUser.getIdToken()
-        .then((idToken) => {
-          // Session login endpoint is queried and session cookie is set.
-          // CSRF protection should be taken into account.
-          const csrfToken = getCookie('csrfToken');
-          return Auth.postIdTokenToSessionLogin(API['log-in'],
-              idToken, csrfToken);
-        });
   });
 };
 
