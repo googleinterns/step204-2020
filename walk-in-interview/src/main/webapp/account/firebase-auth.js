@@ -9,7 +9,7 @@
 
 import {AppStrings} from '../strings.en.js';
 import {setCookie, getCookie,
-  USER_TYPE_COOKIE_PARAM, TYPE_NO_USER} from '../common-functions.js';
+  USER_TYPE_COOKIE_PARAM, TYPE_NO_USER, TYPE_APPLICANT} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -80,6 +80,8 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
+        setCookie(USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT);
+
         if (authResult.additionalUserInfo.isNewUser) {
           // Informs user
           alert(newUserInfo);
