@@ -14,9 +14,9 @@ import {AppStrings} from './strings.en.js';
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
 const USER_TYPE_COOKIE_PARAM = 'userType';
-const TYPE_APPLICANT = 'applicant';
-const TYPE_BUSINESS = 'business';
-const TYPE_NO_USER = '';
+const USER_TYPE_APPLICANT = 'applicant';
+const USER_TYPE_BUSINESS = 'business';
+const USER_TYPE_NO_USER = '';
 const DEFAULT_PAGE_SIZE = 20;
 const WHOLE_DAY_MILLISECONDS = 24*60*60*1000;
 
@@ -103,7 +103,7 @@ function getCookie(cname) {
 }
 
 export {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
-  TYPE_APPLICANT, TYPE_BUSINESS, TYPE_NO_USER,
+  USER_TYPE_APPLICANT as TYPE_APPLICANT, USER_TYPE_BUSINESS as TYPE_BUSINESS, USER_TYPE_NO_USER as TYPE_NO_USER,
   DEFAULT_PAGE_SIZE,
   getRequirementsList, setErrorMessage, renderSelectOptions, 
   setCookie, getCookie};

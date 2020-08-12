@@ -9,7 +9,7 @@
 
 import {AppStrings} from '../strings.en.js';
 import {setCookie, getCookie,
-  USER_TYPE_COOKIE_PARAM, TYPE_NO_USER, TYPE_APPLICANT} from '../common-functions.js';
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER, USER_TYPE_APPLICANT} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -66,7 +66,7 @@ Auth.signIntoBusinessAccount = (email, password) => {
  *
  * @param {String} elementId The div element to add the UI.
  * @param {String} successPath The url for redirect on login success.
- * @param {String} newUserInfo The message to be displayed if the it is a new user.
+ * @param {String} newUserInfo The message to be displayed if it is a new user.
  */
 Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
   ui.start(`#${elementId}`, {
@@ -82,7 +82,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // for now, this will only redirect to homepage for exisiting users
 
         // TODO(issue/100): set the cookie at the server side instead
-        setCookie(USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT);
+        setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
 
         if (authResult.additionalUserInfo.isNewUser) {
           // Informs user
@@ -109,7 +109,7 @@ Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
-    setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
+    setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER);
     alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
