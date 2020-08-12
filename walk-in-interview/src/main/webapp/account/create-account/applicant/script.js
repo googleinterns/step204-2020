@@ -12,7 +12,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {setErrorMessage} from '../../../common-functions.js';
+import {USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT,
+  setCookie, setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-applicant-account'];
@@ -26,6 +27,9 @@ window.onload = () => {
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
   Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info'])
+      .then(() => {
+        setCookie(USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT);
+      })
       .catch((error) => {
         console.error(error.message);
         
