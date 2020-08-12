@@ -106,8 +106,8 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
  * Signs out the current user.
  */
 Auth.signOutCurrentUser = () => {
+  Auth.subscribeToUserAuthenticationChanges();
   firebase.auth().signOut().then(() => {
-    Auth.subscribeToUserAuthenticationChanges();
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
@@ -138,6 +138,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
             .catch((error) => {
               console.error(error);
             });
+        return;
       }
         
       // User signed in.
@@ -151,7 +152,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
             const csrfToken = getCookie('csrfToken');
 
             if (idToken == localStorage.getItem('idToken') && csrfToken == localStorage.getItem('csrfToken')) {
-              continue;
+              return;
             }
 
             if (idToken != localStorage.getItem('idToken')) {

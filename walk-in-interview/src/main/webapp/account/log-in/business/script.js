@@ -82,12 +82,11 @@ submitButton.addEventListener('click', (_) => {
       /* msg= */ '',
       /* includesDefault= */false);
 
+  Auth.subscribeToUserAuthenticationChanges();
   Auth.signIntoBusinessAccount(account, password)
       .then(() => {
         // Enables the button regardless of success or failure
         document.getElementById('submit').disabled = false;
-
-        Auth.subscribeToUserAuthenticationChanges();
 
         // TODO(issue/100): set the cookie at the server side instead
         setCookie(USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS);
@@ -102,6 +101,7 @@ submitButton.addEventListener('click', (_) => {
         // Back to home page
         window.location.href = HOMEPAGE_PATH;
       });
+
 });
 
 /**
