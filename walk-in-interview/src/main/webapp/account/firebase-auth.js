@@ -144,6 +144,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
           .catch((error) => {
             console.log(error);
           });
+      return;
     }
       
     // User signed in.
