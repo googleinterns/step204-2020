@@ -35,8 +35,6 @@ const ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 const STRINGS = AppStrings['auth'];
 
-const HOMEPAGE_PATH = '../../index.html';
-
 const Auth = {};
 
 /**
@@ -123,8 +121,10 @@ Auth.signOutCurrentUser = () => {
  * Checks the user sign in status.
  * Makes a POST request to create a session cookie when the user signs in.
  * Makes a POST request to clear the session cookie when the user signs out.
+ * 
+ * @param {String} redirectUrl Page to be directed to after sign in successfully.
  */
-Auth.subscribeToUserAuthenticationChanges = () => {
+Auth.subscribeToUserAuthenticationChanges = (redirectUrl) => {
   firebase.auth().onAuthStateChanged(async (firebaseUser) => {
     // User not signed in.
     if (!firebaseUser) {
@@ -173,8 +173,8 @@ Auth.subscribeToUserAuthenticationChanges = () => {
             localStorage.setItem('sessionCookie', 'true');
             console.log('Successfully send the request to create session cookie');
 
-            // Back to home page
-            window.location.href = HOMEPAGE_PATH;
+            // Direct to target page
+            window.location.href = redirectUrl;
           } catch(error) {
             console.log(error);
           }
