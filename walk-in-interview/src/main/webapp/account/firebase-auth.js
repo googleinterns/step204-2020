@@ -135,16 +135,20 @@ Auth.subscribeToUserAuthenticationChanges = () => {
       }
 
       console.log("Successfully signed out");
-      // Clears the session cookie
-      Auth.postIdTokenToSessionLogout(API['log-out'])
-          .then(() => {
-            localStorage.setItem('sessionCookie', 'false');
-            console.log("Successfully clears the session cookie");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      return;
+      try {
+        // Clears the session cookie
+        let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
+        
+        if (!response.ok) {
+          throw Error(`HTTP Error: ${response.statusCode}`);
+        }
+
+        localStorage.setItem('sessionCookie', 'false');
+        console.log("Successfully clears the session cookie");
+        return;
+      } catch (error) {
+        console.log(error);
+      }
     }
       
     // User signed in.
@@ -157,14 +161,18 @@ Auth.subscribeToUserAuthenticationChanges = () => {
           // CSRF protection should be taken into account.
           const csrfToken = getCookie('csrfToken');
 
-          Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken)
-              .then(() => {
-                localStorage.setItem('sessionCookie', 'true');
-                console.log("Successfully send the request to create session cookie");
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+          try {
+            let response = await Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
+
+            if (!response.ok) {
+              throw Error(`HTTP Error: ${response.statusCode}`);
+            }
+
+            localStorage.setItem('sessionCookie', 'true');
+            console.log('Successfully send the request to create session cookie');
+          } catch {
+            console.log(error);
+          }
         })
         .catch((error) => {
           console.log(error);
