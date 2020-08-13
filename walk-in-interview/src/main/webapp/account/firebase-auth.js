@@ -35,6 +35,8 @@ const ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 const STRINGS = AppStrings['auth'];
 
+const HOMEPAGE_PATH = '../../index.html';
+
 const Auth = {};
 
 /**
@@ -155,7 +157,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
     console.log('User Signed In');
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    firebaseUser.getIdToken()
+    await firebaseUser.getIdToken()
         .then(async (idToken) => {
           // Session login endpoint is queried and session cookie is set.
           // CSRF protection should be taken into account.
@@ -170,7 +172,10 @@ Auth.subscribeToUserAuthenticationChanges = () => {
 
             localStorage.setItem('sessionCookie', 'true');
             console.log('Successfully send the request to create session cookie');
-          } catch {
+
+            // Back to home page
+            window.location.href = HOMEPAGE_PATH;
+          } catch(error) {
             console.log(error);
           }
         })

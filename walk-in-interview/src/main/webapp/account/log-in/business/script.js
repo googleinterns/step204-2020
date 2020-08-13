@@ -18,7 +18,6 @@ import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
-const HOMEPAGE_PATH = '../../../index.html';
 
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const USER_DISABLED_ERROR_CODE = 'auth/user-disabled';
@@ -91,9 +90,6 @@ submitButton.addEventListener('click', (_) => {
 
         // TODO(issue/100): set the cookie at the server side instead
         setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
       })
       .catch((error) => {
         showErrorMessageFromError(error);
