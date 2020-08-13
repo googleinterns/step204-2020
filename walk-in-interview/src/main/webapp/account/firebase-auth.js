@@ -130,14 +130,17 @@ Auth.subscribeToUserAuthenticationChanges = () => {
 
       if (localStorage.getItem('sessionCookie') != 'true') {
         // Already signed out and cleared the session cookie, no need operation
+        console.log("Already signed out");
         return;
       } else {
+        console.log("Successfully signed out");
         // Clears the session cookie
         Auth.postIdTokenToSessionLogout(API['log-out'])
             .catch((error) => {
               console.log(error);
             });
         localStorage.setItem('sessionCookie', 'false');
+        console.log("Successfully clears the session cookie");
         return;
       }
     }
@@ -167,6 +170,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
 
           Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
           localStorage.setItem('sessionCookie', 'true');
+          console.log("Successfully send the request to create session cookie");
         })
         .catch((error) => {
           console.log(error);
