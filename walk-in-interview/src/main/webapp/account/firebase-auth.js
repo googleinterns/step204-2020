@@ -156,7 +156,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
     firebaseUser.getIdToken()
-        .then((idToken) => {
+        .then(async (idToken) => {
           // Session login endpoint is queried and session cookie is set.
           // CSRF protection should be taken into account.
           const csrfToken = getCookie('csrfToken');
