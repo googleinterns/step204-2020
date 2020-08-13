@@ -132,17 +132,18 @@ Auth.subscribeToUserAuthenticationChanges = () => {
         // Already signed out and cleared the session cookie, no need operation
         console.log("Already signed out");
         return;
-      } else {
-        console.log("Successfully signed out");
-        // Clears the session cookie
-        Auth.postIdTokenToSessionLogout(API['log-out'])
-            .catch((error) => {
-              console.log(error);
-            });
-        localStorage.setItem('sessionCookie', 'false');
-        console.log("Successfully clears the session cookie");
-        return;
       }
+
+      console.log("Successfully signed out");
+      // Clears the session cookie
+      Auth.postIdTokenToSessionLogout(API['log-out'])
+          .then(() => {
+            localStorage.setItem('sessionCookie', 'false');
+            console.log("Successfully clears the session cookie");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     }
       
     // User signed in.
@@ -155,22 +156,14 @@ Auth.subscribeToUserAuthenticationChanges = () => {
           // CSRF protection should be taken into account.
           const csrfToken = getCookie('csrfToken');
 
-          if (idToken == localStorage.getItem('idToken') 
-          && csrfToken == localStorage.getItem('csrfToken')) {
-            return;
-          }
-
-          if (idToken != localStorage.getItem('idToken')) {
-            localStorage.setItem('idToken', idToken);
-          }
-
-          if (csrfToken != localStorage.getItem('csrfToken')) {
-            localStorage.setItem('csrfToken', csrfToken);
-          }
-
-          Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
-          localStorage.setItem('sessionCookie', 'true');
-          console.log("Successfully send the request to create session cookie");
+          Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken)
+              .then(() => {
+                localStorage.setItem('sessionCookie', 'true');
+                console.log("Successfully send the request to create session cookie");
+              })
+              .catch((error) => {
+                console.log(error);
+              });
         })
         .catch((error) => {
           console.log(error);
