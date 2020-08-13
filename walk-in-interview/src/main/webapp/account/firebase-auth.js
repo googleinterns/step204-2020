@@ -123,7 +123,7 @@ Auth.signOutCurrentUser = () => {
  * Makes a POST request to clear the session cookie when the user signs out.
  */
 Auth.subscribeToUserAuthenticationChanges = () => {
-  firebase.auth().onAuthStateChanged((firebaseUser) => {
+  firebase.auth().onAuthStateChanged(async (firebaseUser) => {
     // User not signed in.
     if (!firebaseUser) {
       console.log('User Signed Out');
@@ -138,7 +138,7 @@ Auth.subscribeToUserAuthenticationChanges = () => {
       try {
         // Clears the session cookie
         let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
-        
+
         if (!response.ok) {
           throw Error(`HTTP Error: ${response.statusCode}`);
         }
