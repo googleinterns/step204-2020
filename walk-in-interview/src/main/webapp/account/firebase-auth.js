@@ -202,6 +202,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
 
   return fetch(url, {
     method: 'POST',
+    header: {"Set-Cookie": "Secure;SameSite=None"},
     body: params,
     credentials: 'include',
   });
@@ -216,6 +217,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
 Auth.postIdTokenToSessionLogout = (url) => {
   return fetch(url, {
     method: 'POST',
+    header: {"Set-Cookie": "Secure;SameSite=None"},
     credentials: 'include',
   });
 };
