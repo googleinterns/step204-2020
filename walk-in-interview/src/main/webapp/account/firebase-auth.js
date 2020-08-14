@@ -158,7 +158,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    await Auth.createSessionCookie(onLogIn, onDefault);
+    await Auth.createSessionCookie(firebaseUser, onLogIn, onDefault);
 
     console.log('Successfully signed in');
   });
@@ -195,10 +195,11 @@ Auth.clearSessionCookie = async (onLogOut, onDefault) => {
 /**
  * Gets the user's ID token as it is needed to exchange for a session cookie.
  * 
+ * @param {user} firebaseUser Current user.
  * @param {Function} onLogIn UI related function to be executed after successfully signed in.
  * @param {Function} onDefault UI related function to be executed on default.
  */
-Auth.createSessionCookie = (onLogIn, onDefault) => {
+Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
   return firebaseUser.getIdToken()
       .then(async (idToken) => {
         // Session login endpoint is queried and session cookie is set.
