@@ -25,8 +25,9 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// TODO(issue/21): get the language from the browser
+// TODO(issue/21): get the language and country from the browser
 const CurrentLocale = 'en';
+const CurrentCountry = 'SG';
 
 firebase.auth().languageCode = CurrentLocale;
 
@@ -73,7 +74,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
     signInOptions: [
       {
         provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        defaultCountry: 'SG',
+        defaultCountry: CurrentCountry,
       },
     ],
     callbacks: {
@@ -82,7 +83,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // for now, this will only redirect to homepage for exisiting users
 
         // TODO(issue/100): set the cookie at the server side instead
-        setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
+        // setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
 
         if (authResult.additionalUserInfo.isNewUser) {
           // Informs user
