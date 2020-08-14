@@ -9,7 +9,7 @@
 
 import {AppStrings} from '../strings.en.js';
 import {setCookie, getCookie,
-  USER_TYPE_COOKIE_PARAM, TYPE_NO_USER, TYPE_APPLICANT} from '../common-functions.js';
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER, USER_TYPE_APPLICANT} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -63,7 +63,7 @@ Auth.signIntoBusinessAccount = (email, password) => {
  *
  * @param {String} elementId The div element to add the UI.
  * @param {String} successPath The url for redirect on login success.
- * @param {String} newUserInfo The message to be displayed if the it is a new user.
+ * @param {String} newUserInfo The message to be displayed if it is a new user.
  */
 Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
   ui.start(`#${elementId}`, {
@@ -79,7 +79,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // for now, this will only redirect to homepage for exisiting users
 
         // TODO(issue/100): set the cookie at the server side instead
-        setCookie(USER_TYPE_COOKIE_PARAM, TYPE_APPLICANT);
+        setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
 
         if (authResult.additionalUserInfo.isNewUser) {
           // Informs user
@@ -106,7 +106,7 @@ Auth.signOutCurrentUser = () => {
   firebase.auth().signOut().then(() => {
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
-    setCookie(USER_TYPE_COOKIE_PARAM, TYPE_NO_USER);
+    setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER);
     alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
@@ -120,55 +120,84 @@ Auth.signOutCurrentUser = () => {
  * Makes a POST request to clear the session cookie when the user signs out.
  */
 Auth.subscribeToUserAuthenticationChanges = () => {
-  // To make sure it only triggered once when sign in and out
-  var authFlag = true;
-
-  firebase.auth().onAuthStateChanged((firebaseUser) => {
-    if (authFlag) {
-      authFlag = false;
-
-      if (!firebaseUser) {
+  return new Promise((resolve, reject) => {
+    try {
+      firebase.auth().onAuthStateChanged(async (firebaseUser) => {
         // User not signed in.
-        console.log('User Not Signed In');
-        // Clears the session cookie
-        Auth.postIdTokenToSessionLogout(API['log-out'])
+        if (!firebaseUser) {
+          console.log('User Signed Out');
+    
+          if (localStorage.getItem('sessionCookie') != 'true') {
+            // Already signed out and cleared the session cookie, no need operation
+            console.log("Already signed out");
+            return resolve("Already signed out");
+          }
+    
+          console.log("Successfully signed out");
+          try {
+            // Clears the session cookie
+            let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
+    
+            if (!response.ok) {
+              throw new Error(`HTTP Error: ${response.statusCode}`);
+            }
+    
+            localStorage.setItem('sessionCookie', 'false');
+            console.log("Successfully clears the session cookie");
+            return resolve("Successfully clears the session cookie");
+          } catch (error) {
+            console.log(error);
+            return reject("fail clearing session cookie");
+          }
+        }
+          
+        // User signed in.
+        console.log('User Signed In');
+        // Get the user's ID token as it is needed to exchange
+        // for a session cookie.
+        await firebaseUser.getIdToken()
+            .then(async (idToken) => {
+              // Session login endpoint is queried and session cookie is set.
+              // CSRF protection should be taken into account.
+              const csrfToken = getCookie('csrfToken');
+    
+              try {
+                let response = await Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
+    
+                if (!response.ok) {
+                  throw new Error(`HTTP Error: ${response.statusCode}`);
+                }
+    
+                localStorage.setItem('sessionCookie', 'true');
+                console.log('Successfully send the request to create session cookie');
+              } catch(error) {
+                console.log(error);
+              }
+            })
             .catch((error) => {
               console.log(error);
             });
-        return;
-      }
-        
-      // User signed in.
-      console.log('User Signed In');
-      // Get the user's ID token as it is needed to exchange
-      // for a session cookie.
-      firebaseUser.getIdToken()
-          .then((idToken) => {
-            // Session login endpoint is queried and session cookie is set.
-            // CSRF protection should be taken into account.
-            const csrfToken = getCookie('csrfToken');
-
-            if (idToken == localStorage.getItem('idToken') && csrfToken == localStorage.getItem('csrfToken')) {
-              return;
-            }
-
-            if (idToken != localStorage.getItem('idToken')) {
-              localStorage.setItem('idToken', idToken);
-            }
-
-            if (csrfToken != localStorage.getItem('csrfToken')) {
-              localStorage.setItem('csrfToken', csrfToken);
-            }
-
-            return Auth.postIdTokenToSessionLogin(API['log-in'],
-                idToken, csrfToken);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        return resolve("Successfully creates the session cookie");
+      });
+    } catch(error) {
+      console.log(error);
+      return reject("fails to create/clear the session cookie");
     }
   });
 };
+
+/**
+ * Checks the current user status.
+ */
+Auth.checkCurrentUser = () => {
+  firebase.auth().onAuthStateChanged((firebaseUser) => {
+    if (firebaseUser) {
+      console.log("Logged in");
+    } else {
+      console.log("Logged out");
+    }
+  });
+}
 
 /**
  * Makes a POST request to session log in endpoint.
@@ -185,6 +214,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
 
   return fetch(url, {
     method: 'POST',
+    header: {"Set-Cookie": "Secure;SameSite=None"},
     body: params,
     credentials: 'include',
   });
@@ -199,6 +229,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
 Auth.postIdTokenToSessionLogout = (url) => {
   return fetch(url, {
     method: 'POST',
+    header: {"Set-Cookie": "Secure;SameSite=None"},
     credentials: 'include',
   });
 };

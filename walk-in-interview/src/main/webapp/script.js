@@ -37,7 +37,7 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges();
+  Auth.checkCurrentUser();
   renderHomepageElements();
 };
 

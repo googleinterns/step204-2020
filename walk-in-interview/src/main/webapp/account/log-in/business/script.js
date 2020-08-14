@@ -12,7 +12,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS,
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
@@ -62,7 +62,7 @@ backButton.addEventListener('click', (_) => {
 });
 
 const submitButton = document.getElementById('submit');
-submitButton.addEventListener('click', (_) => {
+submitButton.addEventListener('click', async (_) => {
   // Disables the button to avoid accidental double click
   document.getElementById('submit').disabled = true;
 
@@ -82,22 +82,29 @@ submitButton.addEventListener('click', (_) => {
       /* msg= */ '',
       /* includesDefault= */false);
 
-  Auth.signIntoBusinessAccount(account, password)
-      .then(() => {
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
-
-        // TODO(issue/100): set the cookie at the server side instead
-        setCookie(USER_TYPE_COOKIE_PARAM, TYPE_BUSINESS);
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
-      })
+  await Auth.signIntoBusinessAccount(account, password)
       .catch((error) => {
         showErrorMessageFromError(error);
-        document.getElementById('submit').disabled = false;
       });
-  Auth.subscribeToUserAuthenticationChanges();
+
+  // Enables the button regardless of success or failure
+  document.getElementById('submit').disabled = false;
+
+  let response = await Auth.subscribeToUserAuthenticationChanges()
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMONG_STRINGS['error-message'],
+          /* includesDefault= */false);
+      });
+
+  console.log(response);
+
+  if (response === "Successfully creates the session cookie") {
+    // TODO(issue/100): set the cookie at the server side instead
+    setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+    window.location.href = HOMEPAGE_PATH;
+  }
 });
 
 /**
