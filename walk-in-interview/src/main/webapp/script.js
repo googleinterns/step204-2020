@@ -37,9 +37,21 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
-  Auth.checkCurrentUser();
+  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
   renderHomepageElements();
 };
+
+function onLogIn() {
+
+}
+
+function onLogOut() {
+  
+}
+
+function onDefault() {
+  
+}
 
 /** Adds all the titles to the fields on this page. */
 function renderHomepageElements() {

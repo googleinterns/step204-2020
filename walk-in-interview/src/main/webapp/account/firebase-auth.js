@@ -82,9 +82,6 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
 
-        // TODO(issue/100): set the cookie at the server side instead
-        // setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
-
         if (authResult.additionalUserInfo.isNewUser) {
           // Informs user
           alert(newUserInfo);
@@ -115,7 +112,6 @@ Auth.signOutCurrentUser = () => {
   }).catch((error) => {
     console.error(error);
   });
-  Auth.subscribeToUserAuthenticationChanges();
 };
 
 /**
