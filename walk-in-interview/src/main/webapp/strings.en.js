@@ -208,5 +208,7 @@ AppStrings['job-details'] = {
  */
 AppStrings['auth'] = {
   'sign-in-failure': 'Error occur when signing in',
+  'sign-in-success': 'Signed In Successfully',
   'sign-out-success': 'Signed Out Successfully',
+  'sign-out-failure': 'Error occur when signing out',
 };

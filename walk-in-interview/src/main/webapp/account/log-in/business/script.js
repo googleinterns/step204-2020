@@ -30,6 +30,9 @@ window.onload = () => {
   renderPageElements();
 };
 
+// TODO(issue/101): Display button according to log in status;
+// i.e. implement onLogIn, onLogOut, onDefault
+
 /**
  * What to do after the user signed in and the session cookie is created.
  */

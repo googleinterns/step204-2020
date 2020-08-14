@@ -41,6 +41,9 @@ window.onload = () => {
   renderHomepageElements();
 };
 
+// TODO(issue/101): Display button according to log in status;
+// i.e. implement onLogIn, onLogOut, onDefault
+
 function onLogIn() {
 
 }
