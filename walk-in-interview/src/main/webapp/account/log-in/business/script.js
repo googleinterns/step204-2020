@@ -62,7 +62,7 @@ backButton.addEventListener('click', (_) => {
 });
 
 const submitButton = document.getElementById('submit');
-submitButton.addEventListener('click', (_) => {
+submitButton.addEventListener('click', async (_) => {
   // Disables the button to avoid accidental double click
   document.getElementById('submit').disabled = true;
 
