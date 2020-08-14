@@ -26,10 +26,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // TODO(issue/21): get the language and country from the browser
-const CurrentLocale = 'en';
-const CurrentCountry = 'SG';
+const CURRENT_LOCALE = 'en';
+const CURRENT_COUNTRY = 'SG';
 
-firebase.auth().languageCode = CurrentLocale;
+firebase.auth().languageCode = CURRENT_LOCALE;
 
 // Firebase UI
 const ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -74,7 +74,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
     signInOptions: [
       {
         provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        defaultCountry: CurrentCountry,
+        defaultCountry: CURRENT_COUNTRY,
       },
     ],
     callbacks: {
@@ -170,7 +170,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
  * @param {Function} onLogOut UI related function to be executed after successfully signed out.
  * @param {Function} onDefault UI related function to be executed on default.
  */
-Auth.clearSessionCookie = (onLogOut, onDefault) => {
+Auth.clearSessionCookie = async (onLogOut, onDefault) => {
   try {
     // Clears the session cookie
     let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
