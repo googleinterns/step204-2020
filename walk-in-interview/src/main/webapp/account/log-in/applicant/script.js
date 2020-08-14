@@ -12,7 +12,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT} from '../../../common-functions.js';
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, 
+  setCookie} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['applicant-log-in'];
