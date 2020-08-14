@@ -4,7 +4,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -12,6 +12,8 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, 
+  setCookie} from '../../../common-functions.js';
 
 const COMMONG_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-applicant-account'];
@@ -19,13 +21,33 @@ const LOGIN_HOMEPAGE_PATH = '../index.html';
 const HOMEPAGE_PATH = '../../../index.html';
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
   renderPageElements();
 };
+
+// TODO(issue/101): Display button according to log in status;
+// i.e. implement onLogIn, onLogOut, onDefault
+
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
+function onLogIn() {
+  // TODO(issue/100): set the cookie at the server side instead
+  setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
+  window.location.href = HOMEPAGE_PATH;
+}
+
+function onLogOut() {
+  
+}
+
+function onDefault() {
+  
+}
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
   Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
-  Auth.subscribeToUserAuthenticationChanges();
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];

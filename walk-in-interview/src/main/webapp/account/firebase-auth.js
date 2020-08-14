@@ -25,10 +25,11 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+// TODO(issue/21): get the language and country from the browser
+const CURRENT_LOCALE = 'en';
+const CURRENT_COUNTRY = 'SG';
 
-firebase.auth().languageCode = CurrentLocale;
+firebase.auth().languageCode = CURRENT_LOCALE;
 
 // Firebase UI
 const ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -70,7 +71,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
     signInOptions: [
       {
         provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        defaultCountry: 'SG',
+        defaultCountry: CURRENT_COUNTRY,
       },
     ],
     callbacks: {
@@ -78,11 +79,9 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // TODO(issue/89): add new user pages for name/skills
         // for now, this will only redirect to homepage for exisiting users
 
-        // TODO(issue/100): set the cookie at the server side instead
-        setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
-
         if (authResult.additionalUserInfo.isNewUser) {
           // Informs user
+          // TODO(issue/102): replace with proper notification
           alert(newUserInfo);
         }
 
@@ -92,6 +91,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
       signInFailure: (error) => {
         console.error(error.message);
 
+        // TODO(issue/102): replace with proper notification
         alert(STRINGS['sign-in-failure']);
       }
     },
@@ -107,97 +107,137 @@ Auth.signOutCurrentUser = () => {
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER);
+
+    // TODO(issue/102): replace with proper notification
     alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
+
+    // TODO(issue/102): replace with proper notification
+    alert(STRINGS['sign-out-failure']);
   });
-  Auth.subscribeToUserAuthenticationChanges();
 };
 
 /**
  * Checks the user sign in status.
  * Makes a POST request to create a session cookie when the user signs in.
  * Makes a POST request to clear the session cookie when the user signs out.
+ * 
+ * @param {Function} onLogIn UI related function to be executed after successfully signed in.
+ * @param {Function} onLogOut UI related function to be executed after successfully signed out.
+ * @param {Function} onDefault UI related function to be executed on default.
  */
-Auth.subscribeToUserAuthenticationChanges = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      firebase.auth().onAuthStateChanged(async (firebaseUser) => {
-        // User not signed in.
-        if (!firebaseUser) {
-          console.log('User Signed Out');
-    
-          if (localStorage.getItem('sessionCookie') != 'true') {
-            // Already signed out and cleared the session cookie, no need operation
-            console.log("Already signed out");
-            return resolve("Already signed out");
-          }
-    
-          console.log("Successfully signed out");
-          try {
-            // Clears the session cookie
-            let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
-    
-            if (!response.ok) {
-              throw new Error(`HTTP Error: ${response.statusCode}`);
-            }
-    
-            localStorage.setItem('sessionCookie', 'false');
-            console.log("Successfully clears the session cookie");
-            return resolve("Successfully clears the session cookie");
-          } catch (error) {
-            console.log(error);
-            return reject("fail clearing session cookie");
-          }
-        }
-          
-        // User signed in.
-        console.log('User Signed In');
-        // Get the user's ID token as it is needed to exchange
-        // for a session cookie.
-        await firebaseUser.getIdToken()
-            .then(async (idToken) => {
-              // Session login endpoint is queried and session cookie is set.
-              // CSRF protection should be taken into account.
-              const csrfToken = getCookie('csrfToken');
-    
-              try {
-                let response = await Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
-    
-                if (!response.ok) {
-                  throw new Error(`HTTP Error: ${response.statusCode}`);
-                }
-    
-                localStorage.setItem('sessionCookie', 'true');
-                console.log('Successfully send the request to create session cookie');
-              } catch(error) {
-                console.log(error);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        return resolve("Successfully creates the session cookie");
-      });
-    } catch(error) {
-      console.log(error);
-      return reject("fails to create/clear the session cookie");
+Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
+  firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+    // User not signed in.
+    if (!firebaseUser) {
+      if (localStorage.getItem('sessionCookie') != 'true') {
+        // Already signed out and cleared the session cookie, no need operation
+        console.log('Already signed out');
+        return;
+      }
+      
+      // Clears the session cookie
+      Auth.clearSessionCookie(onLogOut, onDefault);
+
+      console.log('Successfully signed out');
+
+      return;
     }
+
+    // User signed in.
+
+    if (localStorage.getItem('sessionCookie') == 'true') {
+      // Already signed in and created session cookie, no need operation
+      console.log('Already signed in');
+      return;
+    }
+      
+    // Get the user's ID token as it is needed to exchange
+    // for a session cookie.
+    await Auth.createSessionCookie(firebaseUser, onLogIn, onDefault);
+
+    console.log('Successfully signed in');
   });
 };
 
 /**
- * Checks the current user status.
+ * Clears the session cookie
+ * 
+ * @param {Function} onLogOut UI related function to be executed after successfully signed out.
+ * @param {Function} onDefault UI related function to be executed on default.
  */
-Auth.checkCurrentUser = () => {
-  firebase.auth().onAuthStateChanged((firebaseUser) => {
-    if (firebaseUser) {
-      console.log("Logged in");
-    } else {
-      console.log("Logged out");
+Auth.clearSessionCookie = async (onLogOut, onDefault) => {
+  try {
+    // Clears the session cookie
+    let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.statusCode}`);
     }
-  });
-}
+
+    localStorage.setItem('sessionCookie', 'false');
+    console.log('Successfully clears the session cookie');
+
+    // Changes the UI accordingly.
+    onLogOut();
+  } catch (error) {
+    console.log(error);
+
+    // Displays the default UI.
+    onDefault();
+  }
+};
+
+/**
+ * Gets the user's ID token as it is needed to exchange for a session cookie.
+ * 
+ * @param {user} firebaseUser Current user.
+ * @param {Function} onLogIn UI related function to be executed after successfully signed in.
+ * @param {Function} onDefault UI related function to be executed on default.
+ */
+Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
+  return firebaseUser.getIdToken()
+      .then(async (idToken) => {
+        // Session login endpoint is queried and session cookie is set.
+        // CSRF protection should be taken into account.
+        const csrfToken = getCookie('csrfToken');
+
+        try {
+          let response = await Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
+
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.statusCode}`);
+          }
+
+          localStorage.setItem('sessionCookie', 'true');
+          console.log('Successfully creates the session cookie');
+
+          // Changes the UI accordingly.
+          onLogIn();
+
+          // TODO(issue/102): replace with proper notification
+          alert(STRINGS['sign-in-success']);
+        } catch(error) {
+          console.log(error);
+
+          // Displays the default UI.
+          onDefault(); 
+
+          // TODO(issue/102): replace with proper notification
+          alert(STRINGS['sign-in-failure'])
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+
+        // Displays the default UI.
+        onDefault();
+
+        // TODO(issue/102): replace with proper notification
+        alert(STRINGS['sign-in-failure']);
+      });
+};
 
 /**
  * Makes a POST request to session log in endpoint.

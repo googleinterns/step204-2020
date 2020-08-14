@@ -4,7 +4,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -26,8 +26,29 @@ const USER_NOT_FOUND_ERROR_CODE = 'auth/user-not-found';
 const WRONG_PASSWORD_ERROR_CODE = 'auth/wrong-password';
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
   renderPageElements();
 };
+
+// TODO(issue/101): Display button according to log in status;
+// i.e. implement onLogIn, onLogOut, onDefault
+
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
+function onLogIn() {
+  // TODO(issue/100): set the cookie at the server side instead
+  setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+  window.location.href = HOMEPAGE_PATH;
+}
+
+function onLogOut() {
+  
+}
+
+function onDefault() {
+  
+}
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
@@ -89,22 +110,6 @@ submitButton.addEventListener('click', async (_) => {
 
   // Enables the button regardless of success or failure
   document.getElementById('submit').disabled = false;
-
-  let response = await Auth.subscribeToUserAuthenticationChanges()
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ COMMONG_STRINGS['error-message'],
-          /* includesDefault= */false);
-      });
-
-  console.log(response);
-
-  if (response === "Successfully creates the session cookie") {
-    // TODO(issue/100): set the cookie at the server side instead
-    setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
-    window.location.href = HOMEPAGE_PATH;
-  }
 });
 
 /**

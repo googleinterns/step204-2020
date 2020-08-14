@@ -5,7 +5,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -37,9 +37,24 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
-  Auth.checkCurrentUser();
+  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
   renderHomepageElements();
 };
+
+// TODO(issue/101): Display button according to log in status;
+// i.e. implement onLogIn, onLogOut, onDefault
+
+function onLogIn() {
+
+}
+
+function onLogOut() {
+  
+}
+
+function onDefault() {
+  
+}
 
 /** Adds all the titles to the fields on this page. */
 function renderHomepageElements() {
