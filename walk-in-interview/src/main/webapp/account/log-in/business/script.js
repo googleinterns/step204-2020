@@ -82,7 +82,7 @@ submitButton.addEventListener('click', async (_) => {
       /* msg= */ '',
       /* includesDefault= */false);
 
-  Auth.signIntoBusinessAccount(account, password)
+  await Auth.signIntoBusinessAccount(account, password)
       .catch((error) => {
         showErrorMessageFromError(error);
       });
