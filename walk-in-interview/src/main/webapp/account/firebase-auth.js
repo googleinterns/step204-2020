@@ -121,67 +121,71 @@ Auth.signOutCurrentUser = () => {
  * Checks the user sign in status.
  * Makes a POST request to create a session cookie when the user signs in.
  * Makes a POST request to clear the session cookie when the user signs out.
- * 
- * @param {String} redirectUrl Page to be directed to after sign in successfully.
  */
-Auth.subscribeToUserAuthenticationChanges = (redirectUrl) => {
-  firebase.auth().onAuthStateChanged(async (firebaseUser) => {
-    // User not signed in.
-    if (!firebaseUser) {
-      console.log('User Signed Out');
-
-      if (localStorage.getItem('sessionCookie') != 'true') {
-        // Already signed out and cleared the session cookie, no need operation
-        console.log("Already signed out");
-        return;
-      }
-
-      console.log("Successfully signed out");
-      try {
-        // Clears the session cookie
-        let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
-
-        if (!response.ok) {
-          throw Error(`HTTP Error: ${response.statusCode}`);
-        }
-
-        localStorage.setItem('sessionCookie', 'false');
-        console.log("Successfully clears the session cookie");
-        return;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-      
-    // User signed in.
-    console.log('User Signed In');
-    // Get the user's ID token as it is needed to exchange
-    // for a session cookie.
-    await firebaseUser.getIdToken()
-        .then(async (idToken) => {
-          // Session login endpoint is queried and session cookie is set.
-          // CSRF protection should be taken into account.
-          const csrfToken = getCookie('csrfToken');
-
-          try {
-            let response = await Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
-
-            if (!response.ok) {
-              throw Error(`HTTP Error: ${response.statusCode}`);
-            }
-
-            localStorage.setItem('sessionCookie', 'true');
-            console.log('Successfully send the request to create session cookie');
-
-            // Direct to target page
-            window.location.href = redirectUrl;
-          } catch(error) {
-            console.log(error);
+Auth.subscribeToUserAuthenticationChanges = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+        // User not signed in.
+        if (!firebaseUser) {
+          console.log('User Signed Out');
+    
+          if (localStorage.getItem('sessionCookie') != 'true') {
+            // Already signed out and cleared the session cookie, no need operation
+            console.log("Already signed out");
+            return resolve("Already signed out");
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    
+          console.log("Successfully signed out");
+          try {
+            // Clears the session cookie
+            let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
+    
+            if (!response.ok) {
+              throw new Error(`HTTP Error: ${response.statusCode}`);
+            }
+    
+            localStorage.setItem('sessionCookie', 'false');
+            console.log("Successfully clears the session cookie");
+            return resolve("Successfully clears the session cookie");
+          } catch (error) {
+            console.log(error);
+            return reject("fail clearing session cookie");
+          }
+        }
+          
+        // User signed in.
+        console.log('User Signed In');
+        // Get the user's ID token as it is needed to exchange
+        // for a session cookie.
+        let signInResponse = await firebaseUser.getIdToken()
+            .then(async (idToken) => {
+              // Session login endpoint is queried and session cookie is set.
+              // CSRF protection should be taken into account.
+              const csrfToken = getCookie('csrfToken');
+    
+              try {
+                let response = await Auth.postIdTokenToSessionLogin(API['log-in'], idToken, csrfToken);
+    
+                if (!response.ok) {
+                  throw new Error(`HTTP Error: ${response.statusCode}`);
+                }
+    
+                localStorage.setItem('sessionCookie', 'true');
+                console.log('Successfully send the request to create session cookie');
+              } catch(error) {
+                console.log(error);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        return resolve("Successfully creates the session cookie");
+      });
+    } catch(error) {
+      console.log(error);
+      return reject("fails to create/clear the session cookie");
+    }
   });
 };
 

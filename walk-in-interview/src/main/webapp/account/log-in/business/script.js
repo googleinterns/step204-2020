@@ -18,6 +18,7 @@ import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../../../index.html';
 
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const USER_DISABLED_ERROR_CODE = 'auth/user-disabled';
@@ -82,19 +83,28 @@ submitButton.addEventListener('click', (_) => {
       /* includesDefault= */false);
 
   Auth.signIntoBusinessAccount(account, password)
-      .then(() => {
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
-
-        Auth.subscribeToUserAuthenticationChanges();
-
-        // TODO(issue/100): set the cookie at the server side instead
-        setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
-      })
       .catch((error) => {
         showErrorMessageFromError(error);
-        document.getElementById('submit').disabled = false;
       });
+
+  // Enables the button regardless of success or failure
+  document.getElementById('submit').disabled = false;
+
+  let response = await Auth.subscribeToUserAuthenticationChanges()
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMONG_STRINGS['error-message'],
+          /* includesDefault= */false);
+      });
+
+  console.log(response);
+
+  if (response === "Successfully creates the session cookie") {
+    // TODO(issue/100): set the cookie at the server side instead
+    setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+    window.location.href = HOMEPAGE_PATH;
+  }
 });
 
 /**
