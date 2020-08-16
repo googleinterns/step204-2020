@@ -90,6 +90,8 @@ AppStrings['create-account'] = {
  * All the strings to be used in the account/create-account/applicant/index.html.
  */
 AppStrings['create-applicant-account'] = {
+  'name': 'Name',
+  'skills-title': 'Skills',
   'new-user-info': 'Account is successfully created!',
 };
 
