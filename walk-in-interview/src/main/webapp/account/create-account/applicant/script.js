@@ -49,7 +49,7 @@ function onDefault() {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
+  Auth.addPhoneSignInAndSignUpUI('phone-auth', CREATE_ACCOUNT_INFO_PAGE_PATH, STRINGS['new-user-info']);
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
