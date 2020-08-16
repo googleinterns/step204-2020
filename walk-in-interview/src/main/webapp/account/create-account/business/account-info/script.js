@@ -45,6 +45,7 @@ function onDefault() {
   
 }
 
+/** Adds all the text to the fields on this page. */
 function renderPageElements() {
   const backButton = document.getElementById('back');
   backButton.innerText = ACCOUNT_STRINGS['back'];
@@ -60,6 +61,11 @@ function renderPageElements() {
   name.setAttribute('type',  'text');
 }
 
+/**
+ * Gets account detail from user input.
+ * 
+ * @return {Object} Business account object containing the user inputs.
+ */
 function getBusinessDetailsFromUserInput() {
   const businessName = document.getElementById('name').value;
 
