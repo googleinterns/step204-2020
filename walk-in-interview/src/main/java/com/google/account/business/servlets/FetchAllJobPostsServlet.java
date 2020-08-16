@@ -56,9 +56,6 @@ public final class FetchAllJobPostsServlet extends HttpServlet {
             String json = ServletUtils.convertToJsonUsingGson(jobPage);
             response.setContentType("application/json;");
             response.getWriter().println(json);
-
-            // Sends the success status code in the response
-            response.setStatus(HttpServletResponse.SC_OK);
         } catch (ServletException | ExecutionException | TimeoutException | IOException | FirebaseAuthException e) {
             // TODO(issue/47): use custom exceptions
             System.err.println("Error occur: " + e.getCause());
