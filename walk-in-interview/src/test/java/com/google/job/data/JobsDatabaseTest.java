@@ -78,7 +78,7 @@ public final class JobsDatabaseTest {
                 .build();
 
         // Act.
-        Future<WriteResult> future = jobsDatabase.addJob(job);
+        Future<WriteResult> future = jobsDatabase.addJob("", job);
 
         // Assert.
         // future.get() blocks on response.
