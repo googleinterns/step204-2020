@@ -17,8 +17,8 @@ import {USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT,
 
 const COMMONG_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-applicant-account'];
-const LOGIN_HOMEPAGE_PATH = '../index.html';
-const HOMEPAGE_PATH = '../../../index.html';
+const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
+const CREATE_ACCOUNT_HOMEPAGE_PATH = '../index.html';
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
@@ -34,7 +34,9 @@ window.onload = () => {
 function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
-  window.location.href = HOMEPAGE_PATH;
+  
+  // Directs to the page to fill in applicant account info.
+  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
 function onLogOut() {
@@ -55,5 +57,5 @@ function renderPageElements() {
 
 const backButton = document.getElementById('back');
 backButton.addEventListener('click', (_) => {
-  window.location.href = LOGIN_HOMEPAGE_PATH;
+  window.location.href = CREATE_ACCOUNT_HOMEPAGE_PATH;
 });
