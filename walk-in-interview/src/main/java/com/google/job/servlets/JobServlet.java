@@ -1,6 +1,8 @@
 package com.google.job.servlets;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.job.data.*;
+import com.google.utils.FirebaseAuthUtils;
 import com.google.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,6 +69,17 @@ public final class JobServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
+            // Gets uid of the current user
+            Optional<String> optionalUid = FirebaseAuthUtils.getUid(request);
+
+            if (!optionalUid.isPresent()) {
+                System.err.println("Illegal uid");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            String uid = optionalUid.get();
+
             // Gets job post from the form
             Job rawJob = parseRawJobPost(request);
 
@@ -74,11 +87,12 @@ public final class JobServlet extends HttpServlet {
             Job job = rawJob.toBuilder().setJobStatus(JobStatus.ACTIVE).build();
 
             // Stores job post into the database
-            storeJobPost(job);
+            storeJobPost(uid, job);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (ExecutionException | IllegalArgumentException | ServletException | IOException | TimeoutException e) {
+        } catch (ExecutionException | IllegalArgumentException | ServletException
+                | IOException | TimeoutException | FirebaseAuthException e) {
             // TODO(issue/47): use custom exceptions
             System.err.println("Error occur: " + e.getCause());
             // Sends the fail status code in the response
@@ -123,12 +137,12 @@ public final class JobServlet extends HttpServlet {
         }
     }
 
-    /** Stores the job post into the database. */
-    private void storeJobPost(Job job) throws ServletException, ExecutionException, TimeoutException {
+    /** Stores the job post into the database and updates business account accordingly. */
+    private void storeJobPost(String uid, Job job) throws ServletException, ExecutionException, TimeoutException {
         try {
             // Blocks the operation.
             // Use timeout in case it blocks forever.
-            this.jobsDatabase.addJob(job).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            this.jobsDatabase.addJob(uid, job).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
