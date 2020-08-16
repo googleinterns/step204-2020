@@ -58,6 +58,7 @@ public final class JobsDatabase {
 
         String jobId = addedDocRef.getId();
 
+        // TODO: find a way to do this outside jobsdatabase, i.e. how to get uid
         // Updates the business account accordingly
         this.businessDatabase.updateJobsMade(uid, jobId);
 
