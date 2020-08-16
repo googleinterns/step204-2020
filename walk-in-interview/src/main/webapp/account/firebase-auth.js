@@ -112,7 +112,7 @@ Auth.signOutCurrentUser = () => {
     setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER);
 
     // TODO(issue/102): replace with proper notification
-    alert(AUTH_STRINGS['sign-out-success']);
+    alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
 

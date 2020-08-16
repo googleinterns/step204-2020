@@ -15,7 +15,6 @@ import {Auth} from '../../firebase-auth.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
-const AUTH_STRINGS = AppStrings['auth'];
 const ACCOUNT_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-business-account'];
 const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
@@ -49,8 +48,7 @@ function onLogIn() {
 }
 
 function onLogOut() {
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-out-success']);
+
 }
 
 function onDefault() {
