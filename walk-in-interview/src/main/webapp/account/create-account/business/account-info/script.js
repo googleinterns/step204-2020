@@ -13,7 +13,8 @@ const CURRENT_LOCALE = 'en';
 import {AppStrings} from '../../../../strings.en.js';
 import {API} from '../../../../apis.js';
 import {Auth} from '../../../firebase-auth.js';
-import {TYPE_BUSINESS, setErrorMessage} from '../../../../common-functions.js';
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
+  setCookie, setErrorMessage} from '../../../../common-functions.js';
 
 const HOMEPAGE_PATH = '../../../../index.html';
 const STRINGS = AppStrings['create-business-account'];
@@ -63,7 +64,7 @@ function getBusinessDetailsFromUserInput() {
   const businessName = document.getElementById('name').value;
 
   const businessDetails = {
-    userType: TYPE_BUSINESS,
+    userType: USER_TYPE_BUSINESS,
     name: businessName,
     jobs: [], // empty job list when the account is newly created
   };
