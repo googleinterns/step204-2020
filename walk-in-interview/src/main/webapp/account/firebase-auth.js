@@ -83,6 +83,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // for now, this will only redirect to homepage for exisiting users
 
         if (authResult.additionalUserInfo.isNewUser) {
+          console.log("This is a new user");
           // Informs user
           // TODO(issue/102): replace with proper notification
           alert(newUserInfo);
