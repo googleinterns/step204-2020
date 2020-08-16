@@ -23,7 +23,6 @@ public final class CreateSessionCookieServlet extends HttpServlet {
     private static final int SESSION_COOKIE_DURATION_DAYS = 5;
     private static final String SESSION_COOKIE_NAME = "session";
     private static final String ID_TOKEN_PARAM = "idToken";
-    private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
 
     // TODO(issue/87): move to config file
     private static final String DATABASE_URL = "https://com-walk-in-interview.firebaseio.com/";
@@ -66,7 +65,6 @@ public final class CreateSessionCookieServlet extends HttpServlet {
             String errorMessage = "Failed to create a session cookie";
             LOGGER.log(Level.SEVERE, errorMessage, e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.sendRedirect(LOG_IN_PAGE_PATH);
         }
     }
 

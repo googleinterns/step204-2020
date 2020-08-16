@@ -20,7 +20,6 @@ public final class ClearSessionCookieServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(ClearSessionCookieServlet.class.getName());
 
     private static final String SESSION_COOKIE_NAME = "session";
-    private static final String LOG_IN_PAGE_PATH = "/log-in/index.html";
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -41,12 +40,10 @@ public final class ClearSessionCookieServlet extends HttpServlet {
             response.addCookie(sessionCookie);
 
             response.setStatus(HttpServletResponse.SC_OK);
-            response.sendRedirect(LOG_IN_PAGE_PATH);
         } catch (FirebaseAuthException e) {
             String errorMessage = "Fails to verify or revoke tokens";
             LOGGER.log(Level.SEVERE, errorMessage, e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.sendRedirect(LOG_IN_PAGE_PATH);
         }
     }
 }
