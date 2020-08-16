@@ -43,6 +43,7 @@ const Auth = {};
  *
  * @param {String} email The email for the new business account.
  * @param {String} password The password for the new business account.
+ * @returns {Promise} A POST request to create an account.
  */
 Auth.createBusinessAccount = (email, password) => {
   return firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -53,6 +54,7 @@ Auth.createBusinessAccount = (email, password) => {
  *
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
+ * @returns {Promise} A POST request to sign in an account.
  */
 Auth.signIntoBusinessAccount = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
