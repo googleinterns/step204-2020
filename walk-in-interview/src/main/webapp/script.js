@@ -18,7 +18,6 @@ import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
 import {createMap, addMarker} from './maps.js';
 import {Auth} from '/account/firebase-auth.js';
 
-const AUTH_STRINGS = AppStrings['auth'];
 const STRINGS = AppStrings['homepage'];
 const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
 const LOG_IN_PAGE_PATH = '/account/log-in/index.html';
@@ -47,6 +46,8 @@ window.onload = () => {
 // i.e. implement onLogIn, onLogOut, onDefault
 
 function onLogIn() {
+  clearHeaderUI();
+
   const userType = getCookie(USER_TYPE_COOKIE_PARAM);
   if (userType === USER_TYPE_APPLICANT) {
     renderApplicantUI();
@@ -58,11 +59,23 @@ function onLogIn() {
 }
 
 function onLogOut() {
+  clearHeaderUI();
+
   renderDefaultUI();
 }
 
 function onDefault() {
+  clearHeaderUI();
+  
   renderDefaultUI();
+}
+
+function clearHeaderUI() {
+  const headerContainer = document.getElementById('header-container');
+
+  while(headerContainer.firstChild){
+    headerContainer.removeChild(headerContainer.firstChild);
+  }
 }
 
 function renderApplicantUI() {
@@ -79,8 +92,8 @@ function renderBusinessUI() {
 }
 
 function renderDefaultUI() {
-  renderPageTitle();
   renderSignUpButton();
+  renderPageTitle();
   renderLogInButton();
 }
 
