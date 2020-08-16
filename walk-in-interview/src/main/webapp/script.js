@@ -17,6 +17,7 @@ import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
 import {createMap, addMarker} from './maps.js';
 import {Auth} from '/account/firebase-auth.js';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const STRINGS = AppStrings['homepage'];
 const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
 const LOG_IN_PAGE_PATH = '/account/log-in/index.html';
@@ -49,7 +50,8 @@ function onLogIn() {
 }
 
 function onLogOut() {
-  
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-out-success']);
 }
 
 function onDefault() {
