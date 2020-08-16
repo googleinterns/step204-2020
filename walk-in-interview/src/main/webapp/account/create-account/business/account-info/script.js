@@ -4,7 +4,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -12,6 +12,7 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../../../../strings.en.js';
 import {API} from '../../../../apis.js';
+import {Auth} from '../../../firebase-auth.js';
 import {TYPE_BUSINESS, setErrorMessage} from '../../../../common-functions.js';
 
 const HOMEPAGE_PATH = '../../../../index.html';
@@ -20,8 +21,28 @@ const ACCOUNT_STRINGS = AppStrings['create-account'];
 const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
   renderPageElements();
 };
+
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
+function onLogIn() {
+  // TODO(issue/100): set the cookie at the server side instead
+  setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+
+  // Directs to the page to fill in business account info.
+  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
+}
+
+function onLogOut() {
+  
+}
+
+function onDefault() {
+  
+}
 
 function renderPageElements() {
   const backButton = document.getElementById('back');
