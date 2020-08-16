@@ -82,6 +82,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         // for now, this will only redirect to homepage for exisiting users
 
         if (authResult.additionalUserInfo.isNewUser) {
+          console.log("This is a new user");
           // Informs user
           // TODO(issue/102): replace with proper notification
           alert(newUserInfo);
@@ -217,17 +218,11 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
 
           // Changes the UI accordingly.
           onLogIn();
-
-          // TODO(issue/102): replace with proper notification
-          alert(STRINGS['sign-in-success']);
         } catch(error) {
           console.log(error);
 
           // Displays the default UI.
           onDefault(); 
-
-          // TODO(issue/102): replace with proper notification
-          alert(STRINGS['sign-in-failure'])
         }
       })
       .catch((error) => {
@@ -235,9 +230,6 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
 
         // Displays the default UI.
         onDefault();
-
-        // TODO(issue/102): replace with proper notification
-        alert(STRINGS['sign-in-failure']);
       });
 };
 
