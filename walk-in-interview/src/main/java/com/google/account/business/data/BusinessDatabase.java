@@ -1,6 +1,5 @@
 package com.google.account.business.data;
 
-import com.google.account.FirebaseAuthSessionCookieUtil;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -14,12 +13,6 @@ import java.util.concurrent.Future;
 public final class BusinessDatabase {
     private static final String BUSINESS_ACCOUNT_COLLECTION = "ApplicantAccounts";
     private static final String JOBS_FIElD = "jobs";
-
-    private FirebaseAuthSessionCookieUtil firebaseAuthSessionCookieUtil;
-
-    public BusinessDatabase() throws IOException {
-        this.firebaseAuthSessionCookieUtil = new FirebaseAuthSessionCookieUtil();
-    }
 
     /**
      * Updates the job posts made once a new job post is created.

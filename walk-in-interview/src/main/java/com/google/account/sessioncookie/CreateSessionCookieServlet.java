@@ -1,4 +1,4 @@
-package com.google.account;
+package com.google.account.sessioncookie;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SessionCookieOptions;
