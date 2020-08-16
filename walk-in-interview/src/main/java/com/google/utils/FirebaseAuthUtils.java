@@ -78,6 +78,6 @@ public final class FirebaseAuthUtils {
             }
         }
 
-        throw new IllegalArgumentException("No matched cookie");
+        throw new IllegalArgumentException("No matched cookie: " + name);
     }
 }

@@ -5,7 +5,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -13,11 +13,14 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from './strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
-  getRequirementsList, setErrorMessage} from './common-functions.js';
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, USER_TYPE_BUSINESS,
+  getRequirementsList, setErrorMessage, getCookie} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
+import {Auth} from '/account/firebase-auth.js';
 
 const STRINGS = AppStrings['homepage'];
-const LOG_IN_PAGE_PATH = '/log-in/index.html';
+const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
+const LOG_IN_PAGE_PATH = '/account/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
 const POSTS_MADE_PATH = '/business-jobs-list/index.html';
@@ -35,41 +38,155 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
   renderHomepageElements();
 };
 
-/** Adds all the titles to the fields on this page. */
-function renderHomepageElements() {
-  const homepageTitle = document.getElementById('page-title');
-  homepageTitle.innerText = STRINGS['page-title'];
+// TODO(issue/101): Display button according to log in status;
+// i.e. implement onLogIn, onLogOut, onDefault
 
-  const newPostButton = document.getElementById('new-post');
+function onLogIn() {
+  clearHeaderUI();
+
+  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
+  if (userType === USER_TYPE_APPLICANT) {
+    renderApplicantUI();
+  } else if (userType === USER_TYPE_BUSINESS) {
+    renderBusinessUI();
+  } else {
+    renderDefaultUI();
+  }
+}
+
+function onLogOut() {
+  clearHeaderUI();
+
+  renderDefaultUI();
+}
+
+function onDefault() {
+  clearHeaderUI();
+  
+  renderDefaultUI();
+}
+
+function clearHeaderUI() {
+  const headerContainer = document.getElementById('header-container');
+
+  while(headerContainer.firstChild){
+    headerContainer.removeChild(headerContainer.firstChild);
+  }
+}
+
+function renderApplicantUI() {
+  renderInterestedJobButton();
+  renderPageTitle();
+  renderLogOutButton();
+}
+
+function renderBusinessUI() {
+  renderNewPostButton();
+  renderShowJobPostsButton();
+  renderPageTitle();
+  renderLogOutButton();
+}
+
+function renderDefaultUI() {
+  renderSignUpButton();
+  renderPageTitle();
+  renderLogInButton();
+}
+
+function renderNewPostButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const newPostButton = document.createElement('button');
+  newPostButton.setAttribute('id', 'new-post');
   newPostButton.innerText = STRINGS['new-post'];
   newPostButton.addEventListener('click', (_) => {
     window.location.href = JOBPAGE_PATH;
   });
 
-  const accountButton = document.getElementById('account');
-  accountButton.innerText = STRINGS['account'];
+  headerContainer.appendChild(newPostButton);
+}
 
-  const loginButton = document.getElementById('log-in');
+function renderPageTitle() {
+  const headerContainer = document.getElementById('header-container');
+
+  const homepageTitle = document.createElement('div');
+  homepageTitle.setAttribute('id', 'page-title');
+  homepageTitle.innerText = STRINGS['page-title'];
+
+  headerContainer.appendChild(homepageTitle);
+}
+
+function renderSignUpButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const accountButton = document.createElement('button');
+  accountButton.setAttribute('id', 'account');
+  accountButton.innerText = STRINGS['account'];
+  accountButton.addEventListener('click', (_) => {
+    window.location.href = CREATE_ACCOUNT_PAGE_PATH;
+  });
+
+  headerContainer.appendChild(accountButton);
+}
+
+function renderLogInButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const loginButton = document.createElement('button');
+  loginButton.setAttribute('id', 'log-in');
   loginButton.innerText = STRINGS['log-in'];
   loginButton.addEventListener('click', (_) => {
     window.location.href = LOG_IN_PAGE_PATH;
   });
 
-  const showJobPostsButton = document.getElementById('show-job-posts-made');
+  headerContainer.appendChild(loginButton);
+}
+
+function renderLogOutButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const logoutButton = document.createElement('button');
+  logoutButton.setAttribute('id', 'log-out');
+  logoutButton.innerText = STRINGS['log-out'];
+  logoutButton.addEventListener('click', (_) => {
+    Auth.signOutCurrentUser();
+  });
+
+  headerContainer.appendChild(logoutButton);
+}
+
+function renderShowJobPostsButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const showJobPostsButton = document.createElement('button');
+  showJobPostsButton.setAttribute('id', 'show-job-posts-made');
   showJobPostsButton.innerText = STRINGS['show-job-posts-made'];
   showJobPostsButton.addEventListener('click', (_) => {
     window.location.href = POSTS_MADE_PATH;
   });
 
-  const interestedJobButton = document.getElementById('interested-job-list');
+  headerContainer.appendChild(showJobPostsButton);
+}
+
+function renderInterestedJobButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const interestedJobButton = document.createElement('button');
+  interestedJobButton.setAttribute('id', 'interested-job-list');
   interestedJobButton.innerText = STRINGS['interested-job-list'];
   interestedJobButton.addEventListener('click', (_) => {
     window.location.href = INTEREST_JOBS_PATH;
   });
 
+  headerContainer.appendChild(interestedJobButton);
+}
+
+/** Adds all the titles to the fields on this page. */
+function renderHomepageElements() {
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 
