@@ -15,7 +15,8 @@ import {Auth} from '../../firebase-auth.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
-const COMMONG_STRINGS = AppStrings['create-account'];
+const AUTH_STRINGS = AppStrings['auth'];
+const ACCOUNT_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-business-account'];
 const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
 const CREATE_ACCOUNT_HOMEPAGE_PATH = '../index.html';
@@ -40,16 +41,21 @@ function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
 
+  // TODO(issue/102): replace with proper notification
+  alert(STRINGS['new-user-info']);
+
   // Directs to the page to fill in business account info.
   window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
 function onLogOut() {
-  
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-out-success']);
 }
 
 function onDefault() {
-  
+  // TODO(issue/102): replace with proper notification
+  alert(ACCOUNT_STRINGS['create-account-error-message']);
 }
 
 /** Adds all the text to the fields on this page. */
@@ -73,10 +79,10 @@ function renderPageElements() {
   passwordInputElement.setAttribute('type', 'password');
 
   const backButton = document.getElementById('back');
-  backButton.innerText = COMMONG_STRINGS['back'];
+  backButton.innerText = ACCOUNT_STRINGS['back'];
 
   const submitButton = document.getElementById('submit');
-  submitButton.innerText = COMMONG_STRINGS['submit'];
+  submitButton.innerText = ACCOUNT_STRINGS['submit'];
 }
 
 const backButton = document.getElementById('back');
@@ -143,7 +149,7 @@ function showErrorMessageFromError(error) {
       break;
     default:
       setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ COMMONG_STRINGS['error-message'],
+          /* msg= */ ACCOUNT_STRINGS['error-message'],
           /* includesDefault= */false);
       console.error(error.message);
       break;
