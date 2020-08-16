@@ -110,9 +110,6 @@ Auth.signOutCurrentUser = () => {
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER);
-
-    // TODO(issue/102): replace with proper notification
-    alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
 

@@ -48,7 +48,8 @@ function onLogIn() {
 }
 
 function onLogOut() {
-  
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-out-success']);
 }
 
 function onDefault() {
