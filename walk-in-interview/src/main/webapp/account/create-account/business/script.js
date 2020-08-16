@@ -17,7 +17,7 @@ import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
 
 const COMMONG_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-business-account'];
-const CREATE_ACCOUNT_INFO_PAGE_PATH = '/account-info/index.html';
+const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
 const CREATE_ACCOUNT_HOMEPAGE_PATH = '../index.html';
 
 const EMAIL_IN_USE_ERROR_CODE = 'auth/email-already-in-use';
