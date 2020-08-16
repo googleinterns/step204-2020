@@ -134,13 +134,20 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
       if (localStorage.getItem('sessionCookie') != 'true') {
         // Already signed out and cleared the session cookie, no need operation
         console.log('Already signed out');
+
+        // Displays the UI for log out status.
+        onLogOut();
+
         return;
       }
       
       // Clears the session cookie
-      Auth.clearSessionCookie(onLogOut, onDefault);
+      Auth.clearSessionCookie(onDefault);
 
       console.log('Successfully signed out');
+
+      // Displays the UI for log out status.
+      onLogOut();
 
       return;
     }
@@ -150,24 +157,30 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
     if (localStorage.getItem('sessionCookie') == 'true') {
       // Already signed in and created session cookie, no need operation
       console.log('Already signed in');
+
+      // Displays the UI for log in status.
+      onLogIn();
+
       return;
     }
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    await Auth.createSessionCookie(firebaseUser, onLogIn, onDefault);
+    await Auth.createSessionCookie(firebaseUser, onDefault);
 
     console.log('Successfully signed in');
+
+    // Displays the UI for log in status.
+    onLogIn();
   });
 };
 
 /**
  * Clears the session cookie
  * 
- * @param {Function} onLogOut UI related function to be executed after successfully signed out.
  * @param {Function} onDefault UI related function to be executed on default.
  */
-Auth.clearSessionCookie = async (onLogOut, onDefault) => {
+Auth.clearSessionCookie = async (onDefault) => {
   try {
     // Clears the session cookie
     let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
@@ -178,9 +191,6 @@ Auth.clearSessionCookie = async (onLogOut, onDefault) => {
 
     localStorage.setItem('sessionCookie', 'false');
     console.log('Successfully clears the session cookie');
-
-    // Changes the UI accordingly.
-    onLogOut();
   } catch (error) {
     console.log(error);
 
@@ -193,10 +203,9 @@ Auth.clearSessionCookie = async (onLogOut, onDefault) => {
  * Gets the user's ID token as it is needed to exchange for a session cookie.
  * 
  * @param {user} firebaseUser Current user.
- * @param {Function} onLogIn UI related function to be executed after successfully signed in.
  * @param {Function} onDefault UI related function to be executed on default.
  */
-Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
+Auth.createSessionCookie = (firebaseUser, onDefault) => {
   return firebaseUser.getIdToken()
       .then(async (idToken) => {
         // Session login endpoint is queried and session cookie is set.
@@ -212,9 +221,6 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
 
           localStorage.setItem('sessionCookie', 'true');
           console.log('Successfully creates the session cookie');
-
-          // Changes the UI accordingly.
-          onLogIn();
         } catch(error) {
           console.log(error);
 
