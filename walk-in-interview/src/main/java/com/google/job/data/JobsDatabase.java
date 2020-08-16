@@ -317,7 +317,7 @@ public final class JobsDatabase {
                     List<Job> jobList = fetchAllJobsFromIds(jobs);
                     // TODO(issue/34): adjust range/total count based on pagination
                     long totalCount = jobList.size();
-                    Range<Integer> range = Range.between(1, jobList.size());
+                    Range<Integer> range = totalCount == 0 ? Range.between(0, 0) : Range.between(1, jobList.size());
 
                     return new JobPage(jobList, totalCount, range);
                 },
