@@ -15,6 +15,7 @@ import {Auth} from '../../firebase-auth.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, 
   setCookie} from '../../../common-functions.js';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['applicant-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
@@ -34,6 +35,10 @@ window.onload = () => {
 function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
+
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-in-success']);
+  
   window.location.href = HOMEPAGE_PATH;
 }
 
@@ -42,7 +47,8 @@ function onLogOut() {
 }
 
 function onDefault() {
-  
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-in-failure']);
 }
 
 /** Adds all the text to the fields on this page. */

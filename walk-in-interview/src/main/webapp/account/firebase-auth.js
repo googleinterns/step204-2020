@@ -218,17 +218,11 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
 
           // Changes the UI accordingly.
           onLogIn();
-
-          // TODO(issue/102): replace with proper notification
-          alert(STRINGS['sign-in-success']);
         } catch(error) {
           console.log(error);
 
           // Displays the default UI.
           onDefault(); 
-
-          // TODO(issue/102): replace with proper notification
-          alert(STRINGS['sign-in-failure'])
         }
       })
       .catch((error) => {
@@ -236,9 +230,6 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
 
         // Displays the default UI.
         onDefault();
-
-        // TODO(issue/102): replace with proper notification
-        alert(STRINGS['sign-in-failure']);
       });
 };
 
