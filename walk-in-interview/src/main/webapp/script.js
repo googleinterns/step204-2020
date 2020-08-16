@@ -58,8 +58,6 @@ function onLogIn() {
 }
 
 function onLogOut() {
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-out-success']);
   renderDefaultUI();
 }
 
@@ -87,7 +85,7 @@ function renderDefaultUI() {
 }
 
 function renderNewPostButton() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const newPostButton = document.createElement('button');
   newPostButton.setAttribute('id', 'new-post');
@@ -100,7 +98,7 @@ function renderNewPostButton() {
 }
 
 function renderPageTitle() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const homepageTitle = document.createElement('div');
   homepageTitle.setAttribute('id', 'page-title');
@@ -110,7 +108,7 @@ function renderPageTitle() {
 }
 
 function renderSignUpButton() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const accountButton = document.createElement('button');
   accountButton.setAttribute('id', 'account');
@@ -123,7 +121,7 @@ function renderSignUpButton() {
 }
 
 function renderLogInButton() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const loginButton = document.createElement('button');
   loginButton.setAttribute('id', 'log-in');
@@ -136,7 +134,7 @@ function renderLogInButton() {
 }
 
 function renderLogOutButton() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const logoutButton = document.createElement('button');
   logoutButton.setAttribute('id', 'log-out');
@@ -149,7 +147,7 @@ function renderLogOutButton() {
 }
 
 function renderShowJobPostsButton() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const showJobPostsButton = document.createElement('button');
   showJobPostsButton.setAttribute('id', 'show-job-posts-made');
@@ -162,7 +160,7 @@ function renderShowJobPostsButton() {
 }
 
 function renderInterestedJobButton() {
-  const headerContainer = document.getElementsByClassName('header-container');
+  const headerContainer = document.getElementById('header-container');
 
   const interestedJobButton = document.createElement('button');
   interestedJobButton.setAttribute('id', 'interested-job-list');
