@@ -51,9 +51,6 @@ function onLogOutFailure() {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  const backButton = document.getElementById('back');
-  backButton.innerText = ACCOUNT_STRINGS['back'];
-
   const submitButton = document.getElementById('submit');
   submitButton.setAttribute('value', ACCOUNT_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
@@ -99,11 +96,6 @@ function validateRequiredUserInput() {
 
   return true;
 }
-
-const backButton = document.getElementById('back');
-backButton.addEventListener('click', (_) => {
-  window.location.href = HOMEPAGE_PATH;
-});
 
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {

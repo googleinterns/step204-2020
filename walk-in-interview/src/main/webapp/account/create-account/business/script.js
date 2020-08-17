@@ -32,13 +32,12 @@ window.onload = () => {
   renderPageElements();
 };
 
-// TODO(issue/101): Display button according to log in status;
-// i.e. implement onLogIn, onLogOut, onDefault
-
 /**
  * What to do after the user signed in and the session cookie is created.
  */
 function onLogIn() {
+  // TODO(issue/101): Display button according to log in status;
+
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
 
@@ -50,11 +49,15 @@ function onLogIn() {
 }
 
 function onLogOut() {
+  // TODO(issue/101): Display button according to log in status;
+
   // TODO(issue/102): replace with proper notification
   alert(AUTH_STRINGS['sign-out-success']);
 }
 
 function onLogInFailure() {
+  // TODO(issue/101): Display button according to log in status;
+  
   // TODO(issue/102): replace with proper notification
   alert(ACCOUNT_STRINGS['create-account-error-message']);
 }
