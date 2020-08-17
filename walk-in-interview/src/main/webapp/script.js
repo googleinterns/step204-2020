@@ -38,24 +38,28 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderHomepageElements();
 };
 
-// TODO(issue/101): Display button according to log in status;
-// i.e. implement onLogIn, onLogOut, onDefault
-
 function onLogIn() {
-
+  // TODO(issue/101): Display button according to log in status;
 }
 
 function onLogOut() {
+  // TODO(issue/101): Display button according to log in status;
+
   // TODO(issue/102): replace with proper notification
   alert(AUTH_STRINGS['sign-out-success']);
 }
 
-function onDefault() {
-  
+function onLogInFailure() {
+  // TODO(issue/101): Display button according to log in status;
+}
+
+function onLogOutFailure() {
+  // TODO(issue/101): Display button according to log in status;
 }
 
 /** Adds all the titles to the fields on this page. */
