@@ -27,7 +27,8 @@ const OPERATION_NOT_ALLOWED_ERROR_CODE = 'auth/operation-not-allowed';
 const WEAK_PASSWORD_ERROR_CODE = 'auth/weak-password';
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
 
@@ -53,9 +54,14 @@ function onLogOut() {
   alert(AUTH_STRINGS['sign-out-success']);
 }
 
-function onDefault() {
+function onLogInFailure() {
   // TODO(issue/102): replace with proper notification
   alert(ACCOUNT_STRINGS['create-account-error-message']);
+}
+
+
+function onLogOutFailure() {
+  // TODO(issue/101): Display button according to log in status;
 }
 
 /** Adds all the text to the fields on this page. */
