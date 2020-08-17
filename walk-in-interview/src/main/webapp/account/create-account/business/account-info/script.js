@@ -22,7 +22,8 @@ const ACCOUNT_STRINGS = AppStrings['create-account'];
 const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
 
@@ -35,12 +36,18 @@ function onLogIn() {
 }
 
 function onLogOut() {
-  
+  // TODO(issue/101): Display button according to log in status;
 }
 
-function onDefault() {
-  
+function onLogInFailure() {
+  // TODO(issue/101): Display button according to log in status;
 }
+
+
+function onLogOutFailure() {
+  // TODO(issue/101): Display button according to log in status;
+}
+
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
