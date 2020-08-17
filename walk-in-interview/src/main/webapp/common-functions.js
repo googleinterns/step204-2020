@@ -13,7 +13,12 @@ import {AppStrings} from './strings.en.js';
 
 const STRINGS = AppStrings['common'];
 const JOB_ID_PARAM = 'jobId';
+const USER_TYPE_COOKIE_PARAM = 'userType';
+const USER_TYPE_APPLICANT = 'applicant';
+const USER_TYPE_BUSINESS = 'business';
+const USER_TYPE_NO_USER = '';
 const DEFAULT_PAGE_SIZE = 20;
+const WHOLE_DAY_MILLISECONDS = 24*60*60*1000;
 
 /**
  * Gets the requirements list from the servlet
@@ -62,6 +67,20 @@ function renderSelectOptions(select, options) {
 }
 
 /**
+ * Sets the cookie value.
+ * 
+ * @param {String} cname The name of the cookie.
+ * @param {String} cvalue The value of the cookie.
+ * @param {Number} exdays The number of days until the cookie should expire. Default to be half day.
+ */
+function setCookie(cname, cvalue, exdays=0.5) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * WHOLE_DAY_MILLISECONDS));
+  var expires = `expires=${d.toUTCString()}`;
+  document.cookie = `${cname}=${cvalue};${expires};path=/`;
+}
+
+/**
  * Gets the value of a specified cookie.
  *
  * @param {String} cname Cookie name.
@@ -83,6 +102,8 @@ function getCookie(cname) {
   return '';
 }
 
-export {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
-  getRequirementsList, setErrorMessage,
-  renderSelectOptions, getCookie};
+export {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
+  USER_TYPE_APPLICANT, USER_TYPE_BUSINESS, USER_TYPE_NO_USER,
+  DEFAULT_PAGE_SIZE,
+  getRequirementsList, setErrorMessage, renderSelectOptions, 
+  setCookie, getCookie};

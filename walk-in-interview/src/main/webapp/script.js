@@ -5,7 +5,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -15,9 +15,12 @@ import {AppStrings} from './strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
   getRequirementsList, setErrorMessage} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
+import {Auth} from '/account/firebase-auth.js';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const STRINGS = AppStrings['homepage'];
-const LOG_IN_PAGE_PATH = '/log-in/index.html';
+const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
+const LOG_IN_PAGE_PATH = '/account/log-in/index.html';
 const JOBPAGE_PATH = '/new-job/index.html';
 const JOB_DETAILS_PATH = '/job-details/index.html';
 const POSTS_MADE_PATH = '/business-jobs-list/index.html';
@@ -35,8 +38,29 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderHomepageElements();
 };
+
+function onLogIn() {
+  // TODO(issue/101): Display button according to log in status;
+}
+
+function onLogOut() {
+  // TODO(issue/101): Display button according to log in status;
+
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-out-success']);
+}
+
+function onLogInFailure() {
+  // TODO(issue/101): Display button according to log in status;
+}
+
+function onLogOutFailure() {
+  // TODO(issue/101): Display button according to log in status;
+}
 
 /** Adds all the titles to the fields on this page. */
 function renderHomepageElements() {
@@ -51,11 +75,20 @@ function renderHomepageElements() {
 
   const accountButton = document.getElementById('account');
   accountButton.innerText = STRINGS['account'];
+  accountButton.addEventListener('click', (_) => {
+    window.location.href = CREATE_ACCOUNT_PAGE_PATH;
+  });
 
   const loginButton = document.getElementById('log-in');
   loginButton.innerText = STRINGS['log-in'];
   loginButton.addEventListener('click', (_) => {
     window.location.href = LOG_IN_PAGE_PATH;
+  });
+
+  const logoutButton = document.getElementById('log-out');
+  logoutButton.innerText = STRINGS['log-out'];
+  logoutButton.addEventListener('click', (_) => {
+    Auth.signOutCurrentUser();
   });
 
   const showJobPostsButton = document.getElementById('show-job-posts-made');

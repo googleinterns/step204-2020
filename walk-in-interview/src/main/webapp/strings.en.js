@@ -24,6 +24,7 @@ AppStrings['homepage'] = {
   'new-post': 'New Post',
   'account': 'Create an Account',
   'log-in': 'Log In',
+  'log-out': 'Log Out',
   'show-job-posts-made': 'Show Job Posts Made',
   'interested-job-list': 'Interested Jobs',
   'sort-by-title': 'Sort By',
@@ -74,7 +75,25 @@ AppStrings['applicant-interested-list'] = {
 };
 
 /**
- * All the strings to be used in the log-in/index.html.
+ * All the strings to be used in the account/create-account/index.html.
+ */
+AppStrings['create-account'] = {
+  'create-applicant-account': 'Create an Applicant account',
+  'create-business-account': 'Create a Business account',
+  'back': 'Back',
+  'submit': 'Submit',
+  'error-message': 'Error occur. Please try again.',
+};
+
+/**
+ * All the strings to be used in the account/create-account/applicant/index.html.
+ */
+AppStrings['create-applicant-account'] = {
+  'new-user-info': 'Account is successfully created!',
+};
+
+/**
+ * All the strings to be used in the account/log-in/index.html.
  */
 AppStrings['log-in'] = {
   'applicant-log-in': 'Log in as an Applicant',
@@ -84,8 +103,16 @@ AppStrings['log-in'] = {
   'error-message': 'Error occur. Please try again.',
 };
 
+
 /**
- * All the strings to be used in the log-in/business/index.html.
+ * All the strings to be used in the account/log-in/applicant/index.html.
+ */
+AppStrings['applicant-log-in'] = {
+  'new-user-info': 'This phone number is new to our system. An account is created automatically',
+};
+
+/**
+ * All the strings to be used in the account/log-in/business/index.html.
  */
 AppStrings['business-log-in'] = {
   'account': 'Account (Email)',
@@ -180,5 +207,8 @@ AppStrings['job-details'] = {
  * Strings used in firebase-auth.
  */
 AppStrings['auth'] = {
+  'sign-in-failure': 'Error occur when signing in',
+  'sign-in-success': 'Signed In Successfully',
   'sign-out-success': 'Signed Out Successfully',
+  'sign-out-failure': 'Error occur when signing out',
 };
