@@ -13,7 +13,7 @@ const CURRENT_LOCALE = 'en';
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
 import {API} from '../../../apis.js';
-import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS, MIN_PASSWORD_LENGTH,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
 const AUTH_STRINGS = AppStrings['auth'];
@@ -150,7 +150,7 @@ function showErrorMessageFromError(error) {
       break;
     case WEAK_PASSWORD_ERROR_CODE:
       setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ STRINGS['weak-password-error'],
+          /* msg= */ STRINGS['weak-password-error'].replace('{MIN_PASSWORD_LENGTH}', MIN_PASSWORD_LENGTH),
           /* includesDefault= */false);
       break;
     default:
