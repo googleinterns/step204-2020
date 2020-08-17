@@ -45,6 +45,7 @@ const Auth = {};
  * @param {String} password The password for the new business account.
  */
 Auth.createBusinessAccount = (email, password) => {
+  // TODO(issue/105): implement create business account in the next PR
   firebase.auth().createUserWithEmailAndPassword(email, password)
       .catch((error) => {
         console.error(error);
@@ -58,6 +59,7 @@ Auth.createBusinessAccount = (email, password) => {
  * @param {String} password The password for the existing business account.
  */
 Auth.signIntoBusinessAccount = (email, password) => {
+  // TODO(issue/105): implement sign business account in the next PR
   return firebase.auth().signInWithEmailAndPassword(email, password);
 };
 
@@ -126,9 +128,10 @@ Auth.signOutCurrentUser = () => {
  * 
  * @param {Function} onLogIn UI related function to be executed after successfully signed in.
  * @param {Function} onLogOut UI related function to be executed after successfully signed out.
- * @param {Function} onDefault UI related function to be executed on default.
+ * @param {Function} onLogInFailure UI related function to be executed for user does not sign in successfully.
+ * @param {Function} onLogOutFailure UI related function to be executed for user does not sign out successfully.
  */
-Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
+Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, onLogOutFailure) => {
   firebase.auth().onAuthStateChanged(async (firebaseUser) => {
     // User not signed in.
     if (!firebaseUser) {
@@ -139,7 +142,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
       }
       
       // Clears the session cookie
-      Auth.clearSessionCookie(onLogOut, onDefault);
+      Auth.clearSessionCookie(onLogOut, onLogOutFailure);
 
       console.log('Successfully signed out');
 
@@ -156,7 +159,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    await Auth.createSessionCookie(firebaseUser, onLogIn, onDefault);
+    await Auth.createSessionCookie(firebaseUser, onLogIn, onLogInFailure);
 
     console.log('Successfully signed in');
   });
@@ -166,9 +169,9 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
  * Clears the session cookie
  * 
  * @param {Function} onLogOut UI related function to be executed after successfully signed out.
- * @param {Function} onDefault UI related function to be executed on default.
+ * @param {Function} onLogOutFailure UI related function to be executed for user does not sign out successfully.
  */
-Auth.clearSessionCookie = async (onLogOut, onDefault) => {
+Auth.clearSessionCookie = async (onLogOut, onLogOutFailure) => {
   try {
     // Clears the session cookie
     let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
@@ -186,7 +189,7 @@ Auth.clearSessionCookie = async (onLogOut, onDefault) => {
     console.log(error);
 
     // Displays the default UI.
-    onDefault();
+    onLogOutFailure();
   }
 };
 
@@ -195,9 +198,9 @@ Auth.clearSessionCookie = async (onLogOut, onDefault) => {
  * 
  * @param {user} firebaseUser Current user.
  * @param {Function} onLogIn UI related function to be executed after successfully signed in.
- * @param {Function} onDefault UI related function to be executed on default.
+ * @param {Function} onLogInFailure UI related function to be executed for user does not sign in successfully.
  */
-Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
+Auth.createSessionCookie = (firebaseUser, onLogIn, onLogInFailure) => {
   return firebaseUser.getIdToken()
       .then(async (idToken) => {
         // Session login endpoint is queried and session cookie is set.
@@ -219,15 +222,15 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onDefault) => {
         } catch(error) {
           console.log(error);
 
-          // Displays the default UI.
-          onDefault(); 
+          // Displays the UI accordingly.
+          onLogInFailure();
         }
       })
       .catch((error) => {
         console.log(error);
 
-        // Displays the default UI.
-        onDefault();
+        // Displays the UI accordingly.
+        onLogInFailure();
       });
 };
 
