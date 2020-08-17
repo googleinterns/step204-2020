@@ -68,7 +68,7 @@ function renderPageElements() {
  * @return {Object} Business account object containing the user inputs.
  */
 function getBusinessDetailsFromUserInput() {
-  const businessName = document.getElementById('name').value;
+  const businessName = document.getElementById('name').value.trim();
 
   const businessDetails = {
     userType: USER_TYPE_BUSINESS,
@@ -86,7 +86,7 @@ function getBusinessDetailsFromUserInput() {
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
-  const name = document.getElementById('name').value;
+  const name = document.getElementById('name').value.trim();
 
   if (name === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',

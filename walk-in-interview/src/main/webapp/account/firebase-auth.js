@@ -43,7 +43,7 @@ const Auth = {};
  *
  * @param {String} email The email for the new business account.
  * @param {String} password The password for the new business account.
- * @returns {Promise} A POST request to create an account.
+ * Returns {Promise} A POST request to create an account.
  */
 Auth.createBusinessAccount = (email, password) => {
   return firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -54,7 +54,7 @@ Auth.createBusinessAccount = (email, password) => {
  *
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
- * @returns {Promise} A POST request to sign in an account.
+ * Returns {Promise} A POST request to sign in an account.
  */
 Auth.signIntoBusinessAccount = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
@@ -237,7 +237,7 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onLogInFailure) => {
  * @param {String} url Login endpoint.
  * @param {String} idToken Id token.
  * @param {String} csrfToken CSRF token.
- * @return {Promise} Makes POST request.
+ * Returns {Promise} Makes POST request.
  */
 Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   const params = new URLSearchParams();
@@ -256,7 +256,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
  * Makes a POST request to session log out endpoint.
  *
  * @param {String} url Login endpoint.
- * @return {Promise} Makes POST request.
+ * Returns {Promise} Makes POST request.
  */
 Auth.postIdTokenToSessionLogout = (url) => {
   return fetch(url, {

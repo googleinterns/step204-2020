@@ -12,6 +12,7 @@ const CURRENT_LOCALE = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
+import {API} from '../../../apis.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
@@ -41,11 +42,10 @@ function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
 
+  await createEmptyAccount();
+
   // TODO(issue/102): replace with proper notification
   alert(STRINGS['new-user-info']);
-
-  // Directs to the page to fill in business account info.
-  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
 function onLogOut() {
@@ -104,7 +104,7 @@ submitButton.addEventListener('click', async (_) => {
   // Disables the button to avoid accidental double click
   document.getElementById('submit').disabled = true;
 
-  const account = document.getElementById('account-input').value;
+  const account = document.getElementById('account-input').value.trim();
 
   if (account === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -113,7 +113,7 @@ submitButton.addEventListener('click', async (_) => {
     return;
   }
 
-  const password = document.getElementById('password-input').value;
+  const password = document.getElementById('password-input').value.trim();
 
   // Resets the error (there might have been an error msg from earlier)
   setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -124,9 +124,6 @@ submitButton.addEventListener('click', async (_) => {
       .catch((error) => {
         showErrorMessageFromError(error);
       });
-
-  // Enables the button regardless of success or failure
-  document.getElementById('submit').disabled = false;
 });
 
 /**
@@ -163,4 +160,58 @@ function showErrorMessageFromError(error) {
       console.error(error.message);
       break;
   }
+}
+
+/**
+ * Creates an account with email as name for the user
+ */
+async function createEmptyAccount() {
+  var user = firebase.auth().currentUser;
+  if (!user) {
+    return new Promise.reject("Not signed in");
+  }
+
+  // Creates a totally empty account
+  const accountDetails = {
+    userType: USER_TYPE_BUSINESS,
+    name: user.email,
+    jobs: [], // empty job list when the account is newly created
+  };
+
+  return fetch(API['create-business-account'], {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(accountDetails),
+  })
+      .then((response) => {
+        if (response.status == BAD_REQUEST_STATUS_CODE) {
+          setErrorMessage(/* errorMessageElementId= */'error-message',
+              /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
+              /* includesDefault= */false);
+          throw new Error(ACCOUNT_STRINGS['create-account-error-message']);
+        }
+
+        /** reset the error (there might have been an error msg from earlier) */
+        setErrorMessage(/* errorMessageElementId= */'error-message',
+            /* msg= */ '', /* includesDefault= */false);
+
+        // Enables the button regardless of success or failure
+        document.getElementById('submit').disabled = false;
+
+        // Directs to the page to fill in business account info.
+        window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
+      })
+      .catch((error) => {
+        // Not the server response error already caught and thrown
+        if (error.message != ACCOUNT_STRINGS['create-account-error-message']) {
+          console.log('error', error);
+
+          setErrorMessage(/* errorMessageElementId= */'error-message',
+              /* msg= */ ACCOUNT_STRINGS['error-message'],
+              /* includesDefault= */false);
+        }
+
+        // Enables the button regardless of success or failure
+        document.getElementById('submit').disabled = false;
+      });
 }
