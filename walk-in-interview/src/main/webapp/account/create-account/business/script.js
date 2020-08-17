@@ -36,7 +36,7 @@ window.onload = () => {
 /**
  * What to do after the user signed in and the session cookie is created.
  */
-function onLogIn() {
+async function onLogIn() {
   // TODO(issue/101): Display button according to log in status;
 
   // TODO(issue/100): set the cookie at the server side instead
