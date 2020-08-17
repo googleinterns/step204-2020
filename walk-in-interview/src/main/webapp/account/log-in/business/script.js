@@ -4,20 +4,22 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from '../../strings.en.js';
-import {Auth} from '../firebase-auth.js';
-import {setErrorMessage} from '../../common-functions.js';
+import {AppStrings} from '../../../strings.en.js';
+import {Auth} from '../../firebase-auth.js';
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
+  setCookie, setErrorMessage} from '../../../common-functions.js';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const COMMONG_STRINGS = AppStrings['log-in'];
 const STRINGS = AppStrings['business-log-in'];
 const LOGIN_HOMEPAGE_PATH = '../index.html';
-const HOMEPAGE_PATH = '../../index.html';
+const HOMEPAGE_PATH = '../../../index.html';
 
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const USER_DISABLED_ERROR_CODE = 'auth/user-disabled';
@@ -25,8 +27,46 @@ const USER_NOT_FOUND_ERROR_CODE = 'auth/user-not-found';
 const WRONG_PASSWORD_ERROR_CODE = 'auth/wrong-password';
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
+
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
+function onLogIn() {
+  // TODO(issue/101): Display button according to log in status;
+
+  // TODO(issue/100): set the cookie at the server side instead
+  setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-in-success']);
+
+  window.location.href = HOMEPAGE_PATH;
+}
+
+function onLogOut() {
+  // TODO(issue/101): Display button according to log in status;
+
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-out-success']);
+}
+
+function onLogInFailure() {
+  // TODO(issue/101): Display button according to log in status;
+
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-in-failure']);
+}
+
+function onLogOutFailure() {
+  // TODO(issue/101): Display button according to log in status;
+  
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-out-failure']);
+}
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
@@ -61,7 +101,7 @@ backButton.addEventListener('click', (_) => {
 });
 
 const submitButton = document.getElementById('submit');
-submitButton.addEventListener('click', (_) => {
+submitButton.addEventListener('click', async (_) => {
   // Disables the button to avoid accidental double click
   document.getElementById('submit').disabled = true;
 
@@ -81,21 +121,13 @@ submitButton.addEventListener('click', (_) => {
       /* msg= */ '',
       /* includesDefault= */false);
 
-  Auth.signIntoBusinessAccount(account, password)
-      .then(() => {
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
-      })
+  await Auth.signIntoBusinessAccount(account, password)
       .catch((error) => {
         showErrorMessageFromError(error);
-        document.getElementById('submit').disabled = false;
-
-        // Back to home page
-        window.location.href = HOMEPAGE_PATH;
       });
+
+  // Enables the button regardless of success or failure
+  document.getElementById('submit').disabled = false;
 });
 
 /**

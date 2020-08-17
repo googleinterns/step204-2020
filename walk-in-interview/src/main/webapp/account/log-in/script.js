@@ -10,12 +10,12 @@ const CurrentLocale = 'en';
  * Import statements are static so its parameters cannot be dynamic.
  * TODO(issue/22): figure out how to use dynamic imports
  */
-import {AppStrings} from '../strings.en.js';
+import {AppStrings} from '../../strings.en.js';
 
 const STRINGS = AppStrings['log-in'];
 const APPLICANT_LOG_IN_PAGE = './applicant/index.html';
 const BUSINESS_LOG_IN_PAGE = './business/index.html';
-const HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../../index.html';
 
 window.onload = () => {
   renderPageElements();
