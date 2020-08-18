@@ -119,13 +119,12 @@ submitButton.addEventListener('click', async (_) => {
       /* msg= */ '',
       /* includesDefault= */false);
 
-  await Auth.createBusinessAccount(account, password)
-      .then(async() => {
-        await createEmptyAccount();
-      })
-      .catch((error) => {
-        showErrorMessageFromError(error);
-      });
+  try {
+    await Auth.createBusinessAccount(account, password);
+    await createEmptyPlaceholderAccountObject();
+  } catch (error) {
+    showErrorMessageFromError(error);
+  }
   
   // Enables the button regardless of success or failure
   document.getElementById('submit').disabled = false;
@@ -168,9 +167,9 @@ function showErrorMessageFromError(error) {
 }
 
 /**
- * Creates an account with email as name for the user
+ * Creates an account object with email as name for the user
  */
-async function createEmptyAccount() {
+async function createEmptyPlaceholderAccountObject() {
   var user = firebase.auth().currentUser;
   if (!user) {
     return new Promise.reject("Not signed in");
