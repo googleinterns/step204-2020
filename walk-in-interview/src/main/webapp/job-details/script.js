@@ -38,6 +38,9 @@ window.onload = () => {
   renderJobDetailsPageElements();
 };
 
+/**
+ * UI related function to be executed after successfully signed in.
+ */
 function onLogIn() {
   clearHeaderUI();
 
@@ -51,21 +54,29 @@ function onLogIn() {
   }
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
   clearHeaderUI();
 
   renderLogOutUI();
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
   clearHeaderUI();
 
   renderLogOutUI();
 
-  // TODO(issue/101): Display button according to log in status;
   alert(AUTH_STRINGS['sign-in-failure']);
 }
 
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
   clearHeaderUI();
 
@@ -74,10 +85,12 @@ function onLogOutFailure() {
 
   renderLogOutUI();
 
-  // TODO(issue/101): Display button according to log in status;
   console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
+/**
+ * Removes all html elements in header container
+ */
 function clearHeaderUI() {
   const headerContainer = document.getElementById('header-container');
 
@@ -86,16 +99,25 @@ function clearHeaderUI() {
   }
 }
 
+/**
+ * Renders the header UI for applicant user
+ */
 function renderApplicantUI() {
   renderBackButton();
 }
 
+/**
+ * Renders the header UI for business user
+ */
 function renderBusinessUI() {
   renderBackButton();
   renderUpdateButton();
   renderDeleteButton();
 }
 
+/**
+ * Renders the header UI for log out status
+ */
 function renderLogOutUI() {
   renderBackButton();
 }
@@ -113,6 +135,9 @@ function renderBackButton() {
   headerContainer.appendChild(homepageButton);
 }
 
+/**
+ * Renders the back button
+ */
 function renderUpdateButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -147,6 +172,9 @@ function renderUpdateButton() {
   headerContainer.appendChild(updateForm);
 }
 
+/**
+ * Renders the delete button
+ */
 function renderDeleteButton() {
   const headerContainer = document.getElementById('header-container');
 

@@ -44,6 +44,9 @@ window.onload = () => {
   renderHomepageElements();
 };
 
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
 function onLogIn() {
   clearHeaderUI();
 
@@ -57,21 +60,29 @@ function onLogIn() {
   }
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
   clearHeaderUI();
 
   renderLogOutUI();
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
   clearHeaderUI();
 
   renderLogOutUI();
 
-  // TODO(issue/101): Display button according to log in status;
   alert(AUTH_STRINGS['sign-in-failure']);
 }
 
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
   clearHeaderUI();
 
@@ -84,6 +95,9 @@ function onLogOutFailure() {
   console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
+/**
+ * Removes all html elements in header container
+ */
 function clearHeaderUI() {
   const headerContainer = document.getElementById('header-container');
 
@@ -92,12 +106,18 @@ function clearHeaderUI() {
   }
 }
 
+/**
+ * Renders the header UI for applicant user
+ */
 function renderApplicantUI() {
   renderInterestedJobButton();
   renderPageTitle();
   renderLogOutButton();
 }
 
+/**
+ * Renders the header UI for business user
+ */
 function renderBusinessUI() {
   renderNewPostButton();
   renderShowJobPostsButton();
@@ -105,12 +125,18 @@ function renderBusinessUI() {
   renderLogOutButton();
 }
 
+/**
+ * Renders the header UI for log out status
+ */
 function renderLogOutUI() {
   renderSignUpButton();
   renderPageTitle();
   renderLogInButton();
 }
 
+/**
+ * Renders the make new job post button
+ */
 function renderNewPostButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -124,6 +150,9 @@ function renderNewPostButton() {
   headerContainer.appendChild(newPostButton);
 }
 
+/**
+ * Renders the page title
+ */
 function renderPageTitle() {
   const headerContainer = document.getElementById('header-container');
 
@@ -134,6 +163,9 @@ function renderPageTitle() {
   headerContainer.appendChild(homepageTitle);
 }
 
+/**
+ * Renders the sign up button
+ */
 function renderSignUpButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -147,6 +179,9 @@ function renderSignUpButton() {
   headerContainer.appendChild(accountButton);
 }
 
+/**
+ * Renders the log in button
+ */
 function renderLogInButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -160,6 +195,9 @@ function renderLogInButton() {
   headerContainer.appendChild(loginButton);
 }
 
+/**
+ * Renders the log out button
+ */
 function renderLogOutButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -173,6 +211,9 @@ function renderLogOutButton() {
   headerContainer.appendChild(logoutButton);
 }
 
+/**
+ * Renders the show job posts made button
+ */
 function renderShowJobPostsButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -186,6 +227,9 @@ function renderShowJobPostsButton() {
   headerContainer.appendChild(showJobPostsButton);
 }
 
+/**
+ * Renders the show interested job button
+ */
 function renderInterestedJobButton() {
   const headerContainer = document.getElementById('header-container');
 
