@@ -23,7 +23,7 @@ const STRINGS = AppStrings['job'];
 const UPDATE_JOB_STRINGS = AppStrings['update-job'];
 const COMMON_STRINGS = AppStrings['common'];
 const HOMEPAGE_PATH = '../index.html';
-const BAD_REQUEST_STATUS_CODE = 400;
+const SUCCESS_STATUS_CODE = 200;
 
 // Status of this job post, default to be ACTIVE
 let status = 'ACTIVE';
@@ -449,7 +449,7 @@ submitButton.addEventListener('click', (_) => {
       body: JSON.stringify(jobDetails),
     })
         .then((response) => {
-          if (response.status == BAD_REQUEST_STATUS_CODE) {
+          if (response.status != SUCCESS_STATUS_CODE) {
             setErrorMessage(/* errorMessageElementId= */'error-message',
                 /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
                 /* includesDefault= */false);
