@@ -73,7 +73,7 @@ function getBusinessDetailsFromUserInput() {
   const businessDetails = {
     userType: USER_TYPE_BUSINESS,
     name: businessName,
-    jobs: [], // empty job list when the account is newly created
+    // empty job list is created at the server
   };
 
   return businessDetails;
