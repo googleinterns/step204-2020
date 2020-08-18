@@ -14,7 +14,7 @@ import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
 import {API} from '../../../apis.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, 
-  setCookie} from '../../../common-functions.js';
+  setCookie, setErrorMessage} from '../../../common-functions.js';
 
 const AUTH_STRINGS = AppStrings['auth'];
 const ACCOUNT_STRINGS = AppStrings['create-account'];
