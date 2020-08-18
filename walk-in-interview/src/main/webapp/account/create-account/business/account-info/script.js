@@ -35,17 +35,25 @@ function onLogIn() {
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  // TODO(issue/101): Display button according to log in status;
+  // No UI change
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
-  // TODO(issue/101): Display button according to log in status;
+  // No UI change
 }
 
-
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
-  // TODO(issue/101): Display button according to log in status;
+  // No UI change
 }
 
 

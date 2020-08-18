@@ -34,21 +34,28 @@ window.onload = () => {
  * What to do after the user signed in and the session cookie is created.
  */
 function onLogIn() {
-  // TODO(issue/101): Display button according to log in status;
-
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  
+  // No change on UI
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
   // TODO(issue/102): replace with proper notification
   alert(ACCOUNT_STRINGS['create-account-error-message']);
 }
 
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
   // Clears the cookie, which also forces the user to log out
   deleteCookies();

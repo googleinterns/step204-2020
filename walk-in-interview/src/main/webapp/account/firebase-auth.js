@@ -144,11 +144,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
       }
       
       // Clears the session cookie
-<<<<<<< HEAD
-      Auth.clearSessionCookie(onDefault);
-=======
-      Auth.clearSessionCookie(onLogOut, onLogOutFailure);
->>>>>>> create-applicant-account-front-end
+      Auth.clearSessionCookie(onLogOutFailure);
 
       console.log('Successfully signed out');
 
@@ -172,7 +168,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    await Auth.createSessionCookie(firebaseUser, onLogIn, onLogInFailure);
+    await Auth.createSessionCookie(firebaseUser, onLogInFailure);
 
     console.log('Successfully signed in');
 
@@ -187,7 +183,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
  * @param {Function} onLogOut UI related function to be executed after successfully signed out.
  * @param {Function} onLogOutFailure UI related function to be executed for user does not sign out successfully.
  */
-Auth.clearSessionCookie = async (onLogOut, onLogOutFailure) => {
+Auth.clearSessionCookie = async (onLogOutFailure) => {
   try {
     // Clears the session cookie
     let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
@@ -210,10 +206,9 @@ Auth.clearSessionCookie = async (onLogOut, onLogOutFailure) => {
  * Gets the user's ID token as it is needed to exchange for a session cookie.
  * 
  * @param {user} firebaseUser Current user.
- * @param {Function} onLogIn UI related function to be executed after successfully signed in.
  * @param {Function} onLogInFailure UI related function to be executed for user does not sign in successfully.
  */
-Auth.createSessionCookie = (firebaseUser, onLogIn, onLogInFailure) => {
+Auth.createSessionCookie = (firebaseUser, onLogInFailure) => {
   return firebaseUser.getIdToken()
       .then(async (idToken) => {
         // Session login endpoint is queried and session cookie is set.
