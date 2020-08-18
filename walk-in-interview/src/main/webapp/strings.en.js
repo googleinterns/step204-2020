@@ -83,6 +83,7 @@ AppStrings['create-account'] = {
   'back': 'Back',
   'submit': 'Submit',
   'error-message': 'Error occur. Please try again.',
+  'create-account-error-message': 'Some error occur when creating the account.',
 };
 
 /**
@@ -90,6 +91,22 @@ AppStrings['create-account'] = {
  */
 AppStrings['create-applicant-account'] = {
   'new-user-info': 'Account is successfully created!',
+};
+
+/**
+ * All the strings to be used in the account/create-account/business
+ */
+AppStrings['create-business-account'] = {
+  'account': 'Account (Email)',
+  'password': 'Password',
+  'empty-email': 'Empty email input',
+  'invalid-password': 'The password must have at least 6 characters',
+  'new-user-info': 'Account is successfully created!',
+  'name': 'Company Name',
+  'user-in-use-error': 'There already exists an account with the given email address',
+  'invalid-email-error': 'The email address is not valid',
+  'operation-not-allowed-error': 'If email/password accounts are not enabled',
+  'weak-password-error': 'The password is not strong enough\nWe need a password with at least {MIN_PASSWORD_LENGTH} characters',
 };
 
 /**

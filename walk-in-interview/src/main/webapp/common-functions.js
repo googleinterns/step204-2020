@@ -19,6 +19,7 @@ const USER_TYPE_BUSINESS = 'business';
 const USER_TYPE_NO_USER = '';
 const DEFAULT_PAGE_SIZE = 20;
 const WHOLE_DAY_MILLISECONDS = 24*60*60*1000;
+const MIN_PASSWORD_LENGTH = 6;
 
 /**
  * Gets the requirements list from the servlet
@@ -104,6 +105,6 @@ function getCookie(cname) {
 
 export {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
   USER_TYPE_APPLICANT, USER_TYPE_BUSINESS, USER_TYPE_NO_USER,
-  DEFAULT_PAGE_SIZE,
+  DEFAULT_PAGE_SIZE, MIN_PASSWORD_LENGTH,
   getRequirementsList, setErrorMessage, renderSelectOptions, 
   setCookie, getCookie};
