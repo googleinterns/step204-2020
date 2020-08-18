@@ -26,6 +26,7 @@ const EMAIL_IN_USE_ERROR_CODE = 'auth/email-already-in-use';
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const OPERATION_NOT_ALLOWED_ERROR_CODE = 'auth/operation-not-allowed';
 const WEAK_PASSWORD_ERROR_CODE = 'auth/weak-password';
+const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(
@@ -36,13 +37,11 @@ window.onload = () => {
 /**
  * What to do after the user signed in and the session cookie is created.
  */
-async function onLogIn() {
+function onLogIn() {
   // TODO(issue/101): Display button according to log in status;
 
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
-
-  await createEmptyAccount();
 
   // TODO(issue/102): replace with proper notification
   alert(STRINGS['new-user-info']);
@@ -121,9 +120,15 @@ submitButton.addEventListener('click', async (_) => {
       /* includesDefault= */false);
 
   await Auth.createBusinessAccount(account, password)
+      .then(async() => {
+        await createEmptyAccount();
+      })
       .catch((error) => {
         showErrorMessageFromError(error);
       });
+  
+  // Enables the button regardless of success or failure
+  document.getElementById('submit').disabled = false;
 });
 
 /**
