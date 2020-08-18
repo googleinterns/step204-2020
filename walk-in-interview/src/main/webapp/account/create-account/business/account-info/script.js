@@ -22,7 +22,8 @@ const ACCOUNT_STRINGS = AppStrings['create-account'];
 const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
 
@@ -35,18 +36,21 @@ function onLogIn() {
 }
 
 function onLogOut() {
-  
+  // TODO(issue/101): Display button according to log in status;
 }
 
-function onDefault() {
-  
+function onLogInFailure() {
+  // TODO(issue/101): Display button according to log in status;
 }
+
+
+function onLogOutFailure() {
+  // TODO(issue/101): Display button according to log in status;
+}
+
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  const backButton = document.getElementById('back');
-  backButton.innerText = ACCOUNT_STRINGS['back'];
-
   const submitButton = document.getElementById('submit');
   submitButton.setAttribute('value', ACCOUNT_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
@@ -64,12 +68,12 @@ function renderPageElements() {
  * @return {Object} Business account object containing the user inputs.
  */
 function getBusinessDetailsFromUserInput() {
-  const businessName = document.getElementById('name').value;
+  const businessName = document.getElementById('name').value.trim();
 
   const businessDetails = {
     userType: USER_TYPE_BUSINESS,
     name: businessName,
-    jobs: [], // empty job list when the account is newly created
+    // empty job list is created at the server
   };
 
   return businessDetails;
@@ -82,7 +86,7 @@ function getBusinessDetailsFromUserInput() {
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
-  const name = document.getElementById('name').value;
+  const name = document.getElementById('name').value.trim();
 
   if (name === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -92,11 +96,6 @@ function validateRequiredUserInput() {
 
   return true;
 }
-
-const backButton = document.getElementById('back');
-backButton.addEventListener('click', (_) => {
-  window.location.href = HOMEPAGE_PATH;
-});
 
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {

@@ -14,10 +14,11 @@ const CURRENT_LOCALE = 'en';
 import {AppStrings} from './strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
   USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, USER_TYPE_BUSINESS,
-  getRequirementsList, setErrorMessage, getCookie} from './common-functions.js';
+  getRequirementsList, setErrorMessage, getCookie, deleteCookies} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
 import {Auth} from '/account/firebase-auth.js';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const STRINGS = AppStrings['homepage'];
 const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
 const LOG_IN_PAGE_PATH = '/account/log-in/index.html';
@@ -38,12 +39,10 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderHomepageElements();
 };
-
-// TODO(issue/101): Display button according to log in status;
-// i.e. implement onLogIn, onLogOut, onDefault
 
 function onLogIn() {
   clearHeaderUI();
@@ -61,13 +60,28 @@ function onLogIn() {
 function onLogOut() {
   clearHeaderUI();
 
-  renderDefaultUI();
+  renderLogOutUI();
 }
 
-function onDefault() {
+function onLogInFailure() {
   clearHeaderUI();
-  
-  renderDefaultUI();
+
+  renderLogOutUI();
+
+  // TODO(issue/101): Display button according to log in status;
+  alert(AUTH_STRINGS['sign-in-failure']);
+}
+
+function onLogOutFailure() {
+  clearHeaderUI();
+
+  // Clears the cookie, which also forces the user to log out
+  deleteCookies();
+
+  renderLogOutUI();
+
+  // TODO(issue/101): Display button according to log in status;
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
 function clearHeaderUI() {
@@ -91,7 +105,7 @@ function renderBusinessUI() {
   renderLogOutButton();
 }
 
-function renderDefaultUI() {
+function renderLogOutUI() {
   renderSignUpButton();
   renderPageTitle();
   renderLogInButton();

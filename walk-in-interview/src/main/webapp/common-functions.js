@@ -19,6 +19,7 @@ const USER_TYPE_BUSINESS = 'business';
 const USER_TYPE_NO_USER = '';
 const DEFAULT_PAGE_SIZE = 20;
 const WHOLE_DAY_MILLISECONDS = 24*60*60*1000;
+const MIN_PASSWORD_LENGTH = 6;
 
 /**
  * Gets the requirements list from the servlet
@@ -102,8 +103,21 @@ function getCookie(cname) {
   return '';
 }
 
+/**
+ * Deletes all cookies.
+ */
+function deleteCookies() { 
+  var allCookies = document.cookie.split(';'); 
+  
+  // The "expire" attribute of every cookie is  
+  // Set to "Thu, 01 Jan 1970 00:00:00 GMT" 
+  for (var i = 0; i < allCookies.length; i++) {
+    document.cookie = `${allCookies[i]}=;expires=${new Date(0).toUTCString()};path=/`;
+  }
+}
+
 export {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
   USER_TYPE_APPLICANT, USER_TYPE_BUSINESS, USER_TYPE_NO_USER,
-  DEFAULT_PAGE_SIZE,
+  DEFAULT_PAGE_SIZE, MIN_PASSWORD_LENGTH,
   getRequirementsList, setErrorMessage, renderSelectOptions, 
-  setCookie, getCookie};
+  setCookie, getCookie, deleteCookies};
