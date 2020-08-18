@@ -19,7 +19,7 @@ import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
 const HOMEPAGE_PATH = '../../../../index.html';
 const STRINGS = AppStrings['create-business-account'];
 const ACCOUNT_STRINGS = AppStrings['create-account'];
-const BAD_REQUEST_STATUS_CODE = 400;
+const SUCCESS_STATUS_CODE = 200;
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(
@@ -121,7 +121,7 @@ submitButton.addEventListener('click', (_) => {
     body: JSON.stringify(accountDetails),
   })
       .then((response) => {
-        if (response.status == BAD_REQUEST_STATUS_CODE) {
+        if (response.status !== SUCCESS_STATUS_CODE) {
           setErrorMessage(/* errorMessageElementId= */'error-message',
               /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
               /* includesDefault= */false);

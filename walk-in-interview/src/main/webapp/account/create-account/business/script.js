@@ -25,7 +25,7 @@ const EMAIL_IN_USE_ERROR_CODE = 'auth/email-already-in-use';
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const OPERATION_NOT_ALLOWED_ERROR_CODE = 'auth/operation-not-allowed';
 const WEAK_PASSWORD_ERROR_CODE = 'auth/weak-password';
-const BAD_REQUEST_STATUS_CODE = 400;
+const SUCCESS_STATUS_CODE = 200;
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(
@@ -192,7 +192,7 @@ async function createPreliminaryBusinessAccount() {
     body: JSON.stringify(accountDetails),
   })
       .then((response) => {
-        if (response.status == BAD_REQUEST_STATUS_CODE) {
+        if (response.status !== SUCCESS_STATUS_CODE) {
           setErrorMessage(/* errorMessageElementId= */'error-message',
               /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
               /* includesDefault= */false);
