@@ -205,24 +205,31 @@ async function renderJobDetailsPageElements() {
  * @param {Object} job The job details.
  */
 function displayJobDetails(job) {
+  var user = firebase.auth().currentUser();
   const userType = getCookie(USER_TYPE_COOKIE_PARAM);
 
   if (job === undefined || job.length === 0) {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
 
-    if (userType === USER_TYPE_BUSINESS) {
-      // disable the buttons if theres an error
+    // disable the buttons if theres an error
+    if (document.body.contains(document.getElementById('update'))) {
       document.getElementById('update').disabled = true;
+    }
+
+    if (document.body.contains(document.getElementById('delete'))) {
       document.getElementById('delete').disabled = true;
     }
+
     return;
   }
 
-  
-  if (userType === USER_TYPE_BUSINESS) {
-    // in case they were disabled earlier
+  // in case they were disabled earlier
+  if (document.body.contains(document.getElementById('update'))) {
     document.getElementById('update').disabled = false;
+  }
+
+  if (document.body.contains(document.getElementById('delete'))) {
     document.getElementById('delete').disabled = false;
   }
 
