@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../../../style.css">
+  </head>
+
+  <body>
+    <div class="header-container">
+      <input id="submit">
+    </div>
+
+    <div class="content-container">
+      <ul>
+        <li>
+          <label id="name-label" for="name"></label>
+          <input id="name" name="name">
+        </li>
+
+        <li>
+          <label for="skills-title"></label>
+          <div id="skills-title" name="skills-title"></div>
+          <ul id="skills"></ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+
+    <!-- template for skill list -->
+    <div hidden>
+      <li id="skill-element-template">
+          <input type="checkbox">
+          <label></label>
+      </li>
+    </div>
+  </body>
+
+  <script type="module" src="./script.js"></script>
+
+  <!-- TODO(issue/87): move to separate config file -->
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+</html>

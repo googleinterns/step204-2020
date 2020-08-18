@@ -35,9 +35,6 @@ function onLogIn() {
 
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
-
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-in-success']);
   
   window.location.href = HOMEPAGE_PATH;
 }
@@ -65,11 +62,37 @@ function onLogOutFailure() {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
-  // Auth.subscribeToUserAuthenticationChanges();
+  Auth.addPhoneSignInAndSignUpUI(
+    'phone-auth', HOMEPAGE_PATH,
+    onNewUser, onExistingUser);
 
   const backButton = document.getElementById('back');
   backButton.innerText = COMMONG_STRINGS['back'];
+}
+
+/**
+ * The function to be executed for new user log in.
+ */
+function onNewUser() {
+  console.log('This is a new user');
+  // Informs user
+  // TODO(issue/102): replace with proper notification
+  alert(STRINGS['new-user-info']);
+
+  window.location.href = HOMEPAGE_PATH;
+}
+
+/**
+ * The function to be executed for existing user log in.
+ */
+function onExistingUser() {
+  console.log('This is not a new user');
+
+  // Informs user
+  // TODO(issue/102): replace with proper notification
+  alert(AUTH_STRINGS['sign-in-success']);
+
+  window.location.href = HOMEPAGE_PATH;
 }
 
 const backButton = document.getElementById('back');
