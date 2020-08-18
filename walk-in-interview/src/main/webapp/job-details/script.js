@@ -156,6 +156,18 @@ function renderDeleteButton() {
   // in case it was disabled earlier
   deleteButtonElement.disabled = false;
 
+  deleteButtonElement.addEventListener('click', () => {
+    const jobId = getJobId();
+    if (jobId === '') {
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
+          /* includesDefault= */false);
+      return;
+    }
+  
+    deleteJobPost(jobId);
+  });
+
   headerContainer.appendChild(deleteButtonElement);
 }
 
@@ -202,9 +214,12 @@ function displayJobDetails(job) {
     return;
   }
 
-  // in case they were disabled earlier
-  document.getElementById('update').disabled = false;
-  document.getElementById('delete').disabled = false;
+  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
+  if (userType === USER_TYPE_BUSINESS) {
+    // in case they were disabled earlier
+    document.getElementById('update').disabled = false;
+    document.getElementById('delete').disabled = false;
+  }
 
   // does not require info window
   addMarker(map, job);
@@ -320,16 +335,3 @@ function deleteJobPost(jobId) {
         console.error(error);
       });
 }
-
-const deleteButtonElement = document.getElementById('delete');
-deleteButtonElement.addEventListener('click', () => {
-  const jobId = getJobId();
-  if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
-        /* includesDefault= */false);
-    return;
-  }
-
-  deleteJobPost(jobId);
-});
