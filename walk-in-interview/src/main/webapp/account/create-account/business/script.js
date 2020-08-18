@@ -121,7 +121,7 @@ submitButton.addEventListener('click', async (_) => {
 
   try {
     await Auth.createBusinessAccount(account, password);
-    await createEmptyPlaceholderAccountObject();
+    await createPreliminaryBusinessAccount();
   } catch (error) {
     showErrorMessageFromError(error);
   }
@@ -167,9 +167,9 @@ function showErrorMessageFromError(error) {
 }
 
 /**
- * Creates an account object with email as name for the user
+ * Creates an preliminary account object with email as name for the user
  */
-async function createEmptyPlaceholderAccountObject() {
+async function createPreliminaryBusinessAccount() {
   var user = firebase.auth().currentUser;
   if (!user) {
     return new Promise.reject("Not signed in");
