@@ -449,7 +449,7 @@ submitButton.addEventListener('click', (_) => {
       body: JSON.stringify(jobDetails),
     })
         .then((response) => {
-          if (response.status != SUCCESS_STATUS_CODE) {
+          if (response.status !== SUCCESS_STATUS_CODE) {
             setErrorMessage(/* errorMessageElementId= */'error-message',
                 /* msg= */ UPDATE_JOB_STRINGS['storing-error-message'],
                 /* includesDefault= */false);

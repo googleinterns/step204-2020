@@ -113,7 +113,7 @@ submitButton.addEventListener('click', (_) => {
     body: JSON.stringify(accountDetails),
   })
       .then((response) => {
-        if (response.status != SUCCESS_STATUS_CODE) {
+        if (response.status !== SUCCESS_STATUS_CODE) {
           setErrorMessage(/* errorMessageElementId= */'error-message',
               /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
               /* includesDefault= */false);
