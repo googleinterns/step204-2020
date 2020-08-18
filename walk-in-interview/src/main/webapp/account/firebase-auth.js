@@ -65,13 +65,12 @@ Auth.signIntoBusinessAccount = (email, password) => {
  * to the provided element.
  *
  * @param {String} elementId The div element to add the UI.
- * @param {String} newUserSuccessPath The url for redirect on new user login success.
- * @param {String} nonNewUserSuccessPath The url for redirect on non new user login success.
- * @param {String} newUserInfo The message to be displayed if it is a new user.
- * @param {String} nonNewUserInfo The message to be displayed if it is not a new user.
+ * @param {String} successPath The url for redirect on login success.
+ * @param {String} onNewUser The function to be executed for new user log in.
+ * @param {String} onExistingUser The function to be executed for existing user log in.
  */
-Auth.addPhoneSignInAndSignUpUI = 
-  (elementId, newUserSuccessPath, nonNewUserSuccessPath, newUserInfo, nonNewUserInfo) => {
+ Auth.addPhoneSignInAndSignUpUI = 
+  (elementId, successPath, onNewUser, onExistingUser) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -82,23 +81,12 @@ Auth.addPhoneSignInAndSignUpUI =
     callbacks: {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
         if (authResult.additionalUserInfo.isNewUser) {
-          redirectUrl = newUserSuccessPath;
-
-          console.log('This is a new user');
-          // Informs user
-          // TODO(issue/102): replace with proper notification
-          alert(newUserInfo);
+          onNewUser();
         } else {
-          redirectUrl = nonNewUserSuccessPath;
-
-          console.log('This is not a new user');
-
-          // Informs user
-          // TODO(issue/102): replace with proper notification
-          alert(nonNewUserInfo)
+          onExistingUser();
         }
 
-        return true;
+        return false;
       },
 
       signInFailure: (error) => {
@@ -108,7 +96,7 @@ Auth.addPhoneSignInAndSignUpUI =
         alert(STRINGS['sign-in-failure']);
       }
     },
-    signInSuccessUrl: newUserSuccessPath,
+    signInSuccessUrl: successPath,
   });
 };
 

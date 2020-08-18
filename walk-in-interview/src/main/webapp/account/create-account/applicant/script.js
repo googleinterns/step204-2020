@@ -33,16 +33,11 @@ window.onload = () => {
 /**
  * What to do after the user signed in and the session cookie is created.
  */
-async function onLogIn() {
+function onLogIn() {
   // TODO(issue/101): Display button according to log in status;
 
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
-
-  await createPreliminaryApplicantAccount();
-  
-  // Directs to the page to fill in applicant account info.
-  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
 function onLogOut() {
@@ -63,11 +58,41 @@ function onLogOutFailure() {
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
   Auth.addPhoneSignInAndSignUpUI(
-    'phone-auth', CREATE_ACCOUNT_INFO_PAGE_PATH, HOMEPAGE_PATH,
-    STRINGS['new-user-info'], STRINGS['non-new-user-info']);
+    'phone-auth', CREATE_ACCOUNT_INFO_PAGE_PATH,
+    onNewUser, onExistingUser);
 
   const backButton = document.getElementById('back');
   backButton.innerText = ACCOUNT_STRINGS['back'];
+}
+
+/**
+ * The function to be executed for new user log in.
+ */
+async function onNewUser() {
+  console.log('This is a new user');
+
+  await createPreliminaryApplicantAccount();
+
+  // Informs user
+  // TODO(issue/102): replace with proper notification
+  alert(STRINGS['new-user-info']);
+
+  // Directs to the page to fill in applicant account info
+  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
+}
+
+/**
+ * The function to be executed for existing user log in.
+ */
+function onExistingUser() {
+  console.log('This is not a new user');
+
+  // Informs user
+  // TODO(issue/102): replace with proper notification
+  alert(STRINGS['non-new-user-info']);
+
+  // Directs the user back to home page
+  window.location.href = HOMEPAGE_PATH;
 }
 
 const backButton = document.getElementById('back');
