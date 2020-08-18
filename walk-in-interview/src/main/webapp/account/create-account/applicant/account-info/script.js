@@ -110,7 +110,7 @@ function renderSkillsList() {
  * Gets applicant details from user input.
  */
 function getApplicantDetailsFromUserInput() {
-  const applicantName = document.getElementById('name').value;
+  const applicantName = document.getElementById('name').value.trim();
 
   const skillsCheckboxes =
     document.getElementsByName('skill');
@@ -137,7 +137,7 @@ function getApplicantDetailsFromUserInput() {
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
-  const name = document.getElementById('name').value;
+  const name = document.getElementById('name').value.trim();
 
   if (name === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
