@@ -122,6 +122,9 @@ function renderLogOutUI() {
   renderBackButton();
 }
 
+/**
+ * Renders the back button
+ */
 function renderBackButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -136,7 +139,7 @@ function renderBackButton() {
 }
 
 /**
- * Renders the back button
+ * Renders the update button
  */
 function renderUpdateButton() {
   const headerContainer = document.getElementById('header-container');

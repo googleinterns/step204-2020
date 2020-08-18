@@ -91,7 +91,6 @@ function onLogOutFailure() {
 
   renderLogOutUI();
 
-  // TODO(issue/101): Display button according to log in status;
   console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
