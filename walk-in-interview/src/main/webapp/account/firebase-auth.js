@@ -86,6 +86,8 @@ Auth.signIntoBusinessAccount = (email, password) => {
           onExistingUser();
         }
 
+        // Will not direct to redirectUrl automatically
+        // Leaves for programmer to handle instead
         return false;
       },
 

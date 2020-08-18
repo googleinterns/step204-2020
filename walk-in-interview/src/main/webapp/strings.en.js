@@ -93,7 +93,7 @@ AppStrings['create-applicant-account'] = {
   'name': 'Name',
   'skills-title': 'Skills',
   'new-user-info': 'Account is successfully created!',
-  'non-new-user-info': 'This is a currently existing user. Log in successfully!',
+  'non-new-user-info': 'This phone number already has an account. Log in successfully!',
 };
 
 /**

@@ -22,7 +22,7 @@ const STRINGS = AppStrings['create-applicant-account'];
 const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
 const CREATE_ACCOUNT_HOMEPAGE_PATH = '../index.html';
 const HOMEPAGE_PATH = '../../../index.html';
-const BAD_REQUEST_STATUS_CODE = 400;
+const SUCCESS_STATUS_CODE = 200;
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(
@@ -102,6 +102,7 @@ backButton.addEventListener('click', (_) => {
 
 /**
  * Creates a preliminary account object with phoneNumber as name for the user
+ * Returns {Promise} of POST request
  */
 async function createPreliminaryApplicantAccount() {
   var user = firebase.auth().currentUser;
@@ -122,7 +123,7 @@ async function createPreliminaryApplicantAccount() {
     body: JSON.stringify(accountDetails),
   })
       .then((response) => {
-        if (response.status == BAD_REQUEST_STATUS_CODE) {
+        if (response.status != SUCCESS_STATUS_CODE) {
           setErrorMessage(/* errorMessageElementId= */'error-message',
               /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
               /* includesDefault= */false);
