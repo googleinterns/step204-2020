@@ -205,9 +205,6 @@ async function renderJobDetailsPageElements() {
  * @param {Object} job The job details.
  */
 function displayJobDetails(job) {
-  var user = firebase.auth().currentUser();
-  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
-
   if (job === undefined || job.length === 0) {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
