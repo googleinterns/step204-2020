@@ -21,6 +21,7 @@ const ACCOUNT_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-applicant-account'];
 const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
 const CREATE_ACCOUNT_HOMEPAGE_PATH = '../index.html';
+const HOMEPAGE_PATH = '../../../index.html';
 const BAD_REQUEST_STATUS_CODE = 400;
 
 window.onload = () => {
@@ -39,9 +40,6 @@ async function onLogIn() {
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
 
   await createPreliminaryApplicantAccount();
-
-  // TODO(issue/102): replace with proper notification
-  alert(STRINGS['new-user-info']);
   
   // Directs to the page to fill in applicant account info.
   window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
@@ -64,7 +62,9 @@ function onLogOutFailure() {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneSignInAndSignUpUI('phone-auth', CREATE_ACCOUNT_INFO_PAGE_PATH, STRINGS['new-user-info']);
+  Auth.addPhoneSignInAndSignUpUI(
+    'phone-auth', CREATE_ACCOUNT_INFO_PAGE_PATH, HOMEPAGE_PATH,
+    STRINGS['new-user-info'], STRINGS['non-new-user-info']);
 
   const backButton = document.getElementById('back');
   backButton.innerText = ACCOUNT_STRINGS['back'];

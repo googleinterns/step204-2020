@@ -35,9 +35,6 @@ function onLogIn() {
 
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
-
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-in-success']);
   
   window.location.href = HOMEPAGE_PATH;
 }
@@ -65,7 +62,9 @@ function onLogOutFailure() {
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  Auth.addPhoneSignInAndSignUpUI('phone-auth', HOMEPAGE_PATH, STRINGS['new-user-info']);
+  Auth.addPhoneSignInAndSignUpUI(
+    'phone-auth', HOMEPAGE_PATH, HOMEPAGE_PATH, 
+    STRINGS['new-user-info'], AUTH_STRINGS['sign-in-success']);
   // Auth.subscribeToUserAuthenticationChanges();
 
   const backButton = document.getElementById('back');

@@ -65,10 +65,13 @@ Auth.signIntoBusinessAccount = (email, password) => {
  * to the provided element.
  *
  * @param {String} elementId The div element to add the UI.
- * @param {String} successPath The url for redirect on login success.
+ * @param {String} newUserSuccessPath The url for redirect on new user login success.
+ * @param {String} nonNewUserSuccessPath The url for redirect on non new user login success.
  * @param {String} newUserInfo The message to be displayed if it is a new user.
+ * @param {String} nonNewUserInfo The message to be displayed if it is not a new user.
  */
-Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
+Auth.addPhoneSignInAndSignUpUI = 
+  (elementId, newUserSuccessPath, nonNewUserSuccessPath, newUserInfo, nonNewUserInfo) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -78,14 +81,21 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
     ],
     callbacks: {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-        // TODO(issue/89): add new user pages for name/skills
-        // for now, this will only redirect to homepage for exisiting users
-
         if (authResult.additionalUserInfo.isNewUser) {
-          console.log("This is a new user");
+          redirectUrl = newUserSuccessPath;
+
+          console.log('This is a new user');
           // Informs user
           // TODO(issue/102): replace with proper notification
           alert(newUserInfo);
+        } else {
+          redirectUrl = nonNewUserSuccessPath;
+
+          console.log('This is not a new user');
+
+          // Informs user
+          // TODO(issue/102): replace with proper notification
+          alert(nonNewUserInfo)
         }
 
         return true;
@@ -98,7 +108,7 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
         alert(STRINGS['sign-in-failure']);
       }
     },
-    signInSuccessUrl: successPath,
+    signInSuccessUrl: newUserSuccessPath,
   });
 };
 
@@ -246,7 +256,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
 
   return fetch(url, {
     method: 'POST',
-    header: {"Set-Cookie": "Secure;SameSite=None"},
+    header: {'Set-Cookie': 'Secure;SameSite=None'},
     body: params,
     credentials: 'include',
   });
