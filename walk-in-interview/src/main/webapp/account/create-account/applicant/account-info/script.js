@@ -53,9 +53,6 @@ function onLogOutFailure() {
  * Adds text into the page.
  */
 function renderPageElements() {
-  const backButton = document.getElementById('back');
-  backButton.innerText = ACCOUNT_STRINGS['back'];
-
   const submitButton = document.getElementById('submit');
   submitButton.setAttribute('value', ACCOUNT_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
@@ -113,7 +110,7 @@ function renderSkillsList() {
  * Gets applicant details from user input.
  */
 function getApplicantDetailsFromUserInput() {
-  const applicantName = document.getElementById('name').value;
+  const applicantName = document.getElementById('name').value.trim();
 
   const skillsCheckboxes =
     document.getElementsByName('skill');
@@ -140,7 +137,7 @@ function getApplicantDetailsFromUserInput() {
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
-  const name = document.getElementById('name').value;
+  const name = document.getElementById('name').value.trim();
 
   if (name === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -151,11 +148,7 @@ function validateRequiredUserInput() {
   return true;
 }
 
-const backButton = document.getElementById('back');
-backButton.addEventListener('click', (_) => {
-  window.location.href = HOMEPAGE_PATH;
-});
-
+// Update the created preliminary account with more account information.
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
@@ -164,7 +157,8 @@ submitButton.addEventListener('click', (_) => {
 
   const accountDetails = getApplicantDetailsFromUserInput();
 
-  fetch(API['create-applicant-account'], {
+  // Update the preliminary account object with more info
+  fetch(API['update-applicant-account'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(accountDetails),

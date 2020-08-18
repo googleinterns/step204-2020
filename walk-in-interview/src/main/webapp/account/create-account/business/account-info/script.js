@@ -97,6 +97,7 @@ function validateRequiredUserInput() {
   return true;
 }
 
+// Update the created preliminary account with more account information.
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
@@ -105,7 +106,8 @@ submitButton.addEventListener('click', (_) => {
 
   const accountDetails = getBusinessDetailsFromUserInput();
 
-  fetch(API['create-business-account'], {
+  // Update the preliminary account object with more info
+  fetch(API['update-business-account'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(accountDetails),
