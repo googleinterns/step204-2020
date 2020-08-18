@@ -156,6 +156,7 @@ backButton.addEventListener('click', (_) => {
   window.location.href = HOMEPAGE_PATH;
 });
 
+// Update the created preliminary account with more account information.
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
@@ -164,7 +165,8 @@ submitButton.addEventListener('click', (_) => {
 
   const accountDetails = getApplicantDetailsFromUserInput();
 
-  fetch(API['create-applicant-account'], {
+  // Update the preliminary account object with more info
+  fetch(API['update-applicant-account'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(accountDetails),

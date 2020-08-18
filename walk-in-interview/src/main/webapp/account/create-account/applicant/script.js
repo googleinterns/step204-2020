@@ -38,7 +38,7 @@ async function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
 
-  await createEmptyPlaceholderAccountObject();
+  await createPreliminaryApplicantAccount();
 
   // TODO(issue/102): replace with proper notification
   alert(STRINGS['new-user-info']);
@@ -76,9 +76,9 @@ backButton.addEventListener('click', (_) => {
 });
 
 /**
- * Creates an account object with phoneNumber as name for the user
+ * Creates a preliminary account object with phoneNumber as name for the user
  */
-async function createEmptyPlaceholderAccountObject() {
+async function createPreliminaryApplicantAccount() {
   var user = firebase.auth().currentUser;
   if (!user) {
     return new Promise.reject("Not signed in");
