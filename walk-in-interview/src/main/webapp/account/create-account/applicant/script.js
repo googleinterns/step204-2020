@@ -108,9 +108,6 @@ async function createEmptyAccount() {
         setErrorMessage(/* errorMessageElementId= */'error-message',
             /* msg= */ '', /* includesDefault= */false);
 
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
-
         // Directs to the page to fill in business account info.
         window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
       })
@@ -123,8 +120,5 @@ async function createEmptyAccount() {
               /* msg= */ ACCOUNT_STRINGS['error-message'],
               /* includesDefault= */false);
         }
-
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
       });
 }
