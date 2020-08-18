@@ -53,9 +53,6 @@ function onLogOutFailure() {
  * Adds text into the page.
  */
 function renderPageElements() {
-  const backButton = document.getElementById('back');
-  backButton.innerText = ACCOUNT_STRINGS['back'];
-
   const submitButton = document.getElementById('submit');
   submitButton.setAttribute('value', ACCOUNT_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
@@ -150,11 +147,6 @@ function validateRequiredUserInput() {
 
   return true;
 }
-
-const backButton = document.getElementById('back');
-backButton.addEventListener('click', (_) => {
-  window.location.href = HOMEPAGE_PATH;
-});
 
 // Update the created preliminary account with more account information.
 const submitButton = document.getElementById('submit');
