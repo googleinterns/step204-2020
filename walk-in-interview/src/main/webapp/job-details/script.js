@@ -205,16 +205,21 @@ async function renderJobDetailsPageElements() {
  * @param {Object} job The job details.
  */
 function displayJobDetails(job) {
+  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
+
   if (job === undefined || job.length === 0) {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
-    // disable the buttons if theres an error
-    document.getElementById('update').disabled = true;
-    document.getElementById('delete').disabled = true;
+
+    if (userType === USER_TYPE_BUSINESS) {
+      // disable the buttons if theres an error
+      document.getElementById('update').disabled = true;
+      document.getElementById('delete').disabled = true;
+    }
     return;
   }
 
-  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
+  
   if (userType === USER_TYPE_BUSINESS) {
     // in case they were disabled earlier
     document.getElementById('update').disabled = false;
