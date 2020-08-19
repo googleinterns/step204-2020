@@ -39,6 +39,9 @@ window.onload = () => {
 function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+
+  // Directs to the page to fill in business account info.
+  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
 /**

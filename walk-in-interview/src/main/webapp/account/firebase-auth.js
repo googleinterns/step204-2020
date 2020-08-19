@@ -167,15 +167,15 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
 
       return;
     }
+
+    // Displays the UI for log in status.
+    onLogIn();
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
     await Auth.createSessionCookie(firebaseUser, onLogInFailure);
 
     console.log('Successfully signed in');
-
-    // Displays the UI for log in status.
-    onLogIn();
   });
 };
 
