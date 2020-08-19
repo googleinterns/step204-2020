@@ -50,17 +50,31 @@ public final class CreateBusinessServlet extends HttpServlet {
             String uid = optionalUid.get();
 
             // Gets business object from the client
-            Business rawBusiness = parseBusinessAccount(request);
+            Business inputBusiness = parseBusinessAccount(request);
 
-            // Forces new account to have empty job list
-            Business business = rawBusiness.toBuilder().setJobs(ImmutableList.of()).build();
+            // Fetches the existing business object from database
+            Optional<Business> existingBusinessOptional = this.businessDatabase.getBusinessAccount(uid).get();
+
+            Business business;
+
+            // Updates only the updatable fields
+            if (!existingBusinessOptional.isPresent()) {
+                business = Business.newBuilder()
+                        .setName(inputBusiness.getName())
+                        .setJobs(ImmutableList.of()).build();
+            } else {
+                business = Business.newBuilder()
+                        .setName(inputBusiness.getName())
+                        .build();
+            }
 
             // Stores the account into cloud firestore
             addBusinessAccount(uid, business);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (FirebaseAuthException | IOException | ServletException | ExecutionException | TimeoutException e) {
+        } catch (FirebaseAuthException | IOException | ServletException
+                | ExecutionException | TimeoutException | InterruptedException e) {
             // TODO(issue/47): use custom exceptions
             LOGGER.log(Level.SEVERE, /* msg= */"Error occur: " + e.getCause(), e);
             // Sends the fail status code in the response
