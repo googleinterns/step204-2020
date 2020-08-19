@@ -39,7 +39,6 @@ public final class BusinessDatabase {
                     .collection(BUSINESS_ACCOUNT_COLLECTION).document(uid);
 
             // Verifies if the current user can update the job post with this job id
-            // TODO: verify the user type
             DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
 
             // Job does not exist
