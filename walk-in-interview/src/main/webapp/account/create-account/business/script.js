@@ -12,7 +12,6 @@ const CURRENT_LOCALE = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {API} from '../../../apis.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS, MIN_PASSWORD_LENGTH,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
@@ -25,7 +24,6 @@ const EMAIL_IN_USE_ERROR_CODE = 'auth/email-already-in-use';
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const OPERATION_NOT_ALLOWED_ERROR_CODE = 'auth/operation-not-allowed';
 const WEAK_PASSWORD_ERROR_CODE = 'auth/weak-password';
-const SUCCESS_STATUS_CODE = 200;
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(
