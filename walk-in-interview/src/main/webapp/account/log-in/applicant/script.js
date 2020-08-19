@@ -31,33 +31,32 @@ window.onload = () => {
  * What to do after the user signed in and the session cookie is created.
  */
 function onLogIn() {
-  // TODO(issue/101): Display button according to log in status;
-
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT);
   
   window.location.href = HOMEPAGE_PATH;
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  // TODO(issue/101): Display button according to log in status;
-
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-out-success']);
+  // No UI change
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
-  // TODO(issue/101): Display button according to log in status;
-
   // TODO(issue/102): replace with proper notification
   alert(AUTH_STRINGS['sign-in-failure']);
 }
 
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
-  // TODO(issue/101): Display button according to log in status;
-  
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-out-failure']);
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
 /** Adds all the text to the fields on this page. */

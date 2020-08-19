@@ -8,8 +8,8 @@
  */
 
 import {AppStrings} from '../strings.en.js';
-import {setCookie, getCookie,
-  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER, USER_TYPE_APPLICANT} from '../common-functions.js';
+import {setCookie, getCookie, deleteCookies,
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -110,6 +110,9 @@ Auth.signOutCurrentUser = () => {
     console.log('sign out successful');
     // TODO(issue/100): set the cookie at the server side instead
     setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER);
+
+    // TODO(issue/102): replace with proper notification
+    alert(STRINGS['sign-out-success']);
   }).catch((error) => {
     console.error(error);
 
@@ -135,13 +138,20 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
       if (localStorage.getItem('sessionCookie') != 'true') {
         // Already signed out and cleared the session cookie, no need operation
         console.log('Already signed out');
+
+        // Displays the UI for log out status.
+        onLogOut();
+
         return;
       }
       
       // Clears the session cookie
-      Auth.clearSessionCookie(onLogOut, onLogOutFailure);
+      Auth.clearSessionCookie(onLogOutFailure);
 
       console.log('Successfully signed out');
+
+      // Displays the UI for log out status.
+      onLogOut();
 
       return;
     }
@@ -151,14 +161,21 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
     if (localStorage.getItem('sessionCookie') == 'true') {
       // Already signed in and created session cookie, no need operation
       console.log('Already signed in');
+
+      // Displays the UI for log in status.
+      onLogIn();
+
       return;
     }
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    await Auth.createSessionCookie(firebaseUser, onLogIn, onLogInFailure);
+    await Auth.createSessionCookie(firebaseUser, onLogInFailure);
 
     console.log('Successfully signed in');
+
+    // Displays the UI for log in status.
+    onLogIn();
   });
 };
 
@@ -168,7 +185,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, 
  * @param {Function} onLogOut UI related function to be executed after successfully signed out.
  * @param {Function} onLogOutFailure UI related function to be executed for user does not sign out successfully.
  */
-Auth.clearSessionCookie = async (onLogOut, onLogOutFailure) => {
+Auth.clearSessionCookie = async (onLogOutFailure) => {
   try {
     // Clears the session cookie
     let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
@@ -179,11 +196,11 @@ Auth.clearSessionCookie = async (onLogOut, onLogOutFailure) => {
 
     localStorage.setItem('sessionCookie', 'false');
     console.log('Successfully clears the session cookie');
-
-    // Changes the UI accordingly.
-    onLogOut();
   } catch (error) {
     console.log(error);
+
+    // Clears the cookie, which also forces the user to log out
+    deleteCookies();
 
     // Displays the default UI.
     onLogOutFailure();
@@ -194,10 +211,9 @@ Auth.clearSessionCookie = async (onLogOut, onLogOutFailure) => {
  * Gets the user's ID token as it is needed to exchange for a session cookie.
  * 
  * @param {user} firebaseUser Current user.
- * @param {Function} onLogIn UI related function to be executed after successfully signed in.
  * @param {Function} onLogInFailure UI related function to be executed for user does not sign in successfully.
  */
-Auth.createSessionCookie = (firebaseUser, onLogIn, onLogInFailure) => {
+Auth.createSessionCookie = (firebaseUser, onLogInFailure) => {
   return firebaseUser.getIdToken()
       .then(async (idToken) => {
         // Session login endpoint is queried and session cookie is set.
@@ -213,9 +229,6 @@ Auth.createSessionCookie = (firebaseUser, onLogIn, onLogInFailure) => {
 
           localStorage.setItem('sessionCookie', 'true');
           console.log('Successfully creates the session cookie');
-
-          // Changes the UI accordingly.
-          onLogIn();
         } catch(error) {
           console.log(error);
 
