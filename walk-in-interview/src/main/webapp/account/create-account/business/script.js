@@ -39,9 +39,6 @@ window.onload = () => {
 function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
-
-  // TODO(issue/102): replace with proper notification
-  alert(STRINGS['new-user-info']);
 }
 
 /**
@@ -125,6 +122,9 @@ submitButton.addEventListener('click', async (_) => {
   try {
     await Auth.createBusinessAccount(account, password);
     await createPreliminaryBusinessAccount();
+
+    // TODO(issue/102): replace with proper notification
+    alert(STRINGS['new-user-info']);
   } catch (error) {
     showErrorMessageFromError(error);
   }
