@@ -8,8 +8,8 @@
  */
 
 import {AppStrings} from '../strings.en.js';
-import {setCookie, getCookie,
-  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER, USER_TYPE_APPLICANT} from '../common-functions.js';
+import {setCookie, getCookie, deleteCookies,
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -43,7 +43,7 @@ const Auth = {};
  *
  * @param {String} email The email for the new business account.
  * @param {String} password The password for the new business account.
- * @returns {Promise} A POST request to create an account.
+ * Returns {Promise} A POST request to create an account.
  */
 Auth.createBusinessAccount = (email, password) => {
   return firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -54,7 +54,7 @@ Auth.createBusinessAccount = (email, password) => {
  *
  * @param {String} email The email for the exisiting business account.
  * @param {String} password The password for the existing business account.
- * @returns {Promise} A POST request to sign in an account.
+ * Returns {Promise} A POST request to sign in an account.
  */
 Auth.signIntoBusinessAccount = (email, password) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
@@ -66,9 +66,11 @@ Auth.signIntoBusinessAccount = (email, password) => {
  *
  * @param {String} elementId The div element to add the UI.
  * @param {String} successPath The url for redirect on login success.
- * @param {String} newUserInfo The message to be displayed if it is a new user.
+ * @param {String} onNewUser The function to be executed for new user log in.
+ * @param {String} onExistingUser The function to be executed for existing user log in.
  */
-Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
+ Auth.addPhoneSignInAndSignUpUI = 
+  (elementId, successPath, onNewUser, onExistingUser) => {
   ui.start(`#${elementId}`, {
     signInOptions: [
       {
@@ -78,17 +80,15 @@ Auth.addPhoneSignInAndSignUpUI = (elementId, successPath, newUserInfo) => {
     ],
     callbacks: {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-        // TODO(issue/89): add new user pages for name/skills
-        // for now, this will only redirect to homepage for exisiting users
-
         if (authResult.additionalUserInfo.isNewUser) {
-          console.log("This is a new user");
-          // Informs user
-          // TODO(issue/102): replace with proper notification
-          alert(newUserInfo);
+          onNewUser();
+        } else {
+          onExistingUser();
         }
 
-        return true;
+        // Will not direct to redirectUrl automatically
+        // Leaves for programmer to handle instead
+        return false;
       },
 
       signInFailure: (error) => {
@@ -128,9 +128,10 @@ Auth.signOutCurrentUser = () => {
  * 
  * @param {Function} onLogIn UI related function to be executed after successfully signed in.
  * @param {Function} onLogOut UI related function to be executed after successfully signed out.
- * @param {Function} onDefault UI related function to be executed on default.
+ * @param {Function} onLogInFailure UI related function to be executed for user does not sign in successfully.
+ * @param {Function} onLogOutFailure UI related function to be executed for user does not sign out successfully.
  */
-Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
+Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onLogInFailure, onLogOutFailure) => {
   firebase.auth().onAuthStateChanged(async (firebaseUser) => {
     // User not signed in.
     if (!firebaseUser) {
@@ -145,7 +146,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
       }
       
       // Clears the session cookie
-      Auth.clearSessionCookie(onDefault);
+      Auth.clearSessionCookie(onLogOutFailure);
 
       console.log('Successfully signed out');
 
@@ -169,7 +170,7 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
       
     // Get the user's ID token as it is needed to exchange
     // for a session cookie.
-    await Auth.createSessionCookie(firebaseUser, onDefault);
+    await Auth.createSessionCookie(firebaseUser, onLogInFailure);
 
     console.log('Successfully signed in');
 
@@ -181,9 +182,10 @@ Auth.subscribeToUserAuthenticationChanges = (onLogIn, onLogOut, onDefault) => {
 /**
  * Clears the session cookie
  * 
- * @param {Function} onDefault UI related function to be executed on default.
+ * @param {Function} onLogOut UI related function to be executed after successfully signed out.
+ * @param {Function} onLogOutFailure UI related function to be executed for user does not sign out successfully.
  */
-Auth.clearSessionCookie = async (onDefault) => {
+Auth.clearSessionCookie = async (onLogOutFailure) => {
   try {
     // Clears the session cookie
     let response = await Auth.postIdTokenToSessionLogout(API['log-out']);
@@ -197,8 +199,11 @@ Auth.clearSessionCookie = async (onDefault) => {
   } catch (error) {
     console.log(error);
 
+    // Clears the cookie, which also forces the user to log out
+    deleteCookies();
+
     // Displays the default UI.
-    onDefault();
+    onLogOutFailure();
   }
 };
 
@@ -206,9 +211,9 @@ Auth.clearSessionCookie = async (onDefault) => {
  * Gets the user's ID token as it is needed to exchange for a session cookie.
  * 
  * @param {user} firebaseUser Current user.
- * @param {Function} onDefault UI related function to be executed on default.
+ * @param {Function} onLogInFailure UI related function to be executed for user does not sign in successfully.
  */
-Auth.createSessionCookie = (firebaseUser, onDefault) => {
+Auth.createSessionCookie = (firebaseUser, onLogInFailure) => {
   return firebaseUser.getIdToken()
       .then(async (idToken) => {
         // Session login endpoint is queried and session cookie is set.
@@ -227,15 +232,15 @@ Auth.createSessionCookie = (firebaseUser, onDefault) => {
         } catch(error) {
           console.log(error);
 
-          // Displays the default UI.
-          onDefault(); 
+          // Displays the UI accordingly.
+          onLogInFailure();
         }
       })
       .catch((error) => {
         console.log(error);
 
-        // Displays the default UI.
-        onDefault();
+        // Displays the UI accordingly.
+        onLogInFailure();
       });
 };
 
@@ -245,7 +250,7 @@ Auth.createSessionCookie = (firebaseUser, onDefault) => {
  * @param {String} url Login endpoint.
  * @param {String} idToken Id token.
  * @param {String} csrfToken CSRF token.
- * @return {Promise} Makes POST request.
+ * Returns {Promise} Makes POST request.
  */
 Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
   const params = new URLSearchParams();
@@ -254,7 +259,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
 
   return fetch(url, {
     method: 'POST',
-    header: {"Set-Cookie": "Secure;SameSite=None"},
+    header: {'Set-Cookie': 'Secure;SameSite=None'},
     body: params,
     credentials: 'include',
   });
@@ -264,7 +269,7 @@ Auth.postIdTokenToSessionLogin = (url, idToken, csrfToken) => {
  * Makes a POST request to session log out endpoint.
  *
  * @param {String} url Login endpoint.
- * @return {Promise} Makes POST request.
+ * Returns {Promise} Makes POST request.
  */
 Auth.postIdTokenToSessionLogout = (url) => {
   return fetch(url, {

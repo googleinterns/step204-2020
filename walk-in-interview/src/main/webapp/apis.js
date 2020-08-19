@@ -10,8 +10,10 @@ export const API = {
   'expire-job': '/jobs/expire',
   'log-in': '/sign-in',
   'log-out': '/sign-out',
-  'create-business-account': '/create-business-account',
-  'create-applicant-account': '/create-applicant-account',
+  'create-business-account': '/business-acount',
+  'create-applicant-account': '/applicant-acount',
+  'update-business-account': '/business-account',
+  'update-applicant-account': '/applicant-account',
   'business-jobs-list': '/my-jobs',
   'applicant-interested-list': '/my-interested-list',
 };

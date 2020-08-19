@@ -93,6 +93,7 @@ AppStrings['create-applicant-account'] = {
   'name': 'Name',
   'skills-title': 'Skills',
   'new-user-info': 'Account is successfully created!',
+  'non-new-user-info': 'This phone number already has an account. Log in successfully!',
 };
 
 /**
@@ -108,7 +109,7 @@ AppStrings['create-business-account'] = {
   'user-in-use-error': 'There already exists an account with the given email address',
   'invalid-email-error': 'The email address is not valid',
   'operation-not-allowed-error': 'If email/password accounts are not enabled',
-  'weak-password-error': 'The password is not strong enough\nWe need a password with at least 6 characters',
+  'weak-password-error': 'The password is not strong enough\nWe need a password with at least {MIN_PASSWORD_LENGTH} characters',
 };
 
 /**

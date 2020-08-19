@@ -27,12 +27,10 @@ const USER_NOT_FOUND_ERROR_CODE = 'auth/user-not-found';
 const WRONG_PASSWORD_ERROR_CODE = 'auth/wrong-password';
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
-
-// TODO(issue/101): Display button according to log in status;
-// i.e. implement onLogIn, onLogOut, onDefault
 
 /**
  * What to do after the user signed in and the session cookie is created.
@@ -47,13 +45,26 @@ function onLogIn() {
   window.location.href = HOMEPAGE_PATH;
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  
+  // No UI change
 }
 
-function onDefault() {
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
+function onLogInFailure() {
   // TODO(issue/102): replace with proper notification
   alert(AUTH_STRINGS['sign-in-failure']);
+}
+
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
+function onLogOutFailure() {
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
 /** Adds all the text to the fields on this page. */
