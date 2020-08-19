@@ -7,17 +7,8 @@
 </head>
 
 <body>
-    <div class="header-container">
-        <button id="back-to-homepage"></button>
-
-        <form id="update-form">
-            <input id="job-id">
-            <input class="button" id="update">
-        </form>
-
-        <!--Add a button for delete-->
-        <button id="delete"></button>
-    </div>
+    <div id="header-container" class="header-container"></div>
+    
     <div class="content-container">
         <div id="jobpage-map"></div>
         <div class="job-field" id="job-title"></div>
@@ -55,5 +46,11 @@
 <!-- TODO(issue/69): find a way to hide the api key -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXntH-1pvtC20SGfFhbzNPPagESHSR6E4&callback"
   type="text/javascript"></script>
+
+<!-- TODO(issue/87): move to separate config file -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
 </html>

@@ -19,10 +19,11 @@ import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
 const HOMEPAGE_PATH = '../../../../index.html';
 const STRINGS = AppStrings['create-business-account'];
 const ACCOUNT_STRINGS = AppStrings['create-account'];
-const BAD_REQUEST_STATUS_CODE = 400;
+const SUCCESS_STATUS_CODE = 200;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
 
@@ -34,19 +35,30 @@ function onLogIn() {
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  
+  // No UI change
 }
 
-function onDefault() {
-  
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
+function onLogInFailure() {
+  // No UI change
 }
+
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
+function onLogOutFailure() {
+  // No UI change
+}
+
 
 /** Adds all the text to the fields on this page. */
 function renderPageElements() {
-  const backButton = document.getElementById('back');
-  backButton.innerText = ACCOUNT_STRINGS['back'];
-
   const submitButton = document.getElementById('submit');
   submitButton.setAttribute('value', ACCOUNT_STRINGS['submit']);
   submitButton.setAttribute('type', 'submit');
@@ -64,12 +76,12 @@ function renderPageElements() {
  * @return {Object} Business account object containing the user inputs.
  */
 function getBusinessDetailsFromUserInput() {
-  const businessName = document.getElementById('name').value;
+  const businessName = document.getElementById('name').value.trim();
 
   const businessDetails = {
     userType: USER_TYPE_BUSINESS,
     name: businessName,
-    jobs: [], // empty job list when the account is newly created
+    // empty job list is created at the server
   };
 
   return businessDetails;
@@ -82,7 +94,7 @@ function getBusinessDetailsFromUserInput() {
 * @return {boolean} depending on whether the input is valid or not.
 */
 function validateRequiredUserInput() {
-  const name = document.getElementById('name').value;
+  const name = document.getElementById('name').value.trim();
 
   if (name === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -93,11 +105,7 @@ function validateRequiredUserInput() {
   return true;
 }
 
-const backButton = document.getElementById('back');
-backButton.addEventListener('click', (_) => {
-  window.location.href = HOMEPAGE_PATH;
-});
-
+// Update the created preliminary account with more account information.
 const submitButton = document.getElementById('submit');
 submitButton.addEventListener('click', (_) => {
   if (!validateRequiredUserInput()) {
@@ -106,13 +114,14 @@ submitButton.addEventListener('click', (_) => {
 
   const accountDetails = getBusinessDetailsFromUserInput();
 
-  fetch(API['create-business-account'], {
+  // Update the preliminary account object with more info
+  fetch(API['update-business-account'], {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(accountDetails),
   })
       .then((response) => {
-        if (response.status == BAD_REQUEST_STATUS_CODE) {
+        if (response.status !== SUCCESS_STATUS_CODE) {
           setErrorMessage(/* errorMessageElementId= */'error-message',
               /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
               /* includesDefault= */false);

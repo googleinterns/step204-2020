@@ -2,6 +2,7 @@ package com.google.account.business.servlets;
 
 import com.google.account.business.data.Business;
 import com.google.account.business.data.BusinessDatabase;
+import com.google.common.collect.ImmutableList;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.utils.FirebaseAuthUtils;
 import com.google.utils.ServletUtils;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /** Servlet that handles creating new business account. */
-@WebServlet("/create-business-account")
+@WebServlet("/business-account")
 public final class CreateBusinessServlet extends HttpServlet {
     private static final long TIMEOUT_SECONDS = 5;
     private BusinessDatabase businessDatabase;
@@ -45,7 +46,10 @@ public final class CreateBusinessServlet extends HttpServlet {
             String uid = optionalUid.get();
 
             // Gets business object from the client
-            Business business = parseBusinessAccount(request);
+            Business rawBusiness = parseBusinessAccount(request);
+
+            // Forces new account to have empty job list
+            Business business = rawBusiness.toBuilder().setJobs(ImmutableList.of()).build();
 
             // Stores the account into cloud firestore
             addBusinessAccount(uid, business);

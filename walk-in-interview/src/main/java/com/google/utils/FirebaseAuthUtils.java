@@ -15,6 +15,7 @@ import java.util.Optional;
 /** Util methods related to Firebase Auth.  */
 public final class FirebaseAuthUtils {
     private static final String SESSION_COOKIE_NAME = "session";
+    private static final String USER_TYPE_COOKIE_NAME = "userType";
 
     private FirebaseAuthUtils() {}
 
@@ -79,5 +80,15 @@ public final class FirebaseAuthUtils {
         }
 
         throw new IllegalArgumentException("No matched cookie: " + name);
+    }
+
+    /**
+     * Gets the user type from cookie.
+     *
+     * @param request Http Servlet Request.
+     * @return User type cookie value.
+     */
+    public static String getUserType(HttpServletRequest request) {
+        return getCookie(request, USER_TYPE_COOKIE_NAME).getValue();
     }
 }
