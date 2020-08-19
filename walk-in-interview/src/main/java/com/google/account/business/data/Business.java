@@ -6,12 +6,15 @@ import com.google.job.data.Job;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /** Class for a business account. */
 public final class Business {
     private final UserType userType;
     private final String name;
     private final List<String> jobs; // List of jobId
+
+    private volatile int hashCode;
 
     // For serialization
     public Business() {
@@ -95,6 +98,38 @@ public final class Business {
     /** Returns all the job posts made by this business account. */
     public List<String> getJobs() {
         return jobs;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Business business = (Business) o;
+        return userType == business.userType &&
+                name.equals(business.name) &&
+                jobs.equals(business.jobs);
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.hashCode != 0) {
+            return this.hashCode;
+        }
+
+        int result = 0;
+
+        int c = userType.hashCode();
+        result = 31 * result + c;
+
+        c = name.hashCode();
+        result = 31 * result + c;
+
+        c = jobs.hashCode();
+        result = 31 * result + c;
+
+        this.hashCode = result;
+
+        return this.hashCode;
     }
 
     @Override
