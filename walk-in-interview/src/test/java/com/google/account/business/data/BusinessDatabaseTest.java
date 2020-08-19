@@ -61,7 +61,7 @@ public final class BusinessDatabaseTest {
         Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
 
         // Act.
-        Future<WriteResult> future = this.businessDatabase.createBusinessAccount(uid, expectedBusiness);
+        Future<WriteResult> future = this.businessDatabase.updateBusinessAccount(uid, expectedBusiness);
 
         // Assert.
 

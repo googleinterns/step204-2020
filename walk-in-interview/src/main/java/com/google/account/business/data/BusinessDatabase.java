@@ -10,8 +10,14 @@ import java.util.concurrent.Future;
 public final class BusinessDatabase {
     private static final String BUSINESS_ACCOUNT_COLLECTION = "BusinessAccounts";
 
-    // Creates a new business object and stores into the cloud firestore.
-    public Future<WriteResult> createBusinessAccount(String uid, Business business) throws IOException {
+    /**
+     * Replace with a new business object and stores into the cloud firestore.
+     *
+     * @param uid Uid of the current user account.
+     * @param business Business object for the current account.
+     * @return Future with writing details.
+     */
+    public Future<WriteResult> updateBusinessAccount(String uid, Business business) throws IOException {
         // Adds the business object into cloud firestore using uid as document id
         return FireStoreUtils.getFireStore()
                 .collection(BUSINESS_ACCOUNT_COLLECTION)

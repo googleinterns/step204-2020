@@ -92,7 +92,7 @@ public final class CreateBusinessServlet extends HttpServlet {
         try {
             // Blocks the operation and waits for the future.
             // Use timeout in case it blocks forever.
-            this.businessDatabase.createBusinessAccount(uid, business).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            this.businessDatabase.updateBusinessAccount(uid, business).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }
