@@ -19,12 +19,16 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /** Servlet that handles creating new business account. */
 @WebServlet("/business-account")
 public final class CreateBusinessServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(CreateBusinessServlet.class.getName());
     private static final long TIMEOUT_SECONDS = 5;
+
     private BusinessDatabase businessDatabase;
 
     @Override
@@ -38,7 +42,7 @@ public final class CreateBusinessServlet extends HttpServlet {
             Optional<String> optionalUid = FirebaseAuthUtils.getUid(request);
 
             if (!optionalUid.isPresent()) {
-                System.err.println("Illegal uid");
+                LOGGER.log(Level.SEVERE, /* msg= */"Illegal uid");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -58,7 +62,7 @@ public final class CreateBusinessServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (FirebaseAuthException | IOException | ServletException | ExecutionException | TimeoutException e) {
             // TODO(issue/47): use custom exceptions
-            System.err.println("Error occur: " + e.getCause());
+            LOGGER.log(Level.SEVERE, /* msg= */"Error occur: " + e.getCause(), e);
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
