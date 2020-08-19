@@ -9,12 +9,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /** Tests for {@link BusinessDatabase} class. */
 public final class BusinessDatabaseTest {
@@ -48,6 +51,37 @@ public final class BusinessDatabaseTest {
         } catch (ExecutionException | InterruptedException e) {
             System.err.println("Error tearing down collection : " + e.getMessage());
         }
+    }
+    
+    @Test
+    public void getBusinessAccount_normalInput_success() throws IOException, ExecutionException, InterruptedException {
+        // Arrange.
+        String uid = "dummyBusinessUid";
+
+        String businessName = "testBusinessAccount";
+        List<String> jobs = ImmutableList.of("jobId1", "jobId2");
+        Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
+
+        Future<DocumentReference> addedJobFuture = FireStoreUtils.getFireStore()
+                .collection(TEST_BUSINESS_COLLECTION)
+                .add(expectedBusiness);
+
+        DocumentReference documentReference = addedJobFuture.get();
+        // Asynchronously retrieve the document.
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // future.get() blocks on response.
+        DocumentSnapshot document = future.get();
+
+        // Act.
+        Optional<Business> businessOptional = this.businessDatabase.getBusinessAccount(uid).get();
+
+        // Assert.
+        assertTrue(businessOptional.isPresent());
+
+        Business actualBusiness = businessOptional.get();
+
+        assertEquals(expectedBusiness, actualBusiness);
     }
 
     @Test
