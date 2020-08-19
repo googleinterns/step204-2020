@@ -57,7 +57,7 @@ public final class CreateBusinessServlet extends HttpServlet {
 
             Business business;
 
-            // Updates only the updatable fields
+            // Updates the preliminary business object at only the updatable fields
             if (!existingBusinessOptional.isPresent()) {
                 business = Business.newBuilder()
                         .setName(inputBusiness.getName())
