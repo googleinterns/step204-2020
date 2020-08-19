@@ -51,7 +51,7 @@ public final class BusinessDatabaseTest {
     }
 
     @Test
-    public void createBusinessAccount_normalInput_success()
+    public void updateBusinessAccount_normalInput_success()
             throws IOException, ExecutionException, InterruptedException {
         // Arrange.
         String uid = "dummyBusinessUid";
