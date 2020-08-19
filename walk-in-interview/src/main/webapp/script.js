@@ -14,7 +14,7 @@ const CURRENT_LOCALE = 'en';
 import {AppStrings} from './strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
   USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, USER_TYPE_BUSINESS,
-  getRequirementsList, setErrorMessage, getCookie, deleteCookies} from './common-functions.js';
+  getRequirementsList, setErrorMessage, getCookie} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
 import {Auth} from '/account/firebase-auth.js';
 
@@ -85,9 +85,6 @@ function onLogInFailure() {
  */
 function onLogOutFailure() {
   clearHeaderUI();
-
-  // Clears the cookie, which also forces the user to log out
-  deleteCookies();
 
   renderLogOutUI();
 

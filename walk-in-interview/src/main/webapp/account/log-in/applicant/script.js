@@ -56,9 +56,6 @@ function onLogInFailure() {
  * UI related function to be executed for user does not sign out successfully.
  */
 function onLogOutFailure() {
-  // Clears the cookie, which also forces the user to log out
-  deleteCookies();
-
   console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 

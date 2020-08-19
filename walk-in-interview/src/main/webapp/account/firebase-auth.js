@@ -8,8 +8,8 @@
  */
 
 import {AppStrings} from '../strings.en.js';
-import {setCookie, getCookie,
-  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER, USER_TYPE_APPLICANT} from '../common-functions.js';
+import {setCookie, getCookie, deleteCookies,
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_NO_USER} from '../common-functions.js';
 import {API} from '../apis.js';
 
 const firebaseConfig = {
@@ -198,6 +198,9 @@ Auth.clearSessionCookie = async (onLogOutFailure) => {
     console.log('Successfully clears the session cookie');
   } catch (error) {
     console.log(error);
+
+    // Clears the cookie, which also forces the user to log out
+    deleteCookies();
 
     // Displays the default UI.
     onLogOutFailure();

@@ -16,7 +16,7 @@ import {AppStrings} from '../strings.en.js';
 import {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
   USER_TYPE_APPLICANT, USER_TYPE_BUSINESS,
   setErrorMessage, getRequirementsList, 
-  getCookie, deleteCookies} from '../common-functions.js';
+  getCookie} from '../common-functions.js';
 import {createMap, addMarker, JOB_MAP_ZOOM} from '../maps.js';
 
 import {API} from '../apis.js';
@@ -79,9 +79,6 @@ function onLogInFailure() {
  */
 function onLogOutFailure() {
   clearHeaderUI();
-
-  // Clears the cookie, which also forces the user to log out
-  deleteCookies();
 
   renderLogOutUI();
 
