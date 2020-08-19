@@ -62,16 +62,13 @@ public final class BusinessDatabaseTest {
         List<String> jobs = ImmutableList.of("jobId1", "jobId2");
         Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
 
-        Future<DocumentReference> addedJobFuture = FireStoreUtils.getFireStore()
+        Future<WriteResult> future = FireStoreUtils.getFireStore()
                 .collection(TEST_BUSINESS_COLLECTION)
-                .add(expectedBusiness);
-
-        DocumentReference documentReference = addedJobFuture.get();
-        // Asynchronously retrieve the document.
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
+                .document(uid)
+                .set(expectedBusiness);
 
         // future.get() blocks on response.
-        DocumentSnapshot document = future.get();
+        future.get();
 
         // Act.
         Optional<Business> businessOptional = this.businessDatabase.getBusinessAccount(uid).get();
