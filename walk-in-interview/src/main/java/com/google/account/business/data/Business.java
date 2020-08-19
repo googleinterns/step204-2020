@@ -43,8 +43,10 @@ public final class Business {
     }
 
     public static final class BusinessBuilder {
-        // Initializes new business account with BUSINESS user type and empty job post made.
+        // Initializes new business account with BUSINESS user type.
         private UserType userType = UserType.BUSINESS;
+
+        // Optional parameters
         private List<String> jobs = ImmutableList.of();
 
         // Required parameters
@@ -58,6 +60,11 @@ public final class Business {
             return this;
         }
 
+        public BusinessBuilder setJobs(List<String> jobs) {
+            this.jobs = ImmutableList.copyOf(jobs);
+            return this;
+        }
+
         public Business build() {
             if (userType != UserType.BUSINESS) {
                 throw new IllegalArgumentException("Business account should have userType BUSINESS");
@@ -67,9 +74,8 @@ public final class Business {
                 throw new IllegalArgumentException("Company Name should be an non-empty string");
             }
 
-            if (jobs == null || !jobs.isEmpty()) {
-                // Forces to be am empty list
-                this.jobs = ImmutableList.of();
+            if (jobs == null) {
+                throw new IllegalArgumentException("Jobs cannot be null");
             }
 
             return new Business(this);
