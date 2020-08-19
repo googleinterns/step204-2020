@@ -13,7 +13,8 @@ const CURRENT_LOCALE = 'en';
  */
 import {AppStrings} from './strings.en.js';
 import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
-  getRequirementsList, setErrorMessage} from './common-functions.js';
+  USER_TYPE_COOKIE_PARAM, USER_TYPE_APPLICANT, USER_TYPE_BUSINESS,
+  getRequirementsList, setErrorMessage, getCookie} from './common-functions.js';
 import {createMap, addMarker} from './maps.js';
 import {Auth} from '/account/firebase-auth.js';
 
@@ -43,66 +44,203 @@ window.onload = () => {
   renderHomepageElements();
 };
 
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
 function onLogIn() {
-  // TODO(issue/101): Display button according to log in status;
+  clearHeaderUI();
+
+  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
+  if (userType === USER_TYPE_APPLICANT) {
+    renderApplicantUI();
+  } else if (userType === USER_TYPE_BUSINESS) {
+    renderBusinessUI();
+  } else {
+    renderDefaultUI();
+  }
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  // TODO(issue/101): Display button according to log in status;
+  clearHeaderUI();
 
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-out-success']);
+  renderLogOutUI();
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
-  // TODO(issue/101): Display button according to log in status;
+  clearHeaderUI();
+
+  renderLogOutUI();
+
+  alert(AUTH_STRINGS['sign-in-failure']);
 }
 
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
-  // TODO(issue/101): Display button according to log in status;
+  clearHeaderUI();
+
+  renderLogOutUI();
+
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
-/** Adds all the titles to the fields on this page. */
-function renderHomepageElements() {
-  const homepageTitle = document.getElementById('page-title');
-  homepageTitle.innerText = STRINGS['page-title'];
+/**
+ * Removes all html elements in header container
+ */
+function clearHeaderUI() {
+  const headerContainer = document.getElementById('header-container');
 
-  const newPostButton = document.getElementById('new-post');
+  while(headerContainer.firstChild){
+    headerContainer.removeChild(headerContainer.firstChild);
+  }
+}
+
+/**
+ * Renders the header UI for applicant user
+ */
+function renderApplicantUI() {
+  renderInterestedJobButton();
+  renderPageTitle();
+  renderLogOutButton();
+}
+
+/**
+ * Renders the header UI for business user
+ */
+function renderBusinessUI() {
+  renderNewPostButton();
+  renderShowJobPostsButton();
+  renderPageTitle();
+  renderLogOutButton();
+}
+
+/**
+ * Renders the header UI for log out status
+ */
+function renderLogOutUI() {
+  renderSignUpButton();
+  renderPageTitle();
+  renderLogInButton();
+}
+
+/**
+ * Renders the make new job post button
+ */
+function renderNewPostButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const newPostButton = document.createElement('button');
+  newPostButton.setAttribute('id', 'new-post');
   newPostButton.innerText = STRINGS['new-post'];
   newPostButton.addEventListener('click', (_) => {
     window.location.href = JOBPAGE_PATH;
   });
 
-  const accountButton = document.getElementById('account');
+  headerContainer.appendChild(newPostButton);
+}
+
+/**
+ * Renders the page title
+ */
+function renderPageTitle() {
+  const headerContainer = document.getElementById('header-container');
+
+  const homepageTitle = document.createElement('div');
+  homepageTitle.setAttribute('id', 'page-title');
+  homepageTitle.innerText = STRINGS['page-title'];
+
+  headerContainer.appendChild(homepageTitle);
+}
+
+/**
+ * Renders the sign up button
+ */
+function renderSignUpButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const accountButton = document.createElement('button');
+  accountButton.setAttribute('id', 'account');
   accountButton.innerText = STRINGS['account'];
   accountButton.addEventListener('click', (_) => {
     window.location.href = CREATE_ACCOUNT_PAGE_PATH;
   });
 
-  const loginButton = document.getElementById('log-in');
+  headerContainer.appendChild(accountButton);
+}
+
+/**
+ * Renders the log in button
+ */
+function renderLogInButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const loginButton = document.createElement('button');
+  loginButton.setAttribute('id', 'log-in');
   loginButton.innerText = STRINGS['log-in'];
   loginButton.addEventListener('click', (_) => {
     window.location.href = LOG_IN_PAGE_PATH;
   });
 
-  const logoutButton = document.getElementById('log-out');
+  headerContainer.appendChild(loginButton);
+}
+
+/**
+ * Renders the log out button
+ */
+function renderLogOutButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const logoutButton = document.createElement('button');
+  logoutButton.setAttribute('id', 'log-out');
   logoutButton.innerText = STRINGS['log-out'];
   logoutButton.addEventListener('click', (_) => {
     Auth.signOutCurrentUser();
   });
 
-  const showJobPostsButton = document.getElementById('show-job-posts-made');
+  headerContainer.appendChild(logoutButton);
+}
+
+/**
+ * Renders the show job posts made button
+ */
+function renderShowJobPostsButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const showJobPostsButton = document.createElement('button');
+  showJobPostsButton.setAttribute('id', 'show-job-posts-made');
   showJobPostsButton.innerText = STRINGS['show-job-posts-made'];
   showJobPostsButton.addEventListener('click', (_) => {
     window.location.href = POSTS_MADE_PATH;
   });
 
-  const interestedJobButton = document.getElementById('interested-job-list');
+  headerContainer.appendChild(showJobPostsButton);
+}
+
+/**
+ * Renders the show interested job button
+ */
+function renderInterestedJobButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const interestedJobButton = document.createElement('button');
+  interestedJobButton.setAttribute('id', 'interested-job-list');
   interestedJobButton.innerText = STRINGS['interested-job-list'];
   interestedJobButton.addEventListener('click', (_) => {
     window.location.href = INTEREST_JOBS_PATH;
   });
 
+  headerContainer.appendChild(interestedJobButton);
+}
+
+/** Adds all the titles to the fields on this page. */
+function renderHomepageElements() {
   const sortByTitle = document.getElementById('sort-by-title');
   sortByTitle.innerText = STRINGS['sort-by-title'];
 

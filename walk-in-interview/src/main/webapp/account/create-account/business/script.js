@@ -16,7 +16,6 @@ import {API} from '../../../apis.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS, MIN_PASSWORD_LENGTH,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
-const AUTH_STRINGS = AppStrings['auth'];
 const ACCOUNT_STRINGS = AppStrings['create-account'];
 const STRINGS = AppStrings['create-business-account'];
 const CREATE_ACCOUNT_INFO_PAGE_PATH = './account-info/index.html';
@@ -38,32 +37,29 @@ window.onload = () => {
  * What to do after the user signed in and the session cookie is created.
  */
 function onLogIn() {
-  // TODO(issue/101): Display button according to log in status;
-
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
-
-  // TODO(issue/102): replace with proper notification
-  alert(STRINGS['new-user-info']);
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-  // TODO(issue/101): Display button according to log in status;
-
-  // TODO(issue/102): replace with proper notification
-  alert(AUTH_STRINGS['sign-out-success']);
+  // No UI change
 }
 
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
 function onLogInFailure() {
-  // TODO(issue/101): Display button according to log in status;
-  
-  // TODO(issue/102): replace with proper notification
-  alert(ACCOUNT_STRINGS['create-account-error-message']);
+  // No UI change
 }
 
-
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
 function onLogOutFailure() {
-  // TODO(issue/101): Display button according to log in status;
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
 /** Adds all the text to the fields on this page. */
@@ -122,8 +118,14 @@ submitButton.addEventListener('click', async (_) => {
   try {
     await Auth.createBusinessAccount(account, password);
     await createPreliminaryBusinessAccount();
+
+    // TODO(issue/102): replace with proper notification
+    alert(STRINGS['new-user-info']);
   } catch (error) {
     showErrorMessageFromError(error);
+
+    // TODO(issue/102): replace with proper notification
+    alert(ACCOUNT_STRINGS['create-account-error-message']);
   }
   
   // Enables the button regardless of success or failure
