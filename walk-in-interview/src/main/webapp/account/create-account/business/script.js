@@ -117,7 +117,7 @@ submitButton.addEventListener('click', async (_) => {
 
   try {
     await Auth.createBusinessAccount(account, password);
-    await createPreliminaryBusinessAccount();
+    // await createPreliminaryBusinessAccount();
 
     // TODO(issue/102): replace with proper notification
     alert(STRINGS['new-user-info']);

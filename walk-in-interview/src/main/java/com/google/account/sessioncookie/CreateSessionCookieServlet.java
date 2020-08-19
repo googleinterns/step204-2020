@@ -1,7 +1,15 @@
 package com.google.account.sessioncookie;
 
+import com.google.account.UserType;
+import com.google.account.business.data.Business;
+import com.google.account.business.data.BusinessDatabase;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.common.collect.ImmutableList;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.SessionCookieOptions;
+import com.google.firebase.auth.UserRecord;
+import com.google.utils.FireStoreUtils;
 import com.google.utils.FirebaseAuthUtils;
 import com.google.utils.ServletUtils;
 
@@ -11,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +29,11 @@ import java.util.logging.Logger;
 public final class CreateSessionCookieServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(CreateSessionCookieServlet.class.getName());
 
+    private static final String BUSINESS_ACCOUNT_COLLECTION = "BusinessAccounts";
+
     private static final int SESSION_COOKIE_DURATION_DAYS = 5;
     private static final String SESSION_COOKIE_NAME = "session";
+    private static final String USER_TYPE_COOKIE_NAME = "userType";
     private static final String ID_TOKEN_PARAM = "idToken";
 
     // TODO(issue/87): move to config file
@@ -29,9 +41,13 @@ public final class CreateSessionCookieServlet extends HttpServlet {
     private static final String PROJECT_ID = "com-walk-in-interview";
     private static final String PROJECT_NAME = "Walk-In-Interview";
 
+    private BusinessDatabase businessDatabase;
+
 
     @Override
     public void init() {
+        this.businessDatabase = new BusinessDatabase();
+
         try {
             FirebaseAuthUtils.initAdminSDK(DATABASE_URL, PROJECT_ID, PROJECT_NAME);
         } catch (IOException e) {
@@ -56,6 +72,29 @@ public final class CreateSessionCookieServlet extends HttpServlet {
             // The session cookie will have the same claims as the ID token.
             String sessionCookie = FirebaseAuth.getInstance().createSessionCookieAsync(idToken, options).get();
 
+            // Verifies the session cookie. In this case an additional check is added to detect
+            // if the user's Firebase session was revoked, user deleted/disabled, etc.
+            FirebaseToken decodedToken = FirebaseAuth.getInstance()
+                    .verifySessionCookie(sessionCookie, /* checkRevoked= */ true);
+
+            String uid = decodedToken.getUid();
+
+            // Creates the preliminary Account object if the account does not exist
+            String userType = FirebaseAuthUtils.getCookie(request, USER_TYPE_COOKIE_NAME).getValue();
+
+            if (userType.equals(UserType.BUSINESS.getUserTypeId())) {
+                if (!isBusinessAccountExist(uid)) {
+                    UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
+                    String email = userRecord.getEmail();
+
+                    Business preliminaryBusiness = Business.newBuilder()
+                            .setName(email)
+                            .setJobs(ImmutableList.of()).build();
+
+                    this.businessDatabase.createBusinessAccount(uid, preliminaryBusiness);
+                }
+            }
+
             // Sets cookie policy parameters as required
             Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionCookie);
             response.addCookie(cookie);
@@ -77,5 +116,12 @@ public final class CreateSessionCookieServlet extends HttpServlet {
         }
 
         return idToken;
+    }
+
+    private boolean isBusinessAccountExist(String uid) throws IOException, ExecutionException, InterruptedException {
+        DocumentSnapshot account = FireStoreUtils.getFireStore()
+                .collection(BUSINESS_ACCOUNT_COLLECTION).document(uid).get().get();
+
+        return account.exists();
     }
 }
