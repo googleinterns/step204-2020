@@ -18,6 +18,7 @@ import {JOB_ID_PARAM, DEFAULT_PAGE_SIZE,
 import {createMap, addMarker} from './maps.js';
 import {Auth} from '/account/firebase-auth.js';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const STRINGS = AppStrings['homepage'];
 const CREATE_ACCOUNT_PAGE_PATH = '/account/create-account/index.html';
 const LOG_IN_PAGE_PATH = '/account/log-in/index.html';
@@ -38,13 +39,14 @@ const JAVA_INTEGER_MAX_VALUE = Math.pow(2, 31) - 1;
 let map;
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderHomepageElements();
 };
 
-// TODO(issue/101): Display button according to log in status;
-// i.e. implement onLogIn, onLogOut, onDefault
-
+/**
+ * What to do after the user signed in and the session cookie is created.
+ */
 function onLogIn() {
   clearHeaderUI();
 
@@ -58,18 +60,40 @@ function onLogIn() {
   }
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
   clearHeaderUI();
 
-  renderDefaultUI();
+  renderLogOutUI();
 }
 
-function onDefault() {
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
+function onLogInFailure() {
   clearHeaderUI();
-  
-  renderDefaultUI();
+
+  renderLogOutUI();
+
+  alert(AUTH_STRINGS['sign-in-failure']);
 }
 
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
+function onLogOutFailure() {
+  clearHeaderUI();
+
+  renderLogOutUI();
+
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
+}
+
+/**
+ * Removes all html elements in header container
+ */
 function clearHeaderUI() {
   const headerContainer = document.getElementById('header-container');
 
@@ -78,12 +102,18 @@ function clearHeaderUI() {
   }
 }
 
+/**
+ * Renders the header UI for applicant user
+ */
 function renderApplicantUI() {
   renderInterestedJobButton();
   renderPageTitle();
   renderLogOutButton();
 }
 
+/**
+ * Renders the header UI for business user
+ */
 function renderBusinessUI() {
   renderNewPostButton();
   renderShowJobPostsButton();
@@ -91,12 +121,18 @@ function renderBusinessUI() {
   renderLogOutButton();
 }
 
-function renderDefaultUI() {
+/**
+ * Renders the header UI for log out status
+ */
+function renderLogOutUI() {
   renderSignUpButton();
   renderPageTitle();
   renderLogInButton();
 }
 
+/**
+ * Renders the make new job post button
+ */
 function renderNewPostButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -110,6 +146,9 @@ function renderNewPostButton() {
   headerContainer.appendChild(newPostButton);
 }
 
+/**
+ * Renders the page title
+ */
 function renderPageTitle() {
   const headerContainer = document.getElementById('header-container');
 
@@ -120,6 +159,9 @@ function renderPageTitle() {
   headerContainer.appendChild(homepageTitle);
 }
 
+/**
+ * Renders the sign up button
+ */
 function renderSignUpButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -133,6 +175,9 @@ function renderSignUpButton() {
   headerContainer.appendChild(accountButton);
 }
 
+/**
+ * Renders the log in button
+ */
 function renderLogInButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -146,6 +191,9 @@ function renderLogInButton() {
   headerContainer.appendChild(loginButton);
 }
 
+/**
+ * Renders the log out button
+ */
 function renderLogOutButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -159,6 +207,9 @@ function renderLogOutButton() {
   headerContainer.appendChild(logoutButton);
 }
 
+/**
+ * Renders the show job posts made button
+ */
 function renderShowJobPostsButton() {
   const headerContainer = document.getElementById('header-container');
 
@@ -172,6 +223,9 @@ function renderShowJobPostsButton() {
   headerContainer.appendChild(showJobPostsButton);
 }
 
+/**
+ * Renders the show interested job button
+ */
 function renderInterestedJobButton() {
   const headerContainer = document.getElementById('header-container');
 

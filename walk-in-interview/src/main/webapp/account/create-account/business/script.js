@@ -12,7 +12,7 @@ const CURRENT_LOCALE = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS,
+import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS, MIN_PASSWORD_LENGTH,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
 const ACCOUNT_STRINGS = AppStrings['create-account'];
@@ -26,12 +26,10 @@ const OPERATION_NOT_ALLOWED_ERROR_CODE = 'auth/operation-not-allowed';
 const WEAK_PASSWORD_ERROR_CODE = 'auth/weak-password';
 
 window.onload = () => {
-  Auth.subscribeToUserAuthenticationChanges(onLogIn, onLogOut, onDefault);
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderPageElements();
 };
-
-// TODO(issue/101): Display button according to log in status;
-// i.e. implement onLogIn, onLogOut, onDefault
 
 /**
  * What to do after the user signed in and the session cookie is created.
@@ -40,20 +38,29 @@ function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
 
-  // TODO(issue/102): replace with proper notification
-  alert(STRINGS['new-user-info']);
-
   // Directs to the page to fill in business account info.
   window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
+/**
+ * UI related function to be executed after successfully signed out.
+ */
 function onLogOut() {
-
+  // No UI change
 }
 
-function onDefault() {
-  // TODO(issue/102): replace with proper notification
-  alert(ACCOUNT_STRINGS['create-account-error-message']);
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
+function onLogInFailure() {
+  // No UI change
+}
+
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
+function onLogOutFailure() {
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
 }
 
 /** Adds all the text to the fields on this page. */
@@ -93,7 +100,7 @@ submitButton.addEventListener('click', async (_) => {
   // Disables the button to avoid accidental double click
   document.getElementById('submit').disabled = true;
 
-  const account = document.getElementById('account-input').value;
+  const account = document.getElementById('account-input').value.trim();
 
   if (account === '') {
     setErrorMessage(/* errorMessageElementId= */'error-message',
@@ -102,18 +109,25 @@ submitButton.addEventListener('click', async (_) => {
     return;
   }
 
-  const password = document.getElementById('password-input').value;
+  const password = document.getElementById('password-input').value.trim();
 
   // Resets the error (there might have been an error msg from earlier)
   setErrorMessage(/* errorMessageElementId= */'error-message',
       /* msg= */ '',
       /* includesDefault= */false);
 
-  await Auth.createBusinessAccount(account, password)
-      .catch((error) => {
-        showErrorMessageFromError(error);
-      });
+  try {
+    await Auth.createBusinessAccount(account, password);
 
+    // TODO(issue/102): replace with proper notification
+    alert(STRINGS['new-user-info']);
+  } catch (error) {
+    showErrorMessageFromError(error);
+
+    // TODO(issue/102): replace with proper notification
+    alert(ACCOUNT_STRINGS['create-account-error-message']);
+  }
+  
   // Enables the button regardless of success or failure
   document.getElementById('submit').disabled = false;
 });
@@ -142,7 +156,7 @@ function showErrorMessageFromError(error) {
       break;
     case WEAK_PASSWORD_ERROR_CODE:
       setErrorMessage(/* errorMessageElementId= */'error-message',
-          /* msg= */ STRINGS['weak-password-error'],
+          /* msg= */ STRINGS['weak-password-error'].replace('{MIN_PASSWORD_LENGTH}', MIN_PASSWORD_LENGTH),
           /* includesDefault= */false);
       break;
     default:

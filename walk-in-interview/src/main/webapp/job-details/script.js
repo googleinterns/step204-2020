@@ -5,7 +5,7 @@
  */
 
 // TODO(issue/21): get the language from the browser
-const CurrentLocale = 'en';
+const CURRENT_LOCALE = 'en';
 
 /**
  * Import statements are static so its parameters cannot be dynamic.
@@ -13,15 +13,19 @@ const CurrentLocale = 'en';
  */
 import {AppStrings} from '../strings.en.js';
 
-import {JOB_ID_PARAM, setErrorMessage,
-  getRequirementsList} from '../common-functions.js';
+import {JOB_ID_PARAM, USER_TYPE_COOKIE_PARAM, 
+  USER_TYPE_APPLICANT, USER_TYPE_BUSINESS,
+  setErrorMessage, getRequirementsList, 
+  getCookie} from '../common-functions.js';
 import {createMap, addMarker, JOB_MAP_ZOOM} from '../maps.js';
 
 import {API} from '../apis.js';
+import {Auth} from '../account/firebase-auth.js';
 
 const UPDATE_JOB_PATH = '../update-job/index.html';
 const HOMEPAGE_PATH = '../index.html';
 
+const AUTH_STRINGS = AppStrings['auth'];
 const COMMON_STRINGS = AppStrings['common'];
 const STRINGS = AppStrings['job-details'];
 const JOB_STRINGS = AppStrings['job'];
@@ -29,19 +33,113 @@ const JOB_STRINGS = AppStrings['job'];
 let map;
 
 window.onload = () => {
+  Auth.subscribeToUserAuthenticationChanges(
+    onLogIn, onLogOut, onLogInFailure, onLogOutFailure);
   renderJobDetailsPageElements();
 };
 
 /**
- * Add the current job (given the jobId) details to the page,
- * as well as the other elements on the page.
+ * UI related function to be executed after successfully signed in.
  */
-async function renderJobDetailsPageElements() {
-  const homepageButton = document.getElementById('back-to-homepage');
+function onLogIn() {
+  clearHeaderUI();
+
+  const userType = getCookie(USER_TYPE_COOKIE_PARAM);
+  if (userType === USER_TYPE_APPLICANT) {
+    renderApplicantUI();
+  } else if (userType === USER_TYPE_BUSINESS) {
+    renderBusinessUI();
+  } else {
+    renderDefaultUI();
+  }
+}
+
+/**
+ * UI related function to be executed after successfully signed out.
+ */
+function onLogOut() {
+  clearHeaderUI();
+
+  renderLogOutUI();
+}
+
+/**
+ * UI related function to be executed for user does not sign in successfully.
+ */
+function onLogInFailure() {
+  clearHeaderUI();
+
+  renderLogOutUI();
+
+  alert(AUTH_STRINGS['sign-in-failure']);
+}
+
+/**
+ * UI related function to be executed for user does not sign out successfully.
+ */
+function onLogOutFailure() {
+  clearHeaderUI();
+
+  renderLogOutUI();
+
+  console.log(AUTH_STRINGS['sign-out-failure'] + '\n Forced user to log out');
+}
+
+/**
+ * Removes all html elements in header container
+ */
+function clearHeaderUI() {
+  const headerContainer = document.getElementById('header-container');
+
+  while(headerContainer.firstChild){
+    headerContainer.removeChild(headerContainer.firstChild);
+  }
+}
+
+/**
+ * Renders the header UI for applicant user
+ */
+function renderApplicantUI() {
+  renderBackButton();
+}
+
+/**
+ * Renders the header UI for business user
+ */
+function renderBusinessUI() {
+  renderBackButton();
+  renderUpdateButton();
+  renderDeleteButton();
+}
+
+/**
+ * Renders the header UI for log out status
+ */
+function renderLogOutUI() {
+  renderBackButton();
+}
+
+/**
+ * Renders the back button
+ */
+function renderBackButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const homepageButton = document.createElement('button');
+  homepageButton.setAttribute('id', 'back-to-homepage');
   homepageButton.innerText = STRINGS['back-to-homepage'];
   homepageButton.addEventListener('click', (_) => {
     window.location.href= HOMEPAGE_PATH;
   });
+
+  headerContainer.appendChild(homepageButton);
+}
+
+/**
+ * Renders the update button
+ */
+function renderUpdateButton() {
+  const headerContainer = document.getElementById('header-container');
 
   const jobId = getJobId();
   if (jobId === '') {
@@ -50,25 +148,68 @@ async function renderJobDetailsPageElements() {
     throw new Error('jobId should not be empty');
   }
 
-  const updateForm = document.getElementById('update-form');
+  const updateForm = document.createElement('form');
+  updateForm.setAttribute('id', 'update-form');
   updateForm.method = 'GET';
   updateForm.action = UPDATE_JOB_PATH;
 
-  const jobIdElement = document.getElementById('job-id');
+  const jobIdElement = document.createElement('input');
+  jobIdElement.setAttribute('id', 'job-id');
   jobIdElement.setAttribute('type', 'hidden');
   jobIdElement.setAttribute('name', JOB_ID_PARAM);
   jobIdElement.setAttribute('value', jobId);
+  updateForm.appendChild(jobIdElement);
 
-  const updateButton = document.getElementById('update');
+  const updateButton = document.createElement('input');
+  updateButton.setAttribute('id', 'update');
+  updateButton.setAttribute('class', 'button');
   updateButton.setAttribute('value', STRINGS['update']);
   updateButton.setAttribute('type', 'submit');
   // in case it was disabled earlier
   updateButton.disabled = false;
+  updateForm.appendChild(updateButton);
 
-  const deleteButtonElement = document.getElementById('delete');
+  headerContainer.appendChild(updateForm);
+}
+
+/**
+ * Renders the delete button
+ */
+function renderDeleteButton() {
+  const headerContainer = document.getElementById('header-container');
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.setAttribute('id', 'delete');
   deleteButtonElement.innerText = STRINGS['delete'];
   // in case it was disabled earlier
   deleteButtonElement.disabled = false;
+
+  deleteButtonElement.addEventListener('click', () => {
+    const jobId = getJobId();
+    if (jobId === '') {
+      setErrorMessage(/* errorMessageElementId= */'error-message',
+          /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
+          /* includesDefault= */false);
+      return;
+    }
+  
+    deleteJobPost(jobId);
+  });
+
+  headerContainer.appendChild(deleteButtonElement);
+}
+
+/**
+ * Add the current job (given the jobId) details to the page,
+ * as well as the other elements on the page.
+ */
+async function renderJobDetailsPageElements() {
+  const jobId = getJobId();
+  if (jobId === '') {
+    setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
+        /* includesDefaultMsg= */ false);
+    throw new Error('jobId should not be empty');
+  }
 
   const job = await getJobDetails(jobId)
       .catch((error) => {
@@ -95,15 +236,27 @@ function displayJobDetails(job) {
   if (job === undefined || job.length === 0) {
     setErrorMessage('error-message', /* msg= */ STRINGS['error-message'],
         /* includesDefaultMsg= */ false);
+
     // disable the buttons if theres an error
-    document.getElementById('update').disabled = true;
-    document.getElementById('delete').disabled = true;
+    if (document.body.contains(document.getElementById('update'))) {
+      document.getElementById('update').disabled = true;
+    }
+
+    if (document.body.contains(document.getElementById('delete'))) {
+      document.getElementById('delete').disabled = true;
+    }
+
     return;
   }
 
   // in case they were disabled earlier
-  document.getElementById('update').disabled = false;
-  document.getElementById('delete').disabled = false;
+  if (document.body.contains(document.getElementById('update'))) {
+    document.getElementById('update').disabled = false;
+  }
+
+  if (document.body.contains(document.getElementById('delete'))) {
+    document.getElementById('delete').disabled = false;
+  }
 
   // does not require info window
   addMarker(map, job);
@@ -219,16 +372,3 @@ function deleteJobPost(jobId) {
         console.error(error);
       });
 }
-
-const deleteButtonElement = document.getElementById('delete');
-deleteButtonElement.addEventListener('click', () => {
-  const jobId = getJobId();
-  if (jobId === '') {
-    setErrorMessage(/* errorMessageElementId= */'error-message',
-        /* msg= */ COMMON_STRINGS['empty-job-id-error-message'],
-        /* includesDefault= */false);
-    return;
-  }
-
-  deleteJobPost(jobId);
-});

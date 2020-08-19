@@ -1,5 +1,7 @@
 package com.google.job.servlets;
 
+import com.google.account.UserType;
+import com.google.appengine.repackaged.com.google.api.client.http.HttpRequest;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.job.data.*;
 import com.google.utils.FirebaseAuthUtils;
@@ -69,6 +71,13 @@ public final class JobServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
+            // Verifies if this account can make job post
+            if (!isBusinessAccount(request)) {
+                System.err.println("This is not a business account. Making new job post is not allowed");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
             // Gets uid of the current user
             Optional<String> optionalUid = FirebaseAuthUtils.getUid(request);
 
@@ -118,6 +127,12 @@ public final class JobServlet extends HttpServlet {
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    /** Checks if the current account is a business user. */
+    private boolean isBusinessAccount(HttpServletRequest request) {
+        String userType = FirebaseAuthUtils.getUserType(request);
+        return userType.equals(UserType.BUSINESS.getUserTypeId());
     }
 
     /** Parses into valid Job object from json received from client request. */
