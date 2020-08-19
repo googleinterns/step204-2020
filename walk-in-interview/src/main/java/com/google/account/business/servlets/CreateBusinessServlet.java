@@ -90,7 +90,7 @@ public final class CreateBusinessServlet extends HttpServlet {
     private void addBusinessAccount(String uid, Business business)
             throws IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
         try {
-            // Blocks the operation.
+            // Blocks the operation and waits for the future.
             // Use timeout in case it blocks forever.
             this.businessDatabase.createBusinessAccount(uid, business).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
