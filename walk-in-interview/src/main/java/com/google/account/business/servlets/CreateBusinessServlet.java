@@ -21,7 +21,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /** Servlet that handles creating new business account. */
-@WebServlet("/create-business-account")
+@WebServlet("/business-account")
 public final class CreateBusinessServlet extends HttpServlet {
     private static final long TIMEOUT_SECONDS = 5;
     private BusinessDatabase businessDatabase;

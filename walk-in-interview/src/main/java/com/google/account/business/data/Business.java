@@ -67,8 +67,9 @@ public final class Business {
                 throw new IllegalArgumentException("Company Name should be an non-empty string");
             }
 
-            if (!jobs.isEmpty()) {
-                throw new IllegalArgumentException("Newly created account should have empty job posts made");
+            if (jobs == null || !jobs.isEmpty()) {
+                // Forces to be am empty list
+                this.jobs = ImmutableList.of();
             }
 
             return new Business(this);
