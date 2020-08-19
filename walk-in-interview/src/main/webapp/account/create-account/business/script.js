@@ -52,8 +52,7 @@ function onLogOut() {
  * UI related function to be executed for user does not sign in successfully.
  */
 function onLogInFailure() {
-  // TODO(issue/102): replace with proper notification
-  alert(ACCOUNT_STRINGS['create-account-error-message']);
+  // No UI change
 }
 
 /**
@@ -127,6 +126,9 @@ submitButton.addEventListener('click', async (_) => {
     alert(STRINGS['new-user-info']);
   } catch (error) {
     showErrorMessageFromError(error);
+
+    // TODO(issue/102): replace with proper notification
+    alert(ACCOUNT_STRINGS['create-account-error-message']);
   }
   
   // Enables the button regardless of success or failure
