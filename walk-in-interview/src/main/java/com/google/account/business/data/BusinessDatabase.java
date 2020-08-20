@@ -66,8 +66,9 @@ public final class BusinessDatabase {
      * @param uid Uid of the current user
      * @param jobId Id of the newly created job post.
      * @return A future.
+     * @throws IllegalArgumentException If uid does not exist
      */
-    public Future<Void> updateJobsMade(String uid, String jobId) throws IOException {
+    public Future<Void> updateJobsMade(String uid, String jobId) throws IOException, IllegalArgumentException {
         // Runs an asynchronous transaction
         ApiFuture<Void> futureTransaction = FireStoreUtils.getFireStore().runTransaction(transaction -> {
             final DocumentReference documentReference = FireStoreUtils.getFireStore()
@@ -76,7 +77,7 @@ public final class BusinessDatabase {
             // Verifies if the current user can update the job post with this job id
             DocumentSnapshot documentSnapshot = transaction.get(documentReference).get();
 
-            // Job does not exist
+            // Account does not exist
             if (!documentSnapshot.exists()) {
                 throw new IllegalArgumentException("Invalid uid");
             }

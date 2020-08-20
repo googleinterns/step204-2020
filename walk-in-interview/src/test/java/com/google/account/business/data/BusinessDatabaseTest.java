@@ -139,7 +139,7 @@ public final class BusinessDatabaseTest {
     }
 
     @Test
-    public void updateJobsMade_invalidUid_fail() throws IOException {
+    public void updateJobsMade_invalidUid_fail() throws IOException, ExecutionException, InterruptedException {
         // Arrange.
         String jobId = "testJobId";
 
@@ -149,6 +149,9 @@ public final class BusinessDatabaseTest {
         try {
             // Act.
             Future<Void> future = this.businessDatabase.updateJobsMade(uid, jobId);
+            // future.get() blocks on response.
+            future.get();
+
             fail();
         } catch (IllegalArgumentException e) {
             // Assert.
