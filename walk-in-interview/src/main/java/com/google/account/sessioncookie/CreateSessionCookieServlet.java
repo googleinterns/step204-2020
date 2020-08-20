@@ -33,7 +33,6 @@ public final class CreateSessionCookieServlet extends HttpServlet {
 
     private static final int SESSION_COOKIE_DURATION_DAYS = 5;
     private static final String SESSION_COOKIE_NAME = "session";
-    private static final String USER_TYPE_COOKIE_NAME = "userType";
     private static final String ID_TOKEN_PARAM = "idToken";
 
     // TODO(issue/87): move to config file
@@ -80,7 +79,7 @@ public final class CreateSessionCookieServlet extends HttpServlet {
             String uid = decodedToken.getUid();
 
             // Creates the preliminary Account object if the account does not exist
-            String userType = FirebaseAuthUtils.getCookie(request, USER_TYPE_COOKIE_NAME).getValue();
+            String userType = FirebaseAuthUtils.getUserType(request);
 
             if (userType.equals(UserType.BUSINESS.getUserTypeId())) {
                 if (!isBusinessAccountExist(uid)) {
