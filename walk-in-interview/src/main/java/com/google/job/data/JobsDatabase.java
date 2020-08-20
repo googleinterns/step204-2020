@@ -300,7 +300,15 @@ public final class JobsDatabase {
         );
     }
 
-    // TODO: add javadoc, add test
+    /**
+     * Fetches all the jobs post made by the specific business account.
+     *
+     * @param businessId Uid of the business account.
+     * @param pageSize The the number of jobs to be shown on the page.
+     * @param pageIndex The page number on which we are at.
+     * Returns future of the JobPage object.
+     * @throws IllegalArgumentException If it is not a valid existing uid for business account.
+     */
     public Future<JobPage> fetchAllJobMadePage(String businessId, int pageSize, int pageIndex)
             throws IOException, IllegalArgumentException {
         CollectionReference businessAccountsCollection = FireStoreUtils.getFireStore()
