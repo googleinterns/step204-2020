@@ -44,7 +44,7 @@ public final class FirebaseAuthUtils {
      * @throws IllegalArgumentException If uid is null or empty.
      * @throws FirebaseAuthException If session cookie is unavailable, invalid or revoked.
      */
-    public Optional<String> getUid(HttpServletRequest request)
+    public static Optional<String> getUid(HttpServletRequest request)
             throws IllegalArgumentException, FirebaseAuthException {
         String sessionCookie = getCookie(request, SESSION_COOKIE_NAME).getValue();
 

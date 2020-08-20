@@ -12,7 +12,6 @@ const CURRENT_LOCALE = 'en';
  */
 import {AppStrings} from '../../../strings.en.js';
 import {Auth} from '../../firebase-auth.js';
-import {API} from '../../../apis.js';
 import {USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS, MIN_PASSWORD_LENGTH,
   setCookie, setErrorMessage} from '../../../common-functions.js';
 
@@ -25,7 +24,6 @@ const EMAIL_IN_USE_ERROR_CODE = 'auth/email-already-in-use';
 const INVALID_EMAIL_ERROR_CODE = 'auth/invalid-email';
 const OPERATION_NOT_ALLOWED_ERROR_CODE = 'auth/operation-not-allowed';
 const WEAK_PASSWORD_ERROR_CODE = 'auth/weak-password';
-const SUCCESS_STATUS_CODE = 200;
 
 window.onload = () => {
   Auth.subscribeToUserAuthenticationChanges(
@@ -39,6 +37,9 @@ window.onload = () => {
 function onLogIn() {
   // TODO(issue/100): set the cookie at the server side instead
   setCookie(USER_TYPE_COOKIE_PARAM, USER_TYPE_BUSINESS);
+
+  // Directs to the page to fill in business account info.
+  window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
 }
 
 /**
@@ -117,7 +118,6 @@ submitButton.addEventListener('click', async (_) => {
 
   try {
     await Auth.createBusinessAccount(account, password);
-    await createPreliminaryBusinessAccount();
 
     // TODO(issue/102): replace with proper notification
     alert(STRINGS['new-user-info']);
@@ -166,58 +166,4 @@ function showErrorMessageFromError(error) {
       console.error(error.message);
       break;
   }
-}
-
-/**
- * Creates an preliminary account object with email as name for the user
- */
-async function createPreliminaryBusinessAccount() {
-  var user = firebase.auth().currentUser;
-  if (!user) {
-    return new Promise.reject("Not signed in");
-  }
-
-  // Creates a totally empty account
-  const accountDetails = {
-    userType: USER_TYPE_BUSINESS,
-    name: user.email,
-    // empty job list is created at the server
-  };
-
-  return fetch(API['create-business-account'], {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(accountDetails),
-  })
-      .then((response) => {
-        if (response.status !== SUCCESS_STATUS_CODE) {
-          setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ ACCOUNT_STRINGS['create-account-error-message'],
-              /* includesDefault= */false);
-          throw new Error(ACCOUNT_STRINGS['create-account-error-message']);
-        }
-
-        /** reset the error (there might have been an error msg from earlier) */
-        setErrorMessage(/* errorMessageElementId= */'error-message',
-            /* msg= */ '', /* includesDefault= */false);
-
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
-
-        // Directs to the page to fill in business account info.
-        window.location.href = CREATE_ACCOUNT_INFO_PAGE_PATH;
-      })
-      .catch((error) => {
-        // Not the server response error already caught and thrown
-        if (error.message != ACCOUNT_STRINGS['create-account-error-message']) {
-          console.log('error', error);
-
-          setErrorMessage(/* errorMessageElementId= */'error-message',
-              /* msg= */ ACCOUNT_STRINGS['error-message'],
-              /* includesDefault= */false);
-        }
-
-        // Enables the button regardless of success or failure
-        document.getElementById('submit').disabled = false;
-      });
 }
