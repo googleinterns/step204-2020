@@ -3,6 +3,7 @@ package com.google.account.business.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.common.collect.ImmutableList;
+import com.google.job.data.Job;
 import com.google.utils.FireStoreUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +25,7 @@ public final class BusinessDatabaseTest {
     // TODO(issue/15): Add failure test case
 
     private static final String TEST_BUSINESS_COLLECTION = "BusinessAccounts";
+    private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
 
     static BusinessDatabase businessDatabase;
@@ -38,6 +41,7 @@ public final class BusinessDatabaseTest {
     public void clearCollection() {
         try {
             deleteCollection(firestore.collection(TEST_BUSINESS_COLLECTION), BATCH_SIZE);
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
         } catch (ExecutionException | InterruptedException e) {
             System.err.println("Error deleting collection : " + e.getMessage());
         }
@@ -47,6 +51,7 @@ public final class BusinessDatabaseTest {
     public static void tearDownCollection() {
         try {
             deleteCollection(firestore.collection(TEST_BUSINESS_COLLECTION), BATCH_SIZE);
+            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
         } catch (ExecutionException | InterruptedException e) {
             System.err.println("Error tearing down collection : " + e.getMessage());
         }
@@ -56,10 +61,7 @@ public final class BusinessDatabaseTest {
     public void getBusinessAccount_normalInput_success() throws IOException, ExecutionException, InterruptedException {
         // Arrange.
         String uid = "dummyBusinessUid";
-
-        String businessName = "testBusinessAccount";
-        List<String> jobs = ImmutableList.of("jobId1", "jobId2");
-        Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
+        Business expectedBusiness = testBusinessAccountCreation();
 
         Future<WriteResult> future = FireStoreUtils.getFireStore()
                 .collection(TEST_BUSINESS_COLLECTION)
@@ -85,10 +87,7 @@ public final class BusinessDatabaseTest {
             throws IOException, ExecutionException, InterruptedException {
         // Arrange.
         String uid = "dummyBusinessUid";
-
-        String businessName = "testBusinessAccount";
-        List<String> jobs = ImmutableList.of("jobId1", "jobId2");
-        Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
+        Business expectedBusiness = testBusinessAccountCreation();
 
         // Act.
         Future<WriteResult> future = this.businessDatabase.updateBusinessAccount(uid, expectedBusiness);
@@ -107,10 +106,59 @@ public final class BusinessDatabaseTest {
         assertEquals(expectedBusiness, actualBusiness);
     }
 
+    @Test
+    public void updateJobsMade_normalInput_success() throws ExecutionException, InterruptedException, IOException {
+        // Arrange.
+        String jobId = "testJobId";
+        Job job = new Job();
+
+        // ".get()" blocks on response.
+        firestore.collection(TEST_JOB_COLLECTION).add(job).get();
+
+        String uid = "dummyBusinessUid";
+        Business expectedBusiness = testBusinessAccountCreation();
+
+        Future<WriteResult> addedJobFuture = FireStoreUtils.getFireStore()
+                .collection(TEST_BUSINESS_COLLECTION)
+                .document(uid)
+                .set(expectedBusiness);
+
+        // future.get() blocks on response.
+        addedJobFuture.get();
+
+        // Act.
+        Future<Void> future = this.businessDatabase.updateJobsMade(uid, jobId);
+
+        // Assert.
+        // future.get() blocks on response.
+        future.get();
+
+        DocumentReference documentReference = FireStoreUtils.getFireStore()
+                .collection(TEST_BUSINESS_COLLECTION).document(uid);
+        DocumentSnapshot documentSnapshot = documentReference.get().get();
+
+        Business actualBusiness = documentSnapshot.toObject(Business.class);
+
+        List<String> expectedJobs = Arrays.asList("jobId1", "jobId2", jobId);
+
+        List<String> actualJobs = actualBusiness.getJobs();
+
+        assertEquals(expectedJobs, actualJobs);
+    }
+
+    /** Creates Business object for tests. */
+    private Business testBusinessAccountCreation() {
+        String businessName = "testBusinessAccount";
+        List<String> jobs = ImmutableList.of("jobId1", "jobId2");
+        Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
+
+        return expectedBusiness;
+    }
+
     /**
      * Delete a collection in batches to avoid out-of-memory errors.
      *
-     * Batch size may be tuned based on document size (atmost 1MB) and application requirements.
+     * Batch size may be tuned based on document size (at most 1MB) and application requirements.
      */
     private static void deleteCollection(CollectionReference collection, int batchSize)
             throws ExecutionException, InterruptedException {
