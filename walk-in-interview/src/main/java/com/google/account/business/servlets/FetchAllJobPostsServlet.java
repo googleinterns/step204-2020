@@ -16,12 +16,13 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Servlet that handles getting all job posts made by this user */
 @WebServlet("/my-jobs")
 public final class FetchAllJobPostsServlet extends HttpServlet {
-    private static final Logger log = Logger.getLogger(FetchAllJobPostsServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FetchAllJobPostsServlet.class.getName());
 
     private static final String PAGE_SIZE_PARAM = "pageSize";
     private static final String PAGE_INDEX_PARAM = "pageIndex";
@@ -40,7 +41,7 @@ public final class FetchAllJobPostsServlet extends HttpServlet {
             Optional<String> optionalUid = FirebaseAuthUtils.getUid(request);
 
             if (!optionalUid.isPresent()) {
-                System.err.println("Illegal uid");
+                LOGGER.log(Level.SEVERE, /* msg= */ "Illegal uid");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -58,19 +59,19 @@ public final class FetchAllJobPostsServlet extends HttpServlet {
             response.getWriter().println(json);
         } catch (ServletException | ExecutionException | TimeoutException | IOException | FirebaseAuthException e) {
             // TODO(issue/47): use custom exceptions
-            System.err.println("Error occur: " + e.getCause());
+            LOGGER.log(Level.SEVERE, /* msg= */ "Error occur: " + e.getCause(), e);
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
     /**
-     * Returns the JobPage object.
+     * Fetches the all jobs made by the current business user.
      *
      * @param uid Uid of the current business user.
-     * @param pageSize
-     * @param pageIndex
-     * @return JobPage object with all the details for the GET response.
+     * @param pageSize The the number of jobs to be shown on the page.
+     * @param pageIndex The page number on which we are at.
+     * Returns a JobPage object with all the details for the GET response.
      */
     private JobPage fetchJobPageDetails(String uid, int pageSize, int pageIndex)
             throws ServletException, ExecutionException, TimeoutException {
@@ -86,7 +87,7 @@ public final class FetchAllJobPostsServlet extends HttpServlet {
      * Returns the page size as an int.
      *
      * @param request From the GET request.
-     * @return the page size.
+     * Returns the page size.
      * @throws IllegalArgumentException if the page size is invalid.
      */
     public static int parsePageSize(HttpServletRequest request) throws IllegalArgumentException {
@@ -108,7 +109,7 @@ public final class FetchAllJobPostsServlet extends HttpServlet {
      * Returns the page index as an int.
      *
      * @param request From the GET request.
-     * @return the page index.
+     * Returns the page index.
      * @throws IllegalArgumentException if the page index is invalid.
      */
     public static int parsePageIndex(HttpServletRequest request) throws IllegalArgumentException {
