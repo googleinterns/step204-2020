@@ -58,7 +58,10 @@ public final class JobsDatabase {
 
         String jobId = addedDocRef.getId();
 
-        // TODO: find a way to do this outside jobsdatabase, i.e. how to return jobId
+        // TODO: find a way to do this outside JobsDatabase
+        //  i.e. how to retrieve jobId of a newly added document outside this function
+        //  so far jobId cannot be retrieved from WriteResult
+
         // Updates the business account accordingly
         this.businessDatabase.updateJobsMade(uid, jobId);
 

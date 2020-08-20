@@ -18,13 +18,13 @@ import java.util.concurrent.Future;
 /** Helps persist and retrieve business accounts in cloud firestore. */
 public final class BusinessDatabase {
     private static final String BUSINESS_ACCOUNT_COLLECTION = "BusinessAccounts";
-    private static final String JOBS_FIElD = "jobs";
+    private static final String JOBS_FIELD = "jobs";
 
     /**
      * Gets the snapshot future of a specific account.
      *
      * @param uid Uid of the account.
-     * @return Future of the target account.
+     * Returns uture of the target account.
      */
     public Future<Optional<Business>> getBusinessAccount(String uid) throws IOException {
         DocumentReference docRef = FireStoreUtils.getFireStore()
@@ -49,7 +49,7 @@ public final class BusinessDatabase {
      *
      * @param uid Uid of the current user account.
      * @param business Business object for the current account.
-     * @return Future with writing details.
+     * Returns future with writing details.
      */
     public Future<WriteResult> updateBusinessAccount(String uid, Business business) throws IOException {
         // Adds the business object into cloud firestore using uid as document id
@@ -65,7 +65,7 @@ public final class BusinessDatabase {
      *
      * @param uid Uid of the current user
      * @param jobId Id of the newly created job post.
-     * @return A future.
+     * Returns a future.
      * @throws IllegalArgumentException If uid does not exist
      */
     public Future<Void> updateJobsMade(String uid, String jobId) throws IOException, IllegalArgumentException {
@@ -83,7 +83,7 @@ public final class BusinessDatabase {
             }
 
             // Adds the newly created job Id into the array.
-            transaction.update(documentReference, JOBS_FIElD, FieldValue.arrayUnion(jobId));
+            transaction.update(documentReference, JOBS_FIELD, FieldValue.arrayUnion(jobId));
 
             return null;
         });
