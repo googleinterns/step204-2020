@@ -63,13 +63,14 @@ public final class CreateBusinessServlet extends HttpServlet {
                         .setName(inputBusiness.getName())
                         .setJobs(ImmutableList.of()).build();
             } else {
-                business = Business.newBuilder()
+                business = existingBusinessOptional.get()
+                        .toBuilder()
                         .setName(inputBusiness.getName())
                         .build();
             }
 
             // Stores the account into cloud firestore
-            addBusinessAccount(uid, business);
+            updateBusinessAccount(uid, business);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
@@ -100,8 +101,8 @@ public final class CreateBusinessServlet extends HttpServlet {
         }
     }
 
-    /** Adds the business account in the database. */
-    private void addBusinessAccount(String uid, Business business)
+    /** Updates the existing (preliminary) business account with only updatable fields. */
+    private void updateBusinessAccount(String uid, Business business)
             throws IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
         try {
             // Blocks the operation and waits for the future.
