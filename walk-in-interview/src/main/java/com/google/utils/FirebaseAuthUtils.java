@@ -15,6 +15,7 @@ import java.util.Optional;
 /** Util methods related to Firebase Auth.  */
 public final class FirebaseAuthUtils {
     private static final String SESSION_COOKIE_NAME = "session";
+    private static final String USER_TYPE_COOKIE_NAME = "userType";
 
     private FirebaseAuthUtils() {}
 
@@ -40,7 +41,7 @@ public final class FirebaseAuthUtils {
      * Gets the uid from firebase auth session cookie.
      *
      * @param request Http Servlet Request.
-     * @return Optional of uid of the current account.
+     * Returns optional of uid of the current account.
      * @throws IllegalArgumentException If uid is null or empty.
      * @throws FirebaseAuthException If session cookie is unavailable, invalid or revoked.
      */
@@ -67,7 +68,7 @@ public final class FirebaseAuthUtils {
      *
      * @param request Http Servlet Request.
      * @param name Cookie name.
-     * @return The whole cookie.
+     * Returns the whole cookie.
      * @throws IllegalArgumentException If no cookie matched the given name.
      */
     public static Cookie getCookie(HttpServletRequest request, String name) throws IllegalArgumentException {
@@ -79,5 +80,15 @@ public final class FirebaseAuthUtils {
         }
 
         throw new IllegalArgumentException("No matched cookie: " + name);
+    }
+
+    /**
+     * Gets the user type from cookie.
+     *
+     * @param request Http Servlet Request.
+     * Returns user type cookie value.
+     */
+    public static String getUserType(HttpServletRequest request) {
+        return getCookie(request, USER_TYPE_COOKIE_NAME).getValue();
     }
 }

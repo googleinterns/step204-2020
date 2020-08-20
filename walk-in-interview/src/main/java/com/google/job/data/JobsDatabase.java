@@ -1,5 +1,6 @@
 package com.google.job.data;
 
+import com.google.account.business.data.BusinessDatabase;
 import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -40,18 +41,29 @@ public final class JobsDatabase {
     private static final long TIMEOUT_SECONDS = 5;
     private static final int FIRESTORE_IN_QUERY_MAX_ARGS = 10;
 
+    private final BusinessDatabase businessDatabase = new BusinessDatabase();
+
     /**
      * Adds a newly created job post.
+     * Updates the business account accordingly.
      *
+     * @param uid Uid of the current user.
      * @param newJob Newly created job post. Assumes that it is non-nullable.
      * @return A future of the detailed information of the writing.
      */
-    public Future<WriteResult> addJob(Job newJob) throws IOException {
+    public Future<WriteResult> addJob(String uid, Job newJob) throws IOException {
         // Add document data after generating an id
         DocumentReference addedDocRef = FireStoreUtils.getFireStore()
                 .collection(JOB_COLLECTION).document();
 
         String jobId = addedDocRef.getId();
+
+        // TODO: find a way to do this outside JobsDatabase
+        //  i.e. how to retrieve jobId of a newly added document outside this function
+        //  so far jobId cannot be retrieved from WriteResult
+
+        // Updates the business account accordingly
+        this.businessDatabase.updateJobsMade(uid, jobId);
 
         // Updates the Job with cloud firestore id
         // Status is already set when parsing the job post
