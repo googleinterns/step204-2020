@@ -19,12 +19,16 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /** Servlet that handles creating new business account. */
 @WebServlet("/business-account")
 public final class CreateBusinessServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(CreateBusinessServlet.class.getName());
     private static final long TIMEOUT_SECONDS = 5;
+
     private BusinessDatabase businessDatabase;
 
     @Override
@@ -38,7 +42,7 @@ public final class CreateBusinessServlet extends HttpServlet {
             Optional<String> optionalUid = FirebaseAuthUtils.getUid(request);
 
             if (!optionalUid.isPresent()) {
-                System.err.println("Illegal uid");
+                LOGGER.log(Level.SEVERE, /* msg= */"Illegal uid");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -46,19 +50,34 @@ public final class CreateBusinessServlet extends HttpServlet {
             String uid = optionalUid.get();
 
             // Gets business object from the client
-            Business rawBusiness = parseBusinessAccount(request);
+            Business inputBusiness = parseBusinessAccount(request);
 
-            // Forces new account to have empty job list
-            Business business = rawBusiness.toBuilder().setJobs(ImmutableList.of()).build();
+            // Fetches the existing business object from database
+            Optional<Business> existingBusinessOptional = this.businessDatabase.getBusinessAccount(uid).get();
+
+            Business business;
+
+            // Updates the preliminary business object at only the updatable fields
+            if (!existingBusinessOptional.isPresent()) {
+                business = Business.newBuilder()
+                        .setName(inputBusiness.getName())
+                        .setJobs(ImmutableList.of()).build();
+            } else {
+                business = existingBusinessOptional.get()
+                        .toBuilder()
+                        .setName(inputBusiness.getName())
+                        .build();
+            }
 
             // Stores the account into cloud firestore
-            addBusinessAccount(uid, business);
+            updateBusinessAccount(uid, business);
 
             // Sends the success status code in the response
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (FirebaseAuthException | IOException | ServletException | ExecutionException | TimeoutException e) {
+        } catch (FirebaseAuthException | IOException | ServletException
+                | ExecutionException | TimeoutException | InterruptedException e) {
             // TODO(issue/47): use custom exceptions
-            System.err.println("Error occur: " + e.getCause());
+            LOGGER.log(Level.SEVERE, /* msg= */"Error occur: " + e.getCause(), e);
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -82,13 +101,13 @@ public final class CreateBusinessServlet extends HttpServlet {
         }
     }
 
-    /** Adds the business account in the database. */
-    private void addBusinessAccount(String uid, Business business)
+    /** Updates the existing (preliminary) business account with only updatable fields. */
+    private void updateBusinessAccount(String uid, Business business)
             throws IllegalArgumentException, ServletException, ExecutionException, TimeoutException {
         try {
-            // Blocks the operation.
+            // Blocks the operation and waits for the future.
             // Use timeout in case it blocks forever.
-            this.businessDatabase.createBusinessAccount(uid, business).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            this.businessDatabase.updateBusinessAccount(uid, business).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | IOException e) {
             throw new ServletException(e);
         }

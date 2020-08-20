@@ -29,7 +29,7 @@ public final class Business {
         this.jobs = businessBuilder.jobs;
     }
 
-    /** Returns a builder by copying all the fields of an existing Job. */
+    /** Returns a builder by copying all the fields of an existing Business. */
     public BusinessBuilder toBuilder() {
         BusinessBuilder businessBuilder = new BusinessBuilder();
 

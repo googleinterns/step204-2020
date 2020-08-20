@@ -11,10 +11,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /** Tests for {@link BusinessDatabase} class. */
 public final class BusinessDatabaseTest {
@@ -49,9 +51,37 @@ public final class BusinessDatabaseTest {
             System.err.println("Error tearing down collection : " + e.getMessage());
         }
     }
+    
+    @Test
+    public void getBusinessAccount_normalInput_success() throws IOException, ExecutionException, InterruptedException {
+        // Arrange.
+        String uid = "dummyBusinessUid";
+
+        String businessName = "testBusinessAccount";
+        List<String> jobs = ImmutableList.of("jobId1", "jobId2");
+        Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
+
+        Future<WriteResult> future = FireStoreUtils.getFireStore()
+                .collection(TEST_BUSINESS_COLLECTION)
+                .document(uid)
+                .set(expectedBusiness);
+
+        // future.get() blocks on response.
+        future.get();
+
+        // Act.
+        Optional<Business> businessOptional = this.businessDatabase.getBusinessAccount(uid).get();
+
+        // Assert.
+        assertTrue(businessOptional.isPresent());
+
+        Business actualBusiness = businessOptional.get();
+
+        assertEquals(expectedBusiness, actualBusiness);
+    }
 
     @Test
-    public void createBusinessAccount_normalInput_success()
+    public void updateBusinessAccount_normalInput_success()
             throws IOException, ExecutionException, InterruptedException {
         // Arrange.
         String uid = "dummyBusinessUid";
@@ -61,7 +91,7 @@ public final class BusinessDatabaseTest {
         Business expectedBusiness = Business.newBuilder().setName(businessName).setJobs(jobs).build();
 
         // Act.
-        Future<WriteResult> future = this.businessDatabase.createBusinessAccount(uid, expectedBusiness);
+        Future<WriteResult> future = this.businessDatabase.updateBusinessAccount(uid, expectedBusiness);
 
         // Assert.
 
