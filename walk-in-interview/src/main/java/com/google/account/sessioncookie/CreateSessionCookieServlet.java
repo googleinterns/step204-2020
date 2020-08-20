@@ -90,7 +90,7 @@ public final class CreateSessionCookieServlet extends HttpServlet {
                             .setName(email)
                             .setJobs(ImmutableList.of()).build();
 
-                    this.businessDatabase.createBusinessAccount(uid, preliminaryBusiness);
+                    this.businessDatabase.updateBusinessAccount(uid, preliminaryBusiness);
                 }
             }
 

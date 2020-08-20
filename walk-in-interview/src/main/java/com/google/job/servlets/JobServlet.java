@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -27,6 +29,8 @@ import java.util.Optional;
  */
 @WebServlet("/jobs")
 public final class JobServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(JobServlet.class.getName());
+
     private static final String PATCH_METHOD_TYPE = "PATCH";
     private static final long TIMEOUT_SECONDS = 5;
     private static final String JOB_ID_FIELD = "jobId";
@@ -73,7 +77,8 @@ public final class JobServlet extends HttpServlet {
         try {
             // Verifies if this account can make job post
             if (!isBusinessAccount(request)) {
-                System.err.println("This is not a business account. Making new job post is not allowed");
+                LOGGER.log(Level.SEVERE,
+                        /* msg= */ "This is not a business account. Making new job post is not allowed");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -82,7 +87,7 @@ public final class JobServlet extends HttpServlet {
             Optional<String> optionalUid = FirebaseAuthUtils.getUid(request);
 
             if (!optionalUid.isPresent()) {
-                System.err.println("Illegal uid");
+                LOGGER.log(Level.SEVERE, /* msg= */ "Illegal uid");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -103,7 +108,7 @@ public final class JobServlet extends HttpServlet {
         } catch (ExecutionException | IllegalArgumentException | ServletException
                 | IOException | TimeoutException | FirebaseAuthException e) {
             // TODO(issue/47): use custom exceptions
-            System.err.println("Error occur: " + e.getCause());
+            LOGGER.log(Level.SEVERE, /* msg= */ "Error occur: " + e.getCause(), e);
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -132,7 +137,7 @@ public final class JobServlet extends HttpServlet {
     /** Checks if the current account is a business user. */
     private boolean isBusinessAccount(HttpServletRequest request) {
         String userType = FirebaseAuthUtils.getUserType(request);
-        return userType.equals(UserType.BUSINESS.getUserTypeId());
+        return UserType.BUSINESS.getUserTypeId().equals(userType);
     }
 
     /** Parses into valid Job object from json received from client request. */

@@ -11,7 +11,7 @@ public enum UserType {
         this.userTypeId = userTypeId;
     }
 
-    /** Returns the stable id representing the job duration. Can be stored in database. */
+    /** Returns the stable id representing the user type. Can be stored in database. */
     public String getUserTypeId() {
         return this.userTypeId;
     }
