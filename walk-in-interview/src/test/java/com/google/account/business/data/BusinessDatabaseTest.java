@@ -139,7 +139,7 @@ public final class BusinessDatabaseTest {
     }
 
     @Test
-    public void updateJobsMade_invalidUid_fail() throws IOException, ExecutionException, InterruptedException {
+    public void updateJobsMade_invalidUid_fail() throws IOException, InterruptedException {
         // Arrange.
         String jobId = "testJobId";
 
@@ -153,9 +153,9 @@ public final class BusinessDatabaseTest {
             future.get();
 
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (ExecutionException e) {
             // Assert.
-            String expectedErrorMessage = "Invalid uid";
+            String expectedErrorMessage = "java.lang.IllegalArgumentException: Invalid uid";
             assertEquals(expectedErrorMessage, e.getMessage());
         }
     }
