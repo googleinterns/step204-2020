@@ -65,7 +65,7 @@ public final class BusinessDatabase {
      *
      * @param uid Uid of the current user
      * @param jobId Id of the newly created job post.
-     * Returns a future.
+     * Returns the operation's future.
      * @throws IllegalArgumentException If uid does not exist
      */
     public Future<Void> updateJobsMade(String uid, String jobId) throws IOException, IllegalArgumentException {

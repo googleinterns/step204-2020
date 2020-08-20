@@ -108,7 +108,7 @@ public final class JobServlet extends HttpServlet {
         } catch (ExecutionException | IllegalArgumentException | ServletException
                 | IOException | TimeoutException | FirebaseAuthException e) {
             // TODO(issue/47): use custom exceptions
-            System.err.println("Error occur: " + e.getCause());
+            LOGGER.log(Level.SEVERE, /* msg= */ "Error occur: " + e.getCause(), e);
             // Sends the fail status code in the response
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
