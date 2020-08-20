@@ -17,15 +17,13 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /** Tests for {@link BusinessDatabase} class. */
 public final class BusinessDatabaseTest {
     // TODO(issue/15): Add failure test case
 
     private static final String TEST_BUSINESS_COLLECTION = "BusinessAccounts";
-    private static final String TEST_JOB_COLLECTION = "Jobs";
     private static final int BATCH_SIZE = 10;
 
     static BusinessDatabase businessDatabase;
@@ -41,7 +39,6 @@ public final class BusinessDatabaseTest {
     public void clearCollection() {
         try {
             deleteCollection(firestore.collection(TEST_BUSINESS_COLLECTION), BATCH_SIZE);
-            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
         } catch (ExecutionException | InterruptedException e) {
             System.err.println("Error deleting collection : " + e.getMessage());
         }
@@ -51,7 +48,6 @@ public final class BusinessDatabaseTest {
     public static void tearDownCollection() {
         try {
             deleteCollection(firestore.collection(TEST_BUSINESS_COLLECTION), BATCH_SIZE);
-            deleteCollection(firestore.collection(TEST_JOB_COLLECTION), BATCH_SIZE);
         } catch (ExecutionException | InterruptedException e) {
             System.err.println("Error tearing down collection : " + e.getMessage());
         }
@@ -110,10 +106,6 @@ public final class BusinessDatabaseTest {
     public void updateJobsMade_normalInput_success() throws ExecutionException, InterruptedException, IOException {
         // Arrange.
         String jobId = "testJobId";
-        Job job = new Job();
-
-        // ".get()" blocks on response.
-        firestore.collection(TEST_JOB_COLLECTION).add(job).get();
 
         String uid = "dummyBusinessUid";
         Business expectedBusiness = testBusinessAccountCreation();
@@ -144,6 +136,25 @@ public final class BusinessDatabaseTest {
         List<String> actualJobs = actualBusiness.getJobs();
 
         assertEquals(expectedJobs, actualJobs);
+    }
+
+    @Test
+    public void updateJobsMade_invalidUid_fail() throws IOException {
+        // Arrange.
+        String jobId = "testJobId";
+
+        String uid = "dummyBusinessUid";
+        Business expectedBusiness = testBusinessAccountCreation();
+
+        try {
+            // Act.
+            Future<Void> future = this.businessDatabase.updateJobsMade(uid, jobId);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Assert.
+            String expectedErrorMessage = "Invalid uid";
+            assertEquals(expectedErrorMessage, e.getMessage());
+        }
     }
 
     /** Creates Business object for tests. */
